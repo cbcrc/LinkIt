@@ -33,7 +33,7 @@ namespace HeterogeneousDataSources.Tests {
             {typeof (Image), new ImageRepository()}
         };
 
-        public DataContext Load(List<LoadLinkExpression> loadLinkExpressions)
+        public DataContext Load(List<ILoadLinkExpression> loadLinkExpressions)
         {
             var dataContext = new DataContext();
             foreach (var loadLinkExpression in loadLinkExpressions)
@@ -86,14 +86,13 @@ namespace HeterogeneousDataSources.Tests {
         }
 
 
-        public List<LoadLinkExpression> LoadLinkExpressions
+        public List<ILoadLinkExpression> LoadLinkExpressions
         {
             get
             {
-                return new List<LoadLinkExpression>{
-                    new LoadLinkExpression(
-                        () => Model.SummaryImageId,
-                        typeof(Image)
+                return new List<ILoadLinkExpression>{
+                    new LoadLinkExpression<Image>(
+                        () => Model.SummaryImageId
                     )
                 };
             }

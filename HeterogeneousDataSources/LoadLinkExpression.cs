@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources {
-    public class LoadLinkExpression {
-        public LoadLinkExpression(Func<object> loadExpression, Type referenceType) {
+    public class LoadLinkExpression<TReference> : ILoadLinkExpression {
+        public LoadLinkExpression(Func<object> loadExpression) {
             LoadExpression = loadExpression;
-            ReferenceType = referenceType;
         }
 
         private Func<object> LoadExpression { get; set; }
@@ -18,7 +17,9 @@ namespace HeterogeneousDataSources {
             }
         }
 
-
-        public Type ReferenceType { get; private set; }
+        public Type ReferenceType
+        {
+            get { return typeof(TReference); }
+        }
     }
 }
