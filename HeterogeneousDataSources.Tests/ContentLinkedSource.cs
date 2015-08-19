@@ -109,7 +109,7 @@ namespace HeterogeneousDataSources.Tests {
                 return new List<ILoadLinkExpression>{
                     new LoadLinkExpression<Image>(
                         () => Model.SummaryImageId,
-                        (reference) => { SummaryImage = reference; },
+                        (reference) => SummaryImage = reference,
                         (image) => image.Id
                     )
                 };
