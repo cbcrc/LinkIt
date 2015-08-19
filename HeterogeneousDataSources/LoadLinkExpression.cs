@@ -2,37 +2,43 @@
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources {
-    public class LoadLinkExpression<TReference> : ILoadLinkExpression {
-        public LoadLinkExpression(Func<object> loadExpression, Action<TReference> linkAction, Func<TReference, object> getIdFromReferenceFunc)
+    public class LoadLinkExpression<TLinkedSource, TReference> : ILoadLinkExpression {
+        public LoadLinkExpression(Func<TLinkedSource, object> loadExpression, Action<TLinkedSource, TReference> linkAction, Func<TReference, object> getIdFromReferenceFunc)
         {
             LinkAction = linkAction;
             GetIdFromReferenceFunc = getIdFromReferenceFunc;
             LoadExpression = loadExpression;
         }
 
-        private Func<object> LoadExpression { get; set; }
+        private Func<TLinkedSource, object> LoadExpression { get; set; }
 
-        private Action<TReference> LinkAction { get; set; }
+        private Action<TLinkedSource, TReference> LinkAction { get; set; }
         private Func<TReference, object> GetIdFromReferenceFunc { get; set; }
 
-        public void Link(DataContext dataContext)
+        public List<object> GetLookupIds(TLinkedSource linkedSource)
         {
-            var id = LoadExpression();
-            var reference = dataContext.GetOptionalReference<TReference>(id);
-            LinkAction(reference);
+            return new List<object> { LoadExpression(linkedSource) };
         }
 
-        public List<object> ReferenceIds
+        public List<object> GetLookupIds(object linkedSource)
         {
-            get
-            {
-                return new List<object>{LoadExpression()};
-            }
+            return GetLookupIds((TLinkedSource) linkedSource);
         }
 
         public Type ReferenceType
         {
             get { return typeof (TReference); } 
+        }
+
+        public void Link(TLinkedSource linkedSource, DataContext dataContext) {
+            var id = LoadExpression(linkedSource);
+            var reference = dataContext.GetOptionalReference<TReference>(id);
+            LinkAction(linkedSource, reference);
+        }
+
+        public void Link(object linkedSource, DataContext dataContext)
+        {
+            Link((TLinkedSource) linkedSource, dataContext);
         }
 
         public object GetReferenceId(object reference)

@@ -1,0 +1,10 @@
+﻿{
+  "summaryImage": {
+    "id": "a",
+    "alt": "alt-a"
+  },
+  "model": {
+    "id": 1,
+    "summaryImageId": "a"
+  }
+}

@@ -60,7 +60,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentLinkedSource.cs" />
+    <Compile Include="HappyPathTests.cs" />
+    <Compile Include="ImageRepository.cs" />
+    <Compile Include="IReferenceLoader.cs" />
+    <Compile Include="Linker.cs" />
+    <Compile Include="Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
