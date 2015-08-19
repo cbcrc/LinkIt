@@ -58,11 +58,11 @@ namespace HeterogeneousDataSources
 
         private void EnsureTIdIsUsedForLookupIds(List<ILoadLinkExpression> loadExpressions) {
             if (GetLoadExpressionsOfTReferenceUncasted(loadExpressions)
-                .Any(loadExpression => !(loadExpressions is ILoadLinkExpression<TId>)))
+                .Any(loadExpression => !(loadExpression is ILoadLinkExpression<TId>)))
             {
                 throw new InvalidOperationException(
                     string.Format(
-                        "All load expressions for the reference type {0} must {1} for lookup ids.", 
+                        "All load expressions for the reference type {0} must use {1} for their lookup ids.", 
                         typeof(TReference).Name,
                         typeof(TId).Name
                     )
