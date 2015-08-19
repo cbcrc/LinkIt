@@ -14,9 +14,8 @@ namespace HeterogeneousDataSources.Tests {
         {
             var loadLinkExpressions = new List<LoadLinkExpression<ContentLinkedSource, Image>>{
                     new LoadLinkExpression<ContentLinkedSource,Image>(
-                        (linkedSource) => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference,
-                        (image) => image.Id
+                        linkedSource => linkedSource.Model.SummaryImageId,
+                        (linkedSource, reference) => linkedSource.SummaryImage = reference
                     )
                 };
 
