@@ -12,8 +12,7 @@ namespace HeterogeneousDataSources {
 
         #region Load
         public List<TId> GetLookupIds(object linkedSource) {
-            //stle: what should we do here? preconditions or defensive?
-            if (!(linkedSource is TLinkedSource)) { throw new NotImplementedException(); }
+            if (!(linkedSource is TLinkedSource)) { return new List<TId>(); }
 
             return GetLookupIds((TLinkedSource) linkedSource);
         }
@@ -31,8 +30,7 @@ namespace HeterogeneousDataSources {
         #region Link
 
         public void Link(object linkedSource, DataContext dataContext) {
-            //stle: what should we do here? preconditions or defensive?
-            if (!(linkedSource is TLinkedSource)) { throw new NotImplementedException(); }
+            if (!(linkedSource is TLinkedSource)) { return; }
 
             Link((TLinkedSource)linkedSource, dataContext);
         }
