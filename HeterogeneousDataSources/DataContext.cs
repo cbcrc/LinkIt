@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources {
     public class DataContext {
-        private readonly Dictionary<Type,Dictionary<object,object>> _referenceDictionaryByReferenceType = new Dictionary<Type,Dictionary<object,object>>();
+        private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType = new Dictionary<Type, object>();
 
         public object State {
             get
@@ -13,37 +13,43 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        public void Append(List<object> references, ILoadExpression loadLinkExpression) {
-            if (_referenceDictionaryByReferenceType.ContainsKey(loadLinkExpression.ReferenceType)) {
+        public void Append<TReference>(List<TReference> references, Func<TReference,object> getReferenceIdFunc){
+            var tReference = typeof (TReference);
+            if (_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
                 throw new InvalidOperationException(
                     string.Format(
                         "All references of the same type ({0}) must be loaded at the same time.",
-                        loadLinkExpression.ReferenceType.Name)
+                        tReference.Name)
                 );
             }
 
             var referenceDictionnary = references.ToDictionary(
-                keySelector: loadLinkExpression.GetReferenceId,
+                keySelector: getReferenceIdFunc,
                 elementSelector: reference => reference 
             );
 
-            _referenceDictionaryByReferenceType[loadLinkExpression.ReferenceType] = referenceDictionnary;
+            _referenceDictionaryByReferenceType[tReference] = referenceDictionnary;
         }
 
-        private Dictionary<object, object> GetReferenceDictionary(Type referenceType) {
-            if (_referenceDictionaryByReferenceType.ContainsKey(referenceType) == false) {
-                _referenceDictionaryByReferenceType[referenceType] = new Dictionary<object, object>();
+        private Dictionary<object, TReference> GetReferenceDictionary<TReference>() {
+            var tReference = typeof (TReference);
+            if (_referenceDictionaryByReferenceType.ContainsKey(tReference) == false) {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "The type {0} is not supported by this data context.",
+                        tReference.Name)
+                );
             }
 
-            return _referenceDictionaryByReferenceType[referenceType];
+            return (Dictionary<object, TReference>)_referenceDictionaryByReferenceType[tReference];
         }
 
 
         public TReference GetOptionalReference<TReference>(object key) {
-            var referenceDictionnary = GetReferenceDictionary(typeof(TReference));
+            var referenceDictionnary = GetReferenceDictionary<TReference>();
             if (referenceDictionnary.ContainsKey(key) == false) { return default(TReference); }
 
-            return (TReference)referenceDictionnary[key];
+            return referenceDictionnary[key];
         }
 
         //public TData GetMandatoryReference<TData>(object key)

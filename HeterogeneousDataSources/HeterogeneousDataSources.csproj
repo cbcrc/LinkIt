@@ -40,7 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataContext.cs" />
-    <Compile Include="ILoadLinkExpression.cs" />
+    <Compile Include="ILoadExpression.cs" />
+    <Compile Include="ILinkExpression.cs" />
+    <Compile Include="IFutureReferenceLoader.cs" />
+    <Compile Include="Linker.cs" />
     <Compile Include="LoadLinkExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
