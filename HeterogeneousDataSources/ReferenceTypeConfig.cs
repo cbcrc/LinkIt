@@ -35,11 +35,9 @@ namespace HeterogeneousDataSources
 
         public void LoadReferences(object linkedSource, List<ILoadLinkExpression> loadExpressions, DataContext dataContext)
         {
-            var loadExpressionsOfTReference = loadExpressions
-                .Where(loadExpression => loadExpression.ReferenceType == typeof(TReference))
-                //stle: write an explicit preconditions here
-                .Cast<ILoadLinkExpression<TId>>()
-                .ToList();
+            EnsureTIdIsUsedForLookupIds(loadExpressions);
+
+            var loadExpressionsOfTReference = GetLoadExpressionsOfTReference(loadExpressions);
 
             List<TId> lookupIds = loadExpressionsOfTReference
                 .SelectMany(loadExpression => loadExpression.GetLookupIds(linkedSource))
@@ -50,6 +48,33 @@ namespace HeterogeneousDataSources
             var references = LoadReferencesFunc(cleanedIds);
 
             dataContext.Append(references, GetReferenceIdFunc);
+        }
+
+        private List<ILoadLinkExpression<TId>> GetLoadExpressionsOfTReference(List<ILoadLinkExpression> loadExpressions) {
+            return GetLoadExpressionsOfTReferenceUncasted(loadExpressions)
+                .Cast<ILoadLinkExpression<TId>>()
+                .ToList();
+        }
+
+        private void EnsureTIdIsUsedForLookupIds(List<ILoadLinkExpression> loadExpressions) {
+            if (GetLoadExpressionsOfTReferenceUncasted(loadExpressions)
+                .Any(loadExpression => !(loadExpressions is ILoadLinkExpression<TId>)))
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "All load expressions for the reference type {0} must {1} for lookup ids.", 
+                        typeof(TReference).Name,
+                        typeof(TId).Name
+                    )
+                );
+            }
+        }
+
+        private List<ILoadLinkExpression> GetLoadExpressionsOfTReferenceUncasted(List<ILoadLinkExpression> loadExpressions)
+        {
+            return loadExpressions
+                .Where(loadExpression => loadExpression.ReferenceType == typeof (TReference))
+                .ToList();
         }
 
         private static List<TId> CleanedIds(List<TId> lookupIds)
