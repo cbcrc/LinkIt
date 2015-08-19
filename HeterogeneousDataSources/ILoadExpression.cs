@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace HeterogeneousDataSources
 {
-    public interface ILoadExpression<TLinkedSource>
+    public interface ILoadExpression<TLinkedSource, TId>
     {
-        List<object> GetLookupIds(TLinkedSource linkedSource);
+        List<TId> GetLookupIds(TLinkedSource linkedSource);
     }
 }

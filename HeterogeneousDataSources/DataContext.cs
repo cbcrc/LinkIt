@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        public void Append<TReference>(List<TReference> references, Func<TReference,object> getReferenceIdFunc){
+        public void Append<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
             var tReference = typeof (TReference);
             if (_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
                 throw new InvalidOperationException(
@@ -31,7 +31,7 @@ namespace HeterogeneousDataSources {
             _referenceDictionaryByReferenceType[tReference] = referenceDictionnary;
         }
 
-        private Dictionary<object, TReference> GetReferenceDictionary<TReference>() {
+        private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>() {
             var tReference = typeof (TReference);
             if (_referenceDictionaryByReferenceType.ContainsKey(tReference) == false) {
                 throw new InvalidOperationException(
@@ -41,12 +41,12 @@ namespace HeterogeneousDataSources {
                 );
             }
 
-            return (Dictionary<object, TReference>)_referenceDictionaryByReferenceType[tReference];
+            return (Dictionary<TId, TReference>)_referenceDictionaryByReferenceType[tReference];
         }
 
 
-        public TReference GetOptionalReference<TReference>(object key) {
-            var referenceDictionnary = GetReferenceDictionary<TReference>();
+        public TReference GetOptionalReference<TReference, TId>(TId key) {
+            var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
             if (referenceDictionnary.ContainsKey(key) == false) { return default(TReference); }
 
             return referenceDictionnary[key];

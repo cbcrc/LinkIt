@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources {
-    public class LoadLinkExpression<TLinkedSource, TReference> : ILoadExpression<TLinkedSource>, ILinkExpression<TLinkedSource>
+    public class LoadLinkExpression<TLinkedSource, TReference, TId> : ILoadExpression<TLinkedSource, TId>, ILinkExpression<TLinkedSource>
     {
-        public LoadLinkExpression(Func<TLinkedSource, object> getLookupIdFunc, Action<TLinkedSource, TReference> linkAction)
+        public LoadLinkExpression(Func<TLinkedSource, TId> getLookupIdFunc, Action<TLinkedSource, TReference> linkAction)
         {
             GetLookupIdFunc = getLookupIdFunc;
             LinkAction = linkAction;
@@ -12,10 +12,10 @@ namespace HeterogeneousDataSources {
 
         #region Load
 
-        public List<object> GetLookupIds(TLinkedSource linkedSource) {
-            return new List<object> { GetLookupIdFunc(linkedSource) };
+        public List<TId> GetLookupIds(TLinkedSource linkedSource) {
+            return new List<TId> { GetLookupIdFunc(linkedSource) };
         }
-        private Func<TLinkedSource, object> GetLookupIdFunc { get; set; }
+        private Func<TLinkedSource, TId> GetLookupIdFunc { get; set; }
         
         #endregion
 
@@ -23,7 +23,7 @@ namespace HeterogeneousDataSources {
 
         public void Link(TLinkedSource linkedSource, DataContext dataContext) {
             var id = GetLookupIdFunc(linkedSource);
-            var reference = dataContext.GetOptionalReference<TReference>(id);
+            var reference = dataContext.GetOptionalReference<TReference, TId>(id);
             LinkAction(linkedSource, reference);
         }
 

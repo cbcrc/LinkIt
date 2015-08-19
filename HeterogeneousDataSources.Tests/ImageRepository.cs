@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.Tests
 {
-    public class ImageRepository: IReferenceLoader
+    public class ImageRepository
     {
         public List<Image> GetByIds(List<string> ids)
         {

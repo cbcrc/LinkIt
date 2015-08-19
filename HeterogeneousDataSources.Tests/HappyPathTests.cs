@@ -12,14 +12,17 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void DoIt()
         {
-            var loadLinkExpressions = new List<LoadLinkExpression<ContentLinkedSource, Image>>{
-                    new LoadLinkExpression<ContentLinkedSource,Image>(
+            var loadLinkExpressions = new List<LoadLinkExpression<ContentLinkedSource, Image, string>>{
+                    new LoadLinkExpression<ContentLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
                     )
                 };
 
-            var futureReferenceLoader = new FutureReferenceLoader<Image>(image => image.Id);
+            var futureReferenceLoader = new ReferenceTypeConfig<Image,string>(
+                image => image.Id,
+                ids => new ImageRepository().GetByIds(ids)
+            );
 
             var content = new Content{
                 Id = 1,
@@ -28,7 +31,7 @@ namespace HeterogeneousDataSources.Tests {
             var contentLinkedSource = new ContentLinkedSource(content);
 
             var asLoadExpressions = loadLinkExpressions
-                .Cast<ILoadExpression<ContentLinkedSource>>()
+                .Cast<ILoadExpression<ContentLinkedSource,string>>()
                 .ToList();
 
             var loader = new Loader();
