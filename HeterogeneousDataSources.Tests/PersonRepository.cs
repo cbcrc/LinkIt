@@ -3,14 +3,14 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.Tests
 {
-    public class ImageRepository
+    public class PersonRepository
     {
-        public List<Image> GetByIds(List<string> ids)
+        public List<Person> GetByIds(List<int> ids)
         {
             return ids
-                .Select(id => new Image{
+                .Select(id => new Person {
                     Id = id, 
-                    Alt = "alt-" + id
+                    Name = "name-" + id
                 })
                 .ToList();
         }

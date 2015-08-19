@@ -60,8 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ManyReferencesTests.cs" />
-    <Compile Include="SingleReferenceTests.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="PersonRepository.cs" />
+    <Compile Include="MultipleReferencesTypeTests.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="ImageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

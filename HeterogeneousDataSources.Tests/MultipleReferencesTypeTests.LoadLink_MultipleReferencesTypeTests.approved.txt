@@ -1,0 +1,15 @@
+﻿{
+  "summaryImage": {
+    "id": "a",
+    "alt": "alt-a"
+  },
+  "author": {
+    "id": 32,
+    "name": "name-32"
+  },
+  "model": {
+    "id": 1,
+    "summaryImageId": "a",
+    "authorId": 32
+  }
+}

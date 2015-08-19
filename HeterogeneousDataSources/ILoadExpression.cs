@@ -2,8 +2,8 @@
 
 namespace HeterogeneousDataSources
 {
-    public interface ILoadExpression<TLinkedSource, TId>
+    public interface ILoadLinkExpression<TId>
     {
-        List<TId> GetLookupIds(TLinkedSource linkedSource);
+        List<TId> GetLookupIds(object linkedSource);
     }
 }

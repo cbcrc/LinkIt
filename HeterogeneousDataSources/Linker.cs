@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace HeterogeneousDataSources.Tests
+namespace HeterogeneousDataSources
 {
     public class Linker
     {
-        public void Link<TLinkedSource>(DataContext dataContext, TLinkedSource linkedSource, List<ILinkExpression<TLinkedSource>> linkExpressions)
+        public void Link(DataContext dataContext, object linkedSource, List<ILoadLinkExpression> linkExpressions)
         {
             foreach (var linkExpression in linkExpressions)
             {
