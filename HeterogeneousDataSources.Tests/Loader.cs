@@ -10,7 +10,7 @@ namespace HeterogeneousDataSources.Tests
             {typeof (Image), new ImageRepository()}
         };
 
-        public DataContext Load(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions)
+        public DataContext Load(object linkedSource, List<ILoadExpression> loadLinkExpressions)
         {
             var dataContext = new DataContext();
             foreach (var loadLinkExpression in loadLinkExpressions)

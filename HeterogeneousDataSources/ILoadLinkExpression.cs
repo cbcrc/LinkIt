@@ -3,11 +3,14 @@ using System.Collections.Generic;
 
 namespace HeterogeneousDataSources
 {
-    public interface ILoadLinkExpression
+    public interface ILoadExpression
     {
         List<object> GetLookupIds(object linkedSource);
         Type ReferenceType { get; }
-        void Link(object linkedSource, DataContext dataContext);
         object GetReferenceId(object reference);
+    }
+
+    public interface ILinkExpression<TLinkedSource> {
+        void Link(TLinkedSource linkedSource, DataContext dataContext);
     }
 }

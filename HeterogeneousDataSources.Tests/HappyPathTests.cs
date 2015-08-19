@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ApprovalTests.Reporters;
 using NUnit.Framework;
 using RC.Testing;
@@ -11,7 +12,7 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void DoIt()
         {
-            var loadLinkExpressions = new List<ILoadLinkExpression>{
+            var loadLinkExpressions = new List<ILoadExpression>{
                     new LoadLinkExpression<ContentLinkedSource,Image>(
                         (linkedSource) => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference,
@@ -27,8 +28,14 @@ namespace HeterogeneousDataSources.Tests {
 
             var loader = new Loader();
             var dataContext = loader.Load(contentLinkedSource, loadLinkExpressions);
+
+            var contentLinkedSourceLinkExpressions = loadLinkExpressions
+                .Where(linkExpression => linkExpression is ILinkExpression<ContentLinkedSource>)
+                .Cast<ILinkExpression<ContentLinkedSource>>()
+                .ToList();
+
             var linker = new Linker();
-            linker.Link(dataContext, contentLinkedSource, loadLinkExpressions);
+            linker.Link(dataContext, contentLinkedSource, contentLinkedSourceLinkExpressions);
             ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
         }
     }

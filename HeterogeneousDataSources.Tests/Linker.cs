@@ -4,11 +4,11 @@ namespace HeterogeneousDataSources.Tests
 {
     public class Linker
     {
-        public void Link(DataContext dataContext, ContentLinkedSource linkedSource, List<ILoadLinkExpression> loadLinkExpressions)
+        public void Link<TLinkedSource>(DataContext dataContext, TLinkedSource linkedSource, List<ILinkExpression<TLinkedSource>> linkExpressions)
         {
-            foreach (var loadLinkExpression in loadLinkExpressions)
+            foreach (var linkExpression in linkExpressions)
             {
-                loadLinkExpression.Link(linkedSource, dataContext);
+                linkExpression.Link(linkedSource, dataContext);
             }
         }
 

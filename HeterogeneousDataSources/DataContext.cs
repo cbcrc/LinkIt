@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        public void Append(List<object> references, ILoadLinkExpression loadLinkExpression) {
+        public void Append(List<object> references, ILoadExpression loadLinkExpression) {
             if (_referenceDictionaryByReferenceType.ContainsKey(loadLinkExpression.ReferenceType)) {
                 throw new InvalidOperationException(
                     string.Format(
