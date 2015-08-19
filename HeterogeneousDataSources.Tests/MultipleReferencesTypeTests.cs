@@ -21,7 +21,10 @@ namespace HeterogeneousDataSources.Tests {
                         (linkedSource, reference) => linkedSource.Author = reference
                     )
                 };
-
+            var sut = new LoadLinkProtocol(
+                TestUtil.ReferenceTypeConfigs,
+                loadLinkExpressions
+            );
             var content = new MultipleReferencesTypeContent() {
                 Id = 1,
                 SummaryImageId = "a",
@@ -29,15 +32,7 @@ namespace HeterogeneousDataSources.Tests {
             };
             var contentLinkedSource = new MultipleReferencesTypeLinkedSource(content);
 
-            var dataContext = new DataContext();
-            new Loader().Load(
-                contentLinkedSource,
-                TestUtil.ReferenceTypeConfigs,
-                loadLinkExpressions,
-                dataContext
-            );
-
-            new Linker().Link(dataContext, contentLinkedSource, loadLinkExpressions);
+            sut.LoadLink(contentLinkedSource);
 
             ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
         }

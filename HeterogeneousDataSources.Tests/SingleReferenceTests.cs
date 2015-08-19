@@ -12,32 +12,24 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void LoadLink_SingleReference()
         {
-            var loadLinkExpressions = new List<LoadLinkExpression<SingleReferenceLinkedSource, Image, string>>{
+            var loadLinkExpressions = new List<ILoadLinkExpression>{
                     new LoadLinkExpression<SingleReferenceLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
                     )
                 };
-
+            var sut = new LoadLinkProtocol(
+                TestUtil.ReferenceTypeConfigs,
+                loadLinkExpressions
+            );
             var content = new SingleReferenceContent{
                 Id = 1,
                 SummaryImageId = "a"
             };
             var contentLinkedSource = new SingleReferenceLinkedSource(content);
 
-            var asLoadExpressions = loadLinkExpressions
-                .Cast<ILoadExpression<SingleReferenceLinkedSource,string>>()
-                .ToList();
+            sut.LoadLink(contentLinkedSource);
 
-            var loader = new Loader();
-            var dataContext = loader.Load(contentLinkedSource, asLoadExpressions, TestUtil.ImageReferenceTypeConfig);
-
-            var contentLinkedSourceLinkExpressions = loadLinkExpressions
-                .Cast<ILinkExpression<SingleReferenceLinkedSource>>()
-                .ToList();
-
-            var linker = new Linker();
-            linker.Link(dataContext, contentLinkedSource, contentLinkedSourceLinkExpressions);
             ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources {
-    public class LoadLinkExpressionForList<TLinkedSource, TReference, TId> : ILoadExpression<TLinkedSource, TId>, ILinkExpression<TLinkedSource>
+    public class LoadLinkExpressionForList<TLinkedSource, TReference, TId>: ILoadLinkExpression<TId>, ILoadLinkExpression
     {
         public LoadLinkExpressionForList(
             Func<TLinkedSource, List<TId>> getLookupIdsFunc, 
@@ -13,15 +13,30 @@ namespace HeterogeneousDataSources {
         }
 
         #region Load
+        public List<TId> GetLookupIds(object linkedSource) {
+            //stle: what should we do here? preconditions or defensive?
+            if (!(linkedSource is TLinkedSource)) { throw new NotImplementedException(); }
+
+            return GetLookupIds((TLinkedSource)linkedSource);
+        }
 
         public List<TId> GetLookupIds(TLinkedSource linkedSource) {
             return GetLookupIdsFunc(linkedSource);
         }
         private Func<TLinkedSource, List<TId>> GetLookupIdsFunc { get; set; }
+
+        public Type ReferenceType { get { return typeof(TReference); } }
         
         #endregion
 
         #region Link
+
+        public void Link(object linkedSource, DataContext dataContext) {
+            //stle: what should we do here? preconditions or defensive?
+            if (!(linkedSource is TLinkedSource)) { throw new NotImplementedException(); }
+
+            Link((TLinkedSource)linkedSource, dataContext);
+        }
 
         public void Link(TLinkedSource linkedSource, DataContext dataContext) {
             var ids = GetLookupIds(linkedSource);
@@ -31,6 +46,6 @@ namespace HeterogeneousDataSources {
 
         private Action<TLinkedSource, List<TReference>> LinkAction { get; set; }
  
-	    #endregion    
+	    #endregion
     }
 }

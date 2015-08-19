@@ -60,12 +60,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ManyReferencesTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Person.cs" />
     <Compile Include="PersonRepository.cs" />
     <Compile Include="MultipleReferencesTypeTests.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="ImageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleReferenceTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="TestUtil.cs" />
   </ItemGroup>
   <ItemGroup>

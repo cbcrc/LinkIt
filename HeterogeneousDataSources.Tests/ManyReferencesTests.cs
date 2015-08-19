@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources.Tests
         [Test]
         public void LoadLink_ManyReferences()
         {
-            var loadLinkExpressions = new List<object>{
+            var loadLinkExpressions = new List<ILoadLinkExpression>{
                 new LoadLinkExpression<ManyReferencesLinkedSource,Image, string>(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     (linkedSource, reference) => linkedSource.SummaryImage = reference
@@ -27,7 +27,10 @@ namespace HeterogeneousDataSources.Tests
                     (linkedSource, reference) => linkedSource.FavoriteImages = reference
                 )
             };
-
+            var sut = new LoadLinkProtocol(
+                TestUtil.ReferenceTypeConfigs,
+                loadLinkExpressions
+            );
             var content = new ManyReferencesContent {
                 Id = 1,
                 SummaryImageId = "summary-image-id",
@@ -36,19 +39,8 @@ namespace HeterogeneousDataSources.Tests
             };
             var contentLinkedSource = new ManyReferencesLinkedSource{Model=content};
 
-            var asLoadExpressions = loadLinkExpressions
-                .Cast<ILoadExpression<ManyReferencesLinkedSource,string>>()
-                .ToList();
-
-            var loader = new Loader();
-            var dataContext = loader.Load(contentLinkedSource, asLoadExpressions, TestUtil.ImageReferenceTypeConfig);
-
-            var contentLinkedSourceLinkExpressions = loadLinkExpressions
-                .Cast<ILinkExpression<ManyReferencesLinkedSource>>()
-                .ToList();
-
-            var linker = new Linker();
-            linker.Link(dataContext, contentLinkedSource, contentLinkedSourceLinkExpressions);
+            sut.LoadLink(contentLinkedSource);
+            
             ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
         }
     }

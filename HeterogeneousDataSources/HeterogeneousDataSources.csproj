@@ -43,9 +43,11 @@
     <Compile Include="ILoadExpression.cs" />
     <Compile Include="ILoadLinkExpression.cs" />
     <Compile Include="IReferenceTypeConfig.cs" />
-    <Compile Include="Loader.cs" />
+    <Compile Include="LoadLinkExpressionForList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="ReferenceTypeConfig.cs" />
-    <Compile Include="Linker.cs" />
     <Compile Include="LoadLinkExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
