@@ -42,6 +42,7 @@
     <Compile Include="DataContext.cs" />
     <Compile Include="ILoadExpression.cs" />
     <Compile Include="ILinkExpression.cs" />
+    <Compile Include="LoadLinkExpressionForList.cs" />
     <Compile Include="ReferenceTypeConfig.cs" />
     <Compile Include="Linker.cs" />
     <Compile Include="Loader.cs" />

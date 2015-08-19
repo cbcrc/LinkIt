@@ -11,15 +11,15 @@ namespace HeterogeneousDataSources
             ReferenceTypeConfig<TReference, TId> referenceTypeConfig)
         {
             var dataContext = new DataContext();
-            foreach (var loadExpression in loadExpressions)
-            {
-                var referenceIds = loadExpression.GetLookupIds(linkedSource);
-                var references = referenceTypeConfig.LoadReferencesFunc(referenceIds);
+            List<TId> referenceIds = loadExpressions
+                .SelectMany(loadExpression => loadExpression.GetLookupIds(linkedSource))
+                .ToList();
 
-                var referencesAsTReference = references.ToList();
+            var references = referenceTypeConfig.LoadReferencesFunc(referenceIds);
 
-                dataContext.Append(referencesAsTReference, referenceTypeConfig.GetReferenceIdFunc);
-            }
+            var referencesAsTReference = references.ToList();
+
+            dataContext.Append(referencesAsTReference, referenceTypeConfig.GetReferenceIdFunc);
 
             return dataContext;
         }

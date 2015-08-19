@@ -7,38 +7,33 @@ using RC.Testing;
 namespace HeterogeneousDataSources.Tests {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class HappyPathTests
+    public class SingleReferenceTests
     {
         [Test]
-        public void DoIt()
+        public void LoadLink_SingleReference()
         {
-            var loadLinkExpressions = new List<LoadLinkExpression<ContentLinkedSource, Image, string>>{
-                    new LoadLinkExpression<ContentLinkedSource,Image, string>(
+            var loadLinkExpressions = new List<LoadLinkExpression<SingleReferenceLinkedSource, Image, string>>{
+                    new LoadLinkExpression<SingleReferenceLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
                     )
                 };
 
-            var futureReferenceLoader = new ReferenceTypeConfig<Image,string>(
-                image => image.Id,
-                ids => new ImageRepository().GetByIds(ids)
-            );
-
-            var content = new Content{
+            var content = new SingleReferenceContent{
                 Id = 1,
                 SummaryImageId = "a"
             };
-            var contentLinkedSource = new ContentLinkedSource(content);
+            var contentLinkedSource = new SingleReferenceLinkedSource(content);
 
             var asLoadExpressions = loadLinkExpressions
-                .Cast<ILoadExpression<ContentLinkedSource,string>>()
+                .Cast<ILoadExpression<SingleReferenceLinkedSource,string>>()
                 .ToList();
 
             var loader = new Loader();
-            var dataContext = loader.Load(contentLinkedSource, asLoadExpressions, futureReferenceLoader);
+            var dataContext = loader.Load(contentLinkedSource, asLoadExpressions, TestUtil.ImageReferenceTypeConfig);
 
             var contentLinkedSourceLinkExpressions = loadLinkExpressions
-                .Cast<ILinkExpression<ContentLinkedSource>>()
+                .Cast<ILinkExpression<SingleReferenceLinkedSource>>()
                 .ToList();
 
             var linker = new Linker();
@@ -48,26 +43,19 @@ namespace HeterogeneousDataSources.Tests {
     }
 
 
-    public class ContentLinkedSource {
+    public class SingleReferenceLinkedSource {
         //stle: two steps loading sucks!
-        public ContentLinkedSource(Content model)
+        public SingleReferenceLinkedSource(SingleReferenceContent model)
         {
             Model = model;
         }
 
-        public Content Model { get; private set; }
+        public SingleReferenceContent Model { get; private set; }
         public Image SummaryImage;
     }
 
-    public class Content {
+    public class SingleReferenceContent {
         public int Id { get; set; }
         public string SummaryImageId { get; set; }
     }
-
-    public class Image {
-        public string Id { get; set; }
-        public string Alt { get; set; }
-    }
-
-
 }

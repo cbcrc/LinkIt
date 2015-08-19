@@ -45,12 +45,22 @@ namespace HeterogeneousDataSources {
         }
 
 
-        public TReference GetOptionalReference<TReference, TId>(TId key) {
+        public TReference GetOptionalReference<TReference, TId>(TId id) {
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
-            if (referenceDictionnary.ContainsKey(key) == false) { return default(TReference); }
+            if (referenceDictionnary.ContainsKey(id) == false) { return default(TReference); }
 
-            return referenceDictionnary[key];
+            return referenceDictionnary[id];
         }
+
+        public List<TReference> GetOptionalReferences<TReference, TId>(List<TId> ids)
+        {
+            var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
+            return ids
+                .Where(referenceDictionnary.ContainsKey)
+                .Select(id => referenceDictionnary[id])
+                .ToList();
+        }
+
 
         //public TData GetMandatoryReference<TData>(object key)
         //{
