@@ -1,12 +1,19 @@
 ﻿{
-  "state": {
-    "$type": "System.Collections.Generic.Dictionary`2[[System.Type, mscorlib],[System.Collections.Generic.Dictionary`2[[System.Object, mscorlib],[System.Object, mscorlib]], mscorlib]], mscorlib",
-    "heterogeneousDataSources.Tests.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": {
-      "heterogeneousDataSources.Tests.Image": {
-        "$type": "HeterogeneousDataSources.Tests.Image, HeterogeneousDataSources.Tests",
-        "id": "a",
-        "alt": "alt-a"
-      }
+  "summaryImage": {
+    "id": "a",
+    "alt": "alt-a"
+  },
+  "loadLinkExpressions": [
+    {
+      "$type": "HeterogeneousDataSources.LoadLinkExpression`1[[HeterogeneousDataSources.Tests.Image, HeterogeneousDataSources.Tests]], HeterogeneousDataSources",
+      "referenceIds": [
+        "a"
+      ],
+      "referenceType": "HeterogeneousDataSources.Tests.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
+  ],
+  "model": {
+    "id": 1,
+    "summaryImageId": "a"
   }
 }

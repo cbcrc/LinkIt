@@ -13,21 +13,21 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        public void Append(List<object> references, Type referenceType){
-            if (_referenceDictionaryByReferenceType.ContainsKey(referenceType)) {
+        public void Append(List<object> references, ILoadLinkExpression loadLinkExpression) {
+            if (_referenceDictionaryByReferenceType.ContainsKey(loadLinkExpression.ReferenceType)) {
                 throw new InvalidOperationException(
                     string.Format(
-                        "All references of the same type ({0}) must be loaded at the same time.", 
-                        referenceType.Name)
+                        "All references of the same type ({0}) must be loaded at the same time.",
+                        loadLinkExpression.ReferenceType.Name)
                 );
             }
 
             var referenceDictionnary = references.ToDictionary(
-                keySelector: reference => reference,
+                keySelector: loadLinkExpression.GetReferenceId,
                 elementSelector: reference => reference 
             );
 
-            _referenceDictionaryByReferenceType[referenceType] = referenceDictionnary;
+            _referenceDictionaryByReferenceType[loadLinkExpression.ReferenceType] = referenceDictionnary;
         }
 
         private Dictionary<object, object> GetReferenceDictionary(Type referenceType) {
@@ -39,12 +39,12 @@ namespace HeterogeneousDataSources {
         }
 
 
-        //public TData GetOptionalReference<TData>(object key){
-        //    var dictionary = GetOrCreateDictionaryForReferenceType<TData>();
-        //    if (dictionary.ContainsKey(key) == false) { return default(TData); }
+        public TReference GetOptionalReference<TReference>(object key) {
+            var referenceDictionnary = GetReferenceDictionary(typeof(TReference));
+            if (referenceDictionnary.ContainsKey(key) == false) { return default(TReference); }
 
-        //    return dictionary[key];
-        //}
+            return (TReference)referenceDictionnary[key];
+        }
 
         //public TData GetMandatoryReference<TData>(object key)
         //{

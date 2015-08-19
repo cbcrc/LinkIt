@@ -21,10 +21,26 @@ namespace HeterogeneousDataSources.Tests {
 
             var loader = new Loader();
             var dataContext = loader.Load(linkedSource.LoadLinkExpressions);
-
-            ApprovalsExt.VerifyPublicProperties(dataContext);
+            var linker = new Linker();
+            linker.Link(dataContext, linkedSource);
+            ApprovalsExt.VerifyPublicProperties(linkedSource);
         }
+
     }
+
+    public class Linker
+    {
+        public void Link(DataContext dataContext, ContentLinkedSource linkedSource)
+        {
+            var loadLinkExpressions = linkedSource.LoadLinkExpressions;
+            foreach (var loadLinkExpression in loadLinkExpressions)
+            {
+                loadLinkExpression.Link(dataContext);
+            }
+        }
+
+    }
+
 
     public class Loader
     {
@@ -46,7 +62,7 @@ namespace HeterogeneousDataSources.Tests {
                 var referenceIds = loadLinkExpression.ReferenceIds;
                 var references = referenceLoader.LoadReferences(referenceIds);
 
-                dataContext.Append(references, loadLinkExpression.ReferenceType);
+                dataContext.Append(references, loadLinkExpression);
             }
 
             return dataContext;
@@ -92,14 +108,16 @@ namespace HeterogeneousDataSources.Tests {
             {
                 return new List<ILoadLinkExpression>{
                     new LoadLinkExpression<Image>(
-                        () => Model.SummaryImageId
+                        () => Model.SummaryImageId,
+                        (reference) => { SummaryImage = reference; },
+                        (image) => image.Id
                     )
                 };
             }
         }
 
         public Content Model { get; private set; }
-        public Image SummaryImage { get; set; }
+        public Image SummaryImage;
     }
 
     public class Content {
