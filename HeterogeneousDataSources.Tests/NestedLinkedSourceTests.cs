@@ -25,7 +25,7 @@ namespace HeterogeneousDataSources.Tests {
             );
             var content = new NestedContent{
                 Id = 1,
-                PersonId = "john"
+                PersonId = 32
             };
             var contentLinkedSource = new NestedLinkedSource{ Model = content };
 
@@ -43,7 +43,7 @@ namespace HeterogeneousDataSources.Tests {
 
     public class NestedContent {
         public int Id { get; set; }
-        public string PersonId { get; set; }
+        public int PersonId { get; set; }
     }
 
     public class PersonLinkedSource

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources {
     public class LoadedReferenceContext {
-        private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
         public object State {
             get

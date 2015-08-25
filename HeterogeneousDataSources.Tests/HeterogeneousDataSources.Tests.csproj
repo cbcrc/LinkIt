@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeReferenceLoader.cs" />
     <Compile Include="ManyReferencesTests.cs">
       <SubType>Code</SubType>
     </Compile>
