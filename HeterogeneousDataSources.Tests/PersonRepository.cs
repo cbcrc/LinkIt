@@ -10,7 +10,8 @@ namespace HeterogeneousDataSources.Tests
             return ids
                 .Select(id => new Person {
                     Id = id, 
-                    Name = "name-" + id
+                    Name = "name-" + id,
+                    SummaryImageId = "person-img-" + id
                 })
                 .ToList();
         }
