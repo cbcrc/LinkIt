@@ -31,16 +31,16 @@ namespace HeterogeneousDataSources {
 
         #region Link
 
-        public void Link(object linkedSource, DataContext dataContext) {
+        public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext) {
             //stle: what should we do here? preconditions or defensive?
             if (!(linkedSource is TLinkedSource)) { throw new NotImplementedException(); }
 
-            Link((TLinkedSource)linkedSource, dataContext);
+            Link((TLinkedSource)linkedSource, loadedReferenceContext);
         }
 
-        public void Link(TLinkedSource linkedSource, DataContext dataContext) {
+        public void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
             var ids = GetLookupIds(linkedSource);
-            var reference = dataContext.GetOptionalReferences<TReference, TId>(ids);
+            var reference = loadedReferenceContext.GetOptionalReferences<TReference, TId>(ids);
             LinkAction(linkedSource, reference);
         }
 

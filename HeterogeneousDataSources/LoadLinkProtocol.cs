@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources {
 
         public TLinkedSource LoadLink<TLinkedSource>(TLinkedSource linkedSource)
         {
-            var dataContext = new DataContext();
+            var dataContext = new LoadedReferenceContext();
             Load(linkedSource, dataContext);
 
             Link(linkedSource, dataContext);
@@ -23,16 +23,16 @@ namespace HeterogeneousDataSources {
 
         private void Load(
             object linkedSource,
-            DataContext dataContext) 
+            LoadedReferenceContext loadedReferenceContext) 
         {
             foreach (var referenceTypeConfig in ReferenceTypeConfigs) {
-                referenceTypeConfig.LoadReferences(linkedSource, LoadLinkExpressions, dataContext);
+                referenceTypeConfig.LoadReferences(linkedSource, LoadLinkExpressions, loadedReferenceContext);
             }
         }
 
-        private void Link(object linkedSource, DataContext dataContext) {
+        private void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext) {
             foreach (var linkExpression in LoadLinkExpressions) {
-                linkExpression.Link(linkedSource, dataContext);
+                linkExpression.Link(linkedSource, loadedReferenceContext);
             }
         }
     }

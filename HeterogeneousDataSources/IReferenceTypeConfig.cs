@@ -4,6 +4,6 @@ namespace HeterogeneousDataSources
 {
     public interface IReferenceTypeConfig
     {
-        void LoadReferences(object linkedSource, List<ILoadLinkExpression> loadExpressions, DataContext dataContext);
+        void LoadReferences(object linkedSource, List<ILoadLinkExpression> loadExpressions, LoadedReferenceContext loadedReferenceContext);
     }
 }

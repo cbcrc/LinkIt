@@ -13,6 +13,10 @@ namespace HeterogeneousDataSources.Tests {
         public void LoadLink_NestedLinkedSource()
         {
             var loadLinkExpressions = new List<ILoadLinkExpression>{
+                    new LoadLinkExpression<PersonLinkedSource,Image, string>(
+                        linkedSource => linkedSource.Model.SummaryImageId,
+                        (linkedSource, reference) => linkedSource.SummaryImage = reference
+                    )
                 };
 
             var sut = new LoadLinkProtocol(

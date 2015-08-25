@@ -33,7 +33,7 @@ namespace HeterogeneousDataSources
             return _loadReferencesFunc(cleanedIds);
         }
 
-        public void LoadReferences(object linkedSource, List<ILoadLinkExpression> loadExpressions, DataContext dataContext)
+        public void LoadReferences(object linkedSource, List<ILoadLinkExpression> loadExpressions, LoadedReferenceContext loadedReferenceContext)
         {
             EnsureTIdIsUsedForLookupIds(loadExpressions);
 
@@ -47,7 +47,7 @@ namespace HeterogeneousDataSources
 
             var references = LoadReferencesFunc(cleanedIds);
 
-            dataContext.Append(references, GetReferenceIdFunc);
+            loadedReferenceContext.AddReferences(references, GetReferenceIdFunc);
         }
 
         private List<ILoadLinkExpression<TId>> GetLoadExpressionsOfTReference(List<ILoadLinkExpression> loadExpressions) {

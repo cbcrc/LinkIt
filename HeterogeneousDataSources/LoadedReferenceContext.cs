@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace HeterogeneousDataSources {
-    public class DataContext {
+    public class LoadedReferenceContext {
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType = new Dictionary<Type, object>();
 
         public object State {
@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        public void Append<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
+        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
             var tReference = typeof (TReference);
             if (_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
                 throw new InvalidOperationException(
@@ -33,10 +33,10 @@ namespace HeterogeneousDataSources {
 
         private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>() {
             var tReference = typeof (TReference);
-            if (_referenceDictionaryByReferenceType.ContainsKey(tReference) == false) {
+            if (!_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
                 throw new InvalidOperationException(
                     string.Format(
-                        "The type {0} is not supported by this data context.",
+                        "References of type {0} were not loaded.",
                         tReference.Name)
                 );
             }

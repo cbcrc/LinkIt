@@ -29,15 +29,15 @@ namespace HeterogeneousDataSources {
 
         #region Link
 
-        public void Link(object linkedSource, DataContext dataContext) {
+        public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext) {
             if (!(linkedSource is TLinkedSource)) { return; }
 
-            Link((TLinkedSource)linkedSource, dataContext);
+            Link((TLinkedSource)linkedSource, loadedReferenceContext);
         }
 
-        private void Link(TLinkedSource linkedSource, DataContext dataContext) {
+        private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
             var id = GetLookupIdFunc(linkedSource);
-            var reference = dataContext.GetOptionalReference<TReference, TId>(id);
+            var reference = loadedReferenceContext.GetOptionalReference<TReference, TId>(id);
             LinkAction(linkedSource, reference);
         }
 
