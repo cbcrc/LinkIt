@@ -2,14 +2,14 @@
 
 namespace HeterogeneousDataSources {
     public class LoadLinkProtocol {
-        public LoadLinkProtocol(List<IReferenceTypeConfig> referenceTypeConfigs, List<ILoadLinkExpression> loadLinkExpressions)
-        {
-            ReferenceTypeConfigs = referenceTypeConfigs;
-            LoadLinkExpressions = loadLinkExpressions;
-        }
+        private readonly IReferenceLoader _referenceLoader;
+        private readonly List<ILoadLinkExpression> _loadLinkExpressions;
 
-        private List<IReferenceTypeConfig> ReferenceTypeConfigs { get; set; }
-        private List<ILoadLinkExpression> LoadLinkExpressions { get; set; }
+        public LoadLinkProtocol(IReferenceLoader referenceLoader, List<ILoadLinkExpression> loadLinkExpressions)
+        {
+            _referenceLoader = referenceLoader;
+            _loadLinkExpressions = loadLinkExpressions;
+        }
 
         public TLinkedSource LoadLink<TLinkedSource>(TLinkedSource linkedSource)
         {
@@ -23,15 +23,22 @@ namespace HeterogeneousDataSources {
 
         private void Load(
             object linkedSource,
-            LoadedReferenceContext loadedReferenceContext) 
+            LoadedReferenceContext loadedReferenceContext)
         {
-            foreach (var referenceTypeConfig in ReferenceTypeConfigs) {
-                referenceTypeConfig.LoadReferences(linkedSource, LoadLinkExpressions, loadedReferenceContext);
+            var lookupIdContext = new LookupIdContext();
+
+            foreach (var loadLinkExpression in _loadLinkExpressions)
+            {
+                loadLinkExpression.AddLookupIds(linkedSource, lookupIdContext);
             }
+
+            _referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
+
+            _referenceLoader.Dispose();
         }
 
         private void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext) {
-            foreach (var linkExpression in LoadLinkExpressions) {
+            foreach (var linkExpression in _loadLinkExpressions) {
                 linkExpression.Link(linkedSource, loadedReferenceContext);
             }
         }

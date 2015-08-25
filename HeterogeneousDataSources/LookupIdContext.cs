@@ -20,7 +20,7 @@ namespace HeterogeneousDataSources
                 );
             }
 
-            _lookupIdsByReferenceType.Add(tReference, CleanedIds(lookupIds));
+            _lookupIdsByReferenceType.Add(tReference, GetCleanedIds(lookupIds));
         }
 
         public List<Type> GetReferenceTypes() {
@@ -44,7 +44,7 @@ namespace HeterogeneousDataSources
             return casted.ToList();
         }
 
-        private static List<TId> CleanedIds<TId>(List<TId> lookupIds) {
+        private static List<TId> GetCleanedIds<TId>(List<TId> lookupIds) {
             return lookupIds
                 .Where(id => id != null)
                 .Distinct()

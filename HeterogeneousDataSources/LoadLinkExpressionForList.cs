@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources {
-    public class LoadLinkExpressionForList<TLinkedSource, TReference, TId>: ILoadLinkExpression<TId>, ILoadLinkExpression
+    public class LoadLinkExpressionForList<TLinkedSource, TReference, TId>: ILoadLinkExpression
     {
         public LoadLinkExpressionForList(
             Func<TLinkedSource, List<TId>> getLookupIdsFunc, 
@@ -13,11 +13,11 @@ namespace HeterogeneousDataSources {
         }
 
         #region Load
-        public List<TId> GetLookupIds(object linkedSource) {
-            //stle: what should we do here? preconditions or defensive?
-            if (!(linkedSource is TLinkedSource)) { throw new NotImplementedException(); }
+        public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext) {
+            if (!(linkedSource is TLinkedSource)) { return; }
 
-            return GetLookupIds((TLinkedSource)linkedSource);
+            var lookupIds = GetLookupIds((TLinkedSource)linkedSource);
+            lookupIdContext.Add<TReference, TId>(lookupIds);
         }
 
         public List<TId> GetLookupIds(TLinkedSource linkedSource) {

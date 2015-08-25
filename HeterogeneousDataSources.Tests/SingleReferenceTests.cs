@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
@@ -19,7 +20,7 @@ namespace HeterogeneousDataSources.Tests {
                     )
                 };
             var sut = new LoadLinkProtocol(
-                TestUtil.ReferenceTypeConfigs,
+                new FakeReferenceLoader(), 
                 loadLinkExpressions
             );
             var content = new SingleReferenceContent{

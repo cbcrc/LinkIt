@@ -1,4 +1,4 @@
-﻿namespace HeterogeneousDataSources.Tests
+﻿namespace HeterogeneousDataSources.Tests.Shared
 {
     public class Image {
         public string Id { get; set; }

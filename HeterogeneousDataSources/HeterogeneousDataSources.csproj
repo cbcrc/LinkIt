@@ -41,15 +41,12 @@
   <ItemGroup>
     <Compile Include="IReferenceLoader.cs" />
     <Compile Include="LoadedReferenceContext.cs" />
-    <Compile Include="ILoadExpression.cs" />
     <Compile Include="ILoadLinkExpression.cs" />
-    <Compile Include="IReferenceTypeConfig.cs" />
     <Compile Include="LoadLinkExpressionForList.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="LookupIdContext.cs" />
-    <Compile Include="ReferenceTypeConfig.cs" />
     <Compile Include="LoadLinkExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

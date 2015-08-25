@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources {
-    public class LoadLinkExpression<TLinkedSource, TReference, TId> : ILoadLinkExpression<TId>, ILoadLinkExpression
+    public class LoadLinkExpression<TLinkedSource, TReference, TId> : ILoadLinkExpression
     {
         public LoadLinkExpression(Func<TLinkedSource, TId> getLookupIdFunc, Action<TLinkedSource, TReference> linkAction)
         {
@@ -11,17 +11,17 @@ namespace HeterogeneousDataSources {
         }
 
         #region Load
-        public List<TId> GetLookupIds(object linkedSource) {
-            if (!(linkedSource is TLinkedSource)) { return new List<TId>(); }
-
-            return GetLookupIds((TLinkedSource) linkedSource);
+        public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext) {
+            if (!(linkedSource is TLinkedSource)) { return; }
+            
+            var lookupIds = GetLookupIds((TLinkedSource)linkedSource);
+            lookupIdContext.Add<TReference, TId>(lookupIds);
         }
 
         private List<TId> GetLookupIds(TLinkedSource linkedSource) {
             return new List<TId> { GetLookupIdFunc(linkedSource) };
         }
         private Func<TLinkedSource, TId> GetLookupIdFunc { get; set; }
-
 
         public Type ReferenceType { get { return typeof(TReference); } }
 

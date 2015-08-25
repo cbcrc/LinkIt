@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HeterogeneousDataSources.Tests {
+namespace HeterogeneousDataSources.Tests.Shared {
     public class FakeReferenceLoader:IReferenceLoader
     {
         private readonly Dictionary<Type, Action<LookupIdContext, LoadedReferenceContext>> _loadReferencesActions;
@@ -47,5 +47,11 @@ namespace HeterogeneousDataSources.Tests {
             loadedReferenceContext.AddReferences(references, reference => reference.Id);
         }
 
+        public bool IsDisposed { get; private set; }
+
+        public void Dispose()
+        {
+            IsDisposed = true;
+        }
     }
 }

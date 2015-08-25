@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests {
