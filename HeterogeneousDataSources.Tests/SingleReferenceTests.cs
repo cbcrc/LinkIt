@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
@@ -10,61 +11,65 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class SingleReferenceTests
     {
+        private FakeReferenceLoader _referenceLoader;
+
         [Test]
         public void LoadLink_SingleReference()
         {
-            var loadLinkExpressions = new List<ILoadLinkExpression>{
-                    new LoadLinkExpression<SingleReferenceLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference
-                    )
-                };
-            var sut = new LoadLinkProtocol(
-                new FakeReferenceLoader(), 
-                loadLinkExpressions
-            );
-            var content = new SingleReferenceContent{
-                Id = 1,
-                SummaryImageId = "a"
-            };
-            var contentLinkedSource = new SingleReferenceLinkedSource(content);
-
-            sut.LoadLink(contentLinkedSource);
+            var contentLinkedSource = SetupAndAct();
 
             ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
         }
 
         [Test]
         public void LoadLink_ShouldDisposeLoader() {
-            var loadLinkExpressions = new List<ILoadLinkExpression>();
+            SetupAndAct();
 
-            var referenceLoader = new FakeReferenceLoader();
+            Assert.That(_referenceLoader.IsDisposed, Is.True);
+        }
+
+        private SingleReferenceLinkedSource SetupAndAct()
+        {
+            var loadLinkExpressions = new List<ILoadLinkExpression>
+            {
+                new LoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    (linkedSource, reference) => linkedSource.SummaryImage = reference
+                )
+            };
+
+            var customConfig = CreateCustomReferenceTypeConfig(
+                new SingleReferenceContent{
+                    Id = 1,
+                    SummaryImageId = "a"
+                },
+                reference => reference.Id
+            );
+            _referenceLoader = new FakeReferenceLoader(customConfig);
             var sut = new LoadLinkProtocol(
-                referenceLoader,
+                _referenceLoader,
                 loadLinkExpressions
             );
-            var content = new SingleReferenceContent {
-                Id = 1,
-                SummaryImageId = "a"
-            };
-            var contentLinkedSource = new SingleReferenceLinkedSource(content);
 
-            sut.LoadLink(contentLinkedSource);
+            var contentLinkedSource = sut.LoadLink<SingleReferenceLinkedSource, int, SingleReferenceContent>(1);
+            return contentLinkedSource;
+        }
 
-            Assert.That(referenceLoader.IsDisposed, Is.True);
+        public IReferenceTypeConfig CreateCustomReferenceTypeConfig<TReference, TId>(TReference fixedValue, Func<TReference, TId> getReferenceIdFunc)
+        {
+            return new ReferenceTypeConfig<TReference, TId>(
+                ids => ids.Select(id=>fixedValue).ToList(),
+                getReferenceIdFunc
+            );
         }
     }
 
 
-    public class SingleReferenceLinkedSource {
+    public class SingleReferenceLinkedSource: ILinkedSource<SingleReferenceContent>
+    {
         //stle: two steps loading sucks!
-        public SingleReferenceLinkedSource(SingleReferenceContent model)
-        {
-            Model = model;
-        }
-
-        public SingleReferenceContent Model { get; private set; }
-        public Image SummaryImage;
+        public SingleReferenceContent Model { get; set; }
+        public Image SummaryImage{ get; set; }
     }
 
     public class SingleReferenceContent {
