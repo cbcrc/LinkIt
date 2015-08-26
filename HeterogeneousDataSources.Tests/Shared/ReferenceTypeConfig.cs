@@ -5,6 +5,7 @@ namespace HeterogeneousDataSources.Tests.Shared
 {
     public class ReferenceTypeConfig<TReference, TId> : IReferenceTypeConfig {
         private readonly Func<List<TId>, List<TReference>> _loadReferencesFunc;
+        //the necessity of this function could be generalized
         private readonly Func<TReference, TId> _getReferenceIdFunc;
 
         public ReferenceTypeConfig(Func<List<TId>, List<TReference>> loadReferencesFunc, Func<TReference, TId> getReferenceIdFunc, string requiredConnection = null)
