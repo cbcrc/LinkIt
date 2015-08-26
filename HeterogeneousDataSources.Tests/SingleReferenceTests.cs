@@ -33,6 +33,26 @@ namespace HeterogeneousDataSources.Tests {
 
             ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
         }
+
+        [Test]
+        public void LoadLink_ShouldDisposeLoader() {
+            var loadLinkExpressions = new List<ILoadLinkExpression>();
+
+            var referenceLoader = new FakeReferenceLoader();
+            var sut = new LoadLinkProtocol(
+                referenceLoader,
+                loadLinkExpressions
+            );
+            var content = new SingleReferenceContent {
+                Id = 1,
+                SummaryImageId = "a"
+            };
+            var contentLinkedSource = new SingleReferenceLinkedSource(content);
+
+            sut.LoadLink(contentLinkedSource);
+
+            Assert.That(referenceLoader.IsDisposed, Is.True);
+        }
     }
 
 
