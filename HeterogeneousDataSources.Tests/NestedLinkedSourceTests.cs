@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
@@ -12,26 +13,23 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void LoadLink_NestedLinkedSource()
         {
-            var loadLinkExpressions = new List<ILoadLinkExpression>{
+            var sut = TestHelper.CreateLoadLinkProtocol(
+                loadLinkExpressions: new List<ILoadLinkExpression>{
                     new LoadLinkExpression<PersonLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
                     )
-                };
-
-            var sut = new LoadLinkProtocol(
-                TestUtil.ReferenceTypeConfigs,
-                loadLinkExpressions
+                },
+                fixedValue: new NestedContent {
+                    Id = 1,
+                    PersonId = 32
+                },
+                getReferenceIdFunc: reference => reference.Id
             );
-            var content = new NestedContent{
-                Id = 1,
-                PersonId = 32
-            };
-            var contentLinkedSource = new NestedLinkedSource{ Model = content };
 
-            sut.LoadLink(contentLinkedSource);
+            var actual = sut.LoadLink<SingleReferenceLinkedSource, int, SingleReferenceContent>(1);
 
-            ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
+            ApprovalsExt.VerifyPublicProperties(actual);
         }
     }
 

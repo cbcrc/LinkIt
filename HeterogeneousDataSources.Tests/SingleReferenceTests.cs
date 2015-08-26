@@ -11,59 +11,28 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class SingleReferenceTests
     {
-        private FakeReferenceLoader _referenceLoader;
-
         [Test]
         public void LoadLink_SingleReference()
         {
-            var contentLinkedSource = SetupAndAct();
-
-            ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
-        }
-
-        [Test]
-        public void LoadLink_ShouldDisposeLoader() {
-            SetupAndAct();
-
-            Assert.That(_referenceLoader.IsDisposed, Is.True);
-        }
-
-        private SingleReferenceLinkedSource SetupAndAct()
-        {
-            var loadLinkExpressions = new List<ILoadLinkExpression>
-            {
-                new LoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
-                    linkedSource => linkedSource.Model.SummaryImageId,
-                    (linkedSource, reference) => linkedSource.SummaryImage = reference
-                )
-            };
-
-            var customConfig = CreateCustomReferenceTypeConfig(
-                new SingleReferenceContent{
+            var sut = TestHelper.CreateLoadLinkProtocol(
+                loadLinkExpressions: new List<ILoadLinkExpression>{
+                                new LoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
+                                    linkedSource => linkedSource.Model.SummaryImageId,
+                                    (linkedSource, reference) => linkedSource.SummaryImage = reference
+                                )
+                            },
+                fixedValue: new SingleReferenceContent {
                     Id = 1,
                     SummaryImageId = "a"
                 },
-                reference => reference.Id
-            );
-            _referenceLoader = new FakeReferenceLoader(customConfig);
-            var sut = new LoadLinkProtocol(
-                _referenceLoader,
-                loadLinkExpressions
+                getReferenceIdFunc: reference => reference.Id
             );
 
-            var contentLinkedSource = sut.LoadLink<SingleReferenceLinkedSource, int, SingleReferenceContent>(1);
-            return contentLinkedSource;
-        }
+            var actual = sut.LoadLink<SingleReferenceLinkedSource, int, SingleReferenceContent>(1);
 
-        public IReferenceTypeConfig CreateCustomReferenceTypeConfig<TReference, TId>(TReference fixedValue, Func<TReference, TId> getReferenceIdFunc)
-        {
-            return new ReferenceTypeConfig<TReference, TId>(
-                ids => ids.Select(id=>fixedValue).ToList(),
-                getReferenceIdFunc
-            );
+            ApprovalsExt.VerifyPublicProperties(actual);
         }
     }
-
 
     public class SingleReferenceLinkedSource: ILinkedSource<SingleReferenceContent>
     {
