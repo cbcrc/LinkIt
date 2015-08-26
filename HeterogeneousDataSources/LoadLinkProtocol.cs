@@ -11,33 +11,54 @@ namespace HeterogeneousDataSources {
             _loadLinkExpressions = loadLinkExpressions;
         }
 
-        public TLinkedSource LoadLink<TLinkedSource>(TLinkedSource linkedSource)
+        public TLinkedSource LoadLink<TLinkedSource,TId, TModel>(TId modelId)
+            where TLinkedSource : ILinkedSource<TModel>, new() 
         {
-            var dataContext = new LoadedReferenceContext();
-            Load(linkedSource, dataContext);
+            var loadedReferenceContext = Load<TLinkedSource, TId, TModel>(modelId);
 
-            Link(linkedSource, dataContext);
+            var rootLinkedSource = GetRootLinkedSource<TLinkedSource, TId, TModel>(modelId, loadedReferenceContext);
+            LinkReferences(rootLinkedSource, loadedReferenceContext);
 
-            return linkedSource;
+            return rootLinkedSource;
         }
 
-        private void Load(
-            object linkedSource,
-            LoadedReferenceContext loadedReferenceContext)
+        private LoadedReferenceContext Load<TLinkedSource,TId, TModel>(TId modelId)
+            where TLinkedSource :ILinkedSource<TModel>, new() 
         {
-            var lookupIdContext = new LookupIdContext();
+            var loadedReferenceContext = new LoadedReferenceContext();
+            
+            var lookupIdContextLevel0 = new LookupIdContext();
+            lookupIdContextLevel0.Add<TModel, TId>(new List<TId> { modelId });
 
-            foreach (var loadLinkExpression in _loadLinkExpressions)
+            using (_referenceLoader)
             {
-                loadLinkExpression.AddLookupIds(linkedSource, lookupIdContext);
+                _referenceLoader.LoadReferences(lookupIdContextLevel0, loadedReferenceContext);
+
+                var rootLinkedSource = GetRootLinkedSource<TLinkedSource, TId, TModel>(modelId, loadedReferenceContext);
+
+                var lookupIdContextLevel1 = new LookupIdContext();
+                foreach (var loadLinkExpression in _loadLinkExpressions)
+                {
+                    loadLinkExpression.AddLookupIds(rootLinkedSource, lookupIdContextLevel1);
+                }
+                _referenceLoader.LoadReferences(lookupIdContextLevel1, loadedReferenceContext);
             }
-
-            _referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
-
-            _referenceLoader.Dispose();
+            return loadedReferenceContext;
         }
 
-        private void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext) {
+        private static TLinkedSource GetRootLinkedSource<TLinkedSource, TId, TModel>(TId modelId,
+            LoadedReferenceContext loadedReferenceContext) where TLinkedSource : ILinkedSource<TModel>, new()
+        {
+            var model = loadedReferenceContext.GetOptionalReference<TModel, TId>(modelId);
+
+            //what if model is null
+
+            var rootLinkedSource = new TLinkedSource();
+            rootLinkedSource.Model = model;
+            return rootLinkedSource;
+        }
+
+        private void LinkReferences(object linkedSource, LoadedReferenceContext loadedReferenceContext) {
             foreach (var linkExpression in _loadLinkExpressions) {
                 linkExpression.Link(linkedSource, loadedReferenceContext);
             }

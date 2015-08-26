@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILinkedSource.cs" />
     <Compile Include="IReferenceLoader.cs" />
     <Compile Include="LoadedReferenceContext.cs" />
     <Compile Include="ILoadLinkExpression.cs" />
