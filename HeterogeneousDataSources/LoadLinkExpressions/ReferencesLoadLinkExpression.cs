@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HeterogeneousDataSources {
+namespace HeterogeneousDataSources.LoadLinkExpressions {
     public class ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>
-        : LoadLinkExpressionAbs<TLinkedSource, TReference, TId>, ILoadLinkExpression
+        : LoadLinkExpression<TLinkedSource, TReference, TId>, ILoadLinkExpression
     {
         private readonly Func<TLinkedSource, List<TId>> _getLookupIdsFunc;
         private readonly Action<TLinkedSource, List<TReference>> _linkAction;

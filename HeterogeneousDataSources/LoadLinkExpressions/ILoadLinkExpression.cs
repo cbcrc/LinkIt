@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LoadLinkExpressions
 {
     public interface ILoadLinkExpression
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;

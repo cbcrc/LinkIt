@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 

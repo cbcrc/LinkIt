@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources {
+namespace HeterogeneousDataSources.LoadLinkExpressions {
     public class NestedLinkedSourceLoadLinkExpression<TLinkedSource, TNestedLinkedSource, TNestedLinkedSourceModel, TId>
-        : LoadLinkExpressionAbs<TLinkedSource, TNestedLinkedSourceModel, TId>, ILoadLinkExpression
+        : LoadLinkExpression<TLinkedSource, TNestedLinkedSourceModel, TId>, ILoadLinkExpression
         where TNestedLinkedSource : ILinkedSource<TNestedLinkedSourceModel>, new() 
     {
         private readonly Func<TLinkedSource, TId> _getLookupIdFunc;

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LoadLinkExpressions
 {
-    public abstract class LoadLinkExpressionAbs<TLinkedSource, TReference, TId> : ILoadLinkExpression
+    public abstract class LoadLinkExpression<TLinkedSource, TReference, TId> : ILoadLinkExpression
     {
-        protected LoadLinkExpressionAbs()
+        protected LoadLinkExpression()
         {
             ReferenceType = typeof (TReference);
         }
