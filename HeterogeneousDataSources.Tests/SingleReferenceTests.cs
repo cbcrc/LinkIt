@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
@@ -16,22 +15,71 @@ namespace HeterogeneousDataSources.Tests {
         public void LoadLink_SingleReference()
         {
             var sut = TestHelper.CreateLoadLinkProtocol(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                                new ReferenceLoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
-                                    linkedSource => linkedSource.Model.SummaryImageId,
-                                    (linkedSource, reference) => linkedSource.SummaryImage = reference
-                                )
-                            },
+                loadLinkExpressions: GetLoadLinkExpressions(),
                 fixedValue: new SingleReferenceContent {
-                    Id = 1,
+                    Id = "1",
                     SummaryImageId = "a"
                 },
-                getReferenceIdFunc: reference => reference.Id
-            );
+                getReferenceIdFunc: GetReferenceIdFunc(),
+                fakeReferenceTypeForLoadingLevel: FakeReferenceTypeForLoadingLevel());
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource, int, SingleReferenceContent>(1);
+            var actual = sut.LoadLink<SingleReferenceLinkedSource, string, SingleReferenceContent>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        [Test]
+        public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
+            var sut = TestHelper.CreateLoadLinkProtocol(
+                loadLinkExpressions: GetLoadLinkExpressions(),
+                fixedValue: new SingleReferenceContent {
+                    Id = "1",
+                    SummaryImageId = null
+                },
+                getReferenceIdFunc: GetReferenceIdFunc(), 
+                fakeReferenceTypeForLoadingLevel: FakeReferenceTypeForLoadingLevel());
+
+            var actual = sut.LoadLink<SingleReferenceLinkedSource, string, SingleReferenceContent>("1");
+
+            Assert.That(actual.SummaryImage, Is.Null);
+        }
+
+        [Test]
+        public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull() {
+            var sut = TestHelper.CreateLoadLinkProtocol(
+                loadLinkExpressions: GetLoadLinkExpressions(),
+                fixedValue: new SingleReferenceContent {
+                    Id = "1",
+                    SummaryImageId = "cannot-be-resolved"
+                },
+                getReferenceIdFunc: GetReferenceIdFunc(),
+                fakeReferenceTypeForLoadingLevel: FakeReferenceTypeForLoadingLevel());
+
+            var actual = sut.LoadLink<SingleReferenceLinkedSource, string, SingleReferenceContent>("1");
+
+            Assert.That(actual.SummaryImage, Is.Null);
+        }
+
+        private static List<Type>[] FakeReferenceTypeForLoadingLevel() {
+            return new[] {
+                new List<Type>{typeof(SingleReferenceContent)},
+                new List<Type>{typeof(Image)},
+            };
+        }
+
+        private static List<ILoadLinkExpression> GetLoadLinkExpressions()
+        {
+            return new List<ILoadLinkExpression>{
+                new ReferenceLoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    (linkedSource, reference) => linkedSource.SummaryImage = reference
+                    )
+            };
+        }
+
+        private static Func<SingleReferenceContent, string> GetReferenceIdFunc()
+        {
+            return reference => reference.Id;
         }
     }
 
@@ -43,7 +91,7 @@ namespace HeterogeneousDataSources.Tests {
     }
 
     public class SingleReferenceContent {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string SummaryImageId { get; set; }
     }
 }

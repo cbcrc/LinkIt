@@ -33,6 +33,9 @@ namespace HeterogeneousDataSources {
         }
 
         public void AddLinkedSourceToBeBuilt(object linkedSource){
+            //null linked source does not have to be built
+            if (linkedSource == null) { return; }
+
             _linkedSourcesToBeBuilt.Add(linkedSource);
         }
         
@@ -53,18 +56,11 @@ namespace HeterogeneousDataSources {
             return (Dictionary<TId, TReference>)_referenceDictionaryByReferenceType[tReference];
         }
 
-
-        public TReference GetOptionalReference<TReference, TId>(TId id) {
-            var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
-            if (referenceDictionnary.ContainsKey(id) == false) { return default(TReference); }
-
-            return referenceDictionnary[id];
-        }
-
         public List<TReference> GetOptionalReferences<TReference, TId>(List<TId> ids)
         {
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
             return ids
+                .DistinctWithoutNull()
                 .Where(referenceDictionnary.ContainsKey)
                 .Select(id => referenceDictionnary[id])
                 .ToList();

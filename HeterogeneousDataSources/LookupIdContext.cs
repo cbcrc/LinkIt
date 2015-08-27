@@ -39,15 +39,7 @@ namespace HeterogeneousDataSources
             }
 
             var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
-            return GetCleanedIds(casted);
-        }
-
-        //stle: may have a performance impact, if called too often
-        private static List<TId> GetCleanedIds<TId>(List<TId> lookupIds) {
-            return lookupIds
-                .Where(id => id != null)
-                .Distinct()
-                .ToList();
+            return casted.DistinctWithoutNull();
         }
     }
 }

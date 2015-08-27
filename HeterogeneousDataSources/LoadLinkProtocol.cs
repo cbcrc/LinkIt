@@ -21,7 +21,7 @@ namespace HeterogeneousDataSources {
             LinkReferences(loadedReferenceContext);
 
             return (TLinkedSource)loadedReferenceContext.LinkedSourcesToBeBuilt
-                .Single(linkedSource => linkedSource is TLinkedSource);
+                .SingleOrDefault(linkedSource => linkedSource is TLinkedSource);
         }
 
         private LoadedReferenceContext Load<TLinkedSource,TId, TModel>(TId modelId)
@@ -90,13 +90,14 @@ namespace HeterogeneousDataSources {
         private static TLinkedSource CreateRootLinkedSource<TLinkedSource, TId, TModel>(TId modelId,
             LoadedReferenceContext loadedReferenceContext) where TLinkedSource : ILinkedSource<TModel>, new()
         {
-            var model = loadedReferenceContext.GetOptionalReference<TModel, TId>(modelId);
+            var models = loadedReferenceContext.GetOptionalReferences<TModel, TId>(new List<TId>{modelId});
+
+            var model = models.SingleOrDefault();
+            //stle: constraint TLinkedSource to class and use null
+            if (model == null) { return default(TLinkedSource); }
 
             //what if model is null
-
-            var rootLinkedSource = new TLinkedSource();
-            rootLinkedSource.Model = model;
-            return rootLinkedSource;
+            return new TLinkedSource {Model = model};
         }
     }
 }

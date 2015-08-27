@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
@@ -19,18 +20,22 @@ namespace HeterogeneousDataSources.Tests {
                     new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, int>(
                         linkedSource => linkedSource.Model.PersonId,
                         (linkedSource, reference) => linkedSource.Person = reference
-                    ),
+                        ),
                     new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
-                    )
+                        )
                 },
                 fixedValue: new NestedContent {
                     Id = 1,
                     PersonId = 32
                 },
-                getReferenceIdFunc: reference => reference.Id
-            );
+                getReferenceIdFunc: reference => reference.Id,
+                fakeReferenceTypeForLoadingLevel: new[] {
+                        new List<Type>{typeof(NestedContent)},
+                        new List<Type>{typeof(Person)},
+                        new List<Type>{typeof(Image)},
+                });
 
             var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
 

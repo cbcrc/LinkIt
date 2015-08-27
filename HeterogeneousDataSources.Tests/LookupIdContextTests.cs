@@ -37,16 +37,11 @@ namespace HeterogeneousDataSources.Tests {
         }
 
         [Test]
-        public void Add_SameReferenceTypeTwice_ShouldThrow() {
-            _sut.Add<Image, string>(new List<string> {});
+        public void Add_SameReferenceTypeTwice_ShouldMerge() {
+            _sut.Add<Image, string>(new List<string> { "a" });
+            _sut.Add<Image, string>(new List<string> { "b" });
 
-            TestDelegate act =
-                () => _sut.Add<Image, string>(new List<string> {});
-
-            Assert.That(
-                act, 
-                Throws.InstanceOf<InvalidOperationException>()
-            );
+            Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
         }
 
     }

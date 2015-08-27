@@ -5,10 +5,7 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources.Tests.Shared {
     public static class TestHelper {
-        public static LoadLinkProtocol CreateLoadLinkProtocol<TReference, TId>(
-            List<ILoadLinkExpression> loadLinkExpressions,
-            TReference fixedValue,
-            Func<TReference, TId> getReferenceIdFunc) 
+        public static LoadLinkProtocol CreateLoadLinkProtocol<TReference, TId>(List<ILoadLinkExpression> loadLinkExpressions, TReference fixedValue, Func<TReference, TId> getReferenceIdFunc, List<Type>[] fakeReferenceTypeForLoadingLevel) 
         {
             var customConfig = CreateCustomReferenceTypeConfig(
                 fixedValue,
@@ -20,12 +17,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
                 referenceLoader,
                 new LoadLinkConfig(
                     loadLinkExpressions,
-                    fakeReferenceTypeForLoadingLevel: new[]
-                    {
-                        new List<Type>{typeof(NestedContent)},
-                        new List<Type>{typeof(Person)},
-                        new List<Type>{typeof(Image)},
-                    }
+                    fakeReferenceTypeForLoadingLevel 
                 )
             );
         }
