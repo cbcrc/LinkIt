@@ -1,9 +1,10 @@
 ﻿{
   "model": {
     "id": 1,
-    "personId": 32
+    "authorDetailId": 32,
+    "clientSummaryId": 33
   },
-  "person": {
+  "authorDetail": {
     "model": {
       "id": 32,
       "name": "name-32",
@@ -13,5 +14,10 @@
       "id": "person-img-32",
       "alt": "alt-person-img-32"
     }
+  },
+  "clientSummary": {
+    "id": 33,
+    "name": "name-33",
+    "summaryImageId": "person-img-33"
   }
 }
