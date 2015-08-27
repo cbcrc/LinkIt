@@ -18,7 +18,15 @@ namespace HeterogeneousDataSources.Tests.Shared {
 
             return new LoadLinkProtocol(
                 referenceLoader,
-                loadLinkExpressions
+                new LoadLinkConfig(
+                    loadLinkExpressions,
+                    fakeReferenceTypeForLoadingLevel: new[]
+                    {
+                        new List<Type>{typeof(NestedContent)},
+                        new List<Type>{typeof(Person)},
+                        new List<Type>{typeof(Image)},
+                    }
+                )
             );
         }
 

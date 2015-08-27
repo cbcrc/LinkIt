@@ -16,7 +16,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         #region Load
         public void AddLookupIds(List<object> linkedSources, LookupIdContext lookupIdContext) {
-            var lookupIds = GetLinkedSourceOfTLinkedSource(linkedSources)
+            var lookupIds = GetLinkedSourcesOfTLinkedSource(linkedSources)
                 .SelectMany(GetLookupIds)
                 .ToList();
 
@@ -26,7 +26,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             lookupIdContext.Add<TReference, TId>(lookupIds);
         }
 
-        private List<TLinkedSource> GetLinkedSourceOfTLinkedSource(List<object> linkedSources)
+        private List<TLinkedSource> GetLinkedSourcesOfTLinkedSource(List<object> linkedSources)
         {
             return linkedSources
                 //stle: eventully throw instead of skipping, because of easier debuging and little performance improvement
@@ -40,8 +40,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         #endregion
 
         #region Link
-        public void Link(List<object> linkedSources, LoadedReferenceContext loadedReferenceContext) {
-            foreach (var linkedSource in GetLinkedSourceOfTLinkedSource(linkedSources))
+        public void Link(LoadedReferenceContext loadedReferenceContext)
+        {
+            var linkedSources = GetLinkedSourcesOfTLinkedSource(loadedReferenceContext.LinkedSourcesToBeBuilt);
+            foreach (var linkedSource in linkedSources)
             {
                 Link(linkedSource, loadedReferenceContext);
             }

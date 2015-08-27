@@ -60,7 +60,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoadLinkProtocol_LifeCycleTests.cs" />
     <Compile Include="NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -74,9 +73,6 @@
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
     <Compile Include="Shared\TestHelper.cs" />
-    <Compile Include="SingleReferenceTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,24 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
     public class LoadLinkProtocol {
         private readonly IReferenceLoader _referenceLoader;
-        private readonly List<ILoadLinkExpression> _loadLinkExpressions;
-        private readonly List<ILoadLinkExpression> _nestedLinkedSourceLoadLinkExpressions;
-        private readonly List<ILoadLinkExpression> _referenceLoadLinkExpressions;
+        private readonly LoadLinkConfig _config;
 
-        public LoadLinkProtocol(IReferenceLoader referenceLoader, List<ILoadLinkExpression> loadLinkExpressions)
+        public LoadLinkProtocol(IReferenceLoader referenceLoader, LoadLinkConfig config)
         {
             _referenceLoader = referenceLoader;
-            _loadLinkExpressions = loadLinkExpressions;
-            _nestedLinkedSourceLoadLinkExpressions = loadLinkExpressions
-                .Where(loadLinkExpression => loadLinkExpression.IsNestedLinkedSourceLoadLinkExpression)
-                .ToList();
-            _referenceLoadLinkExpressions = loadLinkExpressions
-                .Where(loadLinkExpression => !loadLinkExpression.IsNestedLinkedSourceLoadLinkExpression)
-                .ToList();
+            _config = config;
         }
 
         public TLinkedSource LoadLink<TLinkedSource,TId, TModel>(TId modelId)
@@ -47,15 +40,26 @@ namespace HeterogeneousDataSources {
                 var rootLinkedSource = CreateRootLinkedSource<TLinkedSource, TId, TModel>(modelId, loadedReferenceContext);
                 loadedReferenceContext.AddLinkedSourceToBeBuilt(rootLinkedSource);
 
-                LoadNextNestingLevel(loadedReferenceContext);
+                var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TLinkedSource>();
+                //stle: 1 to skip root for now
+                for (int loadingLevel = 1; loadingLevel < numberOfLoadingLevel; loadingLevel++)
+                {
+                    var referenceTypesToBeLoaded = _config.GetReferenceTypeForLoadingLevel<TLinkedSource>(loadingLevel);
+                    LoadNextNestingLevel(loadedReferenceContext, referenceTypesToBeLoaded);
+                }
             }
             return loadedReferenceContext;
         }
 
-        private void LoadNextNestingLevel(LoadedReferenceContext loadedReferenceContext)
+        private void LoadNextNestingLevel(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypesToBeLoaded)
         {
             var lookupIdContext = new LookupIdContext();
-            foreach (var loadLinkExpression in _loadLinkExpressions)
+
+            var loadLinkExpressions = _config.AllLoadLinkExpressions
+                .Where(loadLinkExpression => referenceTypesToBeLoaded.Contains(loadLinkExpression.ReferenceType))
+                .ToList();
+
+            foreach (var loadLinkExpression in loadLinkExpressions)
             {
                 loadLinkExpression.AddLookupIds(
                     loadedReferenceContext.LinkedSourcesToBeBuilt, 
@@ -67,11 +71,8 @@ namespace HeterogeneousDataSources {
         }
 
         private void LinkNestedLinkedSource(LoadedReferenceContext loadedReferenceContext) {
-            foreach (var linkExpression in _nestedLinkedSourceLoadLinkExpressions) {
-                linkExpression.Link(
-                    loadedReferenceContext.LinkedSourcesToBeBuilt, //stle: hum remove one arg?
-                    loadedReferenceContext
-                );
+            foreach (var linkExpression in _config.NestedLinkedSourceLoadLinkExpressions) {
+                linkExpression.Link(loadedReferenceContext);
             }
         }
 
@@ -89,11 +90,8 @@ namespace HeterogeneousDataSources {
         }
 
         private void LinkReferences(LoadedReferenceContext loadedReferenceContext) {
-            foreach (var linkExpression in _referenceLoadLinkExpressions) {
-                linkExpression.Link(
-                    loadedReferenceContext.LinkedSourcesToBeBuilt,//stle: hum remove one arg?
-                    loadedReferenceContext
-                );
+            foreach (var linkExpression in _config.ReferenceLoadLinkExpressions) {
+                linkExpression.Link(loadedReferenceContext);
             }
         }
     }

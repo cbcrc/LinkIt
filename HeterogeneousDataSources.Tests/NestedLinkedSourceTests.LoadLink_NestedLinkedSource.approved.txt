@@ -3,5 +3,15 @@
     "id": 1,
     "personId": 32
   },
-  "person": null
+  "person": {
+    "model": {
+      "id": 32,
+      "name": "name-32",
+      "summaryImageId": "person-img-32"
+    },
+    "summaryImage": {
+      "id": "person-img-32",
+      "alt": "alt-person-img-32"
+    }
+  }
 }

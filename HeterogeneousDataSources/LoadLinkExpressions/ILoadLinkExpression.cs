@@ -8,6 +8,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         Type ReferenceType { get; }
         bool IsNestedLinkedSourceLoadLinkExpression { get; }
         void AddLookupIds(List<object> linkedSources, LookupIdContext lookupIdContext);
-        void Link(List<object> linkedSources, LoadedReferenceContext loadedReferenceContext);
+        void Link(LoadedReferenceContext loadedReferenceContext);
     }
 }
