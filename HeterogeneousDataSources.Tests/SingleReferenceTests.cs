@@ -16,7 +16,7 @@ namespace HeterogeneousDataSources.Tests {
         {
             var sut = TestHelper.CreateLoadLinkProtocol(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
-                                new LoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
+                                new ReferenceLoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
                                     linkedSource => linkedSource.Model.SummaryImageId,
                                     (linkedSource, reference) => linkedSource.SummaryImage = reference
                                 )

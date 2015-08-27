@@ -1,7 +1,7 @@
 ﻿{
   "model": {
     "id": 1,
-    "personId": "john"
+    "personId": 32
   },
   "person": null
 }

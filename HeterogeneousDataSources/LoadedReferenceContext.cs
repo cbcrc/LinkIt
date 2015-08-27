@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources {
     public class LoadedReferenceContext {
+        private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
         public object State {
@@ -29,6 +30,14 @@ namespace HeterogeneousDataSources {
             );
 
             _referenceDictionaryByReferenceType[tReference] = referenceDictionnary;
+        }
+
+        public void AddLinkedSourceToBeBuilt(object linkedSource){
+            _linkedSourcesToBeBuilt.Add(linkedSource);
+        }
+        
+        public List<object> LinkedSourcesToBeBuilt{
+            get { return _linkedSourcesToBeBuilt.ToList(); }
         }
 
         private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>() {

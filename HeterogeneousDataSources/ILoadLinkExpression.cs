@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HeterogeneousDataSources
 {
     public interface ILoadLinkExpression
     {
         Type ReferenceType { get; }
-        void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext);
-        void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext);
+        bool IsNestedLinkedSourceLoadLinkExpression { get; }
+        void AddLookupIds(List<object> linkedSources, LookupIdContext lookupIdContext);
+        void Link(List<object> linkedSources, LoadedReferenceContext loadedReferenceContext);
     }
 }

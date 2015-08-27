@@ -43,12 +43,14 @@
     <Compile Include="IReferenceLoader.cs" />
     <Compile Include="LoadedReferenceContext.cs" />
     <Compile Include="ILoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressionForList.cs">
+    <Compile Include="LoadLinkExpressionAbs.cs" />
+    <Compile Include="NestedLinkedSourceLoadLinkExpression.cs" />
+    <Compile Include="ReferencesLoadLinkExpression.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="LookupIdContext.cs" />
-    <Compile Include="LoadLinkExpression.cs" />
+    <Compile Include="ReferenceLoadLinkExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,7 +15,11 @@ namespace HeterogeneousDataSources.Tests {
         {
             var sut = TestHelper.CreateLoadLinkProtocol(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new LoadLinkExpression<PersonLinkedSource,Image, string>(
+                    new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, int>(
+                        linkedSource => linkedSource.Model.PersonId,
+                        (linkedSource, reference) => linkedSource.Person = reference
+                    ),
+                    new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
                     )
@@ -27,14 +31,15 @@ namespace HeterogeneousDataSources.Tests {
                 getReferenceIdFunc: reference => reference.Id
             );
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource, int, SingleReferenceContent>(1);
+            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
     }
 
 
-    public class NestedLinkedSource {
+    public class NestedLinkedSource:ILinkedSource<NestedContent>
+    {
         public NestedContent Model { get; set; }
         public PersonLinkedSource Person { get; set; }
     }
@@ -44,7 +49,7 @@ namespace HeterogeneousDataSources.Tests {
         public int PersonId { get; set; }
     }
 
-    public class PersonLinkedSource
+    public class PersonLinkedSource: ILinkedSource<Person>
     {
         public Person Model { get; set; }
         public Image SummaryImage{ get; set; }
