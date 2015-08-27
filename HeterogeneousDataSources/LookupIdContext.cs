@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources
 {
+    //stle: this may become a builder
     public class LookupIdContext
     {
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
@@ -12,15 +13,12 @@ namespace HeterogeneousDataSources
         {
             var tReference = typeof(TReference);
 
-            if (_lookupIdsByReferenceType.ContainsKey(tReference)) {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "All lookup ids for the reference type ({0}) must be added at the same time.",
-                        tReference.Name)
-                );
+            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
+                _lookupIdsByReferenceType.Add(tReference, new List<TId>());
             }
 
-            _lookupIdsByReferenceType.Add(tReference, GetCleanedIds(lookupIds));
+            var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
+            currentLookupIds.AddRange(lookupIds);
         }
 
         public List<Type> GetReferenceTypes() {
@@ -41,9 +39,10 @@ namespace HeterogeneousDataSources
             }
 
             var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
-            return casted.ToList();
+            return GetCleanedIds(casted);
         }
 
+        //stle: may have a performance impact, if called too often
         private static List<TId> GetCleanedIds<TId>(List<TId> lookupIds) {
             return lookupIds
                 .Where(id => id != null)

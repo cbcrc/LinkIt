@@ -8,31 +8,22 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     {
         protected LoadLinkExpression()
         {
+            LinkedSourceType = typeof (TLinkedSource);
             ReferenceType = typeof (TReference);
         }
 
+        public Type LinkedSourceType { get; private set; }
         public Type ReferenceType { get; private set; }
+        
+
         public abstract bool IsNestedLinkedSourceLoadLinkExpression { get; }
 
         #region Load
-        public void AddLookupIds(List<object> linkedSources, LookupIdContext lookupIdContext) {
-            var lookupIds = GetLinkedSourcesOfTLinkedSource(linkedSources)
-                .SelectMany(GetLookupIds)
-                .ToList();
-
-            //stle: eventully throw instead of skipping, because of easier debuging and little performance improvement
-            if (lookupIds.Any() == false) { return; }
-
-            lookupIdContext.Add<TReference, TId>(lookupIds);
-        }
-
-        private List<TLinkedSource> GetLinkedSourcesOfTLinkedSource(List<object> linkedSources)
+        public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext)
         {
-            return linkedSources
-                //stle: eventully throw instead of skipping, because of easier debuging and little performance improvement
-                .Where(linkedSource => linkedSource is TLinkedSource)
-                .Cast<TLinkedSource>()
-                .ToList();
+            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
+
+            lookupIdContext.Add<TReference, TId>(GetLookupIds((TLinkedSource)linkedSource));
         }
 
         protected abstract List<TId> GetLookupIds(TLinkedSource linkedSource);
@@ -40,13 +31,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         #endregion
 
         #region Link
-        public void Link(LoadedReferenceContext loadedReferenceContext)
+        public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
-            var linkedSources = GetLinkedSourcesOfTLinkedSource(loadedReferenceContext.LinkedSourcesToBeBuilt);
-            foreach (var linkedSource in linkedSources)
-            {
-                Link(linkedSource, loadedReferenceContext);
-            }
+            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
+
+            Link((TLinkedSource) linkedSource, loadedReferenceContext);
         }
 
         private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
@@ -62,5 +51,19 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             LoadedReferenceContext loadedReferenceContext
         ); 
         #endregion
+
+        private void EnsureLinkedSourceIsOfTLinkedSource(object linkedSource) {
+            if (!(linkedSource is TLinkedSource)) {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Cannot invoke load-link expression for {0} with linked source of type {1}",
+                        LinkedSourceType.Name,
+                        linkedSource != null
+                            ? linkedSource.GetType().Name
+                            : "Null"
+                        )
+                    );
+            }
+        }
     }
 }
