@@ -65,6 +65,7 @@ namespace HeterogeneousDataSources.Tests {
 
             sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
 
+            //stle: improve this by allowing test visibility on which image id was resolved
             //assert that does not throw
         }
     }

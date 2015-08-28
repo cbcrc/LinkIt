@@ -8,6 +8,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
         private readonly Dictionary<Type, IReferenceTypeConfig> _referenceTypeConfigByReferenceType;
         private bool _isConnectionOpen = false;
 
+        //stle: Config must be inside fake reference loader in order to access connection?
         private List<IReferenceTypeConfig> GetDefaultReferenceTypeConfigs()
         {
             return new List<IReferenceTypeConfig>{
