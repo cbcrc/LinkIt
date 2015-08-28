@@ -98,6 +98,15 @@ namespace HeterogeneousDataSources.Tests {
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
+
+        [Test]
+        public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot() {
+            var sut = _loadLinkProtocolFactory.Create(null);
+
+            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+
+            Assert.That(actual, Is.Null);
+        }
     }
 
 

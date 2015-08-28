@@ -19,7 +19,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
             _customReferenceTypeConfigs = customReferenceTypeConfigs;
         }
 
-        public LoadLinkProtocol Create(TReference fixedValue=null)
+        public LoadLinkProtocol Create(TReference fixedValue)
         {
             var customConfig = GetCustomConfig(fixedValue, _getReferenceIdFunc);
 
@@ -34,12 +34,25 @@ namespace HeterogeneousDataSources.Tests.Shared {
             );
         }
 
+        public LoadLinkProtocol Create() {
+            var referenceLoader = new FakeReferenceLoader(_customReferenceTypeConfigs);
+
+            return new LoadLinkProtocol(
+                referenceLoader,
+                new LoadLinkConfig(
+                    _loadLinkExpressions,
+                    _fakeReferenceTypeForLoadingLevel
+                )
+            );
+        }
+
         private IReferenceTypeConfig[] GetCustomConfig(TReference fixedValue, Func<TReference, TId> getReferenceIdFunc)
         {
-            if (fixedValue == null) { return _customReferenceTypeConfigs; }
-
             var fixedReferenceTypeConfig = new ReferenceTypeConfig<TReference, TId>(
-                ids => ids.Select(id => fixedValue).ToList(),
+                ids => ids
+                    .Select(id => fixedValue)
+                    .Where(id => id!=null)
+                    .ToList(),
                 getReferenceIdFunc
             );
 

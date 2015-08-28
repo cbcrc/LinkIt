@@ -42,7 +42,9 @@ namespace HeterogeneousDataSources {
                 _referenceLoader.LoadReferences(lookupIdContextLevel0, loadedReferenceContext);
 
                 var rootLinkedSource = CreateRootLinkedSource<TLinkedSource, TId, TModel>(rootIds, loadedReferenceContext);
-                loadedReferenceContext.AddLinkedSourceToBeBuilt(rootLinkedSource);
+                if (rootLinkedSource != null){
+                    loadedReferenceContext.AddLinkedSourceToBeBuilt(rootLinkedSource);
+                }
 
                 var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TLinkedSource>();
                 //stle: 1 to skip root for now
@@ -101,7 +103,6 @@ namespace HeterogeneousDataSources {
             //stle: constraint TLinkedSource to class and use null
             if (model == null) { return default(TLinkedSource); }
 
-            //what if model is null
             return new TLinkedSource {Model = model};
         }
     }
