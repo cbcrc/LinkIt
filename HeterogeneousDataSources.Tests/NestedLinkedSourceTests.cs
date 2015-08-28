@@ -69,22 +69,35 @@ namespace HeterogeneousDataSources.Tests {
             //assert that does not throw
         }
 
-        //[Test]
-        //public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull()
-        //{
-        //    var sut = _loadLinkProtocolFactory.Create(
-        //        new NestedContent {
-        //            Id = 1,
-        //            AuthorDetailId = 32,
-        //            ClientSummaryId = 33
-        //        }
-        //    );
+        [Test]
+        public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new NestedContent {
+                    Id = 1,
+                    AuthorDetailId = null,
+                    ClientSummaryId = "33"
+                }
+            );
 
-        //    var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
 
-        //    ApprovalsExt.VerifyPublicProperties(actual);
-        //}
+            Assert.That(actual.AuthorDetail, Is.Null);
+        }
 
+        [Test]
+        public void LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNull() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new NestedContent {
+                    Id = 1,
+                    AuthorDetailId = "cannot-be-resolved",
+                    ClientSummaryId = "33"
+                }
+            );
+
+            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+
+            Assert.That(actual.AuthorDetail, Is.Null);
+        }
     }
 
 

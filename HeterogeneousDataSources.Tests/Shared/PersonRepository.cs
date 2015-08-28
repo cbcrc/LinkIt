@@ -8,6 +8,7 @@ namespace HeterogeneousDataSources.Tests.Shared
         public List<Person> GetByIds(List<string> ids)
         {
             return ids
+                .Where(id => id != "cannot-be-resolved")
                 .Select(id => new Person {
                     Id = id, 
                     Name = "name-" + id,

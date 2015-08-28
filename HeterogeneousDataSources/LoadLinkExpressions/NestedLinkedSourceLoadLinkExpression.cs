@@ -26,13 +26,14 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
 
         protected override void LinkAction(TLinkedSource linkedSource, List<TNestedLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
         {
-            //stle: handle null
+            var model = references.SingleOrDefault();
+
+            if (model == null){ return; }
+
             var nestedLinkedSource = new TNestedLinkedSource{
-                Model = references.SingleOrDefault()
+                Model = model
             };
-
             loadedReferenceContext.AddLinkedSourceToBeBuilt(nestedLinkedSource);
-
             _linkAction(linkedSource, nestedLinkedSource);
         }
 

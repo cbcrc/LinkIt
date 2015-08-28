@@ -33,8 +33,7 @@ namespace HeterogeneousDataSources {
         }
 
         public void AddLinkedSourceToBeBuilt(object linkedSource){
-            //null linked source does not have to be built
-            if (linkedSource == null) { return; }
+            //assume that null linked source are never added
 
             _linkedSourcesToBeBuilt.Add(linkedSource);
         }
