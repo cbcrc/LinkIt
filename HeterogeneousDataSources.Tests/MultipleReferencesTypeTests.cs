@@ -21,7 +21,7 @@ namespace HeterogeneousDataSources.Tests {
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
                     ),
-                    new ReferenceLoadLinkExpression<MultipleReferencesTypeLinkedSource,Person, int>(
+                    new ReferenceLoadLinkExpression<MultipleReferencesTypeLinkedSource,Person, string>(
                         linkedSource => linkedSource.Model.AuthorId,
                         (linkedSource, reference) => linkedSource.Author = reference
                     )
@@ -42,7 +42,7 @@ namespace HeterogeneousDataSources.Tests {
                 {
                     Id = 1,
                     SummaryImageId = "a",
-                    AuthorId = 32
+                    AuthorId = "32"
                 }
             );
 
@@ -63,6 +63,6 @@ namespace HeterogeneousDataSources.Tests {
     public class MultipleReferencesTypeContent {
         public int Id { get; set; }
         public string SummaryImageId { get; set; }
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
     }
 }

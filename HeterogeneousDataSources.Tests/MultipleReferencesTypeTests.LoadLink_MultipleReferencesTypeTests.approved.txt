@@ -2,14 +2,14 @@
   "model": {
     "id": 1,
     "summaryImageId": "a",
-    "authorId": 32
+    "authorId": "32"
   },
   "summaryImage": {
     "id": "a",
     "alt": "alt-a"
   },
   "author": {
-    "id": 32,
+    "id": "32",
     "name": "name-32",
     "summaryImageId": "person-img-32"
   }

@@ -18,10 +18,10 @@ namespace HeterogeneousDataSources.Tests {
         public void SetUp() {
             _loadLinkProtocolFactory = new LoadLinkProtocolFactory<NestedContent, int>(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, int>(
+                    new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, string>(
                         linkedSource => linkedSource.Model.AuthorDetailId,
                         (linkedSource, reference) => linkedSource.AuthorDetail = reference),
-                    new ReferenceLoadLinkExpression<NestedLinkedSource,Person, int>(
+                    new ReferenceLoadLinkExpression<NestedLinkedSource,Person, string>(
                         linkedSource => linkedSource.Model.ClientSummaryId,
                         (linkedSource, reference) => linkedSource.ClientSummary = reference),
                     new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
@@ -43,8 +43,8 @@ namespace HeterogeneousDataSources.Tests {
             var sut = _loadLinkProtocolFactory.Create(
                 new NestedContent{
                     Id = 1,
-                    AuthorDetailId = 32,
-                    ClientSummaryId = 33
+                    AuthorDetailId = "32",
+                    ClientSummaryId = "33"
                 }
             );
 
@@ -58,8 +58,8 @@ namespace HeterogeneousDataSources.Tests {
             var sut = _loadLinkProtocolFactory.Create(
                 new NestedContent {
                     Id = 1,
-                    AuthorDetailId = 32,
-                    ClientSummaryId = 666 //Image repository throws an exception for "person-img-666" 
+                    AuthorDetailId = "32",
+                    ClientSummaryId = "666" //Image repository throws an exception for "person-img-666" 
                 }
             );
 
@@ -68,6 +68,23 @@ namespace HeterogeneousDataSources.Tests {
             //stle: improve this by allowing test visibility on which image id was resolved
             //assert that does not throw
         }
+
+        //[Test]
+        //public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull()
+        //{
+        //    var sut = _loadLinkProtocolFactory.Create(
+        //        new NestedContent {
+        //            Id = 1,
+        //            AuthorDetailId = 32,
+        //            ClientSummaryId = 33
+        //        }
+        //    );
+
+        //    var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+
+        //    ApprovalsExt.VerifyPublicProperties(actual);
+        //}
+
     }
 
 
@@ -80,8 +97,8 @@ namespace HeterogeneousDataSources.Tests {
 
     public class NestedContent {
         public int Id { get; set; }
-        public int AuthorDetailId { get; set; }
-        public int ClientSummaryId { get; set; }
+        public string AuthorDetailId { get; set; }
+        public string ClientSummaryId { get; set; }
     }
 
     public class PersonLinkedSource: ILinkedSource<Person>

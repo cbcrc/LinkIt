@@ -5,7 +5,7 @@ namespace HeterogeneousDataSources.Tests.Shared
 {
     public class PersonRepository
     {
-        public List<Person> GetByIds(List<int> ids)
+        public List<Person> GetByIds(List<string> ids)
         {
             return ids
                 .Select(id => new Person {

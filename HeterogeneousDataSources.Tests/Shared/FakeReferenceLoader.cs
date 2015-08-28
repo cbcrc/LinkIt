@@ -17,7 +17,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
                     reference => reference.Id,
                     "ouglo"
                 ),
-                new ReferenceTypeConfig<Person, int>(
+                new ReferenceTypeConfig<Person, string>(
                     ids => new PersonRepository().GetByIds(ids),
                     reference => reference.Id
                 )

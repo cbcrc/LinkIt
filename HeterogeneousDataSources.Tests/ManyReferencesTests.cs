@@ -78,8 +78,8 @@ namespace HeterogeneousDataSources.Tests
             var sut = _loadLinkProtocolFactory.Create(
                 new ManyReferencesContent {
                     Id = 1,
-                    SummaryImageId = "summary-image-id",
-                    AuthorImageId = "author-image-id",
+                    SummaryImageId = "dont-care",
+                    AuthorImageId = "dont-care",
                     FavoriteImageIds = null
                 }
             );
@@ -94,8 +94,8 @@ namespace HeterogeneousDataSources.Tests
             var sut = _loadLinkProtocolFactory.Create(
                 new ManyReferencesContent {
                     Id = 1,
-                    SummaryImageId = "summary-image-id",
-                    AuthorImageId = "author-image-id",
+                    SummaryImageId = "dont-care",
+                    AuthorImageId = "dont-care",
                     FavoriteImageIds = new List<string> { "a", "a" }
                 }
             );
@@ -112,8 +112,8 @@ namespace HeterogeneousDataSources.Tests
             var sut = _loadLinkProtocolFactory.Create(
                 new ManyReferencesContent {
                     Id = 1,
-                    SummaryImageId = "summary-image-id",
-                    AuthorImageId = "author-image-id",
+                    SummaryImageId = "dont-care",
+                    AuthorImageId = "dont-care",
                     FavoriteImageIds = new List<string> { "cannot-be-resolved", "cannot-be-resolved" }
                 }
             );
