@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.LoadLinkExpressions;
+using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
@@ -8,46 +11,53 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class MultipleReferencesTypeTests
     {
-        [Test]
-        public void LoadLink_MultipleReferencesTypeTests()
-        {
-            var loadLinkExpressions = new List<ILoadLinkExpression>{
-                    new LoadLinkExpression<MultipleReferencesTypeLinkedSource,Image, string>(
+        private LoadLinkProtocolFactory<MultipleReferencesTypeContent, int> _loadLinkProtocolFactory;
+
+        [SetUp]
+        public void SetUp() {
+            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<MultipleReferencesTypeContent, int>(
+                loadLinkExpressions: new List<ILoadLinkExpression>{
+                    new ReferenceLoadLinkExpression<MultipleReferencesTypeLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
                     ),
-                    new LoadLinkExpression<MultipleReferencesTypeLinkedSource,Person, int>(
+                    new ReferenceLoadLinkExpression<MultipleReferencesTypeLinkedSource,Person, int>(
                         linkedSource => linkedSource.Model.AuthorId,
                         (linkedSource, reference) => linkedSource.Author = reference
                     )
-                };
-            var sut = new LoadLinkProtocol(
-                TestUtil.ReferenceTypeConfigs,
-                loadLinkExpressions
+                },
+                getReferenceIdFunc: reference => reference.Id,
+                fakeReferenceTypeForLoadingLevel: new[] {
+                    new List<Type>{typeof(MultipleReferencesTypeContent)},
+                    new List<Type>{typeof(Image), typeof(Person)},
+                }
             );
-            var content = new MultipleReferencesTypeContent() {
-                Id = 1,
-                SummaryImageId = "a",
-                AuthorId = 32
-            };
-            var contentLinkedSource = new MultipleReferencesTypeLinkedSource(content);
+        }
 
-            sut.LoadLink(contentLinkedSource);
+        [Test]
+        public void LoadLink_MultipleReferencesTypeTests()
+        {
+            var sut = _loadLinkProtocolFactory.Create(
+                new MultipleReferencesTypeContent()
+                {
+                    Id = 1,
+                    SummaryImageId = "a",
+                    AuthorId = 32
+                }
+            );
 
-            ApprovalsExt.VerifyPublicProperties(contentLinkedSource);
+            var actual = sut.LoadLink<MultipleReferencesTypeLinkedSource, int, MultipleReferencesTypeContent>(1);
+
+            ApprovalsExt.VerifyPublicProperties(actual);
         }
     }
 
 
-    public class MultipleReferencesTypeLinkedSource {
-        public MultipleReferencesTypeLinkedSource(MultipleReferencesTypeContent model)
-        {
-            Model = model;
-        }
-
-        public MultipleReferencesTypeContent Model { get; private set; }
-        public Image SummaryImage;
-        public Person Author;
+    public class MultipleReferencesTypeLinkedSource : ILinkedSource<MultipleReferencesTypeContent>
+    {
+        public MultipleReferencesTypeContent Model { get; set; }
+        public Image SummaryImage { get; set; }
+        public Person Author { get; set; }
     }
 
     public class MultipleReferencesTypeContent {

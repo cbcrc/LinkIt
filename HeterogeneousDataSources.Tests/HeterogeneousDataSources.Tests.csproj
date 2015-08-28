@@ -60,6 +60,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ManyReferencesTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultipleReferencesTypeTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>
