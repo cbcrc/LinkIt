@@ -30,13 +30,18 @@ namespace HeterogeneousDataSources {
             var loadedReferenceContext = new LoadedReferenceContext();
             
             var lookupIdContextLevel0 = new LookupIdContext();
-            lookupIdContextLevel0.Add<TModel, TId>(new List<TId> { modelId });
+
+            var rootIds = modelId != null
+                ? new List<TId>{ modelId } 
+                : new List<TId>();
+
+            lookupIdContextLevel0.Add<TModel, TId>(rootIds);
 
             using (_referenceLoader)
             {
                 _referenceLoader.LoadReferences(lookupIdContextLevel0, loadedReferenceContext);
 
-                var rootLinkedSource = CreateRootLinkedSource<TLinkedSource, TId, TModel>(modelId, loadedReferenceContext);
+                var rootLinkedSource = CreateRootLinkedSource<TLinkedSource, TId, TModel>(rootIds, loadedReferenceContext);
                 loadedReferenceContext.AddLinkedSourceToBeBuilt(rootLinkedSource);
 
                 var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TLinkedSource>();
@@ -87,10 +92,10 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        private static TLinkedSource CreateRootLinkedSource<TLinkedSource, TId, TModel>(TId modelId,
+        private static TLinkedSource CreateRootLinkedSource<TLinkedSource, TId, TModel>(List<TId> modelIds,
             LoadedReferenceContext loadedReferenceContext) where TLinkedSource : ILinkedSource<TModel>, new()
         {
-            var models = loadedReferenceContext.GetOptionalReferences<TModel, TId>(new List<TId>{modelId});
+            var models = loadedReferenceContext.GetOptionalReferences<TModel, TId>(modelIds);
 
             var model = models.SingleOrDefault();
             //stle: constraint TLinkedSource to class and use null

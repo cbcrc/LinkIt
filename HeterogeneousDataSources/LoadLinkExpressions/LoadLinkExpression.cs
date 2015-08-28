@@ -23,10 +23,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         {
             EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
 
-            lookupIdContext.Add<TReference, TId>(GetLookupIds((TLinkedSource)linkedSource));
+            var lookupIds = GetLookupIds((TLinkedSource)linkedSource);
+            lookupIdContext.Add<TReference, TId>(lookupIds);
         }
 
-        protected abstract List<TId> GetLookupIds(TLinkedSource linkedSource);
+        protected abstract List<TId> GetLookupIdsTemplate(TLinkedSource linkedSource);
         
         #endregion
 
@@ -64,6 +65,16 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                         )
                     );
             }
+        }
+
+        private List<TId> GetLookupIds(TLinkedSource linkedSource)
+        {
+            var lookupIds = GetLookupIdsTemplate(linkedSource);
+            if(lookupIds==null){ return new List<TId>(); }
+
+            return lookupIds
+                .Where(id => id != null)
+                .ToList();
         }
     }
 }

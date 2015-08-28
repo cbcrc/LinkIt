@@ -56,6 +56,73 @@ namespace HeterogeneousDataSources.Tests
             
             ApprovalsExt.VerifyPublicProperties(actual);
         }
+
+        [Test]
+        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldIgnoreNull() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new ManyReferencesContent {
+                    Id = 1,
+                    SummaryImageId = "dont-care",
+                    AuthorImageId = "dont-care",
+                    FavoriteImageIds = new List<string> { "one", null, "two" }
+                }
+            );
+
+            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+
+            Assert.That(actual.FavoriteImages.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new ManyReferencesContent {
+                    Id = 1,
+                    SummaryImageId = "summary-image-id",
+                    AuthorImageId = "author-image-id",
+                    FavoriteImageIds = null
+                }
+            );
+
+            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+
+            Assert.That(actual.FavoriteImages, Is.Empty);
+        }
+
+        [Test]
+        public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new ManyReferencesContent {
+                    Id = 1,
+                    SummaryImageId = "summary-image-id",
+                    AuthorImageId = "author-image-id",
+                    FavoriteImageIds = new List<string> { "a", "a" }
+                }
+            );
+
+            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+
+            var linkedImagesIds = actual.FavoriteImages.Select(image => image.Id);
+            Assert.That(linkedImagesIds, Is.EquivalentTo(new []{"a", "a"}));
+        }
+
+
+        [Test]
+        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkEmptySet() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new ManyReferencesContent {
+                    Id = 1,
+                    SummaryImageId = "summary-image-id",
+                    AuthorImageId = "author-image-id",
+                    FavoriteImageIds = new List<string> { "cannot-be-resolved", "cannot-be-resolved" }
+                }
+            );
+
+            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+
+            Assert.That(actual.FavoriteImages, Is.Empty);
+        }
+
     }
 
     public class ManyReferencesLinkedSource: ILinkedSource<ManyReferencesContent>{

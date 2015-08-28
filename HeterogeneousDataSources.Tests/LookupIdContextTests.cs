@@ -23,13 +23,6 @@ namespace HeterogeneousDataSources.Tests {
         }
 
         [Test]
-        public void Add_WithNull_NullShouldNotBeAdded() {
-            _sut.Add<Image, string>(new List<string> { "a", null, "b" });
-
-            Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
-        }
-
-        [Test]
         public void Add_WithDuplicates_DuplicatesShouldNotBeAdded() {
             _sut.Add<Image,string>(new List<string>{ "a", "a", "b" });
 

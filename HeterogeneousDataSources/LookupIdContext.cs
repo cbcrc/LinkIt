@@ -11,6 +11,8 @@ namespace HeterogeneousDataSources
 
         public void Add<TReference, TId>(List<TId> lookupIds)
         {
+            //Assume that that lookupIds cannot contains null
+
             var tReference = typeof(TReference);
 
             if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
@@ -39,7 +41,10 @@ namespace HeterogeneousDataSources
             }
 
             var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
-            return casted.DistinctWithoutNull();
+
+            return casted
+                .Distinct()
+                .ToList();
         }
     }
 }

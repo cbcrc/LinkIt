@@ -16,7 +16,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             _linkAction = linkAction;
         }
 
-        protected override List<TId> GetLookupIds(TLinkedSource linkedSource)
+        protected override List<TId> GetLookupIdsTemplate(TLinkedSource linkedSource)
         {
             //stle: hey you and your inheritance crap! Try a functional approach
             return new List<TId>{

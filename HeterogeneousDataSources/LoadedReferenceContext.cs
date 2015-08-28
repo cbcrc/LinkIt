@@ -60,7 +60,6 @@ namespace HeterogeneousDataSources {
         {
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
             return ids
-                .DistinctWithoutNull()
                 .Where(referenceDictionnary.ContainsKey)
                 .Select(id => referenceDictionnary[id])
                 .ToList();
