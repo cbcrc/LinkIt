@@ -12,10 +12,11 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class NestedLinkedSourceTests
     {
-        [Test]
-        public void LoadLink_NestedLinkedSource()
-        {
-            var sut = TestHelper.CreateLoadLinkProtocol(
+        private LoadLinkProtocolFactory<NestedContent, int> _loadLinkProtocolFactory;
+
+        [SetUp]
+        public void SetUp() {
+            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<NestedContent, int>(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
                     new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, int>(
                         linkedSource => linkedSource.Model.AuthorDetailId,
@@ -23,22 +24,29 @@ namespace HeterogeneousDataSources.Tests {
                     new ReferenceLoadLinkExpression<NestedLinkedSource,Person, int>(
                         linkedSource => linkedSource.Model.ClientSummaryId,
                         (linkedSource, reference) => linkedSource.ClientSummary = reference),
-
                     new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference)
-                },
-                fixedValue: new NestedContent {
-                    Id = 1,
-                    AuthorDetailId = 32,
-                    ClientSummaryId = 33
                 },
                 getReferenceIdFunc: reference => reference.Id,
                 fakeReferenceTypeForLoadingLevel: new[] {
                         new List<Type>{typeof(NestedContent)},
                         new List<Type>{typeof(Person)},
                         new List<Type>{typeof(Image)},
-                });
+                }
+            );
+        }
+
+        [Test]
+        public void LoadLink_NestedLinkedSource()
+        {
+            var sut = _loadLinkProtocolFactory.Create(
+                new NestedContent{
+                    Id = 1,
+                    AuthorDetailId = 32,
+                    ClientSummaryId = 33
+                }
+            );
 
             var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
 
@@ -47,32 +55,15 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummary() {
-            var sut = TestHelper.CreateLoadLinkProtocol(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, int>(
-                        linkedSource => linkedSource.Model.AuthorDetailId,
-                        (linkedSource, reference) => linkedSource.AuthorDetail = reference),
-                    new ReferenceLoadLinkExpression<NestedLinkedSource,Person, int>(
-                        linkedSource => linkedSource.Model.ClientSummaryId,
-                        (linkedSource, reference) => linkedSource.ClientSummary = reference),
-
-                    new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference)
-                },
-                fixedValue: new NestedContent {
+            var sut = _loadLinkProtocolFactory.Create(
+                new NestedContent {
                     Id = 1,
                     AuthorDetailId = 32,
                     ClientSummaryId = 666 //Image repository throws an exception for "person-img-666" 
-                },
-                getReferenceIdFunc: reference => reference.Id,
-                fakeReferenceTypeForLoadingLevel: new[] {
-                        new List<Type>{typeof(NestedContent)},
-                        new List<Type>{typeof(Person)},
-                        new List<Type>{typeof(Image)},
-                });
+                }
+            );
 
-            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+            sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
 
             //assert that does not throw
         }

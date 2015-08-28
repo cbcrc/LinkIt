@@ -1,0 +1,6 @@
+﻿{
+  "model": {
+    "id": "can-be-resolved",
+    "name": "name-can-be-resolved"
+  }
+}

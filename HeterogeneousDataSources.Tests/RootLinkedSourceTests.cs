@@ -5,28 +5,42 @@ using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
+using RC.Testing;
 
 namespace HeterogeneousDataSources.Tests {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class RootLinkedSourceTests
     {
-        [Test]
-        public void LoadLink_WithoutReferenceId_ShouldLinkNull() {
-            var referenceLoader = new FakeReferenceLoader(
-                new ReferenceTypeConfig<RootContent, string>(
+        private LoadLinkProtocolFactory<RootContent, string> _loadLinkProtocolFactory;
+
+        [SetUp]
+        public void SetUp() {
+            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<RootContent, string>(
+                loadLinkExpressions: new List<ILoadLinkExpression>{},
+                getReferenceIdFunc: reference => reference.Id,
+                fakeReferenceTypeForLoadingLevel: new[] {
+                    new List<Type>{typeof(RootContent)},
+                },
+                customReferenceTypeConfigs: new ReferenceTypeConfig<RootContent, string>(
                     ids => new RootContentRepository().GetByIds(ids),
                     reference => reference.Id
                 )
             );
+        }
 
-            var sut = new LoadLinkProtocol(
-                referenceLoader,
-                new LoadLinkConfig(
-                    GetLoadLinkExpressions(),
-                    FakeReferenceTypeForLoadingLevel()
-                )
-            );
+        [Test]
+        public void LoadLink_WithReferenceId_ShouldLinkModel() {
+            var sut = _loadLinkProtocolFactory.Create();
+
+            var actual = sut.LoadLink<RootLinkedSource, string, RootContent>("can-be-resolved");
+
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        [Test]
+        public void LoadLink_WithoutReferenceId_ShouldLinkNull(){
+            var sut = _loadLinkProtocolFactory.Create();
 
             var actual = sut.LoadLink<RootLinkedSource, string, RootContent>(null);
 
@@ -35,40 +49,11 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_CannotBeResolved_ShouldLinkNull() {
-            var referenceLoader = new FakeReferenceLoader(
-                new ReferenceTypeConfig<RootContent, string>(
-                    ids => new RootContentRepository().GetByIds(ids),
-                    reference => reference.Id
-                )
-            );
-
-            var sut = new LoadLinkProtocol(
-                referenceLoader,
-                new LoadLinkConfig(
-                    GetLoadLinkExpressions(),
-                    FakeReferenceTypeForLoadingLevel()
-                )
-            );
+            var sut = _loadLinkProtocolFactory.Create();
 
             var actual = sut.LoadLink<RootLinkedSource, string, RootContent>("cannot-be-resolved");
 
             Assert.That(actual, Is.Null);
-        }
-
-        private static List<Type>[] FakeReferenceTypeForLoadingLevel() {
-            return new[] {
-                new List<Type>{typeof(RootContent)},
-            };
-        }
-
-        private static List<ILoadLinkExpression> GetLoadLinkExpressions()
-        {
-            return new List<ILoadLinkExpression>{};
-        }
-
-        private static Func<SingleReferenceContent, string> GetReferenceIdFunc()
-        {
-            return reference => reference.Id;
         }
     }
 

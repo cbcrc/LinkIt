@@ -72,6 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
+    <Compile Include="Shared\LoadLinkProtocolFactory.cs" />
     <Compile Include="Shared\TestHelper.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />
     <Compile Include="SingleReferenceTests.cs">
