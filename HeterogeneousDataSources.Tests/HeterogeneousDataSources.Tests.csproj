@@ -67,6 +67,7 @@
     <Compile Include="MultipleReferencesTypeTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NestedLinkedSourcesTests.cs" />
     <Compile Include="NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>

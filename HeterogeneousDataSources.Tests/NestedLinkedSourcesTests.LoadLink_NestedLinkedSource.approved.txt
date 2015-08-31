@@ -1,0 +1,33 @@
+﻿{
+  "model": {
+    "id": 1,
+    "authorIds": [
+      "a",
+      "b"
+    ]
+  },
+  "authors": [
+    {
+      "model": {
+        "id": "a",
+        "name": "name-a",
+        "summaryImageId": "person-img-a"
+      },
+      "summaryImage": {
+        "id": "person-img-a",
+        "alt": "alt-person-img-a"
+      }
+    },
+    {
+      "model": {
+        "id": "b",
+        "name": "name-b",
+        "summaryImageId": "person-img-b"
+      },
+      "summaryImage": {
+        "id": "person-img-b",
+        "alt": "alt-person-img-b"
+      }
+    }
+  ]
+}
