@@ -19,6 +19,7 @@ namespace HeterogeneousDataSources.Tests
         public void SetUp() {
             _loadLinkProtocolFactory = new LoadLinkProtocolFactory<ManyReferencesContent, int>(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
+                    new RootLoadLinkExpression<ManyReferencesLinkedSource,ManyReferencesContent, int>(),
                     new ReferenceLoadLinkExpression<ManyReferencesLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
@@ -52,7 +53,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource,int,ManyReferencesContent>(1);
+            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
             
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -68,7 +69,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             Assert.That(actual.FavoriteImages.Count, Is.EqualTo(2));
         }
@@ -84,7 +85,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             Assert.That(actual.FavoriteImages, Is.Empty);
         }
@@ -100,7 +101,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             var linkedImagesIds = actual.FavoriteImages.Select(image => image.Id);
             Assert.That(linkedImagesIds, Is.EquivalentTo(new []{"a", "a"}));
@@ -118,7 +119,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource, int, ManyReferencesContent>(1);
+            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             Assert.That(actual.FavoriteImages, Is.Empty);
         }

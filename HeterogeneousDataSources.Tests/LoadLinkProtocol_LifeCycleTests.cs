@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
@@ -14,9 +15,18 @@ namespace HeterogeneousDataSources.Tests
         public void LoadLink_ShouldDisposeLoader()
         {
             var referenceLoader = new FakeReferenceLoader();
-            var sut = new LoadLinkProtocol(referenceLoader, new List<ILoadLinkExpression>());
-            
-            var actual = sut.LoadLink<WithoutReferenceLinkedSource, string, Image>("dont-care");
+            var sut = new LoadLinkProtocol(referenceLoader, 
+                new LoadLinkConfig(
+                    new List<ILoadLinkExpression>{
+                        new RootLoadLinkExpression<WithoutReferenceLinkedSource, Image, string>(),
+                    }, 
+                    new[] {
+                            new List<Type>{typeof(string)},
+                    }
+                )
+            );
+
+            var actual = sut.LoadLink<WithoutReferenceLinkedSource>("dont-care");
 
             Assert.That(referenceLoader.IsDisposed, Is.True);
         }

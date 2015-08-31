@@ -60,9 +60,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoadLinkProtocol_LifeCycleTests.cs" />
+    <Compile Include="ManyReferencesTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultipleReferencesTypeTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RootLinkedSourceTests.cs" />
     <Compile Include="Shared\FakeReferenceLoader.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />
     <Compile Include="Shared\Person.cs" />
@@ -73,6 +81,9 @@
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
     <Compile Include="Shared\LoadLinkProtocolFactory.cs" />
+    <Compile Include="SingleReferenceTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

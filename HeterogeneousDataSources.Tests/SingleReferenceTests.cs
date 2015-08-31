@@ -18,6 +18,7 @@ namespace HeterogeneousDataSources.Tests {
         {
             _loadLinkProtocolFactory = new LoadLinkProtocolFactory<SingleReferenceContent, string>(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
+                    new RootLoadLinkExpression<SingleReferenceLinkedSource, SingleReferenceContent, string>(),
                     new ReferenceLoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
@@ -41,7 +42,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource, string, SingleReferenceContent>("1");
+            var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -55,7 +56,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource, string, SingleReferenceContent>("1");
+            var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
 
             Assert.That(actual.SummaryImage, Is.Null);
         }
@@ -69,7 +70,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource, string, SingleReferenceContent>("1");
+            var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
 
             Assert.That(actual.SummaryImage, Is.Null);
         }

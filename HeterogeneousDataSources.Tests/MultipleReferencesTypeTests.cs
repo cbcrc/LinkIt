@@ -17,6 +17,7 @@ namespace HeterogeneousDataSources.Tests {
         public void SetUp() {
             _loadLinkProtocolFactory = new LoadLinkProtocolFactory<MultipleReferencesTypeContent, int>(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
+                    new RootLoadLinkExpression<MultipleReferencesTypeLinkedSource, MultipleReferencesTypeContent, int>(),
                     new ReferenceLoadLinkExpression<MultipleReferencesTypeLinkedSource,Image, string>(
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference
@@ -46,7 +47,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<MultipleReferencesTypeLinkedSource, int, MultipleReferencesTypeContent>(1);
+            var actual = sut.LoadLink<MultipleReferencesTypeLinkedSource>(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

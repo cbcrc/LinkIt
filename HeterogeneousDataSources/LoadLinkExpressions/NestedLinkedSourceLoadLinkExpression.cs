@@ -5,7 +5,7 @@ using System.Linq;
 namespace HeterogeneousDataSources.LoadLinkExpressions {
     public class NestedLinkedSourceLoadLinkExpression<TLinkedSource, TNestedLinkedSource, TNestedLinkedSourceModel, TId>
         : LoadLinkExpression<TLinkedSource, TNestedLinkedSourceModel, TId>, ILoadLinkExpression
-        where TNestedLinkedSource : ILinkedSource<TNestedLinkedSourceModel>, new() 
+        where TNestedLinkedSource : class, ILinkedSource<TNestedLinkedSourceModel>, new() 
     {
         private readonly Func<TLinkedSource, TId> _getLookupIdFunc;
         private readonly Action<TLinkedSource, TNestedLinkedSource> _linkAction;

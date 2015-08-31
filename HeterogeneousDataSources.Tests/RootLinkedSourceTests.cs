@@ -17,7 +17,9 @@ namespace HeterogeneousDataSources.Tests {
         [SetUp]
         public void SetUp() {
             _loadLinkProtocolFactory = new LoadLinkProtocolFactory<RootContent, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{},
+                loadLinkExpressions: new List<ILoadLinkExpression>{
+                    new RootLoadLinkExpression<RootLinkedSource, RootContent, string>(),
+                },
                 getReferenceIdFunc: reference => reference.Id,
                 fakeReferenceTypeForLoadingLevel: new[] {
                     new List<Type>{typeof(RootContent)},
@@ -33,7 +35,7 @@ namespace HeterogeneousDataSources.Tests {
         public void LoadLink_WithReferenceId_ShouldLinkModel() {
             var sut = _loadLinkProtocolFactory.Create();
 
-            var actual = sut.LoadLink<RootLinkedSource, string, RootContent>("can-be-resolved");
+            var actual = sut.LoadLink<RootLinkedSource>("can-be-resolved");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -42,16 +44,16 @@ namespace HeterogeneousDataSources.Tests {
         public void LoadLink_WithoutReferenceId_ShouldLinkNull(){
             var sut = _loadLinkProtocolFactory.Create();
 
-            var actual = sut.LoadLink<RootLinkedSource, string, RootContent>(null);
+            TestDelegate act = () => sut.LoadLink<RootLinkedSource>(null);
 
-            Assert.That(actual, Is.Null);
+            Assert.That(act, Throws.InstanceOf<ArgumentNullException>());
         }
 
         [Test]
         public void LoadLink_CannotBeResolved_ShouldLinkNull() {
             var sut = _loadLinkProtocolFactory.Create();
 
-            var actual = sut.LoadLink<RootLinkedSource, string, RootContent>("cannot-be-resolved");
+            var actual = sut.LoadLink<RootLinkedSource>("cannot-be-resolved");
 
             Assert.That(actual, Is.Null);
         }

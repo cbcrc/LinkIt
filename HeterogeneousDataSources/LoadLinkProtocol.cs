@@ -16,8 +16,7 @@ namespace HeterogeneousDataSources {
 
         public TLinkedSource LoadLink<TLinkedSource>(object modelId)
         {
-            //stle: constraint TLinkedSource to class and use null
-            if (modelId == null) { return default(TLinkedSource); }
+            if (modelId == null) { throw new ArgumentNullException("modelId");}
 
             var loadedReferenceContext = Load<TLinkedSource>(modelId);
             

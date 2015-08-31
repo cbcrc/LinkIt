@@ -5,7 +5,7 @@ using System.Linq;
 namespace HeterogeneousDataSources.LoadLinkExpressions {
     public class RootLoadLinkExpression<TNestedLinkedSource, TNestedLinkedSourceModel, TId>
         : LoadLinkExpression<TId, TNestedLinkedSourceModel, TId>, ILoadLinkExpression
-        where TNestedLinkedSource : ILinkedSource<TNestedLinkedSourceModel>, new() 
+        where TNestedLinkedSource : class, ILinkedSource<TNestedLinkedSourceModel>, new() 
     {
         protected override List<TId> GetLookupIdsTemplate(TId id)
         {
