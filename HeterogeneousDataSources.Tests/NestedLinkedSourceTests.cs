@@ -30,7 +30,6 @@ namespace HeterogeneousDataSources.Tests {
                 },
                 getReferenceIdFunc: reference => reference.Id,
                 fakeReferenceTypeForLoadingLevel: new[] {
-                        new List<Type>{typeof(int)},
                         new List<Type>{typeof(NestedContent)},
                         new List<Type>{typeof(Person)},
                         new List<Type>{typeof(Image)},
