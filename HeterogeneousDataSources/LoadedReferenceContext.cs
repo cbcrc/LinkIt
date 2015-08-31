@@ -33,10 +33,13 @@ namespace HeterogeneousDataSources {
             _referenceDictionaryByReferenceType[tReference] = referenceDictionnary;
         }
 
-        public void AddLinkedSourceToBeBuilt(object linkedSource){
-            if (linkedSource != null) {
-                _linkedSourcesToBeBuilt.Add(linkedSource);
-            }
+        public void AddLinkedSourcesToBeBuilt<TLinkedSource>(List<TLinkedSource> linkedSources)
+        {
+            var linkedSourcesAsObject = linkedSources
+                .Where(linkedSource=>linkedSources!=null)
+                .Cast<object>()
+                .ToList();
+            _linkedSourcesToBeBuilt.AddRange(linkedSourcesAsObject);
         }
 
         public List<object> LinkedSourcesToBeBuilt{

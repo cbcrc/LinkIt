@@ -29,7 +29,7 @@ namespace HeterogeneousDataSources {
         private LoadedReferenceContext Load<TLinkedSource>(object modelId)
         {
             var loadedReferenceContext = new LoadedReferenceContext();
-            loadedReferenceContext.AddLinkedSourceToBeBuilt(modelId);
+            loadedReferenceContext.AddLinkedSourcesToBeBuilt(new List<object>{modelId});
             
             using (_referenceLoader)
             {

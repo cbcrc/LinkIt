@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
     //stle: refactor that
     //stle: hey you and your inheritance crap! Try a functional approach
     internal static class LoadLinkExpressionUtil {
-        internal static TNestedLinkedSource CreateNestedLinkedSource<TNestedLinkedSource, TNestedLinkedSourceModel>(List<TNestedLinkedSourceModel> references)
-            where TNestedLinkedSource : class, ILinkedSource<TNestedLinkedSourceModel>, new()
+        internal static List<TLinkedSource> CreateLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model)
+            where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {
-            var model = references.SingleOrDefault();
-
-            return CreateLinkedSource<TNestedLinkedSource, TNestedLinkedSourceModel>(model);
+            return CreateLinkedSources<TLinkedSource, TLinkedSourceModel>(
+                new List<TLinkedSourceModel> {model}
+            );
         }
 
-        internal static TLinkedSource CreateLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model)
-            where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new() 
+        internal static List<TLinkedSource> CreateLinkedSources<TLinkedSource, TLinkedSourceModel>(List<TLinkedSourceModel> models)
+            where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {
-            if (model == null) { return null; }
+            if (models == null) { return new List<TLinkedSource>(); }
 
-            return new TLinkedSource {
-                Model = model
-            };
+            return models
+                .Where(model => model != null)
+                .Select(model => new TLinkedSource {Model = model})
+                .ToList();
         }
 
         internal static void EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(object linkedSource) {

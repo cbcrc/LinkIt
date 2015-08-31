@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
-    public class SubLinkedSourceLoadLinkExpression<TLinkedSource, TSubLinkedSource, TSubLinkedSourceModel>: ILoadLinkExpression
+    public class SubLinkedSourcesLoadLinkExpression<TLinkedSource, TSubLinkedSource, TSubLinkedSourceModel>: ILoadLinkExpression
         where TSubLinkedSource : class, ILinkedSource<TSubLinkedSourceModel>, new() 
     {
-        private readonly Func<TLinkedSource, TSubLinkedSourceModel> _getSubLinkedSourceModelFunc;
-        private readonly Action<TLinkedSource, TSubLinkedSource> _linkAction;
+        private readonly Func<TLinkedSource, List<TSubLinkedSourceModel>> _getSubLinkedSourceModelsFunc;
+        private readonly Action<TLinkedSource, List<TSubLinkedSource>> _linkAction;
 
-        public SubLinkedSourceLoadLinkExpression(Func<TLinkedSource, TSubLinkedSourceModel> getSubLinkedSourceModelFunc, Action<TLinkedSource, TSubLinkedSource> linkAction)
+        public SubLinkedSourcesLoadLinkExpression(
+            Func<TLinkedSource, List<TSubLinkedSourceModel>> getSubLinkedSourceModelsFunc, Action<TLinkedSource, List<TSubLinkedSource>> linkAction)
         {
             LinkedSourceType = typeof(TLinkedSource);
-
-            _getSubLinkedSourceModelFunc = getSubLinkedSourceModelFunc;
+            _getSubLinkedSourceModelsFunc = getSubLinkedSourceModelsFunc;
             _linkAction = linkAction;
         }
 
@@ -41,10 +41,12 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         public void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
-            var subLinkedSourceModel = _getSubLinkedSourceModelFunc(linkedSource);
-            var subLinkedSources = LoadLinkExpressionUtil.CreateLinkedSource<TSubLinkedSource, TSubLinkedSourceModel>(subLinkedSourceModel);
+            var subLinkedSourceModels = _getSubLinkedSourceModelsFunc(linkedSource);
+            var subLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TSubLinkedSource, TSubLinkedSourceModel>(subLinkedSourceModels);
+
             loadedReferenceContext.AddLinkedSourcesToBeBuilt(subLinkedSources);
-            _linkAction(linkedSource, subLinkedSources.SingleOrDefault());
+            
+            _linkAction(linkedSource, subLinkedSources);
         }
     }
 }

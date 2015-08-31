@@ -47,6 +47,7 @@
     <Compile Include="LoadLinkExpressions\LoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionType.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionUtil.cs" />
+    <Compile Include="LoadLinkExpressions\SubLinkedSourcesLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\SubLinkedSourceLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\RootLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\NestedLinkedSourceLoadLinkExpression.cs" />
