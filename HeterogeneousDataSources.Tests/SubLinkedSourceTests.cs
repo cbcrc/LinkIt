@@ -63,33 +63,23 @@ namespace HeterogeneousDataSources.Tests
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        //[Test]
-        //public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
-        //    var sut = _loadLinkProtocolFactory.Create(
-        //        new SingleReferenceContent {
-        //            Id = "1",
-        //            SummaryImageId = null
-        //        }
-        //    );
+        [Test]
+        public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new SubContentOwner {
+                    Id = "1",
+                    SubContent = new SubContent {
+                        SubSubContent = null
+                    },
+                    SubSubContent = null
+                }
+            );
 
-        //    var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = sut.LoadLink<SubContentOwnerLinkedSource>("1");
 
-        //    Assert.That(actual.SummaryImage, Is.Null);
-        //}
-
-        //[Test]
-        //public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull() {
-        //    var sut = _loadLinkProtocolFactory.Create(
-        //        new SingleReferenceContent {
-        //            Id = "1",
-        //            SummaryImageId = "cannot-be-resolved"
-        //        }
-        //    );
-
-        //    var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
-
-        //    Assert.That(actual.SummaryImage, Is.Null);
-        //}
+            Assert.That(actual.SubContent.SubSubContent, Is.Null);
+            Assert.That(actual.SubSubContent, Is.Null);
+        }
     }
 
     public class SubContentOwnerLinkedSource : ILinkedSource<SubContentOwner> {
