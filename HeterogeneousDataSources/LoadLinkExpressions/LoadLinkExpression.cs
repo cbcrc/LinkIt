@@ -14,14 +14,14 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public Type LinkedSourceType { get; private set; }
         public Type ReferenceType { get; private set; }
-        
 
-        public abstract bool IsNestedLinkedSourceLoadLinkExpression { get; }
+
+        public abstract LoadLinkExpressionType LoadLinkExpressionType { get; }
 
         #region Load
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext)
         {
-            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
             var lookupIds = GetLookupIds((TLinkedSource)linkedSource);
             lookupIdContext.Add<TReference, TId>(lookupIds);
@@ -34,7 +34,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         #region Link
         public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
-            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
             Link((TLinkedSource) linkedSource, loadedReferenceContext);
         }
@@ -52,20 +52,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             LoadedReferenceContext loadedReferenceContext
         ); 
         #endregion
-
-        private void EnsureLinkedSourceIsOfTLinkedSource(object linkedSource) {
-            if (!(linkedSource is TLinkedSource)) {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "Cannot invoke load-link expression for {0} with linked source of type {1}",
-                        LinkedSourceType.Name,
-                        linkedSource != null
-                            ? linkedSource.GetType().Name
-                            : "Null"
-                        )
-                    );
-            }
-        }
 
         private List<TId> GetLookupIds(TLinkedSource linkedSource)
         {

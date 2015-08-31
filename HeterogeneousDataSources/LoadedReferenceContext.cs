@@ -5,6 +5,7 @@ using System.Linq;
 namespace HeterogeneousDataSources {
     public class LoadedReferenceContext {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
+        private readonly List<object> _linkedSourcesWhereSubLinkedSourceAreLinked = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
         public object State {
@@ -37,9 +38,21 @@ namespace HeterogeneousDataSources {
                 _linkedSourcesToBeBuilt.Add(linkedSource);
             }
         }
-        
+
         public List<object> LinkedSourcesToBeBuilt{
             get { return _linkedSourcesToBeBuilt.ToList(); }
+        }
+
+        public void AddLinkedSourceWhereSubLinkedSourceAreLinked(object linkedSource){
+            //assume linkedSource cannot be null
+            _linkedSourcesWhereSubLinkedSourceAreLinked.Add(linkedSource);
+        }
+
+        public List<object> GetLinkedSourceWithSubLinkedSourceToLink()
+        {
+            return _linkedSourcesToBeBuilt
+                .Except(_linkedSourcesWhereSubLinkedSourceAreLinked)
+                .ToList();
         }
 
         private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>() {

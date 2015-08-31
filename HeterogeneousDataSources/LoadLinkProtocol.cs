@@ -38,7 +38,8 @@ namespace HeterogeneousDataSources {
                 for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++)
                 {
                     LoadNestingLevel<TLinkedSource>(loadingLevel, loadedReferenceContext);
-                    LinkNestedLinkedSource<TLinkedSource>(loadingLevel, loadedReferenceContext);
+                    LinkNestedLinkedSources<TLinkedSource>(loadingLevel, loadedReferenceContext);
+                    LinkSubLinkedSources(loadedReferenceContext);
                 }
             }
             return loadedReferenceContext;
@@ -63,11 +64,24 @@ namespace HeterogeneousDataSources {
             return lookupIdContext;
         }
 
-        private void LinkNestedLinkedSource<TLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext) {
+        private void LinkNestedLinkedSources<TLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext) {
             foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt) {
                 var loadLinkExpressions = _config.GetLinkNestedLinkedSourceExpressions<TLinkedSource>(linkedSource, loadingLevel);
                 foreach (var loadLinkExpression in loadLinkExpressions) {
                     loadLinkExpression.Link(linkedSource, loadedReferenceContext);
+                }
+            }
+        }
+
+        private void LinkSubLinkedSources(LoadedReferenceContext loadedReferenceContext) {
+            while (loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink().Any()){
+                foreach (var linkedSource in loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink()){
+                    var loadLinkExpressions = _config.GetSubLinkedSourceExpressions(linkedSource);
+                    foreach (var loadLinkExpression in loadLinkExpressions)
+                    {
+                        loadLinkExpression.Link(linkedSource, loadedReferenceContext);
+                    }
+                    loadedReferenceContext.AddLinkedSourceWhereSubLinkedSourceAreLinked(linkedSource);
                 }
             }
         }

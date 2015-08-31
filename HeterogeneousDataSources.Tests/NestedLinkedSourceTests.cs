@@ -20,7 +20,7 @@ namespace HeterogeneousDataSources.Tests {
                     new RootLoadLinkExpression<NestedLinkedSource, NestedContent, int>(),
                     new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, string>(
                         linkedSource => linkedSource.Model.AuthorDetailId,
-                        (linkedSource, reference) => linkedSource.AuthorDetail = reference),
+                        (linkedSource, nestedLinkedSource) => linkedSource.AuthorDetail = nestedLinkedSource),
                     new ReferenceLoadLinkExpression<NestedLinkedSource,Person, string>(
                         linkedSource => linkedSource.Model.ClientSummaryId,
                         (linkedSource, reference) => linkedSource.ClientSummary = reference),

@@ -84,6 +84,7 @@
     <Compile Include="SingleReferenceTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SubLinkedSourceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

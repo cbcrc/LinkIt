@@ -6,7 +6,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     {
         Type LinkedSourceType { get; }
         Type ReferenceType { get; }
-        bool IsNestedLinkedSourceLoadLinkExpression { get; }
+        LoadLinkExpressionType LoadLinkExpressionType { get; }
         void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext);
         void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext);
     }

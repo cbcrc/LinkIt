@@ -20,8 +20,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             loadedReferenceContext.AddLinkedSourceToBeBuilt(nestedLinkedSource);
         }
 
-        public override bool IsNestedLinkedSourceLoadLinkExpression {
-            get { return true; }
+        public override LoadLinkExpressionType LoadLinkExpressionType {
+            get { return LoadLinkExpressionType.NestedLinkedSource; }
         }
 
     }

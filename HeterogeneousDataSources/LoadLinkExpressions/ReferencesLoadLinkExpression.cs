@@ -26,8 +26,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             _linkAction(linkedSource, references);
         }
 
-        public override bool IsNestedLinkedSourceLoadLinkExpression {
-            get { return false; }
+        public override LoadLinkExpressionType LoadLinkExpressionType {
+            get { return LoadLinkExpressionType.Reference; }
         }
     }
 }
