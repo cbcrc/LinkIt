@@ -45,6 +45,8 @@
     <Compile Include="LoadedReferenceContext.cs" />
     <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpression.cs" />
+    <Compile Include="LoadLinkExpressions\LoadLinkExpressionUtil.cs" />
+    <Compile Include="LoadLinkExpressions\RootLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\NestedLinkedSourceLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\ReferencesLoadLinkExpression.cs">
       <SubType>Code</SubType>

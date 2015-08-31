@@ -18,6 +18,7 @@ namespace HeterogeneousDataSources.Tests {
         public void SetUp() {
             _loadLinkProtocolFactory = new LoadLinkProtocolFactory<NestedContent, int>(
                 loadLinkExpressions: new List<ILoadLinkExpression>{
+                    new RootLoadLinkExpression<NestedLinkedSource, NestedContent, int>(),
                     new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, string>(
                         linkedSource => linkedSource.Model.AuthorDetailId,
                         (linkedSource, reference) => linkedSource.AuthorDetail = reference),
@@ -30,6 +31,7 @@ namespace HeterogeneousDataSources.Tests {
                 },
                 getReferenceIdFunc: reference => reference.Id,
                 fakeReferenceTypeForLoadingLevel: new[] {
+                        new List<Type>{typeof(int)},
                         new List<Type>{typeof(NestedContent)},
                         new List<Type>{typeof(Person)},
                         new List<Type>{typeof(Image)},
@@ -48,7 +50,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+            var actual = sut.LoadLink<NestedLinkedSource>(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -63,7 +65,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+            sut.LoadLink<NestedLinkedSource>(1);
 
             //stle: improve this by allowing test visibility on which image id was resolved
             //assert that does not throw
@@ -79,7 +81,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+            var actual = sut.LoadLink<NestedLinkedSource>(1);
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
@@ -94,7 +96,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+            var actual = sut.LoadLink<NestedLinkedSource>(1);
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
@@ -103,7 +105,7 @@ namespace HeterogeneousDataSources.Tests {
         public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot() {
             var sut = _loadLinkProtocolFactory.Create(null);
 
-            var actual = sut.LoadLink<NestedLinkedSource, int, NestedContent>(1);
+            var actual = sut.LoadLink<NestedLinkedSource>(1);
 
             Assert.That(actual, Is.Null);
         }

@@ -60,12 +60,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ManyReferencesTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MultipleReferencesTypeTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -79,10 +73,6 @@
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
     <Compile Include="Shared\LoadLinkProtocolFactory.cs" />
-    <Compile Include="RootLinkedSourceTests.cs" />
-    <Compile Include="SingleReferenceTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

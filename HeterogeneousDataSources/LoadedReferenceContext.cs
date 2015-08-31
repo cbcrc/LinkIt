@@ -33,9 +33,9 @@ namespace HeterogeneousDataSources {
         }
 
         public void AddLinkedSourceToBeBuilt(object linkedSource){
-            //assume that null linked source are never added
-
-            _linkedSourcesToBeBuilt.Add(linkedSource);
+            if (linkedSource != null) {
+                _linkedSourcesToBeBuilt.Add(linkedSource);
+            }
         }
         
         public List<object> LinkedSourcesToBeBuilt{

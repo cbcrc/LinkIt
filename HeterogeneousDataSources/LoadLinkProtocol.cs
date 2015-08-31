@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
     public class LoadLinkProtocol {
@@ -13,10 +14,12 @@ namespace HeterogeneousDataSources {
             _config = config;
         }
 
-        public TLinkedSource LoadLink<TLinkedSource,TId, TModel>(TId modelId)
-            where TLinkedSource : ILinkedSource<TModel>, new() 
+        public TLinkedSource LoadLink<TLinkedSource>(object modelId)
         {
-            var loadedReferenceContext = Load<TLinkedSource, TId, TModel>(modelId);
+            //stle: constraint TLinkedSource to class and use null
+            if (modelId == null) { return default(TLinkedSource); }
+
+            var loadedReferenceContext = Load<TLinkedSource>(modelId);
             
             LinkReferences(loadedReferenceContext);
 
@@ -24,31 +27,16 @@ namespace HeterogeneousDataSources {
                 .SingleOrDefault(linkedSource => linkedSource is TLinkedSource);
         }
 
-        private LoadedReferenceContext Load<TLinkedSource,TId, TModel>(TId modelId)
-            where TLinkedSource :ILinkedSource<TModel>, new() 
+        private LoadedReferenceContext Load<TLinkedSource>(object modelId)
         {
             var loadedReferenceContext = new LoadedReferenceContext();
+            loadedReferenceContext.AddLinkedSourceToBeBuilt(modelId);
             
-            var lookupIdContextLevel0 = new LookupIdContext();
-
-            var rootIds = modelId != null
-                ? new List<TId>{ modelId } 
-                : new List<TId>();
-
-            lookupIdContextLevel0.Add<TModel, TId>(rootIds);
-
             using (_referenceLoader)
             {
-                _referenceLoader.LoadReferences(lookupIdContextLevel0, loadedReferenceContext);
-
-                var rootLinkedSource = CreateRootLinkedSource<TLinkedSource, TId, TModel>(rootIds, loadedReferenceContext);
-                if (rootLinkedSource != null){
-                    loadedReferenceContext.AddLinkedSourceToBeBuilt(rootLinkedSource);
-                }
-
                 var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TLinkedSource>();
-                //stle: 1 to skip root for now
-                for (int loadingLevel = 1; loadingLevel < numberOfLoadingLevel; loadingLevel++)
+
+                for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++)
                 {
                     LoadNestingLevel<TLinkedSource>(loadingLevel, loadedReferenceContext);
                     LinkNestedLinkedSource<TLinkedSource>(loadingLevel, loadedReferenceContext);
@@ -92,18 +80,6 @@ namespace HeterogeneousDataSources {
                     loadLinkExpression.Link(linkedSource, loadedReferenceContext);
                 }
             }
-        }
-
-        private static TLinkedSource CreateRootLinkedSource<TLinkedSource, TId, TModel>(List<TId> modelIds,
-            LoadedReferenceContext loadedReferenceContext) where TLinkedSource : ILinkedSource<TModel>, new()
-        {
-            var models = loadedReferenceContext.GetOptionalReferences<TModel, TId>(modelIds);
-
-            var model = models.SingleOrDefault();
-            //stle: constraint TLinkedSource to class and use null
-            if (model == null) { return default(TLinkedSource); }
-
-            return new TLinkedSource {Model = model};
         }
     }
 }
