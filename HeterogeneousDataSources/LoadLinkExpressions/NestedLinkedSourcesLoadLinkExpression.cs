@@ -15,6 +15,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             ChildLinkedSourceType = typeof (TChildLinkedSource);
             _getLookupIdsFunc = getLookupIdsFunc;
             _linkAction = linkAction;
+            ModelType = typeof(TChildLinkedSourceModel);
         }
 
         protected override List<TId> GetLookupIdsTemplate(TLinkedSource linkedSource)
@@ -34,5 +35,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         public Type ChildLinkedSourceType { get; private set; }
+
+        public Type ModelType { get; private set; }
     }
 }

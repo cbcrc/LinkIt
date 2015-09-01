@@ -9,6 +9,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         public RootLoadLinkExpression()
         {
             ChildLinkedSourceType = typeof(TChildLinkedSource);
+            ModelType = typeof (TChildLinkedSourceModel);
         }
 
         protected override List<TId> GetLookupIdsTemplate(TId id)
@@ -29,5 +30,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         public Type ChildLinkedSourceType { get; private set; }
+        public Type ModelType { get; private set; }
     }
 }

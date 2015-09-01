@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
-    public abstract class LoadLinkExpression<TLinkedSource, TReference, TId> : ILoadLinkExpression
+    public abstract class LoadLinkExpression<TLinkedSource, TReference, TId> 
     {
         protected LoadLinkExpression()
         {
@@ -14,7 +14,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public Type LinkedSourceType { get; private set; }
         public Type ReferenceType { get; private set; }
-
 
         public abstract LoadLinkExpressionType LoadLinkExpressionType { get; }
 

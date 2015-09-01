@@ -13,6 +13,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         {
             _getLookupIdFunc = getLookupIdFunc;
             _linkAction = linkAction;
+            ModelType = typeof (TReference);
         }
 
         protected override List<TId> GetLookupIdsTemplate(TLinkedSource linkedSource)
@@ -30,5 +31,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         public override LoadLinkExpressionType LoadLinkExpressionType {
             get { return LoadLinkExpressionType.Reference; }
         }
+
+        public Type ModelType { get; private set; }
     }
 }

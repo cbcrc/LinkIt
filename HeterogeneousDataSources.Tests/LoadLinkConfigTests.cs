@@ -54,49 +54,48 @@ namespace HeterogeneousDataSources.Tests {
             public string OneLoadingLevelContentId { get; set; }
         }
 
+        [Test]
+        public void GetReferenceTypeForLoadingLevel_ManyLevel() {
+            var sut = new LoadLinkConfig(
+                new List<ILoadLinkExpression>{
+                    new RootLoadLinkExpression<ManyLoadingLevelContentLinkedSource, ManyLoadingLevelContent, string>(),
+                    new NestedLinkedSourceLoadLinkExpression<ManyLoadingLevelContentLinkedSource, PersonLinkedSource, Person, string>(
+                        linkedSource => linkedSource.Model.PersonId,
+                        (linkedSource, nestedLinkedSource) => linkedSource.Person = nestedLinkedSource),
+                    new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
+                        linkedSource => linkedSource.Model.SummaryImageId,
+                        (linkedSource, reference) => linkedSource.SummaryImage = reference)
+                },
+                null //to remove
+            );
 
-        //[Test]
-        //public void GetReferenceTypeForLoadingLevel_ManyLevel() {
-        //    var sut = new LoadLinkConfig(
-        //        new List<ILoadLinkExpression>{
-        //            new RootLoadLinkExpression<ManyLoadingLevelContentLinkedSource, ManyLoadingLevelContent, string>(),
-        //            new NestedLinkedSourceLoadLinkExpression<ManyLoadingLevelContentLinkedSource, PersonLinkedSource, Person, string>(
-        //                linkedSource => linkedSource.Model.PersonId,
-        //                (linkedSource, nestedLinkedSource) => linkedSource.Person = nestedLinkedSource),
-        //            new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
-        //                linkedSource => linkedSource.Model.SummaryImageId,
-        //                (linkedSource, reference) => linkedSource.SummaryImage = reference)
-        //        },
-        //        null //to remove
-        //    );
+            var numberOfLoadingLevel = sut.GetNumberOfLoadingLevel<ManyLoadingLevelContentLinkedSource>();
+            Assert.That(numberOfLoadingLevel, Is.EqualTo(3));
 
-        //    var numberOfLoadingLevel = sut.GetNumberOfLoadingLevel<ManyLoadingLevelContentLinkedSource>();
-        //    Assert.That(numberOfLoadingLevel, Is.EqualTo(3));
+            var referenceTypeForLoadingLevel0 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
+            Assert.That(
+                referenceTypeForLoadingLevel0,
+                Is.EquivalentTo(new[]{
+                    typeof(ManyLoadingLevelContent), 
+                })
+            );
+            var referenceTypeForLoadingLevel1 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
+            Assert.That(
+                referenceTypeForLoadingLevel1,
+                Is.EquivalentTo(new[]{
+                    typeof(Person), 
+                })
+            );
 
-        //    var referenceTypeForLoadingLevel0 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
-        //    Assert.That(
-        //        referenceTypeForLoadingLevel0,
-        //        Is.EquivalentTo(new[]{
-        //            typeof(ManyLoadingLevelContent), 
-        //        })
-        //    );
-        //    var referenceTypeForLoadingLevel1 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
-        //    Assert.That(
-        //        referenceTypeForLoadingLevel1,
-        //        Is.EquivalentTo(new[]{
-        //            typeof(Person), 
-        //        })
-        //    );
+            var referenceTypeForLoadingLevel2 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
+            Assert.That(
+                referenceTypeForLoadingLevel2,
+                Is.EquivalentTo(new[]{
+                    typeof(Image), 
+                })
+            );
 
-        //    var referenceTypeForLoadingLevel2 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
-        //    Assert.That(
-        //        referenceTypeForLoadingLevel2,
-        //        Is.EquivalentTo(new[]{
-        //            typeof(Image), 
-        //        })
-        //    );
-
-        //}
+        }
 
         public class ManyLoadingLevelContentLinkedSource : ILinkedSource<ManyLoadingLevelContent> {
             public ManyLoadingLevelContent Model { get; set; }
