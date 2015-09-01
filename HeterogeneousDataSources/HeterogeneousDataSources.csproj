@@ -44,6 +44,7 @@
     <Compile Include="IReferenceLoader.cs" />
     <Compile Include="LoadedReferenceContext.cs" />
     <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
+    <Compile Include="LoadLinkExpressions\IRootLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionType.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionUtil.cs" />

@@ -6,17 +6,18 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
+        //stle: remove fakeReferenceType
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<Type>[] fakeReferenceTypeForLoadingLevel)
         {
-            FakeReferenceTypeForLoadingLevel = fakeReferenceTypeForLoadingLevel;
-
             AllLoadLinkExpressions = loadLinkExpressions;
             ReferenceLoadLinkExpressions = loadLinkExpressions
                 .Where(loadLinkExpression => loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Reference)
                 .ToList();
 
             NestedLinkedSourceLoadLinkExpressions = loadLinkExpressions
-                .Where(loadLinkExpression => loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource)
+                .Where(loadLinkExpression => 
+                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource||
+                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root)
                 .ToList();
 
             SubLinkedSourceLoadLinkExpressions = loadLinkExpressions
@@ -24,13 +25,7 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        public List<Type>[] FakeReferenceTypeForLoadingLevel { get; private set; }
-
-        public int GetNumberOfLoadingLevel<TRootLinkedSource>()
-        {
-            return FakeReferenceTypeForLoadingLevel.Length;
-        }
-
+        //stle: should go in protocol
         public List<ILoadLinkExpression> GetLoadExpressions<TRootLinkedSource>(object linkedSource, int loadingLevel)
         {
             return GetLoadLinkExpressions<TRootLinkedSource>(linkedSource, AllLoadLinkExpressions, loadingLevel);
@@ -65,10 +60,37 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-
-        private List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel)
+        public int GetNumberOfLoadingLevel<TRootLinkedSource>()
         {
-            return FakeReferenceTypeForLoadingLevel[loadingLevel];
+            return InferReferenceTypeForEachLoadingLevel<TRootLinkedSource>().Count;
+        }
+
+        public List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel)
+        {
+            return InferReferenceTypeForEachLoadingLevel<TRootLinkedSource>()[0];
+        }
+
+        //stle: init for performance
+        public List<List<Type>> InferReferenceTypeForEachLoadingLevel<TRootLinkedSource>()
+        {
+            var firstLevel = AllLoadLinkExpressions
+                .Where(loadLinkExpression => loadLinkExpression is IRootLoadLinkExpression)
+                .Cast<IRootLoadLinkExpression>()
+                .Where(rootLoadLinkExpression => 
+                    rootLoadLinkExpression.RootLinkedSourceType == typeof (TRootLinkedSource)
+                )
+                .Select(loadLinkExpression => loadLinkExpression.ReferenceType)
+                .ToList();
+
+            //var nextLevel = AllLoadLinkExpressions
+            //    .Where(loadLinkExpression =>
+            //        loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource ||
+            //        loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Reference)
+            //    .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType == typeof(TRootLinkedSource))
+            //    .Select(loadLinkExpression => loadLinkExpression.ReferenceType)
+            //.ToList();
+
+            return new List<List<Type>>{firstLevel};
         }
 
         private List<ILoadLinkExpression> AllLoadLinkExpressions { get; set; }

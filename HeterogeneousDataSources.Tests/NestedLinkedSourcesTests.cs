@@ -111,7 +111,6 @@ namespace HeterogeneousDataSources.Tests {
 
     }
 
-
     public class NestedLinkedSources:ILinkedSource<NestedContents>
     {
         public NestedContents Model { get; set; }
