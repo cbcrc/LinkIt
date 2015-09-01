@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
-    public class NestedLinkedSourceLoadLinkExpression<TLinkedSource, TNestedLinkedSource, TNestedLinkedSourceModel, TId>
-        : LoadLinkExpression<TLinkedSource, TNestedLinkedSourceModel, TId>, ILoadLinkExpression
-        where TNestedLinkedSource : class, ILinkedSource<TNestedLinkedSourceModel>, new() 
+    public class NestedLinkedSourceLoadLinkExpression<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, TId>
+        : LoadLinkExpression<TLinkedSource, TChildLinkedSourceModel, TId>, INestedLoadLinkExpression
+        where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
     {
         private readonly Func<TLinkedSource, TId> _getLookupIdFunc;
-        private readonly Action<TLinkedSource, TNestedLinkedSource> _linkAction;
+        private readonly Action<TLinkedSource, TChildLinkedSource> _linkAction;
 
-        public NestedLinkedSourceLoadLinkExpression(Func<TLinkedSource, TId> getLookupIdFunc, Action<TLinkedSource, TNestedLinkedSource> linkAction)
+        public NestedLinkedSourceLoadLinkExpression(Func<TLinkedSource, TId> getLookupIdFunc, Action<TLinkedSource, TChildLinkedSource> linkAction)
         {
+            ChildLinkedSourceType = typeof (TChildLinkedSource);
             _getLookupIdFunc = getLookupIdFunc;
             _linkAction = linkAction;
         }
@@ -24,9 +25,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             };
         }
 
-        protected override void LinkAction(TLinkedSource linkedSource, List<TNestedLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
+        protected override void LinkAction(TLinkedSource linkedSource, List<TChildLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
         {
-            var nestedLinkedSource = LoadLinkExpressionUtil.CreateLinkedSources<TNestedLinkedSource, TNestedLinkedSourceModel>(references);
+            var nestedLinkedSource = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references);
             loadedReferenceContext.AddLinkedSourcesToBeBuilt(nestedLinkedSource);
             _linkAction(linkedSource, nestedLinkedSource.SingleOrDefault());
         }
@@ -35,5 +36,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             get { return LoadLinkExpressionType.NestedLinkedSource; }
         }
 
+        public Type ChildLinkedSourceType { get; private set; }
     }
 }

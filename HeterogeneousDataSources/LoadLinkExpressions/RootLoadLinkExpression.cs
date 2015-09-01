@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
-    public class RootLoadLinkExpression<TRootLinkedSource, TRootLinkedSourceModel, TId>
-        : LoadLinkExpression<TId, TRootLinkedSourceModel, TId>, IRootLoadLinkExpression
-        where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new() 
+    public class RootLoadLinkExpression<TChildLinkedSource, TChildLinkedSourceModel, TId>
+        : LoadLinkExpression<TId, TChildLinkedSourceModel, TId>, INestedLoadLinkExpression
+        where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
     {
         public RootLoadLinkExpression()
         {
-            RootLinkedSourceType = typeof(TRootLinkedSource);
+            ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
         protected override List<TId> GetLookupIdsTemplate(TId id)
@@ -18,9 +18,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         //stle: hey you and your inheritance crap! Try a functional approach
-        protected override void LinkAction(TId id, List<TRootLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
+        protected override void LinkAction(TId id, List<TChildLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
         {
-            var nestedLinkedSource = LoadLinkExpressionUtil.CreateLinkedSources<TRootLinkedSource, TRootLinkedSourceModel>(references);
+            var nestedLinkedSource = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references);
             loadedReferenceContext.AddLinkedSourcesToBeBuilt(nestedLinkedSource);
         }
 
@@ -28,6 +28,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             get { return LoadLinkExpressionType.Root; }
         }
 
-        public Type RootLinkedSourceType { get; private set; }
+        public Type ChildLinkedSourceType { get; private set; }
     }
 }

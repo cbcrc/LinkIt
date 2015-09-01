@@ -16,8 +16,9 @@ namespace HeterogeneousDataSources {
 
             NestedLinkedSourceLoadLinkExpressions = loadLinkExpressions
                 .Where(loadLinkExpression => 
-                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource||
-                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root)
+                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource ||
+                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root
+                )
                 .ToList();
 
             SubLinkedSourceLoadLinkExpressions = loadLinkExpressions
@@ -74,10 +75,10 @@ namespace HeterogeneousDataSources {
         public List<List<Type>> InferReferenceTypeForEachLoadingLevel<TRootLinkedSource>()
         {
             var firstLevel = AllLoadLinkExpressions
-                .Where(loadLinkExpression => loadLinkExpression is IRootLoadLinkExpression)
-                .Cast<IRootLoadLinkExpression>()
-                .Where(rootLoadLinkExpression => 
-                    rootLoadLinkExpression.RootLinkedSourceType == typeof (TRootLinkedSource)
+                .Where(loadLinkExpression => loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root)
+                .Cast<INestedLoadLinkExpression>()
+                .Where(nestedLoadLinkExpression => 
+                    nestedLoadLinkExpression.ChildLinkedSourceType == typeof (TRootLinkedSource)
                 )
                 .Select(loadLinkExpression => loadLinkExpression.ReferenceType)
                 .ToList();
