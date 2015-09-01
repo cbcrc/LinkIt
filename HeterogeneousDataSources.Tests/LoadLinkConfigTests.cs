@@ -79,7 +79,7 @@ namespace HeterogeneousDataSources.Tests {
                     typeof(ManyLoadingLevelContent), 
                 })
             );
-            var referenceTypeForLoadingLevel1 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
+            var referenceTypeForLoadingLevel1 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(1);
             Assert.That(
                 referenceTypeForLoadingLevel1,
                 Is.EquivalentTo(new[]{
@@ -87,7 +87,7 @@ namespace HeterogeneousDataSources.Tests {
                 })
             );
 
-            var referenceTypeForLoadingLevel2 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(0);
+            var referenceTypeForLoadingLevel2 = sut.GetReferenceTypeForLoadingLevel<ManyLoadingLevelContentLinkedSource>(2);
             Assert.That(
                 referenceTypeForLoadingLevel2,
                 Is.EquivalentTo(new[]{
