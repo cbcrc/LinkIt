@@ -8,40 +8,36 @@ namespace HeterogeneousDataSources.Tests.Shared {
     {
         private readonly List<ILoadLinkExpression> _loadLinkExpressions;
         private readonly Func<TReference, TId> _getReferenceIdFunc;
-        private readonly List<Type>[] _fakeReferenceTypeForLoadingLevel;
         private readonly IReferenceTypeConfig[] _customReferenceTypeConfigs;
 
-        public LoadLinkProtocolFactory(List<ILoadLinkExpression> loadLinkExpressions, Func<TReference, TId> getReferenceIdFunc, List<Type>[] fakeReferenceTypeForLoadingLevel, params IReferenceTypeConfig[] customReferenceTypeConfigs)
+        public LoadLinkProtocolFactory(List<ILoadLinkExpression> loadLinkExpressions, Func<TReference, TId> getReferenceIdFunc, params IReferenceTypeConfig[] customReferenceTypeConfigs)
         {
             _loadLinkExpressions = loadLinkExpressions;
             _getReferenceIdFunc = getReferenceIdFunc;
-            _fakeReferenceTypeForLoadingLevel = fakeReferenceTypeForLoadingLevel;
             _customReferenceTypeConfigs = customReferenceTypeConfigs;
         }
 
-        public HeterogeneousDataSources.LoadLinkProtocol Create(TReference fixedValue)
+        public LoadLinkProtocol Create(TReference fixedValue)
         {
             var customConfig = GetCustomConfig(fixedValue, _getReferenceIdFunc);
 
             var referenceLoader = new FakeReferenceLoader(customConfig);
 
-            return new HeterogeneousDataSources.LoadLinkProtocol(
+            return new LoadLinkProtocol(
                 referenceLoader,
                 new LoadLinkConfig(
-                    _loadLinkExpressions,
-                    _fakeReferenceTypeForLoadingLevel
+                    _loadLinkExpressions
                 )
             );
         }
 
-        public HeterogeneousDataSources.LoadLinkProtocol Create() {
+        public LoadLinkProtocol Create() {
             var referenceLoader = new FakeReferenceLoader(_customReferenceTypeConfigs);
 
-            return new HeterogeneousDataSources.LoadLinkProtocol(
+            return new LoadLinkProtocol(
                 referenceLoader,
                 new LoadLinkConfig(
-                    _loadLinkExpressions,
-                    _fakeReferenceTypeForLoadingLevel
+                    _loadLinkExpressions
                 )
             );
         }

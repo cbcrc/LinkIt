@@ -19,9 +19,6 @@ namespace HeterogeneousDataSources.Tests
                 new LoadLinkConfig(
                     new List<ILoadLinkExpression>{
                         new RootLoadLinkExpression<WithoutReferenceLinkedSource, Image, string>(),
-                    }, 
-                    new[] {
-                        new List<Type>{typeof(string)},
                     }
                 )
             );

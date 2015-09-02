@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
@@ -33,11 +32,7 @@ namespace HeterogeneousDataSources.Tests
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference)
                 },
-                getReferenceIdFunc: reference => reference.Id,
-                fakeReferenceTypeForLoadingLevel: new[] {
-                    new List<Type>{typeof(SubContentOwner)},
-                    new List<Type>{typeof(Image)},
-                }
+                getReferenceIdFunc: reference => reference.Id
                 );
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
@@ -26,12 +25,7 @@ namespace HeterogeneousDataSources.Tests {
                         linkedSource => linkedSource.Model.SummaryImageId,
                         (linkedSource, reference) => linkedSource.SummaryImage = reference)
                 },
-                getReferenceIdFunc: reference => reference.Id,
-                fakeReferenceTypeForLoadingLevel: new[] {
-                        new List<Type>{typeof(NestedContents)},
-                        new List<Type>{typeof(Person)},
-                        new List<Type>{typeof(Image)},
-                }
+                getReferenceIdFunc: reference => reference.Id
             );
         }
 

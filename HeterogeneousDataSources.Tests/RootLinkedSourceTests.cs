@@ -21,9 +21,6 @@ namespace HeterogeneousDataSources.Tests {
                     new RootLoadLinkExpression<RootLinkedSource, RootContent, string>(),
                 },
                 getReferenceIdFunc: reference => reference.Id,
-                fakeReferenceTypeForLoadingLevel: new[] {
-                    new List<Type>{typeof(RootContent)},
-                },
                 customReferenceTypeConfigs: new ReferenceTypeConfig<RootContent, string>(
                     ids => new RootContentRepository().GetByIds(ids),
                     reference => reference.Id

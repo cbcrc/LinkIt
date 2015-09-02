@@ -10,7 +10,7 @@ namespace HeterogeneousDataSources {
         private readonly Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
 
         //stle: remove fakeReferenceType
-        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<Type>[] fakeReferenceTypeForLoadingLevel = null)
+        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions)
         {
             EnsureChildLinkedSourceTypeIsUniqueInRootExpression(loadLinkExpressions);
 
