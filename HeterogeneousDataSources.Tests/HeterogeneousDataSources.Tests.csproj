@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
-    <Compile Include="LoadLinkProtocol_LifeCycleTests.cs" />
+    <Compile Include="LoadLinkProtocolTests.cs" />
     <Compile Include="ManyReferencesTests.cs">
       <SubType>Code</SubType>
     </Compile>

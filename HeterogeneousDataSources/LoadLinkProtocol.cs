@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
     public class LoadLinkProtocol {
@@ -14,49 +13,64 @@ namespace HeterogeneousDataSources {
             _config = config;
         }
 
-        public TLinkedSource LoadLink<TLinkedSource>(object modelId)
+        public TRootLinkedSource LoadLink<TRootLinkedSource>(object modelId)
         {
             if (modelId == null) { throw new ArgumentNullException("modelId");}
+            EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>();
 
-            var loadedReferenceContext = Load<TLinkedSource>(modelId);
+            var loadedReferenceContext = Load<TRootLinkedSource>(modelId);
             
             LinkReferences(loadedReferenceContext);
 
-            return (TLinkedSource)loadedReferenceContext.LinkedSourcesToBeBuilt
-                .SingleOrDefault(linkedSource => linkedSource is TLinkedSource);
+            return (TRootLinkedSource)loadedReferenceContext.LinkedSourcesToBeBuilt
+                .SingleOrDefault(linkedSource => linkedSource is TRootLinkedSource);
         }
 
-        private LoadedReferenceContext Load<TLinkedSource>(object modelId)
+        private void EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>()
+        {
+            if (!_config.DoesLoadLinkExpressionForRootLinkedSourceTypeExists(typeof (TRootLinkedSource)))
+            {
+                throw new ArgumentException(
+                    string.Format(
+                        "{0} is not configured as a root linked source type",
+                        typeof (TRootLinkedSource)
+                        ),
+                    "TRootLinkedSource"
+                );
+            }
+        }
+
+        private LoadedReferenceContext Load<TRootLinkedSource>(object modelId)
         {
             var loadedReferenceContext = new LoadedReferenceContext();
             loadedReferenceContext.AddLinkedSourcesToBeBuilt(new List<object>{modelId});
             
             using (_referenceLoader)
             {
-                var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TLinkedSource>();
+                var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TRootLinkedSource>();
 
                 for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++)
                 {
-                    LoadNestingLevel<TLinkedSource>(loadingLevel, loadedReferenceContext);
-                    LinkNestedLinkedSources<TLinkedSource>(loadingLevel, loadedReferenceContext);
+                    LoadNestingLevel<TRootLinkedSource>(loadingLevel, loadedReferenceContext);
+                    LinkNestedLinkedSources<TRootLinkedSource>(loadingLevel, loadedReferenceContext);
                     LinkSubLinkedSources(loadedReferenceContext);
                 }
             }
             return loadedReferenceContext;
         }
 
-        private void LoadNestingLevel<TLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext)
+        private void LoadNestingLevel<TRootLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext)
         {
-            var lookupIdContext = GetLookupIdContextForLoadingLevel<TLinkedSource>(loadingLevel, loadedReferenceContext);
+            var lookupIdContext = GetLookupIdContextForLoadingLevel<TRootLinkedSource>(loadingLevel, loadedReferenceContext);
             _referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
         }
 
-        private LookupIdContext GetLookupIdContextForLoadingLevel<TLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext)
+        private LookupIdContext GetLookupIdContextForLoadingLevel<TRootLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext)
         {
             var lookupIdContext = new LookupIdContext();
 
             foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt){
-                var loadLinkExpressions = _config.GetLoadExpressions<TLinkedSource>(linkedSource, loadingLevel);
+                var loadLinkExpressions = _config.GetLoadExpressions<TRootLinkedSource>(linkedSource, loadingLevel);
                 foreach (var loadLinkExpression in loadLinkExpressions){
                     loadLinkExpression.AddLookupIds(linkedSource, lookupIdContext);
                 }
@@ -64,9 +78,9 @@ namespace HeterogeneousDataSources {
             return lookupIdContext;
         }
 
-        private void LinkNestedLinkedSources<TLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext) {
+        private void LinkNestedLinkedSources<TRootLinkedSource>(int loadingLevel, LoadedReferenceContext loadedReferenceContext) {
             foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt) {
-                var loadLinkExpressions = _config.GetLinkNestedLinkedSourceExpressions<TLinkedSource>(linkedSource, loadingLevel);
+                var loadLinkExpressions = _config.GetLinkNestedLinkedSourceExpressions<TRootLinkedSource>(linkedSource, loadingLevel);
                 foreach (var loadLinkExpression in loadLinkExpressions) {
                     loadLinkExpression.Link(linkedSource, loadedReferenceContext);
                 }

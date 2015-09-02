@@ -39,6 +39,12 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
+        public int GetNumberOfLoadingLevel<TRootLinkedSource>() {
+            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
+
+            return referenceTypeByLoadingLevel.Count;
+        }
+
         //stle: should go in protocol
         public List<ILoadLinkExpression> GetLoadExpressions<TRootLinkedSource>(object linkedSource, int loadingLevel)
         {
@@ -74,18 +80,20 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        //stle: is this internal?
-        public int GetNumberOfLoadingLevel<TRootLinkedSource>(){
-            var rootLinkedSourceType = typeof (TRootLinkedSource);
+        private List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel){
+            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
 
-            return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType].Count;
+            return referenceTypeByLoadingLevel[loadingLevel];
         }
 
-        //stle: is this internal?
-        public List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel){
+        private Dictionary<int, List<Type>> GetReferenceTypeByLoadingLevel<TRootLinkedSource>(){
             var rootLinkedSourceType = typeof(TRootLinkedSource);
+            return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType];
+        }
 
-            return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType][loadingLevel];
+        public bool DoesLoadLinkExpressionForRootLinkedSourceTypeExists(Type rootLinkedSourceType)
+        {
+            return _referenceTypeByLoadingLevelByRootLinkedSourceType.ContainsKey(rootLinkedSourceType);
         }
 
         private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory)
