@@ -7,11 +7,20 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private LoadLinkExpressionTreeFactory _linkExpressionTreeFactory;
+        private Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
 
         //stle: remove fakeReferenceType
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<Type>[] fakeReferenceTypeForLoadingLevel)
         {
+            EnsureChildLinkedSourceTypeIsUniqueInRootExpression(loadLinkExpressions);
+
             _linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
+
+            _referenceTypeByLoadingLevelByRootLinkedSourceType = 
+                GetReferenceTypeByLoadingLevelByRootLinkedSourceType(
+                    loadLinkExpressions, 
+                    _linkExpressionTreeFactory
+                );
 
             AllLoadLinkExpressions = loadLinkExpressions;
             ReferenceLoadLinkExpressions = loadLinkExpressions
@@ -65,91 +74,62 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        public int GetNumberOfLoadingLevel<TRootLinkedSource>()
+        //stle: is this internal?
+        public int GetNumberOfLoadingLevel<TRootLinkedSource>(){
+            var rootLinkedSourceType = typeof (TRootLinkedSource);
+
+            return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType].Count;
+        }
+
+        //stle: is this internal?
+        public List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel){
+            var rootLinkedSourceType = typeof(TRootLinkedSource);
+
+            return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType][loadingLevel];
+        }
+
+        private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory)
         {
-            return InferReferenceTypeByLoadingLevel<TRootLinkedSource>().Count;
+            var parser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
+
+            return GetRootLoadLinkExpressions(loadLinkExpressions)
+                .Select(rootExpression =>
+                    new {
+                        RootLinkedSourceType = rootExpression.ChildLinkedSourceType,
+                        ReferenceTypeByLoadingLevel = parser.ParseReferenceTypeByLoadingLevel(rootExpression)
+                    }
+                )
+                .ToDictionary(
+                    p => p.RootLinkedSourceType,
+                    p => p.ReferenceTypeByLoadingLevel
+                );
         }
 
-        public List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel)
-        {
-            return InferReferenceTypeByLoadingLevel<TRootLinkedSource>()[loadingLevel];
-        }
+        private void EnsureChildLinkedSourceTypeIsUniqueInRootExpression(List<ILoadLinkExpression> loadLinkExpressions) {
+            var childLinkedSourceTypeWithDuplicates = GetRootLoadLinkExpressions(loadLinkExpressions)
+                .GroupBy(rootExpression => rootExpression.ChildLinkedSourceType)
+                .Where(group => group.Count() > 1)
+                .Select(group => group.Key)
+                .ToList();
 
-        #region Stle: move this out
-        //stle: init for performance
-        public Dictionary<int, List<Type>> InferReferenceTypeByLoadingLevel<TRootLinkedSource>() {
-            var rootExpression = GetRootExpression<TRootLinkedSource>();
-            return InferReferenceTypeByLoadingLevel(rootExpression);
-        }
-
-        private INestedLoadLinkExpression GetRootExpression<TRootLinkedSource>() {
-            var rootExpressions = AllLoadLinkExpressions
-                .Where(loadLinkExpression =>
-                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root)
-                .Cast<INestedLoadLinkExpression>()
-                .Where(nestedLoadLinkExpression =>
-                    nestedLoadLinkExpression.ChildLinkedSourceType == typeof(TRootLinkedSource));
-
-            //stle: assume only one RootExpression perTRootLinkedSource
-
-            return rootExpressions.Single();
-        }
-
-        private Dictionary<int, List<Type>> InferReferenceTypeByLoadingLevel(ILoadLinkExpression rootExpression) {
-            var linkedExpressionTree = _linkExpressionTreeFactory.Create(rootExpression);
-
-            var loadingLevelByReferenceType = new Dictionary<Type, int>();
-            ParseTree(linkedExpressionTree, 0, loadingLevelByReferenceType);
-            return ToReferenceTypeByLoadingLevel(loadingLevelByReferenceType);
-        }
-
-        private void ParseTree(Tree<ILoadLinkExpression> linkedExpressionTree, int loadingLevel, Dictionary<Type, int> loadingLevelByReferenceType) {
-            var node = linkedExpressionTree.Node;
-            ParseNode(node, loadingLevelByReferenceType, loadingLevel);
-
-            var nextLoadingLevel = GetNextLoadingLevel(node, loadingLevel);
-            foreach (var child in linkedExpressionTree.Children) {
-                ParseTree(child, nextLoadingLevel, loadingLevelByReferenceType);
+            if (childLinkedSourceTypeWithDuplicates.Any()) {
+                throw new ArgumentException(
+                    string.Format(
+                        "Can only have one root expression per child linked source, but there are many for : {0}.",
+                        string.Concat(childLinkedSourceTypeWithDuplicates, ',')
+                    )
+                );
             }
         }
 
-        private static int GetNextLoadingLevel(ILoadLinkExpression node, int loadingLevel) {
-            if (node.LoadLinkExpressionType == LoadLinkExpressionType.SubLinkedSource) { return loadingLevel; }
-
-            return loadingLevel + 1;
+        private List<INestedLoadLinkExpression> GetRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions)
+        {
+            return loadLinkExpressions
+                .Where(loadLinkExpression =>
+                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root)
+                .Cast<INestedLoadLinkExpression>()
+                .ToList();
         }
-
-        private void ParseNode(ILoadLinkExpression node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel) {
-            if (node.ReferenceType == null) { return; }
-
-            var currentValue = GetLoadingLevelCurrentValue(node.ReferenceType, loadingLevelByReferenceType);
-            var newValue = Math.Max(currentValue, loadingLevel);
-            loadingLevelByReferenceType[node.ReferenceType] = newValue;
-        }
-
-        private int GetLoadingLevelCurrentValue(Type referenceType, Dictionary<Type, int> loadingLevelByReferenceType) {
-            if (!loadingLevelByReferenceType.ContainsKey(referenceType)) { return -1; }
-            return loadingLevelByReferenceType[referenceType];
-        }
-
-        private static Dictionary<int, List<Type>> ToReferenceTypeByLoadingLevel(Dictionary<Type, int> loadingLevelByReferenceType) {
-            var referenceTypeGroupByLoadingLevel = loadingLevelByReferenceType
-                .GroupBy(
-                    keySelector: p => p.Value, //loadingLevel
-                    elementSelector: p => p.Key, //referenceType
-                    resultSelector: (key, elements) => new {
-                        LoadingLevel = key,
-                        ReferenceTypes = elements.ToList()
-                    }
-                );
-
-            return referenceTypeGroupByLoadingLevel
-                .ToDictionary(
-                    p => p.LoadingLevel,
-                    p => p.ReferenceTypes
-                );
-        } 
-        #endregion
 
         private List<ILoadLinkExpression> AllLoadLinkExpressions { get; set; }
         private List<ILoadLinkExpression> ReferenceLoadLinkExpressions { get; set; }
