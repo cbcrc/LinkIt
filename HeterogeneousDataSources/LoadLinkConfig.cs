@@ -7,10 +7,10 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private LoadLinkExpressionTreeFactory _linkExpressionTreeFactory;
-        private Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
+        private readonly Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
 
         //stle: remove fakeReferenceType
-        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<Type>[] fakeReferenceTypeForLoadingLevel)
+        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<Type>[] fakeReferenceTypeForLoadingLevel = null)
         {
             EnsureChildLinkedSourceTypeIsUniqueInRootExpression(loadLinkExpressions);
 
@@ -116,7 +116,7 @@ namespace HeterogeneousDataSources {
                 throw new ArgumentException(
                     string.Format(
                         "Can only have one root expression per child linked source, but there are many for : {0}.",
-                        string.Concat(childLinkedSourceTypeWithDuplicates, ',')
+                        String.Join(",", childLinkedSourceTypeWithDuplicates)
                     )
                 );
             }

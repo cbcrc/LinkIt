@@ -10,6 +10,21 @@ namespace HeterogeneousDataSources.Tests {
     public class LoadLinkConfigTests
     {
         [Test]
+        public void CreateLoadLinkConfig_ManyRootExpressionForTheSameChildLinkedSource()
+        {
+            TestDelegate act = () => new LoadLinkConfig(
+                new List<ILoadLinkExpression>
+                {
+                    new RootLoadLinkExpression<PersonLinkedSource, Person, string>(),
+                    new RootLoadLinkExpression<PersonLinkedSource, Person, int>(),
+                }
+            );
+
+            Assert.That(act, Throws.ArgumentException.With.Message.ContainsSubstring("PersonLinkedSource"));
+        }
+
+
+        [Test]
         public void GetReferenceTypeForLoadingLevel_OneLevel()
         {
             var sut = new LoadLinkConfig(
