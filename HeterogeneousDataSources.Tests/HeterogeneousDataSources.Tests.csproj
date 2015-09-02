@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReferenceTypeByLoadingLevelParserTests.cs" />
     <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
     <Compile Include="LoadLinkProtocolTests.cs" />
     <Compile Include="ManyReferencesTests.cs">
