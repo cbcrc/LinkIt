@@ -17,6 +17,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             _linkAction = linkAction;
             ModelType = typeof (TChildLinkedSourceModel);
             ChildLinkedSourceType = typeof(TChildLinkedSource);
+            ChildLinkedSourceModelType = typeof(TChildLinkedSourceModel);
         }
 
         //stle: hey you and your inheritance crap! Try a functional approach
@@ -53,5 +54,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
 
         public Type ModelType { get; private set; }
         public Type ChildLinkedSourceType { get; private set; }
+        public Type ChildLinkedSourceModelType { get; private set; }
     }
 }

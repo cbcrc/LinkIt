@@ -13,6 +13,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         public NestedLinkedSourceLoadLinkExpression(Func<TLinkedSource, TId> getLookupIdFunc, Action<TLinkedSource, TChildLinkedSource> linkAction)
         {
             ChildLinkedSourceType = typeof (TChildLinkedSource);
+            ChildLinkedSourceModelType = typeof (TChildLinkedSourceModel);
             _getLookupIdFunc = getLookupIdFunc;
             _linkAction = linkAction;
             ModelType = typeof(TChildLinkedSourceModel);
@@ -38,6 +39,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         public Type ChildLinkedSourceType { get; private set; }
+        public Type ChildLinkedSourceModelType { get; private set; }
 
         public Type ModelType { get; private set; }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HeterogeneousDataSources.LoadLinkExpressions;
 
@@ -23,6 +24,36 @@ namespace HeterogeneousDataSources
                 children
             );
         }
+
+        public Type GetReferenceTypeThatCreatesACycle(ILoadLinkExpression node){
+            return GetReferenceTypeThatCreatesACycle(node, new List<Type>());
+        }
+
+        private Type GetReferenceTypeThatCreatesACycle(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors) {
+            if(referenceTypesOfAncestors.Contains(node.ReferenceType)){ return node.ReferenceType; }
+
+            var referenceTypesOfAncestorsForNextLevel = GetReferenceTypesOfAncestorsForNextLevel(node, referenceTypesOfAncestors);
+
+            var childLoadLinkExpressions = GetChildLoadLinkExpressions(node);
+            return childLoadLinkExpressions
+                .Select(childLoadLinkExpression =>
+                    GetReferenceTypeThatCreatesACycle(childLoadLinkExpression, referenceTypesOfAncestorsForNextLevel))
+                .FirstOrDefault(referenceTypeThatCreateACycle=>referenceTypeThatCreateACycle!=null);
+        }
+
+        private static List<Type> GetReferenceTypesOfAncestorsForNextLevel(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors)
+        {
+            //Make sure referenceTypesOfAncestors is not altered
+            var result = referenceTypesOfAncestors.ToList();
+
+            if (node.LoadLinkExpressionType == LoadLinkExpressionType.Root ||
+                node.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource)
+            {
+                result.Add(node.ReferenceType);
+            }
+            return result;
+        }
+
 
         private List<ILoadLinkExpression> GetChildLoadLinkExpressions(ILoadLinkExpression node)
         {

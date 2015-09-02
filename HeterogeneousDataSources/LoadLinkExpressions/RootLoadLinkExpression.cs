@@ -9,6 +9,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         public RootLoadLinkExpression()
         {
             ChildLinkedSourceType = typeof(TChildLinkedSource);
+            ChildLinkedSourceModelType = typeof(TChildLinkedSourceModel);
             ModelType = typeof (TChildLinkedSourceModel);
         }
 
@@ -30,6 +31,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         public Type ChildLinkedSourceType { get; private set; }
+        public Type ChildLinkedSourceModelType { get; private set; }
         public Type ModelType { get; private set; }
     }
 }
