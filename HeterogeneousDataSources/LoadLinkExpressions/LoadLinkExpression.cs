@@ -10,14 +10,24 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         {
             LinkedSourceType = typeof (TLinkedSource);
             ReferenceType = typeof (TReference);
+            ReferenceTypes = new List<Type> { ReferenceType };
         }
 
         public Type LinkedSourceType { get; private set; }
-        public Type ReferenceType { get; private set; }
+        
+        private Type ReferenceType { get; set; }
+
+        //In order to implement ILoadLinkExpression for sub class
+        public List<Type> ReferenceTypes { get; private set; }
 
         public abstract LoadLinkExpressionType LoadLinkExpressionType { get; }
 
         #region Load
+
+        public bool DoesMatchReferenceTypeToBeLoaded(object linkedSource, List<Type> referenceTypesToBeLoaded){
+            return referenceTypesToBeLoaded.Contains(ReferenceType);
+        }
+
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext)
         {
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);

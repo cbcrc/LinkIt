@@ -1,0 +1,12 @@
+﻿{
+  "model": {
+    "id": "1",
+    "referenceTypeDiscriminant": "image",
+    "referenceId": "image-b"
+  },
+  "reference": {
+    "$type": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests",
+    "id": "image-b",
+    "alt": "alt-image-b"
+  }
+}

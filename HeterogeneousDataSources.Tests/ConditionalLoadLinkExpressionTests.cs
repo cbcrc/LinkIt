@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
@@ -10,26 +11,26 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class ConditionalLoadLinkExpressionTests
     {
-        private LoadLinkProtocolFactory<WithPolymorphicReference, string> _loadLinkProtocolFactory;
+        private LoadLinkProtocolFactory<WithConditional, string> _loadLinkProtocolFactory;
 
         [SetUp]
         public void SetUp() {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<WithPolymorphicReference, string>(
+            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<WithConditional, string>(
                 loadLinkExpressions: new List<ILoadLinkExpression> {
-                    new RootLoadLinkExpression<WithPolymorphicReferenceLinkedSource, WithPolymorphicReference, string>(),
-                    new ConditionalLoadLinkExpression<WithPolymorphicReferenceLinkedSource, string>(
+                    new RootLoadLinkExpression<WithConditionalLinkedSource, WithConditional, string>(),
+                    new ConditionalLoadLinkExpression<WithConditionalLinkedSource, string>(
                         linkedSource => linkedSource.Model.ReferenceTypeDiscriminant,
                         new Dictionary<string, ILoadLinkExpression>{
                             {
                                 "person",
-                                new ReferenceLoadLinkExpression<WithPolymorphicReferenceLinkedSource, Person, string>(
+                                new ReferenceLoadLinkExpression<WithConditionalLinkedSource, Person, string>(
                                     linkedSource => (string)linkedSource.Model.ReferenceId,
                                     (linkedSource, reference) => linkedSource.Reference = reference
                                 )
                             },
                             {
                                 "image",
-                                new ReferenceLoadLinkExpression<WithPolymorphicReferenceLinkedSource, Image, string>(
+                                new ReferenceLoadLinkExpression<WithConditionalLinkedSource, Image, string>(
                                     linkedSource => (string)linkedSource.Model.ReferenceId,
                                     (linkedSource, reference) => linkedSource.Reference = reference
                                 )
@@ -44,14 +45,14 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void LoadLink_PersonPolymorphicReference() {
             var sut = _loadLinkProtocolFactory.Create(
-                new WithPolymorphicReference {
+                new WithConditional {
                     Id = "1",
                     ReferenceTypeDiscriminant = "person",
                     ReferenceId = "person-a"
                 }
             );
 
-            var actual = sut.LoadLink<WithPolymorphicReferenceLinkedSource>("1");
+            var actual = sut.LoadLink<WithConditionalLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -59,14 +60,14 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void LoadLink_ImagePolymorphicReference() {
             var sut = _loadLinkProtocolFactory.Create(
-                new WithPolymorphicReference {
+                new WithConditional {
                     Id = "1",
                     ReferenceTypeDiscriminant = "image",
                     ReferenceId = "image-b"
                 }
             );
 
-            var actual = sut.LoadLink<WithPolymorphicReferenceLinkedSource>("1");
+            var actual = sut.LoadLink<WithConditionalLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -74,26 +75,30 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void LoadLink_NotSupportedPolymorphicReference() {
             var sut = _loadLinkProtocolFactory.Create(
-                new WithPolymorphicReference {
+                new WithConditional {
                     Id = "1",
                     ReferenceTypeDiscriminant = "not-supported",
                     ReferenceId = "not-supported-c"
                 }
             );
 
-            var actual = sut.LoadLink<WithPolymorphicReferenceLinkedSource>("1");
+            TestDelegate act = () => sut.LoadLink<WithConditionalLinkedSource>("1");
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.That(act, Throws
+                .InstanceOf<InvalidOperationException>()
+                .With.Message.Contains("not-supported").And
+                .With.Message.Contains("WithConditionalLinkedSource")
+            );
         }
     }
 
-    public class WithPolymorphicReferenceLinkedSource : ILinkedSource<WithPolymorphicReference>
+    public class WithConditionalLinkedSource : ILinkedSource<WithConditional>
     {
-        public WithPolymorphicReference Model { get; set; }
+        public WithConditional Model { get; set; }
         public object Reference { get; set; }
     }
     
-    public class WithPolymorphicReference {
+    public class WithConditional {
         public string Id { get; set; }
         public string ReferenceTypeDiscriminant { get; set; }
         public object ReferenceId { get; set; }

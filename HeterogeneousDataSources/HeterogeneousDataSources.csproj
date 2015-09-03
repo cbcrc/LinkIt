@@ -40,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoadLinkExpressions\ConditionalLoadLinkExpression.cs" />
-    <Compile Include="ReferenceTypeByLoadingLevelParser.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="LoadLinkConfig.cs" />
     <Compile Include="ILinkedSource.cs" />
@@ -59,7 +58,6 @@
     <Compile Include="LoadLinkExpressions\ReferencesLoadLinkExpression.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LoadLinkExpressionTreeFactory.cs" />
     <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="LookupIdContext.cs" />
     <Compile Include="LoadLinkExpressions\ReferenceLoadLinkExpression.cs" />

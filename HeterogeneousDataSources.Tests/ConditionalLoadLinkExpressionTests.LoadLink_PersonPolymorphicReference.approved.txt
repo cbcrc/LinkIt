@@ -1,0 +1,13 @@
+﻿{
+  "model": {
+    "id": "1",
+    "referenceTypeDiscriminant": "person",
+    "referenceId": "person-a"
+  },
+  "reference": {
+    "$type": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests",
+    "id": "person-a",
+    "name": "name-person-a",
+    "summaryImageId": "person-img-person-a"
+  }
+}

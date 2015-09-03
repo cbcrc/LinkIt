@@ -14,7 +14,7 @@ namespace HeterogeneousDataSources {
 
         #region Initialization
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<List<Type>> fake=null) {
-            var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
+//            var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
 
             EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(loadLinkExpressions);
 
@@ -46,7 +46,7 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory) {
+/*        private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory) {
             var parser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
 
             return GetRootLoadLinkExpressions(loadLinkExpressions)
@@ -61,6 +61,7 @@ namespace HeterogeneousDataSources {
                     p => p.ReferenceTypeByLoadingLevel
                 );
         }
+ */ 
 
         private void EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
             var childLinkedSourceTypeWithDuplicates = GetRootLoadLinkExpressions(loadLinkExpressions)
@@ -79,7 +80,7 @@ namespace HeterogeneousDataSources {
                 );
             }
         }
-
+/*
         private void EnsureNoCyclesInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory loadLinkExpressionTreeFactory) {
             var cycles = GetRootLoadLinkExpressions(loadLinkExpressions)
                 .Select(
@@ -105,7 +106,7 @@ namespace HeterogeneousDataSources {
                 );
             }
         }
-
+*/
         private List<INestedLoadLinkExpression> GetRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
             return loadLinkExpressions
                 .Where(loadLinkExpression =>
@@ -143,15 +144,18 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        public bool DoesLoadLinkExpressionForRootLinkedSourceTypeExists(Type rootLinkedSourceType) {
-            return _referenceTypeByLoadingLevelByRootLinkedSourceType.ContainsKey(rootLinkedSourceType);
+        public bool DoesLoadLinkExpressionForRootLinkedSourceTypeExists(Type rootLinkedSourceType)
+        {
+            return true;
+//            return _referenceTypeByLoadingLevelByRootLinkedSourceType.ContainsKey(rootLinkedSourceType);
         }
 
         private List<ILoadLinkExpression> GetLoadLinkExpressions<TRootLinkedSource>(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions, int loadingLevel) {
             var referenceTypesToBeLoaded = GetReferenceTypeForLoadingLevel<TRootLinkedSource>(loadingLevel);
 
             return GetLoadLinkExpressions(linkedSource, loadLinkExpressions)
-                .Where(loadLinkExpression => referenceTypesToBeLoaded.Contains(loadLinkExpression.ReferenceType))
+                .Where(loadLinkExpression => 
+                    loadLinkExpression.DoesMatchReferenceTypeToBeLoaded(linkedSource, referenceTypesToBeLoaded))
                 .ToList();
         }
 

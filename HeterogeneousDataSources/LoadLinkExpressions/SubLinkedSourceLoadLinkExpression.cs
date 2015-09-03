@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
@@ -11,6 +12,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         public SubLinkedSourceLoadLinkExpression(Func<TLinkedSource, TChildLinkedSourceModel> getSubLinkedSourceModelFunc, Action<TLinkedSource, TChildLinkedSource> linkAction)
         {
             LinkedSourceType = typeof(TLinkedSource);
+            ReferenceTypes = new List<Type>();
 
             _getSubLinkedSourceModelFunc = getSubLinkedSourceModelFunc;
             _linkAction = linkAction;
@@ -23,10 +25,15 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         public Type LinkedSourceType { get; private set; }
         
         //stle: that is not a load expression, but only a link expression
-        public Type ReferenceType { get { return null; } }
+        public List<Type> ReferenceTypes { get; private set; }
 
         public LoadLinkExpressionType LoadLinkExpressionType {
             get { return LoadLinkExpressions.LoadLinkExpressionType.SubLinkedSource; }
+        }
+
+        public bool DoesMatchReferenceTypeToBeLoaded(object linkedSource, List<Type> referenceTypesToBeLoaded)
+        {
+            return false;
         }
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext)

@@ -15,17 +15,26 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             _conditionalLoadLinkExpressions = conditionalLoadLinkExpressions;
 
             LinkedSourceType = typeof (TLinkedSource);
-            ReferenceType = null; //stle: convert to many
-            ModelType = null; //???
+            ReferenceTypes = _conditionalLoadLinkExpressions.Values
+                .SelectMany(conditionalLoadLinkExpression => conditionalLoadLinkExpression.ReferenceTypes)
+                .Distinct()
+                .ToList();
 
             //stle: ensure all of the same .net type and that at least one
             LoadLinkExpressionType = _conditionalLoadLinkExpressions.Values.First().LoadLinkExpressionType;
         }
 
         public Type LinkedSourceType { get; private set; }
-        public Type ReferenceType { get; private set; }
-        public Type ModelType { get; private set; }
+        public List<Type> ReferenceTypes { get; private set; }
+        
         public LoadLinkExpressionType LoadLinkExpressionType { get; private set; }
+
+        public bool DoesMatchReferenceTypeToBeLoaded(object linkedSource, List<Type> referenceTypesToBeLoaded) {
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+
+            var selectedLoadLinkExpression = GetSelectedLoadLinkExpression((TLinkedSource)linkedSource);
+            return selectedLoadLinkExpression.DoesMatchReferenceTypeToBeLoaded(linkedSource, referenceTypesToBeLoaded);
+        }
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext){
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
