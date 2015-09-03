@@ -26,7 +26,14 @@ namespace HeterogeneousDataSources.Tests.Shared {
             return new LoadLinkProtocol(
                 referenceLoader,
                 new LoadLinkConfig(
-                    _loadLinkExpressions
+                    _loadLinkExpressions,
+
+
+                    new List<List<Type>>{
+                        new List<Type>{typeof(WithPolymorphicReference)},
+                        new List<Type>{typeof(Person), typeof(Image)},
+                    }
+
                 )
             );
         }

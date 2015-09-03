@@ -33,7 +33,7 @@ namespace HeterogeneousDataSources.Tests {
                     new ReferenceLoadLinkExpression<CycleInReferenceLinkedSource, DirectCycle, string>(
                         linkedSource => linkedSource.Model.ParentId,
                         (linkedSource, reference) => linkedSource.Parent = reference
-                    )
+                        )
                 }
             );
 
@@ -53,7 +53,7 @@ namespace HeterogeneousDataSources.Tests {
                     new NestedLinkedSourceLoadLinkExpression<DirectCycleInNestedLinkedSource, DirectCycleInNestedLinkedSource, DirectCycle, string>(
                         linkedSource => linkedSource.Model.ParentId,
                         (linkedSource, nestedLinkedSource) => linkedSource.Parent = nestedLinkedSource
-                    )
+                        )
                 }
             );
 
@@ -76,7 +76,7 @@ namespace HeterogeneousDataSources.Tests {
                     new NestedLinkedSourceLoadLinkExpression<IndirectCycleLevel1LinkedSource, IndirectCycleLevel0LinkedSource, IndirectCycleLevel0, string>(
                         linkedSource => linkedSource.Model.Level0Id,
                         (linkedSource, nestedLinkedSource) => linkedSource.Level0 = nestedLinkedSource
-                    )
+                        )
                 }
             );
 

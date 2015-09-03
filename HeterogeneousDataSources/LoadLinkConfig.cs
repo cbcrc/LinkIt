@@ -7,22 +7,26 @@ namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private readonly Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
+        private readonly List<List<Type>> _fake;
         private readonly List<ILoadLinkExpression> _referenceLoadLinkExpressions;
         private readonly List<ILoadLinkExpression> _nestedLinkedSourceLoadLinkExpressions;
         private readonly List<ILoadLinkExpression> _subLinkedSourceLoadLinkExpressions;
 
         #region Initialization
-        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions) {
+        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<List<Type>> fake=null) {
             var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
 
             EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(loadLinkExpressions);
-            EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
 
-            _referenceTypeByLoadingLevelByRootLinkedSourceType =
-                GetReferenceTypeByLoadingLevelByRootLinkedSourceType(
-                    loadLinkExpressions,
-                    linkExpressionTreeFactory
-                );
+            //stle: temp
+            _fake = fake;
+            //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
+
+            //_referenceTypeByLoadingLevelByRootLinkedSourceType =
+            //    GetReferenceTypeByLoadingLevelByRootLinkedSourceType(
+            //        loadLinkExpressions,
+            //        linkExpressionTreeFactory
+            //    );
 
             _allLoadLinkExpressions = loadLinkExpressions;
 
@@ -111,10 +115,12 @@ namespace HeterogeneousDataSources {
         } 
         #endregion
 
-        public int GetNumberOfLoadingLevel<TRootLinkedSource>() {
-            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
+        public int GetNumberOfLoadingLevel<TRootLinkedSource>()
+        {
+            return _fake.Count;
+            //var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
 
-            return referenceTypeByLoadingLevel.Count;
+            //return referenceTypeByLoadingLevel.Count;
         }
 
         //stle: should go in protocol
@@ -156,10 +162,13 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        private List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel){
-            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
+        private List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel)
+        {
+            return _fake[loadingLevel];
 
-            return referenceTypeByLoadingLevel[loadingLevel];
+            //var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
+
+            //return referenceTypeByLoadingLevel[loadingLevel];
         }
 
         private Dictionary<int, List<Type>> GetReferenceTypeByLoadingLevel<TRootLinkedSource>(){
