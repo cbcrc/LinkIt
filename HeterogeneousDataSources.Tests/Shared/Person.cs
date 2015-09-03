@@ -1,6 +1,6 @@
 namespace HeterogeneousDataSources.Tests.Shared
 {
-    public class Person
+    public class Person:IPolymorphicModel
     {
         public string Id { get; set; }
         public string Name { get; set; }

@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
     <Compile Include="Exploratory\ContextualizationTests.cs" />
+    <Compile Include="ConditionalLoadLinkExpressionTests.cs" />
     <Compile Include="ReferenceTypeByLoadingLevelParserTests.cs" />
     <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
     <Compile Include="LoadLinkProtocolTests.cs" />
@@ -78,6 +79,7 @@
     </Compile>
     <Compile Include="RootLinkedSourceTests.cs" />
     <Compile Include="Shared\FakeReferenceLoader.cs" />
+    <Compile Include="Shared\IPolymorphicModel.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />
     <Compile Include="Shared\Person.cs" />
     <Compile Include="Shared\PersonRepository.cs" />

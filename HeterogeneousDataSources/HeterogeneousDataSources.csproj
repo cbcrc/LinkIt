@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoadLinkExpressions\ConditionalLoadLinkExpression.cs" />
     <Compile Include="ReferenceTypeByLoadingLevelParser.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="LoadLinkConfig.cs" />
