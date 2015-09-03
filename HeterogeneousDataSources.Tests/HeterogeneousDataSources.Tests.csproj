@@ -60,6 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
+    <Compile Include="Exploratory\ContextualizationTests.cs" />
     <Compile Include="ReferenceTypeByLoadingLevelParserTests.cs" />
     <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
     <Compile Include="LoadLinkProtocolTests.cs" />
