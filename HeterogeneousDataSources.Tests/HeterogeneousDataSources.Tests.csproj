@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
     <Compile Include="Exploratory\ContextualizationTests.cs" />
-    <Compile Include="ConditionalLoadLinkExpressionTests.cs" />
     <Compile Include="LoadLinkProtocolTests.cs" />
     <Compile Include="ManyReferencesTests.cs">
       <SubType>Code</SubType>

@@ -39,7 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoadLinkExpressions\ConditionalLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicNestedLinkedSourceInclude.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourceInclude.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourcesLoadLinkExpression.cs" />
