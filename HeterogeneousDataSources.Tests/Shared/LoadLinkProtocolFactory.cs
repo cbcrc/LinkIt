@@ -30,7 +30,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
 
 
                     new List<List<Type>>{
-                        new List<Type>{typeof(WithConditional)},
+                        new List<Type>{typeof(PolymorphicNestedLinkedSourcesTests.WithNestedPolymorphicContents)},
                         new List<Type>{typeof(Person), typeof(Image)},
                     }
 
