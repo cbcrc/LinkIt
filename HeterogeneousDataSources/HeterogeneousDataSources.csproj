@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicNestedLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\Polymorphic\LinkWithIndex.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourceInclude.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourcesLoadLinkExpression.cs" />
     <Compile Include="Tree.cs" />

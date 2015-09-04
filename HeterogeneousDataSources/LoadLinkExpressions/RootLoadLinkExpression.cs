@@ -22,8 +22,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         //stle: hey you and your inheritance crap! Try a functional approach
         protected override void LinkAction(TId id, List<TChildLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
         {
-            var nestedLinkedSource = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references);
-            loadedReferenceContext.AddLinkedSourcesToBeBuilt(nestedLinkedSource);
+            LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
         }
 
         public override LoadLinkExpressionType LoadLinkExpressionType {

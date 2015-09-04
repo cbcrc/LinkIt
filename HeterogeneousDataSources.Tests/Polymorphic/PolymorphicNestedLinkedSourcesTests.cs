@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
@@ -21,6 +22,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     new RootLoadLinkExpression<WithNestedPolymorphicContentsLinkedSource, WithNestedPolymorphicContents, string>(),
                     new PolymorphicNestedLinkedSourcesLoadLinkExpression<WithNestedPolymorphicContentsLinkedSource, INestedPolymorphicContentLinkedSource, ContentContextualization, string>(
                         linkedSource => linkedSource.Model.ContentContextualizations,
+                        linkedSource => linkedSource.Contents, 
                         (linkedSource, childLinkedSource) => linkedSource.Contents = childLinkedSource,
                         link => link.ContentType,
                         new Dictionary<

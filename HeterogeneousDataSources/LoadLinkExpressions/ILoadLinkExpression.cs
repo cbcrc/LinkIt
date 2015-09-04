@@ -8,9 +8,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         Type LinkedSourceType { get; }
         List<Type> ReferenceTypes { get; }
         LoadLinkExpressionType LoadLinkExpressionType { get; }
-        bool DoesMatchReferenceTypeToBeLoaded(object linkedSource, List<Type> referenceTypesToBeLoaded);
-        void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext);
-        void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext);
+
+        void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
+        void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked);
         
     }
 }

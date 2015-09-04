@@ -31,17 +31,16 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             get { return LoadLinkExpressions.LoadLinkExpressionType.SubLinkedSource; }
         }
 
-        public bool DoesMatchReferenceTypeToBeLoaded(object linkedSource, List<Type> referenceTypesToBeLoaded)
-        {
-            return false;
-        }
-
-        public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext)
+        public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
             //stle: maybe split load and link iterfaces
         }
 
-        public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        public void Link(
+            object linkedSource, 
+            LoadedReferenceContext loadedReferenceContext, 
+            //stle: common interface sucks
+            Type referenceTypeToBeLinked)
         {
             //stle: hey you and your inheritance crap! Try a functional approach
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
@@ -49,10 +48,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             Link((TLinkedSource) linkedSource, loadedReferenceContext);
         }
 
-        public void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
+        private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
             var subLinkedSourceModel = _getSubLinkedSourceModelFunc(linkedSource);
-            var subLinkedSources = LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(subLinkedSourceModel);
-            loadedReferenceContext.AddLinkedSourcesToBeBuilt(subLinkedSources);
+            var asList = new List<TChildLinkedSourceModel> {subLinkedSourceModel};
+            var subLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(asList, loadedReferenceContext);
+
             _linkAction(linkedSource, subLinkedSources.SingleOrDefault());
         }
 

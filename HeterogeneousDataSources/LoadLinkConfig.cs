@@ -124,14 +124,23 @@ namespace HeterogeneousDataSources {
             //return referenceTypeByLoadingLevel.Count;
         }
 
-        //stle: should go in protocol
-        public List<ILoadLinkExpression> GetLoadExpressions<TRootLinkedSource>(object linkedSource, int loadingLevel)
-        {
-            return GetLoadLinkExpressions<TRootLinkedSource>(linkedSource, _allLoadLinkExpressions, loadingLevel);
+        public List<Type> GetReferenceTypeToBeLoaded<TRootLinkedSource>(int loadingLevel) {
+            return _fake[loadingLevel];
+
+            //var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
+
+            //return referenceTypeByLoadingLevel[loadingLevel];
         }
 
-        public List<ILoadLinkExpression> GetLinkNestedLinkedSourceExpressions<TRootLinkedSource>(object linkedSource, int loadingLevel) {
-            return GetLoadLinkExpressions<TRootLinkedSource>(linkedSource, _nestedLinkedSourceLoadLinkExpressions, loadingLevel);
+
+        //stle: should go in protocol
+        public List<ILoadLinkExpression> GetLoadExpressions(object linkedSource, Type referenceType)
+        {
+            return GetLoadLinkExpressions(linkedSource, _allLoadLinkExpressions, referenceType);
+        }
+
+        public List<ILoadLinkExpression> GetLinkNestedLinkedSourceExpressions(object linkedSource, Type referenceType) {
+            return GetLoadLinkExpressions(linkedSource, _nestedLinkedSourceLoadLinkExpressions, referenceType);
         }
 
         public List<ILoadLinkExpression> GetLinkReferenceExpressions(object linkedSource) {
@@ -150,12 +159,10 @@ namespace HeterogeneousDataSources {
 //            return _referenceTypeByLoadingLevelByRootLinkedSourceType.ContainsKey(rootLinkedSourceType);
         }
 
-        private List<ILoadLinkExpression> GetLoadLinkExpressions<TRootLinkedSource>(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions, int loadingLevel) {
-            var referenceTypesToBeLoaded = GetReferenceTypeForLoadingLevel<TRootLinkedSource>(loadingLevel);
-
+        private List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions, Type referenceType)
+        {
             return GetLoadLinkExpressions(linkedSource, loadLinkExpressions)
-                .Where(loadLinkExpression => 
-                    loadLinkExpression.DoesMatchReferenceTypeToBeLoaded(linkedSource, referenceTypesToBeLoaded))
+                .Where(loadLinkExpression => loadLinkExpression.ReferenceTypes.Contains(referenceType))
                 .ToList();
         }
 
@@ -164,15 +171,6 @@ namespace HeterogeneousDataSources {
             return loadLinkExpressions
                 .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType.Equals(linkedSourceType))
                 .ToList();
-        }
-
-        private List<Type> GetReferenceTypeForLoadingLevel<TRootLinkedSource>(int loadingLevel)
-        {
-            return _fake[loadingLevel];
-
-            //var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
-
-            //return referenceTypeByLoadingLevel[loadingLevel];
         }
 
         private Dictionary<int, List<Type>> GetReferenceTypeByLoadingLevel<TRootLinkedSource>(){

@@ -29,8 +29,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
 
         protected override void LinkAction(TLinkedSource linkedSource, List<TChildLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
         {
-            var nestedLinkedSource = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references);
-            loadedReferenceContext.AddLinkedSourcesToBeBuilt(nestedLinkedSource);
+            var nestedLinkedSource = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
             _linkAction(linkedSource, nestedLinkedSource.SingleOrDefault());
         }
 
