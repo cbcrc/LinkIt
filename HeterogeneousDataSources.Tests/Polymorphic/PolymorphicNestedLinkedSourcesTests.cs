@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
+using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace HeterogeneousDataSources.Tests {
+namespace HeterogeneousDataSources.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicNestedLinkedSourcesTests {
@@ -13,11 +14,46 @@ namespace HeterogeneousDataSources.Tests {
         private LoadLinkProtocolFactory<WithNestedPolymorphicContents, string> _loadLinkProtocolFactory;
 
         [SetUp]
-        public void SetUp() {
+        public void SetUp()
+        {
             _loadLinkProtocolFactory = new LoadLinkProtocolFactory<WithNestedPolymorphicContents, string>(
                 loadLinkExpressions: new List<ILoadLinkExpression> {
                     new RootLoadLinkExpression<WithNestedPolymorphicContentsLinkedSource, WithNestedPolymorphicContents, string>(),
-
+                    new PolymorphicNestedLinkedSourcesLoadLinkExpression<WithNestedPolymorphicContentsLinkedSource, INestedPolymorphicContentLinkedSource, ContentContextualization, string>(
+                        linkedSource => linkedSource.Model.ContentContextualizations,
+                        (linkedSource, childLinkedSource) => linkedSource.Contents = childLinkedSource,
+                        link => link.ContentType,
+                        new Dictionary<
+                            string, 
+                            IPolymorphicNestedLinkedSourceInclude<INestedPolymorphicContentLinkedSource, ContentContextualization>
+                        >{
+                            {
+                                "person", 
+                                new PolymorphicNestedLinkedSourceInclude<
+                                    INestedPolymorphicContentLinkedSource,
+                                    ContentContextualization,
+                                    PersonWithoutContextualizationLinkedSource,
+                                    Person,
+                                    string
+                                >(
+                                    link => (string) link.Id
+                                )
+                            },
+                            {
+                                "image",
+                                new PolymorphicNestedLinkedSourceInclude<
+                                    INestedPolymorphicContentLinkedSource,
+                                    ContentContextualization,
+                                    ImageWithContextualizationLinkedSource,
+                                    Image,
+                                    string
+                                >(
+                                    link => (string)link.Id,
+                                    (link,childLinkedSource) => childLinkedSource.ContentContextualization = link
+                                ) 
+                            }
+                        }
+                    ),
                 },
                 getReferenceIdFunc: reference => reference.Id
             );
@@ -61,9 +97,8 @@ namespace HeterogeneousDataSources.Tests {
             public ContentContextualization ContentContextualization { get; set; }
         }
 
-        public class PersonWithContextualizationLinkedSource : INestedPolymorphicContentLinkedSource, ILinkedSource<Person> {
+        public class PersonWithoutContextualizationLinkedSource : INestedPolymorphicContentLinkedSource, ILinkedSource<Person> {
             public Person Model { get; set; }
-            public ContentContextualization ContentContextualization { get; set; }
         }
 
         public class WithNestedPolymorphicContents {
@@ -74,7 +109,7 @@ namespace HeterogeneousDataSources.Tests {
         public class ContentContextualization
         {
             public string ContentType { get; set; }
-            public string Id{ get; set; }
+            public object Id{ get; set; }
             public string Title{ get; set; }
         }
     }
