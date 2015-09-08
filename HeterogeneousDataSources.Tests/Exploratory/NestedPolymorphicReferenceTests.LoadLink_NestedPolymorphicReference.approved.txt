@@ -1,0 +1,28 @@
+﻿{
+  "model": {
+    "id": "1",
+    "polyIds": [
+      "p1",
+      32
+    ]
+  },
+  "contents": [
+    {
+      "$type": "HeterogeneousDataSources.Tests.PersonLinkedSource, HeterogeneousDataSources.Tests",
+      "model": {
+        "id": "p1",
+        "name": "name-p1",
+        "summaryImageId": "person-img-p1"
+      },
+      "summaryImage": null
+    },
+    {
+      "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests+ImageWithContextualizationLinkedSource, HeterogeneousDataSources.Tests",
+      "model": {
+        "id": "32",
+        "alt": "alt-32"
+      },
+      "contentContextualization": null
+    }
+  ]
+}

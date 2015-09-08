@@ -74,6 +74,7 @@
     <Compile Include="NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />
     <Compile Include="Shared\FakeReferenceLoader.cs" />
