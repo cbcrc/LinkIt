@@ -86,32 +86,100 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        //[Test]
-        //public void LoadLink_WithNullLinks_ShouldIgnoreNull() {
-        //    var sut = _loadLinkProtocolFactory.Create(
-        //        new WithNestedPolymorphicContents {
-        //            Id = "1",
-        //            ContentContextualizations = new List<ContentContextualization>{
-        //                new ContentContextualization{
-        //                    ContentType = "person",
-        //                    Id = "p1",
-        //                    Title = "altered person title"
-        //                },
-        //                null,
-        //                new ContentContextualization{
-        //                    ContentType = "image",
-        //                    Id = "i1",
-        //                    Title = "altered image title"
-        //                }
-        //            }
-        //        }
-        //    );
+        [Test]
+        public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldIgnoreNull() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new WithNestedPolymorphicContents {
+                    Id = "1",
+                    ContentContextualizations = new List<ContentContextualization>{
+                        new ContentContextualization{
+                            ContentType = "person",
+                            Id = "p1",
+                            Title = "altered person title"
+                        },
+                        null,
+                        new ContentContextualization{
+                            ContentType = "image",
+                            Id = "i1",
+                            Title = "altered image title"
+                        }
+                    }
+                }
+            );
 
-        //    var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
-        //    ApprovalsExt.VerifyPublicProperties(actual);
-        //}
+            Assert.That(actual.Contents.Count, Is.EqualTo(2));
+        }
 
+        [Test]
+        public void LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySet() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new WithNestedPolymorphicContents {
+                    Id = "1",
+                    ContentContextualizations = null
+                }
+            );
+
+            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+
+            Assert.That(actual.Contents, Is.Empty);
+        }
+
+        [Test]
+        public void LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicates() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new WithNestedPolymorphicContents {
+                    Id = "1",
+                    ContentContextualizations = new List<ContentContextualization>{
+                        new ContentContextualization{
+                            ContentType = "image",
+                            Id = "i1",
+                            Title = "altered image title"
+                        },
+                        new ContentContextualization{
+                            ContentType = "image",
+                            Id = "i1",
+                            Title = "altered image title"
+                        }
+                    }
+                }
+            );
+
+            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+
+            var asImageIds = actual.Contents
+                .Cast<ImageWithContextualizationLinkedSource>()
+                .Select(image => image.Model.Id)
+                .ToList();
+
+            Assert.That(asImageIds, Is.EquivalentTo(new[] { "i1", "i1" }));
+        }
+
+        [Test]
+        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkEmptySet() {
+            var sut = _loadLinkProtocolFactory.Create(
+                new WithNestedPolymorphicContents {
+                    Id = "1",
+                    ContentContextualizations = new List<ContentContextualization>{
+                        new ContentContextualization{
+                            ContentType = "image",
+                            Id = "cannot-be-resolved",
+                            Title = "altered image title"
+                        },
+                        new ContentContextualization{
+                            ContentType = "image",
+                            Id = "cannot-be-resolved",
+                            Title = "altered image title"
+                        }
+                    }
+                }
+            );
+
+            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+
+            Assert.That(actual.Contents, Is.Empty);
+        }
 
         public class WithNestedPolymorphicContentsLinkedSource : ILinkedSource<WithNestedPolymorphicContents> {
             public WithNestedPolymorphicContents Model { get; set; }

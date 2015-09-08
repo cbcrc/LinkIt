@@ -58,7 +58,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
         }
 
         private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
-            InitListOfReferencesIfNull(linkedSource);
+            InitListOfReferencesIfNull(linkedSource, loadedReferenceContext);
 
             var linksToEntityOfReferenceType = GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLinked);
 
@@ -68,15 +68,26 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
                 var childLinkedSources = include.CreateChildLinkedSources(linkToEntityOfReferenceType.Link, loadedReferenceContext);
 
                 //stle: need single
-                _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSources.Single();
+                _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSources.SingleOrDefault();
             }
         }
 
-        private void InitListOfReferencesIfNull(TLinkedSource linkedSource)
+        private void InitListOfReferencesIfNull(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
-            if (_getReferences(linkedSource) == null){
-                _setReferences(linkedSource, new TIChildLinkedSource[GetLinkCount(linkedSource)].ToList());
+            if (_getReferences(linkedSource) == null)
+            {
+                var polymorphicListToBeBuilt = new TIChildLinkedSource[GetLinkCount(linkedSource)].ToList();
+                loadedReferenceContext.OnLinkCompleted(
+                    ()=>RemoveNullFromPolymorphicList(polymorphicListToBeBuilt)
+                );
+
+                _setReferences(linkedSource, polymorphicListToBeBuilt);
             }
+        }
+
+        private void RemoveNullFromPolymorphicList<TIChildLinkedSource>(List<TIChildLinkedSource> polymorphicListToBeBuilt)
+        {
+            polymorphicListToBeBuilt.RemoveAll(item => item == null);
         }
 
         private List<TLink> GetLinksForReferenceType(TLinkedSource linkedSource, Type referenceTypeToBeLoaded) {
@@ -88,16 +99,25 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 
         private List<LinkWithIndex<TLink>> GetLinksWithIndexForReferenceType(TLinkedSource linkedSource, Type referenceTypeToBeLoaded)
         {
-            var allLinks = _getLinksFunc(linkedSource);
+            var links = GetLinks(linkedSource);
 
-            return allLinks
+            return links
                 .Select((link, index) => new LinkWithIndex<TLink>(link, index))
+                .Where(linkWithIndex => linkWithIndex.Link != null)
                 .Where(linkWithIndex => GetSelectedInclude(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded)
                 .ToList();
         }
 
         private int GetLinkCount(TLinkedSource linkedSource){
-            return _getLinksFunc(linkedSource).Count;
+            return GetLinks(linkedSource).Count;
+        }
+
+        private List<TLink> GetLinks(TLinkedSource linkedSource){
+            var links = _getLinksFunc(linkedSource);
+
+            if (links == null) { return new List<TLink>(); }
+
+            return links;
         }
 
         private IPolymorphicNestedLinkedSourceInclude<TIChildLinkedSource, TLink> GetSelectedInclude(TLink link) {

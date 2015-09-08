@@ -22,6 +22,8 @@ namespace HeterogeneousDataSources {
             
             LinkReferences(loadedReferenceContext);
 
+            loadedReferenceContext.LinkCompleted();
+
             return (TRootLinkedSource)loadedReferenceContext.LinkedSourcesToBeBuilt
                 .SingleOrDefault(linkedSource => linkedSource is TRootLinkedSource);
         }

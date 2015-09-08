@@ -7,6 +7,7 @@ namespace HeterogeneousDataSources {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly List<object> _linkedSourcesWhereSubLinkedSourceAreLinked = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
+        private List<Action> OnLinkCompletedActions = new List<Action>();
 
         public object State {
             get
@@ -97,5 +98,22 @@ namespace HeterogeneousDataSources {
         //        data
         //    );
         //}
+
+        
+        //stle: use event instead
+        public void OnLinkCompleted(Action action){
+            OnLinkCompletedActions.Add(action);
+        }
+
+        public void LinkCompleted(){
+            //These actions has to be done after each polymorphic list 
+            //are linked because polymorphic list are built in place.
+            //Thus, until link is completed it is not possible to determine
+            //if a null value in a list is a not resolved yet or if it will never be resolved.
+
+            foreach (var action in OnLinkCompletedActions){
+                action();
+            }
+        }
     }
 }
