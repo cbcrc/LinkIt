@@ -62,7 +62,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
         }
 
         [Test]
-        public void LoadLink_WithNestedPolymorphicContents() {
+        public void LoadLink_NestedPolymorphicContents() {
             var sut = _loadLinkProtocolFactory.Create(
                 new WithNestedPolymorphicContents {
                     Id = "1",
@@ -85,6 +85,33 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
+
+        //[Test]
+        //public void LoadLink_WithNullLinks_ShouldIgnoreNull() {
+        //    var sut = _loadLinkProtocolFactory.Create(
+        //        new WithNestedPolymorphicContents {
+        //            Id = "1",
+        //            ContentContextualizations = new List<ContentContextualization>{
+        //                new ContentContextualization{
+        //                    ContentType = "person",
+        //                    Id = "p1",
+        //                    Title = "altered person title"
+        //                },
+        //                null,
+        //                new ContentContextualization{
+        //                    ContentType = "image",
+        //                    Id = "i1",
+        //                    Title = "altered image title"
+        //                }
+        //            }
+        //        }
+        //    );
+
+        //    var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+
+        //    ApprovalsExt.VerifyPublicProperties(actual);
+        //}
+
 
         public class WithNestedPolymorphicContentsLinkedSource : ILinkedSource<WithNestedPolymorphicContents> {
             public WithNestedPolymorphicContents Model { get; set; }
