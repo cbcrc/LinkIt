@@ -49,25 +49,24 @@ namespace HeterogeneousDataSources {
             {
                 var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TRootLinkedSource>();
 
-                for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++)
-                {
+                for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++){
                     var referenceTypeToBeLoaded = _config.GetReferenceTypeToBeLoaded<TRootLinkedSource>(loadingLevel);
 
-                    LoadNestingLevel<TRootLinkedSource>(loadedReferenceContext, referenceTypeToBeLoaded);
-                    LinkNestedLinkedSources<TRootLinkedSource>(loadedReferenceContext, referenceTypeToBeLoaded);
+                    LoadNestingLevel(loadedReferenceContext, referenceTypeToBeLoaded);
+                    LinkNestedLinkedSources(loadedReferenceContext, referenceTypeToBeLoaded);
                     LinkSubLinkedSources(loadedReferenceContext);
                 }
             }
             return loadedReferenceContext;
         }
 
-        private void LoadNestingLevel<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypeToBeLoaded)
+        private void LoadNestingLevel(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypeToBeLoaded)
         {
-            var lookupIdContext = GetLookupIdContextForLoadingLevel<TRootLinkedSource>(loadedReferenceContext, referenceTypeToBeLoaded);
+            var lookupIdContext = GetLookupIdContextForLoadingLevel(loadedReferenceContext, referenceTypeToBeLoaded);
             _referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
         }
 
-        private LookupIdContext GetLookupIdContextForLoadingLevel<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypesToBeLoaded)
+        private LookupIdContext GetLookupIdContextForLoadingLevel(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypesToBeLoaded)
         {
             var lookupIdContext = new LookupIdContext();
 
@@ -82,7 +81,7 @@ namespace HeterogeneousDataSources {
             return lookupIdContext;
         }
 
-        private void LinkNestedLinkedSources<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypesToBeLoaded) {
+        private void LinkNestedLinkedSources(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypesToBeLoaded) {
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded){
                 foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt)
                 {

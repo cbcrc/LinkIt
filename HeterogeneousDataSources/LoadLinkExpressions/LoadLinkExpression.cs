@@ -38,10 +38,13 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         #endregion
 
         #region Link
-        public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        public void Link(
+            object linkedSource, 
+            LoadedReferenceContext loadedReferenceContext,
+            //stle: common interface sucks
+            Type referenceTypeToBeLinked)
         {
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            LoadLinkExpressionUtil.EnsureIsOfReferenceType(this, referenceTypeToBeLinked);
 
             Link((TLinkedSource) linkedSource, loadedReferenceContext);
         }

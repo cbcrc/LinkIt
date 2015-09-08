@@ -7,26 +7,22 @@ namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private readonly Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
-        private readonly List<List<Type>> _fake;
         private readonly List<ILoadLinkExpression> _referenceLoadLinkExpressions;
         private readonly List<ILoadLinkExpression> _nestedLinkedSourceLoadLinkExpressions;
         private readonly List<ILoadLinkExpression> _subLinkedSourceLoadLinkExpressions;
 
         #region Initialization
-        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions, List<List<Type>> fake=null) {
-//            var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
+        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions) {
+            var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
 
             EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(loadLinkExpressions);
+            EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
 
-            //stle: temp
-            _fake = fake;
-            //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
-
-            //_referenceTypeByLoadingLevelByRootLinkedSourceType =
-            //    GetReferenceTypeByLoadingLevelByRootLinkedSourceType(
-            //        loadLinkExpressions,
-            //        linkExpressionTreeFactory
-            //    );
+            _referenceTypeByLoadingLevelByRootLinkedSourceType =
+                GetReferenceTypeByLoadingLevelByRootLinkedSourceType(
+                    loadLinkExpressions,
+                    linkExpressionTreeFactory
+                );
 
             _allLoadLinkExpressions = loadLinkExpressions;
 
@@ -46,7 +42,7 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-/*        private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory) {
+        private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory) {
             var parser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
 
             return GetRootLoadLinkExpressions(loadLinkExpressions)
@@ -61,7 +57,6 @@ namespace HeterogeneousDataSources {
                     p => p.ReferenceTypeByLoadingLevel
                 );
         }
- */ 
 
         private void EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
             var childLinkedSourceTypeWithDuplicates = GetRootLoadLinkExpressions(loadLinkExpressions)
@@ -74,20 +69,19 @@ namespace HeterogeneousDataSources {
                 throw new ArgumentException(
                     string.Format(
                         "Can only have one root expression per child linked source, but there are many for : {0}.",
-                        String.Join(",", childLinkedSourceTypeWithDuplicates),
-                        "loadLinkExpressions"
+                        String.Join(",", childLinkedSourceTypeWithDuplicates)
                     )
                 );
             }
         }
-/*
+
         private void EnsureNoCyclesInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory loadLinkExpressionTreeFactory) {
             var cycles = GetRootLoadLinkExpressions(loadLinkExpressions)
                 .Select(
                     rootLoadLinkExpression =>
                         new {
                             RootLoadLinkExpression = rootLoadLinkExpression,
-                            ReferenceTypeThatCreatesACycle = loadLinkExpressionTreeFactory.GetReferenceTypeThatCreatesACycle(rootLoadLinkExpression)
+                            ReferenceTypeThatCreatesACycle = loadLinkExpressionTreeFactory.GetReferenceTypeThatCreatesACycleFromTree(rootLoadLinkExpression)
                         })
                 .Where(potentialCycle => potentialCycle.ReferenceTypeThatCreatesACycle != null)
                 .ToList();
@@ -106,7 +100,7 @@ namespace HeterogeneousDataSources {
                 );
             }
         }
-*/
+
         private List<INestedLoadLinkExpression> GetRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
             return loadLinkExpressions
                 .Where(loadLinkExpression =>
@@ -118,18 +112,15 @@ namespace HeterogeneousDataSources {
 
         public int GetNumberOfLoadingLevel<TRootLinkedSource>()
         {
-            return _fake.Count;
-            //var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
+            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
 
-            //return referenceTypeByLoadingLevel.Count;
+            return referenceTypeByLoadingLevel.Count;
         }
 
         public List<Type> GetReferenceTypeToBeLoaded<TRootLinkedSource>(int loadingLevel) {
-            return _fake[loadingLevel];
+            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
 
-            //var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
-
-            //return referenceTypeByLoadingLevel[loadingLevel];
+            return referenceTypeByLoadingLevel[loadingLevel];
         }
 
 
@@ -155,8 +146,7 @@ namespace HeterogeneousDataSources {
 
         public bool DoesLoadLinkExpressionForRootLinkedSourceTypeExists(Type rootLinkedSourceType)
         {
-            return true;
-//            return _referenceTypeByLoadingLevelByRootLinkedSourceType.ContainsKey(rootLinkedSourceType);
+            return _referenceTypeByLoadingLevelByRootLinkedSourceType.ContainsKey(rootLinkedSourceType);
         }
 
         private List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions, Type referenceType)

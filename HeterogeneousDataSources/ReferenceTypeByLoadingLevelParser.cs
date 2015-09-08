@@ -37,11 +37,11 @@ namespace HeterogeneousDataSources {
         }
 
         private void ParseNode(ILoadLinkExpression node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel) {
-            if (node.ReferenceType == null) { return; }
-
-            var currentValue = GetLoadingLevelCurrentValue(node.ReferenceType, loadingLevelByReferenceType);
-            var newValue = Math.Max(currentValue, loadingLevel);
-            loadingLevelByReferenceType[node.ReferenceType] = newValue;
+            foreach (var referenceType in node.ReferenceTypes){
+                var currentValue = GetLoadingLevelCurrentValue(referenceType, loadingLevelByReferenceType);
+                var newValue = Math.Max(currentValue, loadingLevel);
+                loadingLevelByReferenceType[referenceType] = newValue;
+            }
         }
 
         private int GetLoadingLevelCurrentValue(Type referenceType, Dictionary<Type, int> loadingLevelByReferenceType) {

@@ -26,16 +26,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
 
             return new LoadLinkProtocol(
                 referenceLoader,
-                new LoadLinkConfig(
-                    _loadLinkExpressions,
-
-
-                    new List<List<Type>>{
-                        new List<Type>{typeof(PolymorphicNestedLinkedSourcesTests.WithNestedPolymorphicContents)},
-                        new List<Type>{typeof(Person), typeof(Image)},
-                    }
-
-                )
+                new LoadLinkConfig(_loadLinkExpressions)
             );
         }
 

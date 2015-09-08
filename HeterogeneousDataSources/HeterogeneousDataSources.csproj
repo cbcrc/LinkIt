@@ -43,6 +43,8 @@
     <Compile Include="LoadLinkExpressions\Polymorphic\LinkWithIndex.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourceInclude.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourcesLoadLinkExpression.cs" />
+    <Compile Include="LoadLinkExpressionTreeFactory.cs" />
+    <Compile Include="ReferenceTypeByLoadingLevelParser.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="LoadLinkConfig.cs" />
     <Compile Include="ILinkedSource.cs" />
