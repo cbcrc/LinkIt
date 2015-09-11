@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
@@ -45,6 +46,27 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
+
+        [Test]
+        public void X()
+        {
+            var linkedSourceType = typeof (PersonLinkedSource);
+
+            var iLinkedSourceTypes = linkedSourceType.GetInterfaces()
+                .Where(interfaceType =>
+                    interfaceType.IsGenericType &&
+                    interfaceType.GetGenericTypeDefinition() == typeof (ILinkedSource<>))
+                .ToList();
+
+            //stle: throws if more than once
+
+            var iLinkedSourceType = iLinkedSourceTypes.Single();
+
+            var actual = iLinkedSourceType.GenericTypeArguments.Single();
+
+            Assert.That(actual, Is.EqualTo(typeof(Person)));
+        }
+
     }
 
     public class LoadLinkExpressionFactory<TLinkedSource>

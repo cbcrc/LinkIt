@@ -19,7 +19,7 @@ namespace HeterogeneousDataSources.Tests {
             );
 
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder(_fakeReferenceLoader);
-            loadLinkProtocolBuilder.For<SingleReferenceLinkedSource, SingleReferenceContent>()
+            loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
                 .IsRoot<string>()
                 .LoadLinkReference(
                     linkedSource => linkedSource.Model.SummaryImageId,
