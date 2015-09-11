@@ -7,7 +7,7 @@ namespace HeterogeneousDataSources
 
     //stle: enhance that: TChildLinkedSourceModel could be infered by reflection
     //stle: enhance that: TId could dispear after query are supported
-    public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel, TChildLinkedSourceModelId>
+    public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel>
         where TLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
     {
         private readonly Action<ILoadLinkExpression> _addLoadLinkExpressionAction;
@@ -17,7 +17,7 @@ namespace HeterogeneousDataSources
             _addLoadLinkExpressionAction = addLoadLinkExpressionAction;
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel, TChildLinkedSourceModelId> LoadLinkReference<TReference, TId>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel> LoadLinkReference<TReference, TId>(
             Func<TLinkedSource, TId> getLookupIdFunc,
             Expression<Func<TLinkedSource, TReference>> linkTargetFunc) 
         {
@@ -33,9 +33,9 @@ namespace HeterogeneousDataSources
             return this;
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel, TChildLinkedSourceModelId> IsRoot()
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel> IsRoot<TId>()
         {
-            var loadLinkExpression = new RootLoadLinkExpression<TLinkedSource, TChildLinkedSourceModel, TChildLinkedSourceModelId>();
+            var loadLinkExpression = new RootLoadLinkExpression<TLinkedSource, TChildLinkedSourceModel, TId>();
 
             _addLoadLinkExpressionAction(loadLinkExpression);
 

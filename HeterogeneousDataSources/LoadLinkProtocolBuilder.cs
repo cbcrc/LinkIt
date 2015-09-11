@@ -14,10 +14,10 @@ namespace HeterogeneousDataSources {
             _referenceLoader = referenceLoader;
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel, TChildLinkedSourceModelId> For<TLinkedSource, TChildLinkedSourceModel, TChildLinkedSourceModelId>()
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel> For<TLinkedSource, TChildLinkedSourceModel>()
             where TLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
-            return new LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel, TChildLinkedSourceModelId>(AddLoadLinkExpression);
+            return new LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource, TChildLinkedSourceModel>(AddLoadLinkExpression);
         }
 
         private void AddLoadLinkExpression(ILoadLinkExpression loadLinkExpression)
