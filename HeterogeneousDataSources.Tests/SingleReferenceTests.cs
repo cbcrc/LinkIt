@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
+﻿using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -10,62 +8,65 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class SingleReferenceTests
     {
-        private LoadLinkProtocolFactory<SingleReferenceContent, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<SingleReferenceContent, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp()
         {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<SingleReferenceContent, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<SingleReferenceLinkedSource, SingleReferenceContent, string>(),
-                    new ReferenceLoadLinkExpression<SingleReferenceLinkedSource, Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference
-                    )
-                },
-                getReferenceIdFunc: reference => reference.Id
+            _fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(
+                reference => reference.Id
             );
+
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder(_fakeReferenceLoader);
+            loadLinkProtocolBuilder.For<SingleReferenceLinkedSource, SingleReferenceContent, string>()
+                .IsRoot()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                );
+            _sut = loadLinkProtocolBuilder.Build();
         }
 
         [Test]
         public void LoadLink_SingleReference()
         {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = "a"
                 }
             );
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = null
                 }
             );
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource>("1");
 
             Assert.That(actual.SummaryImage, Is.Null);
         }
 
         [Test]
         public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = "cannot-be-resolved"
                 }
             );
 
-            var actual = sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource>("1");
 
             Assert.That(actual.SummaryImage, Is.Null);
         }

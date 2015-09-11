@@ -81,6 +81,7 @@
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />
+    <Compile Include="Shared\FakeReferenceLoader2.cs" />
     <Compile Include="Shared\FakeReferenceLoader.cs" />
     <Compile Include="Shared\IPolymorphicModel.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />
