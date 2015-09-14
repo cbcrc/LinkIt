@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
@@ -6,16 +7,30 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         : LoadLinkExpression<TLinkedSource, TReference, TId>, ILoadLinkExpression
     {
         private readonly Func<TLinkedSource, List<TId>> _getLookupIdsFunc;
+        private readonly LinkTarget<TLinkedSource, TReference> _linkTarget;
         private readonly Action<TLinkedSource, List<TReference>> _linkAction;
 
         public ReferencesLoadLinkExpression(
+            string linkTargetId,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
-            Action<TLinkedSource, List<TReference>> linkAction)
+            Action<TLinkedSource, List<TReference>> linkAction) 
         {
+            EnsureGenericParameterCannotBeCollection<TLinkedSource>(linkTargetId, "TLinkedSource");
+            EnsureGenericParameterCannotBeCollection<TReference>(linkTargetId, "TReference");
+            EnsureGenericParameterCannotBeCollection<TId>(linkTargetId, "TId");
+
             _getLookupIdsFunc = getLookupIdsFunc;
             _linkAction = linkAction;
             ModelType = typeof(TReference);
         }
+
+        //stle: delete
+        [Obsolete]
+        public ReferencesLoadLinkExpression(
+            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Action<TLinkedSource, List<TReference>> linkAction)
+            : this("obsolete",getLookupIdsFunc,linkAction) 
+        { }
 
         protected override List<TId> GetLookupIdsTemplate(TLinkedSource linkedSource)
         {
@@ -32,5 +47,16 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         public Type ModelType { get; private set; }
+
+        private static void EnsureGenericParameterCannotBeCollection<T>(string context, string genericParameterName)
+        {
+            if (typeof (T).GetInterface("ICollection") != null){
+                throw new ArgumentException(
+                    string.Format("{0}: {1} cannot be a collection.", context, genericParameterName),
+                    genericParameterName
+                );
+            }
+        }
+
     }
 }

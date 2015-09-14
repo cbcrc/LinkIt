@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
+    <Compile Include="ReferencesLoadLinkExpressionTests.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />
     <Compile Include="Shared\FakeReferenceLoader2.cs" />
     <Compile Include="Shared\FakeReferenceLoader.cs" />

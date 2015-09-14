@@ -14,18 +14,17 @@ namespace HeterogeneousDataSources.Tests {
         [SetUp]
         public void SetUp()
         {
-            _fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(
-                reference => reference.Id
-            );
-
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder(_fakeReferenceLoader);
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
                 .IsRoot<string>()
                 .LoadLinkReference(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            _sut = loadLinkProtocolBuilder.Build();
+
+            _fakeReferenceLoader = 
+                new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]

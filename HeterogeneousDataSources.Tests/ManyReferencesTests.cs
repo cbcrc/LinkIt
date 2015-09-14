@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -12,50 +11,52 @@ namespace HeterogeneousDataSources.Tests
     [TestFixture]
     public class ManyReferencesTests
     {
-        private LoadLinkProtocolFactory<ManyReferencesContent, int> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<ManyReferencesContent, int> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<ManyReferencesContent, int>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<ManyReferencesLinkedSource,ManyReferencesContent, int>(),
-                    new ReferenceLoadLinkExpression<ManyReferencesLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference
-                    ),
-                    new ReferenceLoadLinkExpression<ManyReferencesLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Model.AuthorImageId,
-                        (linkedSource, reference) => linkedSource.AuthorImage = reference
-                    ),
-                    new ReferencesLoadLinkExpression<ManyReferencesLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Model.FavoriteImageIds,
-                        (linkedSource, reference) => linkedSource.FavoriteImages = reference
-                    )
-                },
-                getReferenceIdFunc: reference => reference.Id
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<ManyReferencesLinkedSource>()
+                .IsRoot<int>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                )
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.AuthorImageId,
+                    linkedSource => linkedSource.AuthorImage
+                )
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.FavoriteImageIds,
+                    linkedSource => linkedSource.FavoriteImages
+                );
+
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<ManyReferencesContent, int>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_ManyReferences()
         {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "summary-image-id",
                     AuthorImageId = "author-image-id",
-                    FavoriteImageIds = new List<string>{"one","two"}
+                    FavoriteImageIds = new List<string> { "one", "two" }
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>(1);
             
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldIgnoreNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -64,14 +65,14 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             Assert.That(actual.FavoriteImages.Count, Is.EqualTo(2));
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -80,14 +81,14 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             Assert.That(actual.FavoriteImages, Is.Empty);
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -96,7 +97,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             var linkedImagesIds = actual.FavoriteImages.Select(image => image.Id);
             Assert.That(linkedImagesIds, Is.EquivalentTo(new []{"a", "a"}));
@@ -105,7 +106,7 @@ namespace HeterogeneousDataSources.Tests
 
         [Test]
         public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkEmptySet() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -114,7 +115,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<ManyReferencesLinkedSource>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>(1);
 
             Assert.That(actual.FavoriteImages, Is.Empty);
         }

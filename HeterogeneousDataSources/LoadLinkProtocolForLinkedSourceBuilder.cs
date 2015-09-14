@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -22,17 +23,38 @@ namespace HeterogeneousDataSources
             Func<TLinkedSource, TId> getLookupIdFunc,
             Expression<Func<TLinkedSource, TReference>> linkTargetFunc) 
         {
-            var setterAction = LinkTargetFactory.Create(linkTargetFunc);
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var loadLinkExpression = new ReferenceLoadLinkExpression<TLinkedSource, TReference, TId>(
-                getLookupIdFunc,
-                setterAction.SetTargetProperty
+            var loadLinkExpression = new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
+                linkTarget.Id,
+                linkedSource => 
+                    new List<TId>{ getLookupIdFunc(linkedSource)},
+                (linkedSource, references) => 
+                    linkTarget.SetTargetProperty(linkedSource, references.SingleOrDefault())
             );
 
             _addLoadLinkExpressionAction(loadLinkExpression);
 
             return this;
         }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
+            Func<TLinkedSource, List<TId>> getLookupIdFunc,
+            Expression<Func<TLinkedSource, List<TReference>>> linkTargetFunc) 
+        {
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
+
+            var loadLinkExpression = new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
+                linkTarget.Id,
+                getLookupIdFunc,
+                linkTarget.SetTargetProperty
+            );
+
+            _addLoadLinkExpressionAction(loadLinkExpression);
+
+            return this;
+        }
+
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> IsRoot<TId>()
         {
@@ -46,13 +68,13 @@ namespace HeterogeneousDataSources
         private ILoadLinkExpression CreateRootLoadLinkExpression<TId>()
         {
             Type rootLoadLinkExpressionGenericType = typeof(RootLoadLinkExpression<,,>);
-            Type[] typeArgs = { typeof(TLinkedSource), GetChildLinkedSourceModelType(), typeof(TId) };
+            Type[] typeArgs = { typeof(TLinkedSource), GetLinkedSourceModelType(), typeof(TId) };
             Type rootLoadLinkExpressionSpecificType = rootLoadLinkExpressionGenericType.MakeGenericType(typeArgs);
 
             return (ILoadLinkExpression)Activator.CreateInstance(rootLoadLinkExpressionSpecificType);
         }
 
-        private Type GetChildLinkedSourceModelType()
+        private Type GetLinkedSourceModelType()
         {
             var linkedSourceType = typeof(TLinkedSource);
             var iLinkedSourceTypes = linkedSourceType.GetInterfaces()

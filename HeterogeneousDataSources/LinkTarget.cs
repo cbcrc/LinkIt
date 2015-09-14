@@ -16,10 +16,12 @@ namespace HeterogeneousDataSources
             PropertyName = propertyName;
             _getterFunc = getterFunc;
             _setterAction = setterAction;
+            Id = string.Format("{0}/{1}", LinkedSourceType.FullName, propertyName);
         }
 
         public Type LinkedSourceType { get; private set; }
         public string PropertyName { get; private set; }
+        public string Id { get; private set; }
 
         public TTargetProperty GetTargetProperty(TLinkedSource linkedSource){
             return _getterFunc(linkedSource);
