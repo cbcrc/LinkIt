@@ -25,17 +25,15 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var loadLinkExpression = new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
-                linkTarget.Id,
-                linkedSource => 
-                    new List<TId>{ getLookupIdFunc(linkedSource)},
-                (linkedSource, references) => 
-                    linkTarget.SetTargetProperty(linkedSource, references.SingleOrDefault())
+            return AddLoadLinkExpression(
+                new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
+                    linkTarget.Id,
+                    linkedSource =>
+                        new List<TId> {getLookupIdFunc(linkedSource)},
+                    (linkedSource, references) =>
+                        linkTarget.SetTargetProperty(linkedSource, references.SingleOrDefault())
+                )
             );
-
-            _addLoadLinkExpressionAction(loadLinkExpression);
-
-            return this;
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
@@ -44,24 +42,25 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var loadLinkExpression = new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
-                linkTarget.Id,
-                getLookupIdFunc,
-                linkTarget.SetTargetProperty
+            return AddLoadLinkExpression(
+                new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
+                    linkTarget.Id,
+                    getLookupIdFunc,
+                    linkTarget.SetTargetProperty
+                )
             );
-
-            _addLoadLinkExpressionAction(loadLinkExpression);
-
-            return this;
         }
 
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> IsRoot<TId>()
         {
-            var loadLinkExpression = CreateRootLoadLinkExpression<TId>();
+            return AddLoadLinkExpression(CreateRootLoadLinkExpression<TId>());
+        }
 
+        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddLoadLinkExpression(
+            ILoadLinkExpression loadLinkExpression)
+        {
             _addLoadLinkExpressionAction(loadLinkExpression);
-
             return this;
         }
 
