@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
+﻿using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -10,46 +8,50 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class NestedLinkedSourceTests
     {
-        private LoadLinkProtocolFactory<NestedContent, int> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<NestedContent, int> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<NestedContent, int>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<NestedLinkedSource, NestedContent, int>(),
-                    new NestedLinkedSourceLoadLinkExpression<NestedLinkedSource, PersonLinkedSource, Person, string>(
-                        linkedSource => linkedSource.Model.AuthorDetailId,
-                        (linkedSource, nestedLinkedSource) => linkedSource.AuthorDetail = nestedLinkedSource),
-                    new ReferenceLoadLinkExpression<NestedLinkedSource,Person, string>(
-                        linkedSource => linkedSource.Model.ClientSummaryId,
-                        (linkedSource, reference) => linkedSource.ClientSummary = reference),
-                    new ReferenceLoadLinkExpression<PersonLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference)
-                },
-                getReferenceIdFunc: reference => reference.Id
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<NestedLinkedSource>()
+                .IsRoot<int>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.AuthorDetailId,
+                    linkedSource => linkedSource.AuthorDetail)
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.ClientSummaryId,
+                    linkedSource => linkedSource.ClientSummary);
+
+            loadLinkProtocolBuilder.For<PersonLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage);
+
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<NestedContent, int>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_NestedLinkedSource()
         {
-            var sut = _loadLinkProtocolFactory.Create(
-                new NestedContent{
+            _fakeReferenceLoader.FixValue(
+                new NestedContent {
                     Id = 1,
                     AuthorDetailId = "32",
                     ClientSummaryId = "33"
                 }
             );
 
-            var actual = sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource>(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummary() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new NestedContent {
                     Id = 1,
                     AuthorDetailId = "32",
@@ -57,7 +59,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            sut.LoadLink<NestedLinkedSource>(1);
+            _sut.LoadLink<NestedLinkedSource>(1);
 
             //stle: improve this by allowing test visibility on which image id was resolved
             //assert that does not throw
@@ -65,22 +67,21 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new NestedContent {
                     Id = 1,
                     AuthorDetailId = null,
                     ClientSummaryId = "33"
                 }
             );
-
-            var actual = sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource>(1);
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
 
         [Test]
         public void LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new NestedContent {
                     Id = 1,
                     AuthorDetailId = "cannot-be-resolved",
@@ -88,16 +89,16 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource>(1);
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
 
         [Test]
         public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot() {
-            var sut = _loadLinkProtocolFactory.Create(null);
+            _fakeReferenceLoader.FixValue(null);
 
-            var actual = sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource>(1);
 
             Assert.That(actual, Is.Null);
         }

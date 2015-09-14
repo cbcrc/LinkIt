@@ -76,7 +76,7 @@ namespace HeterogeneousDataSources
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             return AddLoadLinkExpression(
-                CreateNestedLinkedSourceLoadLinkExpression<TChildLinkedSource, TId>(
+                CreateNestedLinkedSourceLoadLinkExpression(
                     linkTarget.Id,
                     ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
                     ToLinkActionForSingleValue(linkTarget)
@@ -100,7 +100,16 @@ namespace HeterogeneousDataSources
 
             Type nestedLinkedSourceLoadLinkExpressionSpecificType = nestedLinkedSourceLoadLinkExpressionGenericType.MakeGenericType(typeArgs);
 
-            return (ILoadLinkExpression)Activator.CreateInstance(nestedLinkedSourceLoadLinkExpressionSpecificType);
+            //stle: change to single once obsolete constructor is deleted
+            var ctor = nestedLinkedSourceLoadLinkExpressionSpecificType.GetConstructors().First();
+
+            return (ILoadLinkExpression)ctor.Invoke(
+                new object[]{
+                    linkTargetId,
+                    getLookupIdsFunc,
+                    linkAction
+                }
+            );
         }
 
         #region Shared

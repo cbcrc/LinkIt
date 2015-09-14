@@ -59,5 +59,14 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
                 .ToList();
         }
 
+        //stle: dry
+        public static void EnsureGenericParameterCannotBeList<T>(string context, string genericParameterName) {
+            if (typeof(List<>).IsAssignableFrom(typeof(T))) {
+                throw new ArgumentException(
+                    string.Format("{0}: {1} cannot be a list.", context, genericParameterName),
+                    genericParameterName
+                );
+            }
+        }
     }
 }

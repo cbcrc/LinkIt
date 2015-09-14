@@ -15,9 +15,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
             Action<TLinkedSource, List<TReference>> linkAction) 
         {
-            EnsureGenericParameterCannotBeList<TLinkedSource>(linkTargetId, "TLinkedSource");
-            EnsureGenericParameterCannotBeList<TReference>(linkTargetId, "TReference");
-            EnsureGenericParameterCannotBeList<TId>(linkTargetId, "TId");
+            LoadLinkExpressionUtil.EnsureGenericParameterCannotBeList<TLinkedSource>(linkTargetId, "TLinkedSource");
+            LoadLinkExpressionUtil.EnsureGenericParameterCannotBeList<TReference>(linkTargetId, "TReference");
+            LoadLinkExpressionUtil.EnsureGenericParameterCannotBeList<TId>(linkTargetId, "TId");
 
             _getLookupIdsFunc = getLookupIdsFunc;
             _linkAction = linkAction;
@@ -47,16 +47,5 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         }
 
         public Type ModelType { get; private set; }
-
-        private static void EnsureGenericParameterCannotBeList<T>(string context, string genericParameterName)
-        {
-            if (typeof(List<>).IsAssignableFrom(typeof(T))){
-                throw new ArgumentException(
-                    string.Format("{0}: {1} cannot be a list.", context, genericParameterName),
-                    genericParameterName
-                );
-            }
-        }
-
     }
 }

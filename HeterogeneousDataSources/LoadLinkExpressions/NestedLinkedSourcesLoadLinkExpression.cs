@@ -10,6 +10,26 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         private readonly Func<TLinkedSource, List<TId>> _getLookupIdsFunc;
         private readonly Action<TLinkedSource, List<TChildLinkedSource>> _linkAction;
 
+        public NestedLinkedSourcesLoadLinkExpression(
+            string linkTargetId,
+            Func<TLinkedSource, List<TId>> getLookupIdsFunc, Action<TLinkedSource,
+            List<TChildLinkedSource>> linkAction) 
+        {
+            //stle: dry and test
+            LoadLinkExpressionUtil.EnsureGenericParameterCannotBeList<TLinkedSource>(linkTargetId, "TLinkedSource");
+            LoadLinkExpressionUtil.EnsureGenericParameterCannotBeList<TChildLinkedSource>(linkTargetId, "TChildLinkedSource");
+            LoadLinkExpressionUtil.EnsureGenericParameterCannotBeList<TChildLinkedSource>(linkTargetId, "TChildLinkedSourceModel");
+            LoadLinkExpressionUtil.EnsureGenericParameterCannotBeList<TId>(linkTargetId, "TId");
+
+            ChildLinkedSourceType = typeof(TChildLinkedSource);
+            ChildLinkedSourceModelType = typeof(TChildLinkedSourceModel);
+            _getLookupIdsFunc = getLookupIdsFunc;
+            _linkAction = linkAction;
+            ModelType = typeof(TChildLinkedSourceModel);
+        }
+
+        //stle: delete
+        [Obsolete]
         public NestedLinkedSourcesLoadLinkExpression(Func<TLinkedSource, List<TId>> getLookupIdsFunc, Action<TLinkedSource, List<TChildLinkedSource>> linkAction)
         {
             ChildLinkedSourceType = typeof (TChildLinkedSource);
