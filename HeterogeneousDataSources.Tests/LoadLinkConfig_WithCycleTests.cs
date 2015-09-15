@@ -11,16 +11,15 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldThrow()
         {
-            TestDelegate act = () => new LoadLinkConfig(
-                new List<ILoadLinkExpression>
-                {
-                    new RootLoadLinkExpression<CycleInReferenceLinkedSource, DirectCycle, string>(),
-                    new ReferenceLoadLinkExpression<CycleInReferenceLinkedSource, DirectCycle, string>(
-                        linkedSource => linkedSource.Model.ParentId,
-                        (linkedSource, reference) => linkedSource.Parent = reference
-                        )
-                }
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<CycleInReferenceLinkedSource>()
+                .IsRoot<string>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.ParentId,
+                    linkedSource => linkedSource.Parent
+                );
+
+            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
             Assert.That(
                 act,
@@ -32,15 +31,15 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void CreateLoadLinkConfig_WithCycleCausedByDirectNestedLinkedSource_ShouldThrow() {
-            TestDelegate act = () => new LoadLinkConfig(
-                new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<DirectCycleInNestedLinkedSource, DirectCycle, string>(),
-                    new NestedLinkedSourceLoadLinkExpression<DirectCycleInNestedLinkedSource, DirectCycleInNestedLinkedSource, DirectCycle, string>(
-                        linkedSource => linkedSource.Model.ParentId,
-                        (linkedSource, nestedLinkedSource) => linkedSource.Parent = nestedLinkedSource
-                        )
-                }
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<DirectCycleInNestedLinkedSource>()
+                .IsRoot<string>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.ParentId,
+                    linkedSource => linkedSource.Parent
+                );
+
+            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
             Assert.That(
                 act,
@@ -52,18 +51,20 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void CreateLoadLinkConfig_WithCycleCausedByIndirectNestedLinkedSource_ShouldThrow() {
-            TestDelegate act = () => new LoadLinkConfig(
-                new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<IndirectCycleLevel0LinkedSource, IndirectCycleLevel0, string>(),
-                    new NestedLinkedSourceLoadLinkExpression<IndirectCycleLevel0LinkedSource, IndirectCycleLevel1LinkedSource, IndirectCycleLevel1, string>(
-                        linkedSource => linkedSource.Model.Level1Id,
-                        (linkedSource, nestedLinkedSource) => linkedSource.Level1 = nestedLinkedSource),
-                    new NestedLinkedSourceLoadLinkExpression<IndirectCycleLevel1LinkedSource, IndirectCycleLevel0LinkedSource, IndirectCycleLevel0, string>(
-                        linkedSource => linkedSource.Model.Level0Id,
-                        (linkedSource, nestedLinkedSource) => linkedSource.Level0 = nestedLinkedSource
-                        )
-                }
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<IndirectCycleLevel0LinkedSource>()
+                .IsRoot<string>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.Level1Id,
+                    linkedSource => linkedSource.Level1
+                );
+            loadLinkProtocolBuilder.For<IndirectCycleLevel1LinkedSource>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.Level0Id,
+                    linkedSource => linkedSource.Level0
+                );
+
+            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
             Assert.That(
                 act,

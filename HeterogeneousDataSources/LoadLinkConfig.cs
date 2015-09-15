@@ -60,7 +60,8 @@ namespace HeterogeneousDataSources {
 
         private void EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
             var childLinkedSourceTypeWithDuplicates = GetRootLoadLinkExpressions(loadLinkExpressions)
-                .GroupBy(rootExpression => rootExpression.ChildLinkedSourceTypes)
+                .SelectMany(rootExpression => rootExpression.ChildLinkedSourceTypes)
+                .GroupBy(rootLinkedSource => rootLinkedSource)
                 .Where(group => group.Count() > 1)
                 .Select(group => group.Key)
                 .ToList();
