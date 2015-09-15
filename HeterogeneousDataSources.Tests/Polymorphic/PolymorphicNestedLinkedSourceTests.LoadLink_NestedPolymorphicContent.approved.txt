@@ -1,0 +1,18 @@
+﻿{
+  "model": {
+    "id": "1",
+    "contentContextualization": {
+      "contentType": "person",
+      "id": "p1",
+      "title": "altered person title"
+    }
+  },
+  "content": {
+    "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests+PersonWithoutContextualizationLinkedSource, HeterogeneousDataSources.Tests",
+    "model": {
+      "id": "p1",
+      "name": "name-p1",
+      "summaryImageId": "person-img-p1"
+    }
+  }
+}

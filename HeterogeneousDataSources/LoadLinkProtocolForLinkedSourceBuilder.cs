@@ -119,6 +119,29 @@ namespace HeterogeneousDataSources
             return AddLoadLinkExpression(loadLinkExpression);
         }
 
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TIChildLinkedSource, TLink, TDiscriminant>(
+           Func<TLinkedSource, TLink> getLinkFunc,
+           Expression<Func<TLinkedSource, TIChildLinkedSource>> linkTargetFunc,
+           Func<TLink, TDiscriminant> getDiscriminantFunc,
+           Action<IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+        {
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
+            //stle: dry
+            var includeBuilder = new IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>();
+            includes(includeBuilder);
+
+            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
+                linkTarget.Id,
+                ToGetLookupIdsFuncForSingleValue(getLinkFunc),
+                GetReferencesFuncForSingleValue<TIChildLinkedSource>(),
+                SetReferencesActionForSingleValue(linkTarget),
+                getDiscriminantFunc,
+                includeBuilder.Build()
+            );
+
+            return AddLoadLinkExpression(loadLinkExpression);
+        }
+
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TIChildLinkedSource, TLink, TDiscriminant>(
            Func<TLinkedSource, List<TLink>> getLinksFunc,

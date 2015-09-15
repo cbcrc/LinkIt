@@ -80,6 +80,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
+    <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
     <Compile Include="ReferencesLoadLinkExpressionTests.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />
