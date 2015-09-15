@@ -6,7 +6,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
     public interface IPolymorphicNestedLinkedSourceInclude<TIChildLinkedSource, TLink>
     {
         Type ReferenceType { get; }
+        Type ChildLinkedSourceType { get; }
+
         void AddLookupIds(TLink link, LookupIdContext lookupIdContext);
         List<TIChildLinkedSource> CreateChildLinkedSources(TLink link, LoadedReferenceContext loadedReferenceContext);
+        
     }
 }

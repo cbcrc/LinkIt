@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
     public interface INestedLoadLinkExpression : ILoadLinkExpression
     {
-        Type ChildLinkedSourceType { get; }
+        List<Type> ChildLinkedSourceTypes { get; }
     }
 }

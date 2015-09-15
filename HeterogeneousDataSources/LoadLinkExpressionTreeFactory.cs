@@ -75,8 +75,8 @@ namespace HeterogeneousDataSources
             if (nodeAsNestedLoadLinkExpression == null) { return new List<ILoadLinkExpression>(); }
 
             return _loadLinkExpressions
-                .Where(loadLinkExpression => 
-                    loadLinkExpression.LinkedSourceType == nodeAsNestedLoadLinkExpression.ChildLinkedSourceType)
+                .Where(loadLinkExpression =>
+                    nodeAsNestedLoadLinkExpression.ChildLinkedSourceTypes.Contains(loadLinkExpression.LinkedSourceType))
                 .ToList();
         }
     }

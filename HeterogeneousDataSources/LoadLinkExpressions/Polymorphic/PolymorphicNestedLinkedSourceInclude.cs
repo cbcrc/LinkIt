@@ -18,6 +18,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             _getLookupIdFunc = getLookupIdFunc;
             _initChildLinkedSourceAction = initChildLinkedSourceAction;
             ReferenceType = typeof(TChildLinkedSourceModel);
+            ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
         public Type ReferenceType { get; private set; }
@@ -57,6 +58,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             var lookupIds = new List<TId> { lookupId };
             return LoadLinkExpressionUtil.GetCleanedLookupIds(lookupIds);
         }
+
+        public Type ChildLinkedSourceType { get; private set; }
 
     }
 }

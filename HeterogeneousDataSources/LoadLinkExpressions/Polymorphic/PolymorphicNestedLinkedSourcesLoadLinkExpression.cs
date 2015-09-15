@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 {
-    public class PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : ILoadLinkExpression
+    public class PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : ILoadLinkExpression, INestedLoadLinkExpression
     {
         private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
         private readonly Func<TLinkedSource, List<TIChildLinkedSource>> _getReferences;
@@ -29,8 +29,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             _includes = includes;
 
             LinkedSourceType = typeof (TLinkedSource);
-            ReferenceTypes = _includes
-                .Select(include => include.Value.ReferenceType)
+            ReferenceTypes = _includes.Values
+                .Select(include => include.ReferenceType)
+                .ToList();
+            ChildLinkedSourceTypes = _includes.Values
+                .Select(include => include.ChildLinkedSourceType)
                 .ToList();
             LoadLinkExpressionType = LoadLinkExpressionType.NestedLinkedSource;
         }
@@ -170,5 +173,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 
             return _includes[discriminant];
         }
+
+        public List<Type> ChildLinkedSourceTypes { get; private set; }
     }
 }

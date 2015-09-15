@@ -48,7 +48,7 @@ namespace HeterogeneousDataSources {
             return GetRootLoadLinkExpressions(loadLinkExpressions)
                 .Select(rootExpression =>
                     new {
-                        RootLinkedSourceType = rootExpression.ChildLinkedSourceType,
+                        RootLinkedSourceType = rootExpression.ChildLinkedSourceTypes.Single(),
                         ReferenceTypeByLoadingLevel = parser.ParseReferenceTypeByLoadingLevel(rootExpression)
                     }
                 )
@@ -60,7 +60,7 @@ namespace HeterogeneousDataSources {
 
         private void EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
             var childLinkedSourceTypeWithDuplicates = GetRootLoadLinkExpressions(loadLinkExpressions)
-                .GroupBy(rootExpression => rootExpression.ChildLinkedSourceType)
+                .GroupBy(rootExpression => rootExpression.ChildLinkedSourceTypes)
                 .Where(group => group.Count() > 1)
                 .Select(group => group.Key)
                 .ToList();
@@ -88,7 +88,7 @@ namespace HeterogeneousDataSources {
 
             if (cycles.Any()) {
                 var cycleAsString = cycles
-                    .Select(cycle => string.Format("{0} creates a cycle in {1}", cycle.ReferenceTypeThatCreatesACycle, cycle.RootLoadLinkExpression.ChildLinkedSourceType))
+                    .Select(cycle => string.Format("{0} creates a cycle in {1}", cycle.ReferenceTypeThatCreatesACycle, cycle.RootLoadLinkExpression.ChildLinkedSourceTypes))
                     .ToList();
 
                 throw new ArgumentException(

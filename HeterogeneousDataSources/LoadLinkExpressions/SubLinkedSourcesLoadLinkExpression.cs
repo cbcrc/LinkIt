@@ -61,5 +61,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         public Type ModelType { get; private set; }
         public Type ChildLinkedSourceType { get; private set; }
         public Type ChildLinkedSourceModelType { get; private set; }
+
+        public List<Type> ChildLinkedSourceTypes { get { return new List<Type> { ChildLinkedSourceType }; } }
     }
 }
