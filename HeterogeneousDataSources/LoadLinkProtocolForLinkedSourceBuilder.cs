@@ -71,28 +71,6 @@ namespace HeterogeneousDataSources
         #endregion
 
         #region NestedLinkedSource
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TIChildLinkedSource, TLink, TDiscriminant>(
-           Func<TLinkedSource, List<TLink>> getLinksFunc,
-           Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
-           Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>> includes) 
-        {
-            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-            var includeBuilder = new IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>();
-            includes(includeBuilder);
-
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
-                linkTarget.Id,
-                getLinksFunc,
-                linkTarget.GetTargetProperty,
-                linkTarget.SetTargetProperty,
-                getDiscriminantFunc,
-                includeBuilder.Build()
-            );
-
-            return AddLoadLinkExpression(loadLinkExpression);
-        }
-
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
            Func<TLinkedSource, TId> getLookupIdFunc,
            Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc) 
@@ -116,6 +94,55 @@ namespace HeterogeneousDataSources
 
             return AddLoadLinkExpression(loadLinkExpression);
         }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+           Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+           Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc) 
+        {
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
+
+            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
+                linkTarget.Id,
+                getLookupIdsFunc,
+                linkTarget.GetTargetProperty,
+                linkTarget.SetTargetProperty,
+                link => true,
+                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>>
+                {
+                    {
+                        true, //always one include when not polymorphic
+                        CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>()
+                    }
+                }
+            );
+
+            return AddLoadLinkExpression(loadLinkExpression);
+        }
+
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TIChildLinkedSource, TLink, TDiscriminant>(
+           Func<TLinkedSource, List<TLink>> getLinksFunc,
+           Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
+           Func<TLink, TDiscriminant> getDiscriminantFunc,
+           Action<IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+        {
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
+            var includeBuilder = new IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>();
+            includes(includeBuilder);
+
+            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
+                linkTarget.Id,
+                getLinksFunc,
+                linkTarget.GetTargetProperty,
+                linkTarget.SetTargetProperty,
+                getDiscriminantFunc,
+                includeBuilder.Build()
+            );
+
+            return AddLoadLinkExpression(loadLinkExpression);
+        }
+
+
 
         private IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>() {
             Type ctorGenericType = typeof(PolymorphicNestedLinkedSourceInclude<,,,,>);
