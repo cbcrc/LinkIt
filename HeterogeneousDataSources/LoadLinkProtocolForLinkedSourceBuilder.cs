@@ -70,38 +70,28 @@ namespace HeterogeneousDataSources
         } 
         #endregion
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource,TM, TId>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource,TId>(
            Func<TLinkedSource, TId> getLookupIdFunc,
            Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc)
-            where TChildLinkedSource : class, ILinkedSource<TM>, new()
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var x = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
+            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
                 linkTarget.Id,
                 ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
                 GetReferencesFuncForSingleValue<TChildLinkedSource>(),
                 SetReferencesActionForSingleValue(linkTarget),
                 link => true,
-                new Dictionary<
-                    bool,
-                    IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>
-                    >
+                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>>
                 {
                     {
                         true, //always one include when not polymorphic
-                        new PolymorphicNestedLinkedSourceInclude<
-                            TChildLinkedSource,
-                            TId,
-                            TChildLinkedSource,
-                            TM,
-                            TId
-                        >(link => link)
+                        CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>()
                     }
                 }
             );
 
-            return AddLoadLinkExpression(x);
+            return AddLoadLinkExpression(loadLinkExpression);
         }
 
         private static Action<TLinkedSource, List<TIChildLinkedSource>> SetReferencesActionForSingleValue<TIChildLinkedSource>(
@@ -115,6 +105,38 @@ namespace HeterogeneousDataSources
             return linkedSource => {
                 throw new InvalidOperationException("Cannot get reference list for single reference.");
             };
+        }
+
+        private IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>() 
+        {
+            Type ctorGenericType = typeof(PolymorphicNestedLinkedSourceInclude<,,,,>);
+
+            var childLinkedSourceType = typeof (TChildLinkedSource);
+            var idType = typeof (TId);
+            Type[] typeArgs ={
+                childLinkedSourceType, 
+                idType,
+                childLinkedSourceType, 
+                GetLinkedSourceModelType(childLinkedSourceType),
+                idType
+            };
+
+            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
+
+            //stle: change to single once obsolete constructor is deleted
+            var ctor = ctorSpecificType.GetConstructors().First();
+
+            return (IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>)ctor.Invoke(
+                new object[]{
+                    CreateIdentityFunc<TId>(),
+                    null
+                }
+            );
+        }
+
+        private Func<T, T> CreateIdentityFunc<T>()
+        {
+            return x => x;
         }
 
         private ILoadLinkExpression CreateNestedLinkedSourceLoadLinkExpression<TChildLinkedSource, TId>(
