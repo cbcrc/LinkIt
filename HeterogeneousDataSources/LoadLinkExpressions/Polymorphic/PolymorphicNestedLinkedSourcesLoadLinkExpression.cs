@@ -57,15 +57,47 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             Link((TLinkedSource)linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
         }
 
-        private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
+        private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        {
+            if (GetLinks(linkedSource).Count <= 1){
+                LinkListWithZeroOrOneReference(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+            }
+            else{
+                LinkListWithManyReferences(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+            }
+        }
+
+        private void LinkListWithZeroOrOneReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        {
+            var link = GetLinks(linkedSource).SingleOrDefault();
+            if (link == null){
+                _setReferences(linkedSource, new List<TIChildLinkedSource>());
+            }
+
+            var include = GetSelectedInclude(link);
+            if (include.ReferenceType != referenceTypeToBeLinked) { return; }
+
+            var childLinkedSources = include
+                .CreateChildLinkedSources(link, loadedReferenceContext)
+                .Where(childLinkedSource => childLinkedSource != null)
+                .ToList();
+
+            _setReferences(linkedSource, childLinkedSources);
+        }
+
+        private void LinkListWithManyReferences(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
+            Type referenceTypeToBeLinked)
+        {
             InitListOfReferencesIfNull(linkedSource, loadedReferenceContext);
 
             var linksToEntityOfReferenceType = GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLinked);
 
-            foreach (var linkToEntityOfReferenceType in linksToEntityOfReferenceType) {
+            foreach (var linkToEntityOfReferenceType in linksToEntityOfReferenceType)
+            {
                 var include = GetSelectedInclude(linkToEntityOfReferenceType.Link);
 
-                var childLinkedSources = include.CreateChildLinkedSources(linkToEntityOfReferenceType.Link, loadedReferenceContext);
+                var childLinkedSources = include.CreateChildLinkedSources(linkToEntityOfReferenceType.Link,
+                    loadedReferenceContext);
 
                 //stle: need single
                 _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSources.SingleOrDefault();

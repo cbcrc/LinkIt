@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using HeterogeneousDataSources.LoadLinkExpressions;
+using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
 
 namespace HeterogeneousDataSources
 {
@@ -69,19 +70,50 @@ namespace HeterogeneousDataSources
         } 
         #endregion
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource,TM, TId>(
            Func<TLinkedSource, TId> getLookupIdFunc,
-           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc) 
+           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc)
+            where TChildLinkedSource : class, ILinkedSource<TM>, new()
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            return AddLoadLinkExpression(
-                CreateNestedLinkedSourceLoadLinkExpression(
-                    linkTarget.Id,
-                    ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
-                    ToLinkActionForSingleValue(linkTarget)
-                )
+            var x = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
+                ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
+                GetReferencesFuncForSingleValue<TChildLinkedSource>(),
+                SetReferencesActionForSingleValue(linkTarget),
+                link => true,
+                new Dictionary<
+                    bool,
+                    IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>
+                    >
+                {
+                    {
+                        true, //always one include when not polymorphic
+                        new PolymorphicNestedLinkedSourceInclude<
+                            TChildLinkedSource,
+                            TId,
+                            TChildLinkedSource,
+                            TM,
+                            TId
+                        >(link => link)
+                    }
+                }
             );
+
+            return AddLoadLinkExpression(x);
+        }
+
+        private static Action<TLinkedSource, List<TIChildLinkedSource>> SetReferencesActionForSingleValue<TIChildLinkedSource>(
+            LinkTarget<TLinkedSource, TIChildLinkedSource> linkTarget)
+        {
+            return (linkedSource, childLinkedSources) =>
+                linkTarget.SetTargetProperty(linkedSource, childLinkedSources.SingleOrDefault());
+        }
+
+        private static Func<TLinkedSource, List<TIChildLinkedSource>> GetReferencesFuncForSingleValue<TIChildLinkedSource>(){
+            return linkedSource => {
+                throw new InvalidOperationException("Cannot get reference list for single reference.");
+            };
         }
 
         private ILoadLinkExpression CreateNestedLinkedSourceLoadLinkExpression<TChildLinkedSource, TId>(
