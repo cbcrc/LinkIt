@@ -79,6 +79,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             var link = GetLinks(linkedSource).SingleOrDefault();
             if (link == null){
                 _setReferences(linkedSource, new List<TIChildLinkedSource>());
+                return;
             }
 
             var include = GetSelectedInclude(link);

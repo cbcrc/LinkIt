@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILinkTarget.cs" />
+    <Compile Include="IncludeBuilder.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicNestedLinkedSourceInclude.cs" />

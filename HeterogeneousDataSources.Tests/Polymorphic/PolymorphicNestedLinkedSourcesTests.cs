@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -11,60 +9,36 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicNestedLinkedSourcesTests {
-
-        private LoadLinkProtocolFactory<WithNestedPolymorphicContents, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<WithNestedPolymorphicContents, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
-        public void SetUp()
-        {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<WithNestedPolymorphicContents, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression> {
-                    new RootLoadLinkExpression<WithNestedPolymorphicContentsLinkedSource, WithNestedPolymorphicContents, string>(),
-                    new PolymorphicNestedLinkedSourcesLoadLinkExpression<WithNestedPolymorphicContentsLinkedSource, INestedPolymorphicContentLinkedSource, ContentContextualization, string>(
-                        "temp: until protocol builder",
-                        linkedSource => linkedSource.Model.ContentContextualizations,
-                        linkedSource => linkedSource.Contents, 
-                        (linkedSource, childLinkedSource) => linkedSource.Contents = childLinkedSource,
-                        link => link.ContentType,
-                        new Dictionary<
-                            string, 
-                            IPolymorphicNestedLinkedSourceInclude<INestedPolymorphicContentLinkedSource, ContentContextualization>
-                        >{
-                            {
-                                "person", 
-                                new PolymorphicNestedLinkedSourceInclude<
-                                    INestedPolymorphicContentLinkedSource,
-                                    ContentContextualization,
-                                    PersonWithoutContextualizationLinkedSource,
-                                    Person,
-                                    string
-                                >(
-                                    link => (string) link.Id
-                                )
-                            },
-                            {
-                                "image",
-                                new PolymorphicNestedLinkedSourceInclude<
-                                    INestedPolymorphicContentLinkedSource,
-                                    ContentContextualization,
-                                    ImageWithContextualizationLinkedSource,
-                                    Image,
-                                    string
-                                >(
-                                    link => (string)link.Id,
-                                    (link,childLinkedSource) => childLinkedSource.ContentContextualization = link
-                                ) 
-                            }
-                        }
-                    ),
-                },
-                getReferenceIdFunc: reference => reference.Id
-            );
+        public void SetUp() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<WithNestedPolymorphicContentsLinkedSource>()
+                .IsRoot<string>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.ContentContextualizations,
+                    linkedSource => linkedSource.Contents,
+                    reference => reference.ContentType,
+                    includes => includes
+                        .When<PersonWithoutContextualizationLinkedSource, string>(
+                            "person",
+                            reference => (string)reference.Id)
+                        .When<ImageWithContextualizationLinkedSource, string>(
+                            "image",
+                            reference => (string)reference.Id,
+                            (reference, childLinkedSource) => childLinkedSource.ContentContextualization = reference)
+                );
+
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<WithNestedPolymorphicContents, string>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContents() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -82,14 +56,14 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldIgnoreNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -108,28 +82,28 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
             Assert.That(actual.Contents.Count, Is.EqualTo(2));
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySet() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = null
                 }
             );
 
-            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
             Assert.That(actual.Contents, Is.Empty);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicates() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -147,7 +121,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
             var asImageIds = actual.Contents
                 .Cast<ImageWithContextualizationLinkedSource>()
@@ -159,7 +133,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
         [Test]
         public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkEmptySet() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -177,7 +151,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
             Assert.That(actual.Contents, Is.Empty);
         }
