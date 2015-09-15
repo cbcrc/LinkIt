@@ -13,6 +13,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
         private readonly Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TIChildLinkedSource, TLink>> _includes;
 
         public PolymorphicNestedLinkedSourcesLoadLinkExpression(
+            string linkTargetId,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
             //stle: http://stackoverflow.com/questions/7723744
             Func<TLinkedSource, List<TIChildLinkedSource>> getReferences,
@@ -20,6 +21,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TIChildLinkedSource, TLink>> includes)
         {
+            LinkTargetId = linkTargetId;
             _getLinksFunc = getLinksFunc;
             _getReferences = getReferences;
             _setReferences = setReferences;
@@ -32,6 +34,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
                 .ToList();
             LoadLinkExpressionType = LoadLinkExpressionType.NestedLinkedSource;
         }
+
+        public string LinkTargetId { get; private set; }
 
         public Type LinkedSourceType { get; private set; }
         public List<Type> ReferenceTypes { get; private set; }

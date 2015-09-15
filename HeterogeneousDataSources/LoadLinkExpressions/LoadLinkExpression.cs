@@ -13,6 +13,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             ReferenceTypes = new List<Type> { ReferenceType };
         }
 
+        //stle: delete or do it
+        public string LinkTargetId { get { return "n/a"; } }
+
         public Type LinkedSourceType { get; private set; }
         
         private Type ReferenceType { get; set; }

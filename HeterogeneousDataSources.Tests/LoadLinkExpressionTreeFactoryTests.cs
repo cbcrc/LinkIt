@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
@@ -11,59 +12,54 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class LoadLinkExpressionTreeFactoryTests
     {
-        private ILoadLinkExpression _root;
-        private ILoadLinkExpression _branch;
-        private ILoadLinkExpression _leaf;
         private LoadLinkExpressionTreeFactory _sut;
+        private List<ILoadLinkExpression> _loadLinkExpressions;
 
         [SetUp]
         public void SetUp(){
-            _root = new RootLoadLinkExpression<LoadLinkExpressionTreeLinkedSource, LoadLinkExpressionTreeContent, int>();
-            _branch = new NestedLinkedSourceLoadLinkExpression<LoadLinkExpressionTreeLinkedSource, PersonLinkedSource, Person, string>(
-                linkedSource => linkedSource.Model.PersonId,
-                (linkedSource, childLinkedSource) => linkedSource.Person = childLinkedSource);
-            _leaf = new ReferenceLoadLinkExpression<PersonLinkedSource, Image, string>(
-                linkedSource => linkedSource.Model.SummaryImageId,
-                (linkedSource, reference) => linkedSource.SummaryImage = reference);
-            _sut = new LoadLinkExpressionTreeFactory(
-                new List<ILoadLinkExpression>{
-                    _root,
-                    _branch,
-                    new SubLinkedSourceLoadLinkExpression<LoadLinkExpressionTreeLinkedSource, SubLoadLinkExpressionTreeLinkedSource, SubLoadLinkExpressionTreeContent>(
-                        linkedSource => linkedSource.Model.SubPerson,
-                        (linkedSource, subLinkedSources) => linkedSource.SubPerson= subLinkedSources),
-                    new NestedLinkedSourceLoadLinkExpression<SubLoadLinkExpressionTreeLinkedSource,PersonLinkedSource, Person, string>(
-                        linkedSource => linkedSource.Model.PersonId,
-                        (linkedSource, childLinkedSource) => linkedSource.Person = childLinkedSource),
-                    _leaf
-                }
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<LoadLinkExpressionTreeLinkedSource>()
+                .IsRoot<int>()
+                .LoadLinkNestedLinkedSource<PersonLinkedSource, Person, string>(
+                    linkedSource => linkedSource.Model.PersonId,
+                    linkedSource => linkedSource.Person
+                );
+            loadLinkProtocolBuilder.For<PersonLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                );
+
+            _loadLinkExpressions = loadLinkProtocolBuilder.GetLoadLinkExpressions();
+            _sut = new LoadLinkExpressionTreeFactory(_loadLinkExpressions);
         }
 
         [Test]
         public void Create_Root()
         {
-            Create_Parameterizable(_root);
+            var node = _loadLinkExpressions[0];
+            Create_Parameterizable(node);
         }
 
         [Test]
         public void Create_Branch() {
-            Create_Parameterizable(_branch);
+            var node = _loadLinkExpressions[1];
+            Create_Parameterizable(node);
         }
 
         [Test]
         public void Create_Leaf() {
-            Create_Parameterizable(_leaf);
+            var node = _loadLinkExpressions[2];
+            Create_Parameterizable(node);
         }
 
         private void Create_Parameterizable(ILoadLinkExpression node)
         {
             var actual = _sut.Create(node);
 
-            //stle todo
-            //var asModelTree = actual.Projection(n => n.ModelType.Name);
+            var asModelTree = actual.Projection(n => n.LinkTargetId);
 
-            //ApprovalsExt.VerifyPublicProperties(asModelTree);
+            ApprovalsExt.VerifyPublicProperties(asModelTree);
         }
 
         public class LoadLinkExpressionTreeLinkedSource : ILinkedSource<LoadLinkExpressionTreeContent> {
@@ -78,6 +74,7 @@ namespace HeterogeneousDataSources.Tests {
             public SubLoadLinkExpressionTreeContent SubPerson { get; set; }
         }
 
+        //stle: review root test
         public class SubLoadLinkExpressionTreeLinkedSource : ILinkedSource<SubLoadLinkExpressionTreeContent> {
             public SubLoadLinkExpressionTreeContent Model { get; set; }
             public PersonLinkedSource Person { get; set; }

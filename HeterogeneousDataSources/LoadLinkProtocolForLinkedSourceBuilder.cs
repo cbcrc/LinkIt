@@ -78,6 +78,7 @@ namespace HeterogeneousDataSources
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             var x = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
+                linkTarget.Id,
                 ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
                 GetReferencesFuncForSingleValue<TChildLinkedSource>(),
                 SetReferencesActionForSingleValue(linkTarget),

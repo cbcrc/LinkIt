@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
@@ -24,6 +25,10 @@ namespace HeterogeneousDataSources {
                 referenceLoader, 
                 new LoadLinkConfig(_loadLinkExpressions)
             );
+        }
+
+        public List<ILoadLinkExpression> GetLoadLinkExpressions(){
+            return _loadLinkExpressions.ToList();
         }
     }
 }

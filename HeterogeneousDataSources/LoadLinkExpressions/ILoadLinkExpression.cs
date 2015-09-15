@@ -5,6 +5,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 {
     public interface ILoadLinkExpression
     {
+        string LinkTargetId { get; }
+
         Type LinkedSourceType { get; }
         List<Type> ReferenceTypes { get; }
         LoadLinkExpressionType LoadLinkExpressionType { get; }

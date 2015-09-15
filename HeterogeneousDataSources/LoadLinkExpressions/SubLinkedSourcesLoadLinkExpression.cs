@@ -21,6 +21,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             ChildLinkedSourceModelType = typeof(TChildLinkedSourceModel);
         }
 
+        //stle: delete or do it
+        public string LinkTargetId { get { return "n/a sub list"; } }
+
         //stle: hey you and your inheritance crap! Try a functional approach
         public Type LinkedSourceType { get; private set; }
         

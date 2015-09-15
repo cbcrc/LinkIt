@@ -7,7 +7,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         : LoadLinkExpression<TLinkedSource, TReference, TId>, ILoadLinkExpression
     {
         private readonly Func<TLinkedSource, List<TId>> _getLookupIdsFunc;
-        private readonly LinkTarget<TLinkedSource, TReference> _linkTarget;
         private readonly Action<TLinkedSource, List<TReference>> _linkAction;
 
         public ReferencesLoadLinkExpression(

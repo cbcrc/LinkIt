@@ -21,6 +21,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 loadLinkExpressions: new List<ILoadLinkExpression> {
                     new RootLoadLinkExpression<WithNestedPolymorphicReferenceLinkedSource, WithNestedPolymorphicReference, string>(),
                     new PolymorphicNestedLinkedSourcesLoadLinkExpression<WithNestedPolymorphicReferenceLinkedSource, object, object, Type>(
+                        "temp: until protocol builder",
                         linkedSource => linkedSource.Model.PolyIds,
                         linkedSource => linkedSource.Contents, 
                         (linkedSource, childLinkedSource) => linkedSource.Contents = childLinkedSource,

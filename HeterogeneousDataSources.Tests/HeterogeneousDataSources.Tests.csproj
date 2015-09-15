@@ -66,6 +66,7 @@
     <Compile Include="LinkTargetTests.cs" />
     <Compile Include="LinkTargetFactoryTests.cs" />
     <Compile Include="LoadLinkConfig_WithCycleTests.cs" />
+    <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
     <Compile Include="LoadLinkProtocolTests.cs" />
     <Compile Include="ManyReferencesTests.cs">
       <SubType>Code</SubType>
