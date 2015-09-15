@@ -14,7 +14,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         }
 
         //stle: delete or do it
-        public string LinkTargetId { get { return "n/a"; } }
+        public virtual string LinkTargetId { get { return "n/a"; } }
 
         public Type LinkedSourceType { get; private set; }
         

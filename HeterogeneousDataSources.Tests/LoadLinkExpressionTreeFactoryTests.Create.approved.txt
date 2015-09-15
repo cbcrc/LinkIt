@@ -1,0 +1,14 @@
+﻿{
+  "node": "HeterogeneousDataSources.Tests.LoadLinkExpressionTreeFactoryTests+LoadLinkExpressionTreeLinkedSource",
+  "children": [
+    {
+      "node": "HeterogeneousDataSources.Tests.LoadLinkExpressionTreeFactoryTests+LoadLinkExpressionTreeLinkedSource/Person",
+      "children": [
+        {
+          "node": "HeterogeneousDataSources.Tests.PersonLinkedSource/SummaryImage",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
