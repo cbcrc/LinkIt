@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 
@@ -14,26 +12,23 @@ namespace HeterogeneousDataSources.Tests
         [Test]
         public void LoadLink_ShouldDisposeLoader()
         {
-            var referenceLoader = new FakeReferenceLoader();
-            var sut = new LoadLinkProtocol(referenceLoader, 
-                new LoadLinkConfig(
-                    new List<ILoadLinkExpression>{
-                        new RootLoadLinkExpression<WithoutReferenceLinkedSource, Image, string>(),
-                    }
-                )
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>()
+                .IsRoot<string>();
+            var fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
             var actual = sut.LoadLink<WithoutReferenceLinkedSource>("dont-care");
 
-            Assert.That(referenceLoader.IsDisposed, Is.True);
+            Assert.That(fakeReferenceLoader.IsDisposed, Is.True);
         }
 
         [Test]
         public void LoadLink_ModelIdIsNull_ShouldThrow() {
-            var referenceLoader = new FakeReferenceLoader();
-            var sut = new LoadLinkProtocol(referenceLoader,
-                new LoadLinkConfig( new List<ILoadLinkExpression>{} )
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
+            var fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
             TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource>(null);
 
@@ -47,10 +42,10 @@ namespace HeterogeneousDataSources.Tests
 
         [Test]
         public void LoadLink_NotARootLinkedSourceType_ShouldThrow() {
-            var referenceLoader = new FakeReferenceLoader();
-            var sut = new LoadLinkProtocol(referenceLoader,
-                new LoadLinkConfig(new List<ILoadLinkExpression> { })
-            );
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
+            var fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
             TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource>("dont-care");
 
@@ -59,8 +54,6 @@ namespace HeterogeneousDataSources.Tests
                 Throws.ArgumentException.With.Message.ContainsSubstring("WithoutReferenceLinkedSource")
             );
         }
-
-
     }
 
     public class WithoutReferenceLinkedSource : ILinkedSource<Image> {
