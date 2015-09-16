@@ -61,17 +61,13 @@
     <Compile Include="LoadLinkExpressions\LoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionType.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionUtil.cs" />
-    <Compile Include="LoadLinkExpressions\NestedLinkedSourcesLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\SubLinkedSourcesLoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressions\SubLinkedSourceLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\RootLoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressions\NestedLinkedSourceLoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\ReferencesLoadLinkExpression.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="LookupIdContext.cs" />
-    <Compile Include="LoadLinkExpressions\ReferenceLoadLinkExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
