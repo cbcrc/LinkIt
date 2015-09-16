@@ -9,15 +9,15 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;
-        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction2;
+        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
 
         public PolymorphicNestedLinkedSourceInclude(
             Func<TLink, TId> getLookupIdFunc,
-            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction2 = null
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
         )
         {
             _getLookupIdFunc = getLookupIdFunc;
-            _initChildLinkedSourceAction2 = initChildLinkedSourceAction2;
+            _initChildLinkedSourceAction = initChildLinkedSourceAction;
             ReferenceType = typeof(TChildLinkedSourceModel);
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
@@ -46,8 +46,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             var childLinkedSource = childLinkedSources.SingleOrDefault();
             if (childLinkedSource == null) { return; }
 
-            if (_initChildLinkedSourceAction2 != null) {
-                _initChildLinkedSourceAction2(linkedSource, referenceIndex, childLinkedSources.Single());
+            if (_initChildLinkedSourceAction != null) {
+                _initChildLinkedSourceAction(linkedSource, referenceIndex, childLinkedSources.Single());
             }
         }
 
