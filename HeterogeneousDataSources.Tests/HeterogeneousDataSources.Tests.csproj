@@ -84,7 +84,6 @@
     <Compile Include="ReferencesLoadLinkExpressionTests.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />
     <Compile Include="Shared\FakeReferenceLoader2.cs" />
-    <Compile Include="Shared\FakeReferenceLoader.cs" />
     <Compile Include="Shared\IPolymorphicModel.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />
     <Compile Include="Shared\Person.cs" />
@@ -94,7 +93,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
-    <Compile Include="Shared\LoadLinkProtocolFactory.cs" />
     <Compile Include="SingleReferenceTests.cs">
       <SubType>Code</SubType>
     </Compile>
