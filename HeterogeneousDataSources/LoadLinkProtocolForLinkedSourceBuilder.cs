@@ -74,6 +74,18 @@ namespace HeterogeneousDataSources
            Func<TLinkedSource, TId> getLookupIdFunc,
            Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc) 
         {
+            return LoadLinkNestedLinkedSource(
+                getLookupIdFunc,
+                linkTargetFunc,
+                NullInitChildLinkedSourceActionForSingleValue
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+           Func<TLinkedSource, TId> getLookupIdFunc,
+           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc,
+           Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction) 
+        {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
@@ -82,11 +94,13 @@ namespace HeterogeneousDataSources
                 GetReferencesFuncForSingleValue<TChildLinkedSource>(),
                 SetReferencesActionForSingleValue(linkTarget),
                 link => true,
-                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>>
+                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>>
                 {
                     {
                         true, //always one include when not polymorphic
-                        CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>()
+                        CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
+                            InitChildLinkedSourceActionForSingleValue(initChildLinkedSourceAction)
+                        )
                     }
                 }
             );
@@ -95,8 +109,20 @@ namespace HeterogeneousDataSources
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
-           Func<TLinkedSource, List<TId>> getLookupIdsFunc,
-           Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc) 
+            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc)
+        {
+            return LoadLinkNestedLinkedSource(
+                getLookupIdsFunc, 
+                linkTargetFunc, 
+                NullInitChildLinkedSourceAction
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc,
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
@@ -106,11 +132,13 @@ namespace HeterogeneousDataSources
                 linkTarget.GetTargetProperty,
                 linkTarget.SetTargetProperty,
                 link => true,
-                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>>
+                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>>
                 {
                     {
                         true, //always one include when not polymorphic
-                        CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>()
+                        CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
+                            initChildLinkedSourceAction
+                        )
                     }
                 }
             );
@@ -122,11 +150,11 @@ namespace HeterogeneousDataSources
            Func<TLinkedSource, TLink> getLinkFunc,
            Expression<Func<TLinkedSource, TIChildLinkedSource>> linkTargetFunc,
            Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
             //stle: dry
-            var includeBuilder = new IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>();
+            var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
             includes(includeBuilder);
 
             var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
@@ -146,10 +174,10 @@ namespace HeterogeneousDataSources
            Func<TLinkedSource, List<TLink>> getLinksFunc,
            Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
            Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-            var includeBuilder = new IncludeBuilder<TIChildLinkedSource, TLink, TDiscriminant>();
+            var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
             includes(includeBuilder);
 
             var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
@@ -166,12 +194,15 @@ namespace HeterogeneousDataSources
 
 
 
-        private IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>() {
-            Type ctorGenericType = typeof(PolymorphicNestedLinkedSourceInclude<,,,,>);
+        private IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
+        {
+            Type ctorGenericType = typeof(PolymorphicNestedLinkedSourceInclude<,,,,,>);
 
             var childLinkedSourceType = typeof(TChildLinkedSource);
             var idType = typeof(TId);
             Type[] typeArgs ={
+                _linkedSourceType,
                 childLinkedSourceType, 
                 idType,
                 childLinkedSourceType, 
@@ -184,10 +215,11 @@ namespace HeterogeneousDataSources
             //stle: change to single once obsolete constructor is deleted
             var ctor = ctorSpecificType.GetConstructors().First();
 
-            return (IPolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>)ctor.Invoke(
+            return (IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>)ctor.Invoke(
                 new object[]{
                     CreateIdentityFunc<TId>(),
-                    null
+                    null,
+                    initChildLinkedSourceAction
                 }
             );
         } 
@@ -297,6 +329,31 @@ namespace HeterogeneousDataSources
         private Func<T, T> CreateIdentityFunc<T>() {
             return x => x;
         }
+
+        private Action<TLinkedSource, int, TChildLinkedSource> InitChildLinkedSourceActionForSingleValue<TChildLinkedSource>(Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction) {
+
+
+            return (linkedSource, referenceIndex, childLinkedSource) =>
+                    initChildLinkedSourceAction(linkedSource, childLinkedSource);
+        }
+
+        private void NullInitChildLinkedSourceActionForSingleValue<TChildLinkedSource>(
+            TLinkedSource linkedsource,
+            TChildLinkedSource childLinkedSource) 
+        {
+            //using null causes problem with generic type inference, 
+            //using a special value work around this limitation of generics
+        }
+
+        private void NullInitChildLinkedSourceAction<TChildLinkedSource>(
+            TLinkedSource linkedsource,
+            int referenceIndex,
+            TChildLinkedSource childLinkedSource) 
+        {
+            //using null causes problem with generic type inference, 
+            //using a special value work around this limitation of generics
+        }
+
         #endregion
     }
 }

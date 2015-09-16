@@ -28,7 +28,13 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                         .When<ImageWithContextualizationLinkedSource, string>(
                             "image",
                             reference => (string)reference.Id,
-                            (reference, childLinkedSource) => childLinkedSource.ContentContextualization = reference)
+                            null,//(reference, childLinkedSource) => childLinkedSource.ContentContextualization = reference
+                            (linkedSource, referenceIndex, childLinkedSource) =>
+                            {
+                                var contextualization = linkedSource.Model.ContentContextualizations[referenceIndex];
+                                childLinkedSource.ContentContextualization = contextualization;
+                            }
+                        )
                 );
 
             _fakeReferenceLoader =

@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exploratory\ContextualizationTests.cs" />
     <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
     <Compile Include="LinkTargetTests.cs" />
     <Compile Include="LinkTargetFactoryTests.cs" />

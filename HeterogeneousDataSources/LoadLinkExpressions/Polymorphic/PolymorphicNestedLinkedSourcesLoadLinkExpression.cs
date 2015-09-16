@@ -10,7 +10,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
         private readonly Func<TLinkedSource, List<TIChildLinkedSource>> _getReferences;
         private readonly Action<TLinkedSource, List<TIChildLinkedSource>> _setReferences;
         private readonly Func<TLink, TDiscriminant> _getDiscriminantFunc;
-        private readonly Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TIChildLinkedSource, TLink>> _includes;
+        private readonly Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TLinkedSource,TIChildLinkedSource, TLink>> _includes;
 
         public PolymorphicNestedLinkedSourcesLoadLinkExpression(
             string linkTargetId,
@@ -19,7 +19,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             Func<TLinkedSource, List<TIChildLinkedSource>> getReferences,
             Action<TLinkedSource, List<TIChildLinkedSource>> setReferences,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
-            Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TIChildLinkedSource, TLink>> includes)
+            Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>> includes)
         {
             LinkTargetId = linkTargetId;
             _getLinksFunc = getLinksFunc;
@@ -86,7 +86,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             if (include.ReferenceType != referenceTypeToBeLinked) { return; }
 
             var childLinkedSources = include
-                .CreateChildLinkedSources(link, loadedReferenceContext)
+                .CreateChildLinkedSources(link, loadedReferenceContext, linkedSource, 0)
                 .Where(childLinkedSource => childLinkedSource != null)
                 .ToList();
 
@@ -104,8 +104,12 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             {
                 var include = GetSelectedInclude(linkToEntityOfReferenceType.Link);
 
-                var childLinkedSources = include.CreateChildLinkedSources(linkToEntityOfReferenceType.Link,
-                    loadedReferenceContext);
+                var childLinkedSources = include.CreateChildLinkedSources(
+                    linkToEntityOfReferenceType.Link,
+                    loadedReferenceContext,
+                    linkedSource,
+                    linkToEntityOfReferenceType.Index
+                );
 
                 //stle: need single
                 _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSources.SingleOrDefault();
@@ -160,7 +164,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             return links;
         }
 
-        private IPolymorphicNestedLinkedSourceInclude<TIChildLinkedSource, TLink> GetSelectedInclude(TLink link) {
+        private IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> GetSelectedInclude(TLink link) {
             var discriminant = _getDiscriminantFunc(link);
             if (!_includes.ContainsKey(discriminant)) {
                 throw new InvalidOperationException(

@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
+﻿using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
-using RC.Testing;
 
 namespace HeterogeneousDataSources.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
@@ -20,11 +17,15 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 .IsRoot<string>()
                 .LoadLinkNestedLinkedSource(
                     linkedSource => linkedSource.Model.PersonContextualization.Id,
-                    linkedSource => linkedSource.Person
+                    linkedSource => linkedSource.Person,
+                    (linkedSource, childLinkedSource) => 
+                        childLinkedSource.Contextualization = linkedSource.Model.PersonContextualization
                 );
             loadLinkProtocolBuilder.For<PersonContextualizedLinkedSource>()
-                .LoadLinkNestedLinkedSource(
-                    linkedSource => linkedSource.Contextualization.SummaryImageId ?? linkedSource.Model.SummaryImageId,
+                .LoadLinkReference(
+                    linkedSource => 
+                        linkedSource.Contextualization.SummaryImageId ?? 
+                        linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
 
