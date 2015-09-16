@@ -8,7 +8,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class NestedPolymorphicReferenceTests {
-        private FakeReferenceLoader2<WithNestedPolymorphicReference, string> _fakeReferenceLoader;
+        private FakeReferenceLoader<WithNestedPolymorphicReference, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -29,7 +29,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                             reference => ((int)reference).ToString()));
 
             _fakeReferenceLoader =
-                new FakeReferenceLoader2<WithNestedPolymorphicReference, string>(reference => reference.Id);
+                new FakeReferenceLoader<WithNestedPolymorphicReference, string>(reference => reference.Id);
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 

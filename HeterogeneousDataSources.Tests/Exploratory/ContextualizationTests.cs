@@ -10,7 +10,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
     [TestFixture]
     public class ContextualizationTests
     {
-        private FakeReferenceLoader2<WithContextualizedReference, string> _fakeReferenceLoader;
+        private FakeReferenceLoader<WithContextualizedReference, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -29,7 +29,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 );
 
             _fakeReferenceLoader =
-                new FakeReferenceLoader2<WithContextualizedReference, string>(reference => reference.Id);
+                new FakeReferenceLoader<WithContextualizedReference, string>(reference => reference.Id);
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 

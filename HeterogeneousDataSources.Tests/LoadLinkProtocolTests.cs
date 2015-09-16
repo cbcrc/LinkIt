@@ -15,7 +15,7 @@ namespace HeterogeneousDataSources.Tests
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>()
                 .IsRoot<string>();
-            var fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+            var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
             var actual = sut.LoadLink<WithoutReferenceLinkedSource>("dont-care");
@@ -27,7 +27,7 @@ namespace HeterogeneousDataSources.Tests
         public void LoadLink_ModelIdIsNull_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
-            var fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+            var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
             TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource>(null);
@@ -44,7 +44,7 @@ namespace HeterogeneousDataSources.Tests
         public void LoadLink_NotARootLinkedSourceType_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
-            var fakeReferenceLoader = new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+            var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
             TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource>("dont-care");

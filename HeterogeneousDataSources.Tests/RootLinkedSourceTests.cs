@@ -11,7 +11,7 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class RootLinkedSourceTests
     {
-        private FakeReferenceLoader2<RootContent, string> _fakeReferenceLoader;
+        private FakeReferenceLoader<RootContent, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -20,7 +20,7 @@ namespace HeterogeneousDataSources.Tests {
             loadLinkProtocolBuilder.For<RootLinkedSource>()
                 .IsRoot<string>();
 
-            _fakeReferenceLoader = new FakeReferenceLoader2<RootContent, string>(
+            _fakeReferenceLoader = new FakeReferenceLoader<RootContent, string>(
                 reference => reference.Id,
                 new ReferenceTypeConfig<RootContent, string>(
                     ids => new RootContentRepository().GetByIds(ids),

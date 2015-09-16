@@ -10,7 +10,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests
     {
-        private FakeReferenceLoader2<WithContextualizedReference, string> _fakeReferenceLoader;
+        private FakeReferenceLoader<WithContextualizedReference, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -20,7 +20,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 .IsRoot<string>();
 
             _fakeReferenceLoader =
-                new FakeReferenceLoader2<WithContextualizedReference, string>(
+                new FakeReferenceLoader<WithContextualizedReference, string>(
                     reference => reference.Id,
                     new ReferenceTypeConfig<ImageWithDeclinaison, string>(
                         declinaisonUrls => new ImageWithDeclinaisonRepository().GetByDeclinaisonUrl(declinaisonUrls),

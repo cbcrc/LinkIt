@@ -8,7 +8,7 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class NestedLinkedSourceTests
     {
-        private FakeReferenceLoader2<NestedContent, int> _fakeReferenceLoader;
+        private FakeReferenceLoader<NestedContent, int> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -29,7 +29,7 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.SummaryImage);
 
             _fakeReferenceLoader =
-                new FakeReferenceLoader2<NestedContent, int>(reference => reference.Id);
+                new FakeReferenceLoader<NestedContent, int>(reference => reference.Id);
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 

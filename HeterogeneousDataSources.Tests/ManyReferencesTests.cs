@@ -11,7 +11,7 @@ namespace HeterogeneousDataSources.Tests
     [TestFixture]
     public class ManyReferencesTests
     {
-        private FakeReferenceLoader2<ManyReferencesContent, int> _fakeReferenceLoader;
+        private FakeReferenceLoader<ManyReferencesContent, int> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -33,7 +33,7 @@ namespace HeterogeneousDataSources.Tests
                 );
 
             _fakeReferenceLoader =
-                new FakeReferenceLoader2<ManyReferencesContent, int>(reference => reference.Id);
+                new FakeReferenceLoader<ManyReferencesContent, int>(reference => reference.Id);
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 

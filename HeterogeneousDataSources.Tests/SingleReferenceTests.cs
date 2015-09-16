@@ -8,7 +8,7 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class SingleReferenceTests
     {
-        private FakeReferenceLoader2<SingleReferenceContent, string> _fakeReferenceLoader;
+        private FakeReferenceLoader<SingleReferenceContent, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -23,7 +23,7 @@ namespace HeterogeneousDataSources.Tests {
                 );
 
             _fakeReferenceLoader = 
-                new FakeReferenceLoader2<SingleReferenceContent, string>(reference => reference.Id);
+                new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 

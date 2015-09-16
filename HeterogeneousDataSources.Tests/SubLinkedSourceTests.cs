@@ -9,7 +9,7 @@ namespace HeterogeneousDataSources.Tests
     [TestFixture]
     public class SubLinkedSourceTests
     {
-        private FakeReferenceLoader2<SubContentOwner, string> _fakeReferenceLoader;
+        private FakeReferenceLoader<SubContentOwner, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -37,7 +37,7 @@ namespace HeterogeneousDataSources.Tests
                 );
 
             _fakeReferenceLoader =
-                new FakeReferenceLoader2<SubContentOwner, string>(reference => reference.Id);
+                new FakeReferenceLoader<SubContentOwner, string>(reference => reference.Id);
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.Tests.Shared {
     
-    public class FakeReferenceLoader2<TReference, TId>:IReferenceLoader
+    public class FakeReferenceLoader<TReference, TId>:IReferenceLoader
     {
         private readonly Func<TReference, TId> _getReferenceIdFunc;
         private readonly Dictionary<Type, IReferenceTypeConfig> _referenceTypeConfigByReferenceType;
@@ -26,7 +26,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
             };
         }
 
-        public FakeReferenceLoader2(Func<TReference, TId> getReferenceIdFunc, params IReferenceTypeConfig[] customReferenceTypeConfigs)
+        public FakeReferenceLoader(Func<TReference, TId> getReferenceIdFunc, params IReferenceTypeConfig[] customReferenceTypeConfigs)
         {
             _getReferenceIdFunc = getReferenceIdFunc;
             var config = customReferenceTypeConfigs
