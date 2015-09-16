@@ -218,7 +218,6 @@ namespace HeterogeneousDataSources
             return (IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>)ctor.Invoke(
                 new object[]{
                     CreateIdentityFunc<TId>(),
-                    null,
                     initChildLinkedSourceAction
                 }
             );

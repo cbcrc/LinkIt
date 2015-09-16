@@ -28,7 +28,6 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                         .When<ImageWithContextualizationLinkedSource, string>(
                             "image",
                             reference => (string)reference.Id,
-                            null,//(reference, childLinkedSource) => childLinkedSource.ContentContextualization = reference
                             (linkedSource, referenceIndex, childLinkedSource) =>
                             {
                                 var contextualization = linkedSource.Model.ContentContextualizations[referenceIndex];

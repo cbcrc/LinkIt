@@ -28,7 +28,8 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                         .When<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
                             "image",
                             reference => (string)reference.Id,
-                            (reference, childLinkedSource) => childLinkedSource.ContentContextualization = reference)
+                            (linkedSource, referenceIndex, childLinkedSource) =>
+                                childLinkedSource.ContentContextualization = linkedSource.Model.ContentContextualization)
                 );
 
             _fakeReferenceLoader =
