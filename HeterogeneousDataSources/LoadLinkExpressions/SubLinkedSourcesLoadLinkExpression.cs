@@ -10,7 +10,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         private readonly Action<TLinkedSource, List<TChildLinkedSource>> _linkAction;
 
         public SubLinkedSourcesLoadLinkExpression(
-            Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc, Action<TLinkedSource, List<TChildLinkedSource>> linkAction)
+            Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc, 
+            Action<TLinkedSource, List<TChildLinkedSource>> linkAction)
         {
             LinkedSourceType = typeof(TLinkedSource);
             ReferenceTypes= new List<Type>();

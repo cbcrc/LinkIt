@@ -12,35 +12,44 @@ namespace HeterogeneousDataSources.Tests
     [TestFixture]
     public class SubLinkedSourcesTests
     {
-        private LoadLinkProtocolFactory<SubContentsOwner, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<SubContentsOwner, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
-        public void SetUp()
-        {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<SubContentsOwner, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<SubContentsOwnerLinkedSource, SubContentsOwner, string>(),
-                    new SubLinkedSourcesLoadLinkExpression<SubContentsOwnerLinkedSource, SubContentWithManySubSubContentsLinkedSource, SubContentWithManySubSubContents>(
-                        linkedSource => linkedSource.Model.SubContents,
-                        (linkedSource, subLinkedSources) => linkedSource.SubContents = subLinkedSources),
-                    new SubLinkedSourcesLoadLinkExpression<SubContentsOwnerLinkedSource, SubSubContentLinkedSource, SubSubContent>(
-                        linkedSource => linkedSource.Model.SubSubContents,
-                        (linkedSource, subLinkedSources) => linkedSource.SubSubContents = subLinkedSources),
-                    new SubLinkedSourcesLoadLinkExpression<SubContentWithManySubSubContentsLinkedSource, SubSubContentLinkedSource, SubSubContent>(
-                        linkedSource => linkedSource.Model.SubSubContents,
-                        (linkedSource, subLinkedSources) => linkedSource.SubSubContents = subLinkedSources),
-                    new ReferenceLoadLinkExpression<SubSubContentLinkedSource, Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference)
-                },
-                getReferenceIdFunc: reference => reference.Id
+        public void SetUp() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<SubContentsOwnerLinkedSource>()
+                .IsRoot<string>()
+                .LinkSubLinkedSource(
+                    linkedSource => linkedSource.Model.SubContents,
+                    linkedSource => linkedSource.SubContents
+                )
+                .LinkSubLinkedSource(
+                    linkedSource => linkedSource.Model.SubSubContents,
+                    linkedSource => linkedSource.SubSubContents
                 );
+            loadLinkProtocolBuilder.For<SubContentWithManySubSubContentsLinkedSource>()
+                .LinkSubLinkedSource(
+                    linkedSource => linkedSource.Model.SubSubContents,
+                    linkedSource => linkedSource.SubSubContents
+                );
+            loadLinkProtocolBuilder.For<SubSubContentLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                );
+
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<SubContentsOwner, string>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
+
+        private LoadLinkProtocolFactory<SubContentsOwner, string> _loadLinkProtocolFactory;
 
         [Test]
         public void LoadLink_SubLinkedSources()
         {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = new List<SubContentWithManySubSubContents>{
@@ -58,14 +67,14 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<SubContentsOwnerLinkedSource>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_SubLinkedSourcesWithNullInReferenceIds_ShouldIgnoreNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = null, //dont-care
@@ -77,14 +86,14 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<SubContentsOwnerLinkedSource>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>("1");
 
             Assert.That(actual.SubSubContents.Count, Is.EqualTo(2));
         }
 
         [Test]
         public void LoadLink_SubLinkedSourcesWithoutReferenceIds_ShouldLinkEmptySet() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = null, //dont-care
@@ -92,7 +101,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<SubContentsOwnerLinkedSource>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>("1");
 
             Assert.That(actual.SubSubContents, Is.Empty);
         }
@@ -100,7 +109,7 @@ namespace HeterogeneousDataSources.Tests
 
         [Test]
         public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = null, //dont-care
@@ -111,7 +120,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<SubContentsOwnerLinkedSource>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>("1");
 
             var linkedImagesIds = actual.SubSubContents.Select(subSubContent => subSubContent.Model.SummaryImageId);
             Assert.That(linkedImagesIds, Is.EquivalentTo(new[] { "a", "a" }));

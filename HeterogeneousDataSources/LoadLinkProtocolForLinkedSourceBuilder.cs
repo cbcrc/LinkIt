@@ -8,7 +8,6 @@ using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
 
 namespace HeterogeneousDataSources
 {
-    //stle: enhance that: TChildLinkedSourceModel could be infered by reflection
     //stle: enhance that: TId could dispear after query are supported
     public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>
     {
@@ -192,6 +191,40 @@ namespace HeterogeneousDataSources
                 }
             );
         } 
+        #endregion
+
+        #region SubLinkedSource
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+            Func<TLinkedSource, TChildLinkedSourceModel> getSubLinkedSourceModelsFunc,
+            Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc
+        )
+            where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
+        {
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
+
+            return AddLoadLinkExpression(
+                new SubLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>(
+                    ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc),
+                    ToLinkActionForSingleValue(linkTarget)
+                )
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+            Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
+            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc
+        )
+            where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
+        {
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
+
+            return AddLoadLinkExpression(
+                new SubLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>(
+                    getSubLinkedSourceModelsFunc,
+                    linkTarget.SetTargetProperty
+                )
+            );
+        }  
         #endregion
 
         #region Shared

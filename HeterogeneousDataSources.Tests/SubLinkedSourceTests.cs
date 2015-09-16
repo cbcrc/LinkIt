@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
+﻿using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -11,35 +9,42 @@ namespace HeterogeneousDataSources.Tests
     [TestFixture]
     public class SubLinkedSourceTests
     {
-        private LoadLinkProtocolFactory<SubContentOwner, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<SubContentOwner, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
-        public void SetUp()
-        {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<SubContentOwner, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<SubContentOwnerLinkedSource, SubContentOwner, string>(),
-                    new SubLinkedSourceLoadLinkExpression<SubContentOwnerLinkedSource, SubContentLinkedSource, SubContent>(
-                        linkedSource => linkedSource.Model.SubContent,
-                        (linkedSource, subLinkedSource) => linkedSource.SubContent = subLinkedSource),
-                    new SubLinkedSourceLoadLinkExpression<SubContentOwnerLinkedSource, SubSubContentLinkedSource, SubSubContent>(
-                        linkedSource => linkedSource.Model.SubSubContent,
-                        (linkedSource, subLinkedSource) => linkedSource.SubSubContent = subLinkedSource),
-                    new SubLinkedSourceLoadLinkExpression<SubContentLinkedSource, SubSubContentLinkedSource, SubSubContent>(
-                        linkedSource => linkedSource.Model.SubSubContent,
-                        (linkedSource, subLinkedSource) => linkedSource.SubSubContent = subLinkedSource),
-                    new ReferenceLoadLinkExpression<SubSubContentLinkedSource, Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference)
-                },
-                getReferenceIdFunc: reference => reference.Id
+        public void SetUp() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<SubContentOwnerLinkedSource>()
+                .IsRoot<string>()
+                .LinkSubLinkedSource(
+                    linkedSource => linkedSource.Model.SubContent,
+                    linkedSource => linkedSource.SubContent
+                )
+                .LinkSubLinkedSource(
+                    linkedSource => linkedSource.Model.SubSubContent,
+                    linkedSource => linkedSource.SubSubContent
                 );
+            loadLinkProtocolBuilder.For<SubContentLinkedSource>()
+                .LinkSubLinkedSource(
+                    linkedSource => linkedSource.Model.SubSubContent,
+                    linkedSource => linkedSource.SubSubContent
+                );
+            loadLinkProtocolBuilder.For<SubSubContentLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                );
+
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<SubContentOwner, string>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_SubLinkedSource()
         {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SubContentOwner {
                     Id = "1",
                     SubContent = new SubContent{
@@ -53,14 +58,14 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<SubContentOwnerLinkedSource>("1");
+            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new SubContentOwner {
                     Id = "1",
                     SubContent = new SubContent {
@@ -70,7 +75,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = sut.LoadLink<SubContentOwnerLinkedSource>("1");
+            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>("1");
 
             Assert.That(actual.SubContent.SubSubContent, Is.Null);
             Assert.That(actual.SubSubContent, Is.Null);
