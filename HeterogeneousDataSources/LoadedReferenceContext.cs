@@ -34,6 +34,19 @@ namespace HeterogeneousDataSources {
             _referenceDictionaryByReferenceType[tReference] = referenceDictionnary;
         }
 
+        //stle: temporary work around for image, fix the root cause by solving the query vs id problem
+        public void AddReference<TReference, TId>(TReference reference, TId id) {
+            var tReference = typeof(TReference);
+            if (!_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
+                _referenceDictionaryByReferenceType.Add(tReference, new Dictionary<TId, TReference>());
+            }
+
+            var referenceDictionnary = (Dictionary<TId, TReference>)
+                _referenceDictionaryByReferenceType[tReference];
+
+            referenceDictionnary.Add(id,reference);
+        }
+
         public void AddLinkedSourcesToBeBuilt<TLinkedSource>(List<TLinkedSource> linkedSources)
         {
             var linkedSourcesAsObject = linkedSources

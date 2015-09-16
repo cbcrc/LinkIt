@@ -39,6 +39,10 @@ namespace HeterogeneousDataSources.Tests.Shared {
             );
         }
 
+        public FakeReferenceLoader(params IReferenceTypeConfig[] customReferenceTypeConfigs) 
+            : this(null, customReferenceTypeConfigs)
+        {}
+
         public void FixValue(TReference fixedValue) {
             var fixedReferenceTypeConfig = new ReferenceTypeConfig<TReference, TId>(
                 ids => ids

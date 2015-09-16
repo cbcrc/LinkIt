@@ -1,0 +1,20 @@
+﻿{
+  "model": {
+    "id": "1",
+    "imageUrl": "a-1x1"
+  },
+  "image": {
+    "alt": "alt-a",
+    "declinaisons": [
+      {
+        "url": "a-16x9",
+        "ratio": "16x9"
+      },
+      {
+        "url": "a-1x1",
+        "ratio": "1x1"
+      }
+    ]
+  },
+  "selectedDeclinaison": null
+}

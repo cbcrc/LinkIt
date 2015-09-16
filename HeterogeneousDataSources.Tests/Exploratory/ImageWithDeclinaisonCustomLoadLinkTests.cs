@@ -1,39 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
+using RC.Testing;
 
 namespace HeterogeneousDataSources.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests
     {
-        private FakeReferenceLoader<WithContextualizedReference, string> _fakeReferenceLoader;
+        private FakeReferenceLoader<WithImage, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<WithContextualizedReferenceLinkedSource>()
-                .IsRoot<string>();
+            loadLinkProtocolBuilder.For<WithImageLinkedSource>()
+                .IsRoot<string>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.ImageUrl,
+                    linkedSource => linkedSource.Image
+                );
 
             _fakeReferenceLoader =
-                new FakeReferenceLoader<WithContextualizedReference, string>(
-                    reference => reference.Id,
-                    new ReferenceTypeConfig<ImageWithDeclinaison, string>(
-                        declinaisonUrls => new ImageWithDeclinaisonRepository().GetByDeclinaisonUrl(declinaisonUrls),
-                        reference => reference.Alt //Stle: oups!: similar to query, not always ref-id==entity.id , sometimes one entity has many key and sometimes match should be specification(entity)==true
-                    )
-            );
+                new FakeReferenceLoader<WithImage, string>(
+                    reference=>reference.Id,
+                    new ImageReferenceTypeConfigWorkAround()
+                );
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
-        public void X()
+        public void LoadLink_ImagesFromDeclinaisonUrl()
         {
-           
+            _fakeReferenceLoader.FixValue(
+                new WithImage{
+                    Id = "1",
+                    ImageUrl = "a-1x1"
+                }
+            );
+
+            var actual = _sut.LoadLink<WithImageLinkedSource>("1");
+
+            ApprovalsExt.VerifyPublicProperties(actual);
         }
     }
 
@@ -95,6 +107,32 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 .Select(declinaisonUrl => _imagesByDeclinaisonUrl[declinaisonUrl])
                 .Distinct()
                 .ToList();
+        }
+    }
+
+    public class ImageReferenceTypeConfigWorkAround: IReferenceTypeConfig
+    {
+        public Type ReferenceType
+        {
+            get { return typeof (ImageWithDeclinaison); }
+        }
+
+        public void Load(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext)
+        {
+            var lookupIds = lookupIdContext.GetReferenceIds<ImageWithDeclinaison, string>();
+            var references = new ImageWithDeclinaisonRepository();
+            var images = references.GetByDeclinaisonUrl(lookupIds);
+
+            foreach (var image in images){
+                foreach (var declinaison in image.Declinaisons){
+                    loadedReferenceContext.AddReference(image, declinaison.Url);    
+                }
+            }
+        }
+
+        public string RequiredConnection
+        {
+            get { return null; }
         }
     }
 }
