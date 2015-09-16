@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests {
@@ -24,8 +19,8 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLinkReference_WithEnumerableTReference_ShouldThrow() {
-            TestDelegate act = () => 
-                new ReferencesLoadLinkExpression<object,List<object>,string>("the-id",null,null);
+            TestDelegate act = () =>
+                new ReferencesLoadLinkExpression<object, List<object>, string>("the-id", null, null);
 
             Assert.That(act,
                 Throws.ArgumentException

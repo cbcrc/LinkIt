@@ -60,8 +60,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
-    <Compile Include="Exploratory\ContextualizationTests.cs" />
     <Compile Include="LinkTargetTests.cs" />
     <Compile Include="LinkTargetFactoryTests.cs" />
     <Compile Include="LoadLinkConfig_WithCycleTests.cs" />
@@ -81,7 +79,6 @@
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
-    <Compile Include="ReferencesLoadLinkExpressionTests.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />
     <Compile Include="Shared\FakeReferenceLoader.cs" />
     <Compile Include="Shared\IPolymorphicModel.cs" />
