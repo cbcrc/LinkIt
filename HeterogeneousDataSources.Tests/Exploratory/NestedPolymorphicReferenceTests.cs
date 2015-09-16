@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -11,66 +8,41 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class NestedPolymorphicReferenceTests {
-
-        private LoadLinkProtocolFactory<WithNestedPolymorphicReference, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<WithNestedPolymorphicReference, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
-        public void SetUp()
-        {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<WithNestedPolymorphicReference, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression> {
-                    new RootLoadLinkExpression<WithNestedPolymorphicReferenceLinkedSource, WithNestedPolymorphicReference, string>(),
-                    new PolymorphicNestedLinkedSourcesLoadLinkExpression<WithNestedPolymorphicReferenceLinkedSource, object, object, Type>(
-                        "temp: until protocol builder",
-                        linkedSource => linkedSource.Model.PolyIds,
-                        linkedSource => linkedSource.Contents, 
-                        (linkedSource, childLinkedSource) => linkedSource.Contents = childLinkedSource,
-                        link => link.GetType(),
-                        new Dictionary<
-                            Type, 
-                            IPolymorphicNestedLinkedSourceInclude<object, object>
-                        >{
-                            {
-                                typeof(string), 
-                                new PolymorphicNestedLinkedSourceInclude<
-                                    object,
-                                    object,
-                                    PersonLinkedSource,
-                                    Person,
-                                    string
-                                >(
-                                    link => (string)link
-                                )
-                            },
-                            {
-                                typeof(int), 
-                                new PolymorphicNestedLinkedSourceInclude<
-                                    object,
-                                    object,
-                                    PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource,
-                                    Image,
-                                    string
-                                >(
-                                    link => ((int)link).ToString()
-                                )
-                            },
-                        }
-                    ),
-                },
-                getReferenceIdFunc: reference => reference.Id
-            );
+        public void SetUp() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<WithNestedPolymorphicReferenceLinkedSource>()
+                .IsRoot<string>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.PolyIds,
+                    linkedSource => linkedSource.Contents,
+                    reference => reference.GetType(),
+                    includes => includes
+                        .When<PersonLinkedSource, string>(
+                            typeof(string),
+                            reference => (string)reference)
+                        .When<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
+                            typeof(int),
+                            reference => ((int)reference).ToString()));
+
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<WithNestedPolymorphicReference, string>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicReference() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicReference {
                     Id = "1",
                     PolyIds = new List<object>{"p1",32}
                 }
             );
 
-            var actual = sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

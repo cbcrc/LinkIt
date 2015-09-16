@@ -10,32 +10,33 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
     [TestFixture]
     public class ContextualizationTests
     {
-        private LoadLinkProtocolFactory<WithContextualizedReference, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<WithContextualizedReference, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<WithContextualizedReference, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<WithContextualizedReferenceLinkedSource, WithContextualizedReference, string>(),
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<WithContextualizedReferenceLinkedSource>()
+                .IsRoot<string>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.PersonContextualization.Id,
+                    linkedSource => linkedSource.Person
+                );
+            loadLinkProtocolBuilder.For<PersonContextualizedLinkedSource>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Contextualization.SummaryImageId ?? linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                );
 
-                    new NestedLinkedSourceLoadLinkExpression<WithContextualizedReferenceLinkedSource, PersonContextualizedLinkedSource, Person, string>(
-                        linkedSource => linkedSource.Model.PersonContextualization.Id,
-                        (linkedSource, nestedLinkedSource) => {
-                            nestedLinkedSource.Contextualization = linkedSource.Model.PersonContextualization;
-                            linkedSource.Person = nestedLinkedSource;
-                        }),
-                    new ReferenceLoadLinkExpression<PersonContextualizedLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Contextualization.SummaryImageId ?? linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference)
-                },
-                getReferenceIdFunc: reference => reference.Id
-            );
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<WithContextualizedReference, string>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
         {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithContextualizedReference {
                     Id = "1",
                     PersonContextualization = new PersonContextualization{
@@ -46,7 +47,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 }
             );
 
-            var actual = sut.LoadLink<WithContextualizedReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>("1");
 
             Assert.That(actual.Person.Contextualization.SummaryImageId, Is.Null);
             Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("person-img-32"));
@@ -54,7 +55,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
 
         [Test]
         public void LoadLink_WithContextualization_ShouldLinkOverriddenImage() {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new WithContextualizedReference {
                     Id = "1",
                     PersonContextualization = new PersonContextualization {
@@ -65,7 +66,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 }
             );
 
-            var actual = sut.LoadLink<WithContextualizedReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>("1");
 
             Assert.That(actual.Person.Contextualization.SummaryImageId, Is.EqualTo("overriden-image"));
             Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("overriden-image"));

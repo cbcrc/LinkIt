@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
+﻿using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -10,30 +8,33 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class MultipleReferencesTypeTests
     {
-        private LoadLinkProtocolFactory<MultipleReferencesTypeContent, int> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<MultipleReferencesTypeContent, int> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
-        public void SetUp() {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<MultipleReferencesTypeContent, int>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<MultipleReferencesTypeLinkedSource, MultipleReferencesTypeContent, int>(),
-                    new ReferenceLoadLinkExpression<MultipleReferencesTypeLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference
-                    ),
-                    new ReferenceLoadLinkExpression<MultipleReferencesTypeLinkedSource,Person, string>(
-                        linkedSource => linkedSource.Model.AuthorId,
-                        (linkedSource, reference) => linkedSource.Author = reference
-                    )
-                },
-                getReferenceIdFunc: reference => reference.Id
-            );
+        public void SetUp()
+        {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<MultipleReferencesTypeLinkedSource>()
+                .IsRoot<int>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                )
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.AuthorId,
+                    linkedSource => linkedSource.Author
+                );
+
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<MultipleReferencesTypeContent, int>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_MultipleReferencesTypeTests()
         {
-            var sut = _loadLinkProtocolFactory.Create(
+            _fakeReferenceLoader.FixValue(
                 new MultipleReferencesTypeContent()
                 {
                     Id = 1,
@@ -42,7 +43,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = sut.LoadLink<MultipleReferencesTypeLinkedSource>(1);
+            var actual = _sut.LoadLink<MultipleReferencesTypeLinkedSource>(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

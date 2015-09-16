@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.Tests.Polymorphic;
 
 namespace HeterogeneousDataSources.Tests.Shared {
     public class LoadLinkProtocolFactory<TReference, TId> where TReference:class

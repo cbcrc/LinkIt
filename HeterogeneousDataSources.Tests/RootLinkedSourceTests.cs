@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -12,45 +11,42 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class RootLinkedSourceTests
     {
-        private LoadLinkProtocolFactory<RootContent, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<RootContent, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<RootContent, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<RootLinkedSource, RootContent, string>(),
-                },
-                getReferenceIdFunc: reference => reference.Id,
-                customReferenceTypeConfigs: new ReferenceTypeConfig<RootContent, string>(
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<RootLinkedSource>()
+                .IsRoot<string>();
+
+            _fakeReferenceLoader = new FakeReferenceLoader2<RootContent, string>(
+                reference => reference.Id,
+                new ReferenceTypeConfig<RootContent, string>(
                     ids => new RootContentRepository().GetByIds(ids),
                     reference => reference.Id
                 )
             );
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
         public void LoadLink_WithReferenceId_ShouldLinkModel() {
-            var sut = _loadLinkProtocolFactory.Create();
-
-            var actual = sut.LoadLink<RootLinkedSource>("can-be-resolved");
+            var actual = _sut.LoadLink<RootLinkedSource>("can-be-resolved");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_WithoutReferenceId_ShouldLinkNull(){
-            var sut = _loadLinkProtocolFactory.Create();
-
-            TestDelegate act = () => sut.LoadLink<RootLinkedSource>(null);
+            TestDelegate act = () => _sut.LoadLink<RootLinkedSource>(null);
 
             Assert.That(act, Throws.InstanceOf<ArgumentNullException>());
         }
 
         [Test]
         public void LoadLink_CannotBeResolved_ShouldLinkNull() {
-            var sut = _loadLinkProtocolFactory.Create();
-
-            var actual = sut.LoadLink<RootLinkedSource>("cannot-be-resolved");
+            var actual = _sut.LoadLink<RootLinkedSource>("cannot-be-resolved");
 
             Assert.That(actual, Is.Null);
         }

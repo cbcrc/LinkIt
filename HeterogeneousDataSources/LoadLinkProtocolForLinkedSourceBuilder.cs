@@ -220,19 +220,31 @@ namespace HeterogeneousDataSources
                     interfaceType.GetGenericTypeDefinition() == typeof(ILinkedSource<>))
                 .ToList();
 
-            EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(iLinkedSourceTypes);
+            EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(linkedSourceType, iLinkedSourceTypes);
 
             var iLinkedSourceType = iLinkedSourceTypes.Single();
             return iLinkedSourceType.GenericTypeArguments.Single();
         }
 
-        private static void EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(List<Type> iLinkedSourceTypes) {
+        private static void EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(Type linkedSourceType, List<Type> iLinkedSourceTypes) {
             if (!iLinkedSourceTypes.Any()) {
-                throw new ArgumentException(string.Format("{0} must implement ILinkedSource<> at least once."), "TLinkedSource");
+                throw new ArgumentException(
+                    string.Format(
+                        "{0} must implement ILinkedSource<>.",
+                        linkedSourceType
+                    ), 
+                    "TLinkedSource"
+                );
             }
 
             if (iLinkedSourceTypes.Count > 1) {
-                throw new ArgumentException(string.Format("{0} must implement ILinkedSource<> only once."), "TLinkedSource");
+                throw new ArgumentException(
+                    string.Format(
+                        "{0} must implement ILinkedSource<> only once.",
+                        linkedSourceType
+                    ),
+                    "TLinkedSource"
+                );
             }
         }
 

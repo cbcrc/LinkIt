@@ -4,38 +4,30 @@ using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
-using RC.Testing;
 
 namespace HeterogeneousDataSources.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests
     {
-        private LoadLinkProtocolFactory<WithContextualizedReference, string> _loadLinkProtocolFactory;
+        private FakeReferenceLoader2<WithContextualizedReference, string> _fakeReferenceLoader;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
-            _loadLinkProtocolFactory = new LoadLinkProtocolFactory<WithContextualizedReference, string>(
-                loadLinkExpressions: new List<ILoadLinkExpression>{
-                    new RootLoadLinkExpression<WithContextualizedReferenceLinkedSource, WithContextualizedReference, string>(),
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<WithContextualizedReferenceLinkedSource>()
+                .IsRoot<string>();
 
-                    new NestedLinkedSourceLoadLinkExpression<WithContextualizedReferenceLinkedSource, PersonContextualizedLinkedSource, Person, string>(
-                        linkedSource => linkedSource.Model.PersonContextualization.Id,
-                        (linkedSource, nestedLinkedSource) => {
-                            nestedLinkedSource.Contextualization = linkedSource.Model.PersonContextualization;
-                            linkedSource.Person = nestedLinkedSource;
-                        }),
-                    new ReferenceLoadLinkExpression<PersonContextualizedLinkedSource,Image, string>(
-                        linkedSource => linkedSource.Contextualization.SummaryImageId ?? linkedSource.Model.SummaryImageId,
-                        (linkedSource, reference) => linkedSource.SummaryImage = reference)
-                },
-                getReferenceIdFunc: reference => reference.Id,
-                customReferenceTypeConfigs: new ReferenceTypeConfig<ImageWithDeclinaison, string>(
-                    declinaisonUrls =>new ImageWithDeclinaisonRepository().GetByDeclinaisonUrl(declinaisonUrls),
-                    reference => reference.Alt //Stle: oups!: similar to query, not always ref-id==entity.id , sometimes one entity has many key and sometimes match should be specification(entity)==true
-
-                )
+            _fakeReferenceLoader =
+                new FakeReferenceLoader2<WithContextualizedReference, string>(
+                    reference => reference.Id,
+                    new ReferenceTypeConfig<ImageWithDeclinaison, string>(
+                        declinaisonUrls => new ImageWithDeclinaisonRepository().GetByDeclinaisonUrl(declinaisonUrls),
+                        reference => reference.Alt //Stle: oups!: similar to query, not always ref-id==entity.id , sometimes one entity has many key and sometimes match should be specification(entity)==true
+                    )
             );
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
         [Test]
