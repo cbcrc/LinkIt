@@ -79,6 +79,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
+    <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests_AsSub.cs" />
+    <Compile Include="Shared\IPolymorphicSource.cs" />
+    <Compile Include="Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
     <Compile Include="RootLinkedSourceTests.cs" />

@@ -163,18 +163,16 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
         public class WithNestedPolymorphicContentsLinkedSource : ILinkedSource<WithNestedPolymorphicContents> {
             public WithNestedPolymorphicContents Model { get; set; }
-            public List<INestedPolymorphicContentLinkedSource> Contents { get; set; }
+            public List<IPolymorphicSource> Contents { get; set; }
         }
 
-        public interface INestedPolymorphicContentLinkedSource { }
-
-        public class ImageWithContextualizationLinkedSource : INestedPolymorphicContentLinkedSource, ILinkedSource<Image>
+        public class ImageWithContextualizationLinkedSource : IPolymorphicSource, ILinkedSource<Image>
         {
             public Image Model { get; set; }
             public ContentContextualization ContentContextualization { get; set; }
         }
 
-        public class PersonWithoutContextualizationLinkedSource : INestedPolymorphicContentLinkedSource, ILinkedSource<Person> {
+        public class PersonWithoutContextualizationLinkedSource : IPolymorphicSource, ILinkedSource<Person> {
             public Person Model { get; set; }
         }
 

@@ -255,7 +255,19 @@ namespace HeterogeneousDataSources
                     linkTarget.SetTargetProperty
                 )
             );
-        }  
+        }
+
+        //public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>(
+        //    Func<TLinkedSource, List<TIChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
+        //    Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
+        //    Func<TIChildLinkedSourceModel, TDiscriminant> getDiscriminantFunc,
+        //    Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+        //{
+
+          
+        //}
+
+
         #endregion
 
         #region Shared

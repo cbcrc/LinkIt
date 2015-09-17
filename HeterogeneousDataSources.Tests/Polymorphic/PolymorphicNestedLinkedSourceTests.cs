@@ -78,7 +78,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
         public class WithNestedPolymorphicContentLinkedSource : ILinkedSource<WithNestedPolymorphicContent> {
             public WithNestedPolymorphicContent Model { get; set; }
-            public PolymorphicNestedLinkedSourcesTests.INestedPolymorphicContentLinkedSource Content { get; set; }
+            public IPolymorphicSource Content { get; set; }
         }
 
         public class WithNestedPolymorphicContent {

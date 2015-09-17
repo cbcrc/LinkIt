@@ -24,6 +24,18 @@ namespace HeterogeneousDataSources
             return this;
         }
 
+        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenSub<TChildLinkedSource>(
+            TDiscriminant discriminantValue) 
+        {
+            //_includeByDiscriminantValue.Add(
+            //    discriminantValue,
+            //    null
+            //);
+
+            return this;
+        }
+
+
         private IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
             Func<TLink, TId> getLookupIdFunc, 
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
