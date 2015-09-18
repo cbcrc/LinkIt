@@ -94,7 +94,7 @@ namespace HeterogeneousDataSources
                 GetReferencesFuncForSingleValue<TChildLinkedSource>(),
                 SetReferencesActionForSingleValue(linkTarget),
                 link => true,
-                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>>
+                new Dictionary<bool, IPolymorphicInclude>
                 {
                     {
                         true, //always one include when not polymorphic
@@ -132,7 +132,7 @@ namespace HeterogeneousDataSources
                 linkTarget.GetTargetProperty,
                 linkTarget.SetTargetProperty,
                 link => true,
-                new Dictionary<bool, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>>
+                new Dictionary<bool, IPolymorphicInclude>
                 {
                     {
                         true, //always one include when not polymorphic

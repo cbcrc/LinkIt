@@ -7,8 +7,8 @@ namespace HeterogeneousDataSources
 {
     public class IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>
     {
-        private Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>> _includeByDiscriminantValue
-            = new Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>>();
+        private Dictionary<TDiscriminant, IPolymorphicInclude> _includeByDiscriminantValue
+            = new Dictionary<TDiscriminant, IPolymorphicInclude>();
 
         public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> When<TChildLinkedSource, TId>(
             TDiscriminant discriminantValue,
@@ -36,7 +36,7 @@ namespace HeterogeneousDataSources
         }
 
 
-        private IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
+        private IPolymorphicInclude CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
             Func<TLink, TId> getLookupIdFunc, 
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
@@ -57,7 +57,7 @@ namespace HeterogeneousDataSources
             //stle: change to single once obsolete constructor is deleted
             var ctor = ctorSpecificType.GetConstructors().First();
 
-            return (IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>)ctor.Invoke(
+            return (IPolymorphicInclude)ctor.Invoke(
                 new object[]{
                     getLookupIdFunc,
                     initChildLinkedSourceAction
@@ -65,7 +65,7 @@ namespace HeterogeneousDataSources
             );
         }
 
-        public Dictionary<TDiscriminant, IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>> Build() {
+        public Dictionary<TDiscriminant, IPolymorphicInclude> Build() {
             return _includeByDiscriminantValue;
         }
     }
