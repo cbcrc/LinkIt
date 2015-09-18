@@ -27,12 +27,33 @@ namespace HeterogeneousDataSources
         public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenSub<TChildLinkedSource>(
             TDiscriminant discriminantValue) 
         {
-            //_includeByDiscriminantValue.Add(
-            //    discriminantValue,
-            //    null
-            //);
+            _includeByDiscriminantValue.Add(
+                discriminantValue,
+                CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSource>()
+            );
 
             return this;
+        }
+
+        private IPolymorphicInclude CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSource>(){
+            Type ctorGenericType = typeof(PolymorphicSubLinkedSourceInclude<,,>);
+
+            var iChildLinkedSourceType = typeof (TIChildLinkedSource); //stle:dry
+            var childLinkedSourceType = typeof(TChildLinkedSource);
+
+            Type[] typeArgs ={
+                iChildLinkedSourceType,
+                childLinkedSourceType,
+                //stle: move this out
+                LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(childLinkedSourceType)
+            };
+
+            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
+
+            //stle: change to single once obsolete constructor is deleted
+            var ctor = ctorSpecificType.GetConstructors().First();
+
+            return (IPolymorphicInclude)ctor.Invoke(new object[]{});
         }
 
 

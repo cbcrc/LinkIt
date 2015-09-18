@@ -1,1 +1,37 @@
-﻿ 
+﻿{
+  "model": {
+    "id": "1",
+    "contentContextualizations": [
+      {
+        "contentType": "person",
+        "id": "p1",
+        "title": "altered person title"
+      },
+      {
+        "contentType": "image",
+        "id": "i1",
+        "title": "altered image title"
+      }
+    ]
+  },
+  "contents": [
+    {
+      "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests_AsSub+ContentContextualizationLinkedSourceA, HeterogeneousDataSources.Tests",
+      "model": {
+        "contentType": "person",
+        "id": "p1",
+        "title": "altered person title"
+      },
+      "a": null
+    },
+    {
+      "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests_AsSub+ContentContextualizationLinkedSourceB, HeterogeneousDataSources.Tests",
+      "model": {
+        "contentType": "image",
+        "id": "i1",
+        "title": "altered image title"
+      },
+      "b": null
+    }
+  ]
+}

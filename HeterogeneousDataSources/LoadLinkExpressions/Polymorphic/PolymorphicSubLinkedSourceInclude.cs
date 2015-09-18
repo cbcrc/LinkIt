@@ -4,10 +4,9 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 {
-    public class PolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TIChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>
-        : IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TIChildLinkedSourceModel>
+    public class PolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>
+        : IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource>
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
-        where TChildLinkedSourceModel: TIChildLinkedSourceModel
     {
         public PolymorphicSubLinkedSourceInclude(){
             ChildLinkedSourceType = typeof(TChildLinkedSource);
@@ -19,23 +18,22 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 
         public Type ChildLinkedSourceType { get; private set; }
 
-        public TIChildLinkedSource CreateSubLinkedSource(TIChildLinkedSourceModel iChildLinkedSourceModel, LoadedReferenceContext loadedReferenceContext) {
-            if (!(iChildLinkedSourceModel is TChildLinkedSourceModel)){
+        public TIChildLinkedSource CreateSubLinkedSource(object childLinkedSourceModel, LoadedReferenceContext loadedReferenceContext) {
+            if (!(childLinkedSourceModel is TChildLinkedSourceModel)) {
                 //stle: all error message should have a way to identity context: at least linked source and target property
                 throw new InvalidOperationException(
                     string.Format(
                         "Sub linked source of type {0} cannot have model of type {1}.",
                         typeof(TChildLinkedSource),
-                        typeof(TChildLinkedSourceModel)
+                        childLinkedSourceModel.GetType()
                     )
                 );
-
             }
 
-            var childLinkedSourceModel = (TChildLinkedSourceModel)iChildLinkedSourceModel;
+            var castedChildLinkedSourceModel = (TChildLinkedSourceModel)childLinkedSourceModel;
 
             var subLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(
-                new List<TChildLinkedSourceModel>{ childLinkedSourceModel }, 
+                new List<TChildLinkedSourceModel> { castedChildLinkedSourceModel }, 
                 loadedReferenceContext
             );
             //stle: please make it explicit that include works at single value level not at list level

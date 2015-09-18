@@ -1,7 +1,7 @@
 namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 {
-    public interface IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TIChildLinkedSourceModel> : IPolymorphicInclude 
+    public interface IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource> : IPolymorphicInclude 
     {
-        TIChildLinkedSource CreateSubLinkedSource(TIChildLinkedSourceModel iChildLinkedSourceModel, LoadedReferenceContext loadedReferenceContext);
+        TIChildLinkedSource CreateSubLinkedSource(object iChildLinkedSourceModel, LoadedReferenceContext loadedReferenceContext);
     }
 }

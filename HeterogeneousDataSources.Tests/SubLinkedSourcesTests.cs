@@ -44,6 +44,8 @@ namespace HeterogeneousDataSources.Tests
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
+
+
         [Test]
         public void LoadLink_SubLinkedSources()
         {

@@ -19,7 +19,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             Func<TLinkedSource, List<TIChildLinkedSource>> getReferences,
             Action<TLinkedSource, List<TIChildLinkedSource>> setReferences,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
-            Dictionary<TDiscriminant, IPolymorphicInclude> includes)
+            Dictionary<TDiscriminant, IPolymorphicInclude> includes,
+            LoadLinkExpressionType tempLoadLinkExpressionType
+            )
         {
             LinkTargetId = linkTargetId;
             _getLinksFunc = getLinksFunc;
@@ -37,7 +39,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             ChildLinkedSourceTypes = _includes.Values
                 .Select(include => include.ChildLinkedSourceType)
                 .ToList();
-            LoadLinkExpressionType = LoadLinkExpressionType.NestedLinkedSource;
+
+            //stle: this must go away
+            LoadLinkExpressionType = tempLoadLinkExpressionType;
         }
 
         public string LinkTargetId { get; private set; }
@@ -71,12 +75,16 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             var tempIgnoreMixedMode = false;
             var subLinkedSources = new List<TIChildLinkedSource>();
 
+            var notNullLinks = GetLinks(linkedSource)
+                .Where(link => link != null)
+                .ToList();
+
             //stle: this is not a link and not a reference but a sub linked source model
             //      find a good abstraction for the concept
-            foreach (var link in GetLinks(linkedSource)) {
+            foreach (var link in notNullLinks) {
                 var include = GetPolymorphicInclude(link);
                 var asSubLinkedSourceInclude =
-                    include as IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TLink>;
+                    include as IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource>;
 
                 //stle: will not work if sub linked source is mixed with other expressions 
                 //This case is not supported for now

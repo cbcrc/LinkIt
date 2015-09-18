@@ -99,7 +99,7 @@ namespace HeterogeneousDataSources {
         private void LinkSubLinkedSources(LoadedReferenceContext loadedReferenceContext) {
             while (loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink().Any()){
                 foreach (var linkedSource in loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink()){
-                    var loadLinkExpressions = _config.GetSubLinkedSourceExpressions(linkedSource);
+                    var loadLinkExpressions = _config.GetLoadExpressions(linkedSource);
                     foreach (var loadLinkExpression in loadLinkExpressions)
                     {
                         loadLinkExpression.LinkSubLinkedSource(

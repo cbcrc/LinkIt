@@ -22,10 +22,10 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Contents,
                     reference => reference.ContentType,
                     includes => includes
-                        .WhenSub<PolymorphicNestedLinkedSourcesTests.PersonWithoutContextualizationLinkedSource>(
+                        .WhenSub<ContentContextualizationLinkedSourceA>(
                             "person"
                         )
-                        .WhenSub<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource>(
+                        .WhenSub<ContentContextualizationLinkedSourceB>(
                             "image"
                         )
                 );
@@ -35,30 +35,30 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
-        //[Test]
-        //public void LoadLink_NestedPolymorphicContents() {
-        //    _fakeReferenceLoader.FixValue(
-        //        new PolymorphicNestedLinkedSourcesTests.WithNestedPolymorphicContents {
-        //            Id = "1",
-        //            ContentContextualizations = new List<PolymorphicNestedLinkedSourcesTests.ContentContextualization>{
-        //                new PolymorphicNestedLinkedSourcesTests.ContentContextualization{
-        //                    ContentType = "person",
-        //                    Id = "p1",
-        //                    Title = "altered person title"
-        //                },
-        //                new PolymorphicNestedLinkedSourcesTests.ContentContextualization{
-        //                    ContentType = "image",
-        //                    Id = "i1",
-        //                    Title = "altered image title"
-        //                }
-        //            }
-        //        }
-        //    );
+        [Test]
+        public void LoadLink_NestedPolymorphicContents() {
+            _fakeReferenceLoader.FixValue(
+                new PolymorphicNestedLinkedSourcesTests.WithNestedPolymorphicContents {
+                    Id = "1",
+                    ContentContextualizations = new List<PolymorphicNestedLinkedSourcesTests.ContentContextualization>{
+                        new PolymorphicNestedLinkedSourcesTests.ContentContextualization{
+                            ContentType = "person",
+                            Id = "p1",
+                            Title = "altered person title"
+                        },
+                        new PolymorphicNestedLinkedSourcesTests.ContentContextualization{
+                            ContentType = "image",
+                            Id = "i1",
+                            Title = "altered image title"
+                        }
+                    }
+                }
+            );
 
-        //    var actual = _sut.LoadLink<PolymorphicNestedLinkedSourcesTests.WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<PolymorphicNestedLinkedSourcesTests.WithNestedPolymorphicContentsLinkedSource>("1");
 
-        //    ApprovalsExt.VerifyPublicProperties(actual);
-        //}
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
 
         public class ContentContextualizationLinkedSourceA :IPolymorphicSource, ILinkedSource<PolymorphicNestedLinkedSourcesTests.ContentContextualization>
         {

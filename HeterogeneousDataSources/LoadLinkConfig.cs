@@ -124,6 +124,10 @@ namespace HeterogeneousDataSources {
             return referenceTypeByLoadingLevel[loadingLevel];
         }
 
+        public List<ILoadLinkExpression> GetLoadExpressions(object linkedSource) {
+            return GetLoadLinkExpressions(linkedSource, _allLoadLinkExpressions);
+        }
+
 
         //stle: should go in protocol
         public List<ILoadLinkExpression> GetLoadExpressions(object linkedSource, Type referenceType)
@@ -157,7 +161,7 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        private List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions) {
+        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions) {
             var linkedSourceType = linkedSource.GetType();
             return loadLinkExpressions
                 .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType.Equals(linkedSourceType))
