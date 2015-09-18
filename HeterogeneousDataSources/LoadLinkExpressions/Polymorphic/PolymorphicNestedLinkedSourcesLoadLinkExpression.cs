@@ -57,6 +57,14 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             }
         }
 
+        public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
+        }
+
+        public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
+        }
+
         public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
             LoadLinkExpressionUtil.EnsureIsOfReferenceType(this, referenceTypeToBeLinked);
@@ -64,17 +72,23 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             Link((TLinkedSource)linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
         }
 
-        private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            LinkNestedLinkedSource((TLinkedSource)linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+        }
+
+        private void LinkNestedLinkedSource(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
         {
             if (GetLinks(linkedSource).Count <= 1){
-                LinkListWithZeroOrOneReference(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+                LinkNestedLinkedSourceListWithZeroOrOneReference(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
             }
             else{
-                LinkListWithManyReferences(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+                LinkNestedLinkedSourceListWithManyReferences(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
             }
         }
 
-        private void LinkListWithZeroOrOneReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        private void LinkNestedLinkedSourceListWithZeroOrOneReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
         {
             var link = GetLinks(linkedSource).SingleOrDefault();
             if (link == null){
@@ -93,7 +107,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             _setReferences(linkedSource, childLinkedSources);
         }
 
-        private void LinkListWithManyReferences(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
+        private void LinkNestedLinkedSourceListWithManyReferences(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
         {
             InitListOfReferencesIfNull(linkedSource, loadedReferenceContext);

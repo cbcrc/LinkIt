@@ -40,13 +40,19 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             //stle: maybe split load and link iterfaces
         }
 
-        public void Link(
-            object linkedSource, 
-            LoadedReferenceContext loadedReferenceContext,
-            //stle: common interface sucks
+        public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
         {
-            //stle: hey you and your inheritance crap! Try a functional approach
+            //no operations
+        }
+
+        public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
+            //no operations
+        }
+
+        public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
             
             Link((TLinkedSource) linkedSource, loadedReferenceContext);

@@ -40,31 +40,31 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
 
 
-        [Test]
-        public void LoadLink_SubContentWithoutReferences() {
-            _fakeReferenceLoader.FixValue(
-                new WithPolymorphicSubLinkedSourceContent {
-                    Id = "1",
-                    Subs = new List<IPolymorphicModel>
-                    {
-                        new SubContentWithImage
-                        {
-                            Id="a",
-                            ImageId = "i-a"
-                        },
-                        new SubContentWithoutReferences
-                        {
-                            Id="b",
-                            Title = "sub-b"
-                        },
-                    }
-                }
-            );
+        //[Test]
+        //public void LoadLink_SubContentWithoutReferences() {
+        //    _fakeReferenceLoader.FixValue(
+        //        new WithPolymorphicSubLinkedSourceContent {
+        //            Id = "1",
+        //            Subs = new List<IPolymorphicModel>
+        //            {
+        //                new SubContentWithImage
+        //                {
+        //                    Id="a",
+        //                    ImageId = "i-a"
+        //                },
+        //                new SubContentWithoutReferences
+        //                {
+        //                    Id="b",
+        //                    Title = "sub-b"
+        //                },
+        //            }
+        //        }
+        //    );
 
-            var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>("1");
+        //    var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>("1");
 
-            ApprovalsExt.VerifyPublicProperties(actual);
-        }
+        //    ApprovalsExt.VerifyPublicProperties(actual);
+        //}
 
         public class WithPolymorphicSubLinkedSource : ILinkedSource<WithPolymorphicSubLinkedSourceContent> {
             public WithPolymorphicSubLinkedSourceContent Model { get; set; }

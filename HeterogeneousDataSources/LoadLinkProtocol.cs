@@ -90,7 +90,7 @@ namespace HeterogeneousDataSources {
                     var loadLinkExpressions = _config.GetLinkNestedLinkedSourceExpressions(linkedSource, referenceTypeToBeLoaded);
                     foreach (var loadLinkExpression in loadLinkExpressions)
                     {
-                        loadLinkExpression.Link(linkedSource, loadedReferenceContext, referenceTypeToBeLoaded);
+                        loadLinkExpression.LinkNestedLinkedSource(linkedSource, loadedReferenceContext, referenceTypeToBeLoaded);
                     }
                 }
             }
@@ -102,10 +102,9 @@ namespace HeterogeneousDataSources {
                     var loadLinkExpressions = _config.GetSubLinkedSourceExpressions(linkedSource);
                     foreach (var loadLinkExpression in loadLinkExpressions)
                     {
-                        loadLinkExpression.Link(
+                        loadLinkExpression.LinkSubLinkedSource(
                             linkedSource, 
-                            loadedReferenceContext, 
-                            null //stle: do not care it that context: the interface sucks!
+                            loadedReferenceContext 
                         );
                     }
                     loadedReferenceContext.AddLinkedSourceWhereSubLinkedSourceAreLinked(linkedSource);
@@ -117,10 +116,9 @@ namespace HeterogeneousDataSources {
             foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt) {
                 var loadLinkExpressions = _config.GetLinkReferenceExpressions(linkedSource);
                 foreach (var loadLinkExpression in loadLinkExpressions) {
-                    loadLinkExpression.Link(
+                    loadLinkExpression.LinkReference(
                         linkedSource, 
-                        loadedReferenceContext, 
-                        null //stle:not required in that context, the interface sucks!
+                        loadedReferenceContext 
                     );
                 }
             }

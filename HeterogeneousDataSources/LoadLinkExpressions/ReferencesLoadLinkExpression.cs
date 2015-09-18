@@ -33,14 +33,22 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             : this("obsolete",getLookupIdsFunc,linkAction) 
         { }
 
+        public override void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            LinkReference((TLinkedSource)linkedSource, loadedReferenceContext);
+        }
+
+        private void LinkReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
+            var references = GetReferences(linkedSource, loadedReferenceContext);
+            _linkAction(linkedSource, references);
+        }
+
+
         protected override List<TId> GetLookupIdsTemplate(TLinkedSource linkedSource)
         {
             return _getLookupIdsFunc(linkedSource);
-        }
-
-        protected override void LinkAction(TLinkedSource linkedSource, List<TReference> references, LoadedReferenceContext loadedReferenceContext)
-        {
-            _linkAction(linkedSource, references);
         }
 
         public override LoadLinkExpressionType LoadLinkExpressionType {

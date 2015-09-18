@@ -19,9 +19,17 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
             return new List<TId>{id};
         }
 
-        //stle: hey you and your inheritance crap! Try a functional approach
-        protected override void LinkAction(TId id, List<TChildLinkedSourceModel> references, LoadedReferenceContext loadedReferenceContext)
+        public override void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext,
+            Type referenceTypeToBeLinked)
         {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TId>(linkedSource);
+            LinkNestedLinkedSource((TId)linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+        }
+
+        //stle: simplify this please!
+        private void LinkNestedLinkedSource(TId linkedSourceForBase, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
+            var references = GetReferences(linkedSourceForBase, loadedReferenceContext);
             LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
         }
 

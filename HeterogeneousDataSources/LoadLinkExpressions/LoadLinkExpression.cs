@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
@@ -36,37 +35,36 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             lookupIdContext.Add<TReference, TId>(lookupIds);
         }
 
+        public virtual void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext,
+            Type referenceTypeToBeLinked)
+        {
+            //no operations
+        }
+
+        public virtual void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
+            //no operations
+        }
+
+        public virtual void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
+            //no operations
+        }
+
         protected abstract List<TId> GetLookupIdsTemplate(TLinkedSource linkedSource);
         
         #endregion
 
-        #region Link
-        public void Link(
-            object linkedSource, 
-            LoadedReferenceContext loadedReferenceContext,
-            //stle: common interface sucks
-            Type referenceTypeToBeLinked)
+        //stle: dry
+        protected List<TReference> GetReferences(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-
-            Link((TLinkedSource) linkedSource, loadedReferenceContext);
-        }
-
-        private void Link(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
             var ids = GetLookupIds(linkedSource);
-            var references = loadedReferenceContext.GetOptionalReferences<TReference, TId>(ids);
-            LinkAction(linkedSource, references, loadedReferenceContext);
+            return loadedReferenceContext.GetOptionalReferences<TReference, TId>(ids);
         }
 
-        protected abstract void LinkAction(
-            TLinkedSource linkedSource, 
-            List<TReference> references,
-            //stle: hey you and your inheritance crap! Try a functional approach
-            LoadedReferenceContext loadedReferenceContext
-        ); 
-        #endregion
 
-        private List<TId> GetLookupIds(TLinkedSource linkedSource)
+        //stle: dry
+        protected List<TId> GetLookupIds(TLinkedSource linkedSource)
         {
             var lookupIds = GetLookupIdsTemplate(linkedSource);
             return LoadLinkExpressionUtil.GetCleanedLookupIds(lookupIds);
