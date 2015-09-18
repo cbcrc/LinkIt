@@ -32,6 +32,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 
             ReferenceTypes = _includes.Values
                 .Select(include => include.ReferenceType)
+                .Where(referenceType=>referenceType!=null)
                 .ToList();
             ChildLinkedSourceTypes = _includes.Values
                 .Select(include => include.ChildLinkedSourceType)
@@ -58,19 +59,46 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             }
         }
 
-        public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext){
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+
+            LinkSubLinkedSources((TLinkedSource)linkedSource, loadedReferenceContext);
+        }
+
+        public void LinkSubLinkedSources(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
+            var tempIgnoreMixedMode = false;
+            var subLinkedSources = new List<TIChildLinkedSource>();
+
+            //stle: this is not a link and not a reference but a sub linked source model
+            //      find a good abstraction for the concept
+            foreach (var link in GetLinks(linkedSource)) {
+                var include = GetPolymorphicInclude(link);
+                var asSubLinkedSourceInclude =
+                    include as IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TLink>;
+
+                //stle: will not work if sub linked source is mixed with other expressions 
+                //This case is not supported for now
+                if (asSubLinkedSourceInclude == null)
+                {
+                    tempIgnoreMixedMode = true;
+                }
+                else
+                {
+                    var subLinkedSource = asSubLinkedSourceInclude.CreateSubLinkedSource(link, loadedReferenceContext);
+                    //stle: use linq
+                    subLinkedSources.Add(subLinkedSource);
+                }
+            }
+
+            if (!tempIgnoreMixedMode){
+                _setReferences(linkedSource, subLinkedSources);
+            }
         }
 
         public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
-        }
-
-        public void Link(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            LoadLinkExpressionUtil.EnsureIsOfReferenceType(this, referenceTypeToBeLinked);
-
-            Link((TLinkedSource)linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
         }
 
         public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
@@ -182,6 +210,23 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
         private IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> 
         GetSelectedPolymorphicNestedLinkedSourceInclude(TLink link) 
         {
+            var castedSelectedInclude = GetPolymorphicInclude(link) 
+                as IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>;
+
+            if (castedSelectedInclude==null){
+                throw new InvalidOperationException(
+                    string.Format(
+                        "There is no nested linked source include for discriminant={0} in {1}.",
+                        _getDiscriminantFunc(link),
+                        LinkedSourceType
+                    )
+                );
+            }
+
+            return castedSelectedInclude;
+        }
+
+        private IPolymorphicInclude GetPolymorphicInclude(TLink link) {
             var discriminant = _getDiscriminantFunc(link);
             if (!_includes.ContainsKey(discriminant)) {
                 throw new InvalidOperationException(
@@ -193,19 +238,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
                 );
             }
 
-            var castedSelectedInclude = _includes[discriminant] as IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>;
-
-            if (castedSelectedInclude==null){
-                throw new InvalidOperationException(
-                    string.Format(
-                        "There is no nested linked source include for discriminant={0} in {1}.",
-                        discriminant,
-                        LinkedSourceType
-                    )
-                );
-            }
-
-            return castedSelectedInclude;
+            return _includes[discriminant];
         }
 
         public List<Type> ChildLinkedSourceTypes { get; private set; }

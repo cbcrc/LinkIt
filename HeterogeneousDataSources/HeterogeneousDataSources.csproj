@@ -45,9 +45,13 @@
     <Compile Include="LinkTargetFactory.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicInclude.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicNestedLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicSubLinkedSourceInclude.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\LinkWithIndex.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourceInclude.cs" />
     <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourcesLoadLinkExpression.cs" />
+    <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicSubLinkedSourceInclude.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LoadLinkExpressionTreeFactory.cs" />
     <Compile Include="LoadLinkProtocolBuilder.cs" />
     <Compile Include="LoadLinkProtocolForLinkedSourceBuilder.cs" />

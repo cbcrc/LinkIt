@@ -4,62 +4,42 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
 {
-    public class PolymorphicSubLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId>
-        : IPolymorphicInclude
+    public class PolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TIChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>
+        : IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TIChildLinkedSourceModel>
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
+        where TChildLinkedSourceModel: TIChildLinkedSourceModel
     {
-        private readonly Func<TLink, TId> _getLookupIdFunc;
-        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
-
-        //public PolymorphicNestedLinkedSourceInclude(
-        //    Func<TLink, TId> getLookupIdFunc,
-        //    Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
-        //)
-        //{
-        //    _getLookupIdFunc = getLookupIdFunc;
-        //    _initChildLinkedSourceAction = initChildLinkedSourceAction;
-        //    ReferenceType = typeof(TChildLinkedSourceModel);
-        //    ChildLinkedSourceType = typeof(TChildLinkedSource);
-        //}
-
-        public Type ReferenceType { get; private set; }
-
-        public void AddLookupIds(TLink link, LookupIdContext lookupIdContext){
-            var lookupIds = GetLookupIds(link);
-            lookupIdContext.Add<TChildLinkedSourceModel, TId>(lookupIds);
+        public PolymorphicSubLinkedSourceInclude(){
+            ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
-        public List<TIChildLinkedSource> CreateChildLinkedSources(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
-            //stle: dry with other load link expressions
-            var ids = GetLookupIds(link);
-            var references = loadedReferenceContext.GetOptionalReferences<TChildLinkedSourceModel, TId>(ids);
-            var childLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
-
-            InitChildLinkedSource(link, childLinkedSources, linkedSource, referenceIndex);
-
-            return childLinkedSources
-                .Cast<TIChildLinkedSource>()
-                .ToList();
-        }
-
-        private void InitChildLinkedSource(TLink link, List<TChildLinkedSource> childLinkedSources, TLinkedSource linkedSource, int referenceIndex){
-            var childLinkedSource = childLinkedSources.SingleOrDefault();
-            if (childLinkedSource == null) { return; }
-
-            if (_initChildLinkedSourceAction != null) {
-                _initChildLinkedSourceAction(linkedSource, referenceIndex, childLinkedSources.Single());
-            }
-        }
-
-
-        //stle: dry with load link expressions
-        private List<TId> GetLookupIds(TLink link) {
-            var lookupId = _getLookupIdFunc(link);
-            var lookupIds = new List<TId> { lookupId };
-            return LoadLinkExpressionUtil.GetCleanedLookupIds(lookupIds);
+        public Type ReferenceType{
+            get { return null; }
         }
 
         public Type ChildLinkedSourceType { get; private set; }
 
+        public TIChildLinkedSource CreateSubLinkedSource(TIChildLinkedSourceModel iChildLinkedSourceModel, LoadedReferenceContext loadedReferenceContext) {
+            if (!(iChildLinkedSourceModel is TChildLinkedSourceModel)){
+                //stle: all error message should have a way to identity context: at least linked source and target property
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Sub linked source of type {0} cannot have model of type {1}.",
+                        typeof(TChildLinkedSource),
+                        typeof(TChildLinkedSourceModel)
+                    )
+                );
+
+            }
+
+            var childLinkedSourceModel = (TChildLinkedSourceModel)iChildLinkedSourceModel;
+
+            var subLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(
+                new List<TChildLinkedSourceModel>{ childLinkedSourceModel }, 
+                loadedReferenceContext
+            );
+            //stle: please make it explicit that include works at single value level not at list level
+            return subLinkedSources.SingleOrDefault();
+        }
     }
 }
