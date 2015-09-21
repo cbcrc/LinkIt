@@ -20,7 +20,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 .LinkSubLinkedSource(
                     linkedSource => linkedSource.Model.Subs,
                     linkedSource => linkedSource.Subs,
-                    reference => reference.GetType(),
+                    subContent => subContent.GetType(),
                     includes => includes
                         .WhenSub<SubContentWithImageLinkedSource>(
                             typeof(SubContentWithImage)
