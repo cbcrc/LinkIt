@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
@@ -12,59 +11,61 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
         private FakeReferenceLoader<WithPolymorphicSubLinkedSourceContent, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
-        //[SetUp]
-        //public void SetUp() {
-        //    var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-        //    loadLinkProtocolBuilder.For<WithPolymorphicSubLinkedSource>()
-        //        .IsRoot<string>()
-        //        .LoadLinkNestedLinkedSource(
-        //            linkedSource => linkedSource.Model.Subs,
-        //            linkedSource => linkedSource.Subs,
-        //            reference => reference.GetType(),
-        //            includes => includes
-        //                .When<SubContentWithImageLinkedSource, string>(
-        //                    "person",
-        //                    reference => reference.GetType().Name)
-        //        //.WhenSub<SubContentWithImageLinkedSource>(
-        //                //    typeof(SubContentWithImage)
-        //                //)
-        //                //.WhenSub<SubContentWithoutReferences>(
-        //                //    typeof(SubContentWithoutReferences)
-        //                //)
-        //        );
+        [SetUp]
+        public void SetUp() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
-        //    _fakeReferenceLoader =
-        //        new FakeReferenceLoader<WithPolymorphicSubLinkedSourceContent, string>(reference => reference.Id);
-        //    _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
-        //}
+            loadLinkProtocolBuilder.For<WithPolymorphicSubLinkedSource>()
+                .IsRoot<string>()
+                .LinkSubLinkedSource(
+                    linkedSource => linkedSource.Model.Subs,
+                    linkedSource => linkedSource.Subs,
+                    reference => reference.GetType(),
+                    includes => includes
+                        .WhenSub<SubContentWithImageLinkedSource>(
+                            typeof(SubContentWithImage)
+                        )
+                        .WhenSub<SubContentWithoutReferencesLinkedSource>(
+                            typeof(SubContentWithoutReferences)
+                        )
+                );
 
+            loadLinkProtocolBuilder.For<SubContentWithImageLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.ImageId,
+                    linkedSource => linkedSource.Image
+                );
 
+            _fakeReferenceLoader =
+                new FakeReferenceLoader<WithPolymorphicSubLinkedSourceContent, string>(reference => reference.Id);
+            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+        }
 
-        //[Test]
-        //public void LoadLink_SubContentWithoutReferences() {
-        //    _fakeReferenceLoader.FixValue(
-        //        new WithPolymorphicSubLinkedSourceContent {
-        //            Id = "1",
-        //            Subs = new List<IPolymorphicModel>
-        //            {
-        //                new SubContentWithImage
-        //                {
-        //                    Id="a",
-        //                    ImageId = "i-a"
-        //                },
-        //                new SubContentWithoutReferences
-        //                {
-        //                    Id="b",
-        //                    Title = "sub-b"
-        //                },
-        //            }
-        //        }
-        //    );
+        [Test]
+        public void LoadLink_SubContentWithoutReferences() {
+            _fakeReferenceLoader.FixValue(
+                new WithPolymorphicSubLinkedSourceContent {
+                    Id = "1",
+                    Subs = new List<IPolymorphicModel>
+                    {
+                        new SubContentWithImage
+                        {
+                            Id="a",
+                            ImageId = "i-a"
+                        },
+                        new SubContentWithoutReferences
+                        {
+                            Id="b",
+                            Title = "sub-b"
+                        },
+                    }
+                }
+            );
 
-        //    var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>("1");
+            var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>("1");
 
-        //    ApprovalsExt.VerifyPublicProperties(actual);
-        //}
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
 
         public class WithPolymorphicSubLinkedSource : ILinkedSource<WithPolymorphicSubLinkedSourceContent> {
             public WithPolymorphicSubLinkedSourceContent Model { get; set; }

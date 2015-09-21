@@ -1,0 +1,37 @@
+﻿{
+  "model": {
+    "id": "1",
+    "subs": [
+      {
+        "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImage, HeterogeneousDataSources.Tests",
+        "id": "a",
+        "imageId": "i-a"
+      },
+      {
+        "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferences, HeterogeneousDataSources.Tests",
+        "id": "b",
+        "title": "sub-b"
+      }
+    ]
+  },
+  "subs": [
+    {
+      "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImageLinkedSource, HeterogeneousDataSources.Tests",
+      "model": {
+        "id": "a",
+        "imageId": "i-a"
+      },
+      "image": {
+        "id": "i-a",
+        "alt": "alt-i-a"
+      }
+    },
+    {
+      "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferencesLinkedSource, HeterogeneousDataSources.Tests",
+      "model": {
+        "id": "b",
+        "title": "sub-b"
+      }
+    }
+  ]
+}
