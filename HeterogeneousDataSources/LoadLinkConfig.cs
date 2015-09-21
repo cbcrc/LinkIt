@@ -16,7 +16,7 @@ namespace HeterogeneousDataSources {
             var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
 
             EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(loadLinkExpressions);
-            EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
+            //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
 
             _referenceTypeByLoadingLevelByRootLinkedSourceType =
                 GetReferenceTypeByLoadingLevelByRootLinkedSourceType(
