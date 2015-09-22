@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
+namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public interface IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>: IPolymorphicInclude
+    public interface INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>: IInclude
     {
         void AddLookupIds(TLink link, LookupIdContext lookupIdContext);
         List<TIChildLinkedSource> CreateChildLinkedSources(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex);

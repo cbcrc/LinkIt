@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
+using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources
 {
     public class IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>
     {
-        private Dictionary<TDiscriminant, IPolymorphicInclude> _includeByDiscriminantValue
-            = new Dictionary<TDiscriminant, IPolymorphicInclude>();
+        private Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue
+            = new Dictionary<TDiscriminant, IInclude>();
 
         public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> When<TChildLinkedSource, TId>(
             TDiscriminant discriminantValue,
@@ -35,8 +35,8 @@ namespace HeterogeneousDataSources
             return this;
         }
 
-        private IPolymorphicInclude CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSource>(){
-            Type ctorGenericType = typeof(PolymorphicSubLinkedSourceInclude<,,>);
+        private IInclude CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSource>(){
+            Type ctorGenericType = typeof(SubLinkedSourceInclude<,,>);
 
             var iChildLinkedSourceType = typeof (TIChildLinkedSource); //stle:dry
             var childLinkedSourceType = typeof(TChildLinkedSource);
@@ -53,15 +53,15 @@ namespace HeterogeneousDataSources
             //stle: change to single once obsolete constructor is deleted
             var ctor = ctorSpecificType.GetConstructors().First();
 
-            return (IPolymorphicInclude)ctor.Invoke(new object[]{});
+            return (IInclude)ctor.Invoke(new object[]{});
         }
 
 
-        private IPolymorphicInclude CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
+        private IInclude CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
             Func<TLink, TId> getLookupIdFunc, 
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
-            Type ctorGenericType = typeof(PolymorphicNestedLinkedSourceInclude<,,,,,>);
+            Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
 
             var childLinkedSourceType = typeof (TChildLinkedSource);
             Type[] typeArgs ={
@@ -78,7 +78,7 @@ namespace HeterogeneousDataSources
             //stle: change to single once obsolete constructor is deleted
             var ctor = ctorSpecificType.GetConstructors().First();
 
-            return (IPolymorphicInclude)ctor.Invoke(
+            return (IInclude)ctor.Invoke(
                 new object[]{
                     getLookupIdFunc,
                     initChildLinkedSourceAction
@@ -86,7 +86,7 @@ namespace HeterogeneousDataSources
             );
         }
 
-        public Dictionary<TDiscriminant, IPolymorphicInclude> Build() {
+        public Dictionary<TDiscriminant, IInclude> Build() {
             return _includeByDiscriminantValue;
         }
     }

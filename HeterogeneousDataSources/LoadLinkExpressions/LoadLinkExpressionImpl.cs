@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
+namespace HeterogeneousDataSources.LoadLinkExpressions
 {
-    public class PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : ILoadLinkExpression, INestedLoadLinkExpression
+    public class LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : ILoadLinkExpression, INestedLoadLinkExpression
     {
         private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
         private readonly Func<TLinkedSource, List<TIChildLinkedSource>> _getReferences;
         private readonly Action<TLinkedSource, List<TIChildLinkedSource>> _setReferences;
         private readonly Func<TLink, TDiscriminant> _getDiscriminantFunc;
-        private readonly Dictionary<TDiscriminant, IPolymorphicInclude> _includes;
+        private readonly Dictionary<TDiscriminant, IInclude> _includes;
 
-        public PolymorphicNestedLinkedSourcesLoadLinkExpression(
+        public LoadLinkExpressionImpl(
             string linkTargetId,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
             //stle: http://stackoverflow.com/questions/7723744
             Func<TLinkedSource, List<TIChildLinkedSource>> getReferences,
             Action<TLinkedSource, List<TIChildLinkedSource>> setReferences,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
-            Dictionary<TDiscriminant, IPolymorphicInclude> includes,
+            Dictionary<TDiscriminant, IInclude> includes,
             LoadLinkExpressionType tempLoadLinkExpressionType
             )
         {
@@ -84,7 +85,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             foreach (var link in notNullLinks) {
                 var include = GetPolymorphicInclude(link);
                 var asSubLinkedSourceInclude =
-                    include as IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource>;
+                    include as ISubLinkedSourceInclude<TIChildLinkedSource>;
 
                 //stle: will not work if sub linked source is mixed with other expressions 
                 //This case is not supported for now
@@ -215,11 +216,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             return links;
         }
 
-        private IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> 
+        private INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> 
         GetSelectedPolymorphicNestedLinkedSourceInclude(TLink link) 
         {
             var castedSelectedInclude = GetPolymorphicInclude(link) 
-                as IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>;
+                as INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>;
 
             if (castedSelectedInclude==null){
                 throw new InvalidOperationException(
@@ -234,7 +235,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
             return castedSelectedInclude;
         }
 
-        private IPolymorphicInclude GetPolymorphicInclude(TLink link) {
+        private IInclude GetPolymorphicInclude(TLink link) {
             var discriminant = _getDiscriminantFunc(link);
             if (!_includes.ContainsKey(discriminant)) {
                 throw new InvalidOperationException(

@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
+namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class PolymorphicNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId>
-        : IPolymorphicNestedLinkedSourceInclude<TLinkedSource,TIChildLinkedSource, TLink>
+    public class NestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId>
+        : INestedLinkedSourceInclude<TLinkedSource,TIChildLinkedSource, TLink>
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;
         private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
 
-        public PolymorphicNestedLinkedSourceInclude(
+        public NestedLinkedSourceInclude(
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
         )

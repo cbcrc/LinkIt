@@ -43,13 +43,13 @@
     <Compile Include="IncludeBuilder.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />
-    <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicInclude.cs" />
-    <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicNestedLinkedSourceInclude.cs" />
-    <Compile Include="LoadLinkExpressions\Polymorphic\IPolymorphicSubLinkedSourceInclude.cs" />
-    <Compile Include="LoadLinkExpressions\Polymorphic\LinkWithIndex.cs" />
-    <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourceInclude.cs" />
-    <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicNestedLinkedSourcesLoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressions\Polymorphic\PolymorphicSubLinkedSourceInclude.cs">
+    <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\INestedLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\ISubLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\LinkWithIndex.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\NestedLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\LoadLinkExpressionImpl.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\SubLinkedSourceInclude.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LoadLinkExpressionTreeFactory.cs" />

@@ -1,4 +1,4 @@
-﻿namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
+﻿namespace HeterogeneousDataSources.LoadLinkExpressions
 {
     public class LinkWithIndex<TLink>{
         public LinkWithIndex(TLink link, int index){

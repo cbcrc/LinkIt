@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
+namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class PolymorphicSubLinkedSourceInclude<TIChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>
-        : IPolymorphicSubLinkedSourceInclude<TIChildLinkedSource>
+    public class SubLinkedSourceInclude<TIChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>
+        : ISubLinkedSourceInclude<TIChildLinkedSource>
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
-        public PolymorphicSubLinkedSourceInclude(){
+        public SubLinkedSourceInclude(){
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.LoadLinkExpressions.Polymorphic;
+using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources
 {
@@ -88,7 +88,7 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TId, bool>(
                 linkTarget.Id,
                 ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
                 GetReferencesFuncForSingleValue<TChildLinkedSource>(),
@@ -121,7 +121,7 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TId, bool>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TId, bool>(
                 linkTarget.Id,
                 getLookupIdsFunc,
                 linkTarget.GetTargetProperty,
@@ -147,7 +147,7 @@ namespace HeterogeneousDataSources
             var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
             includes(includeBuilder);
 
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
                 linkTarget.Id,
                 ToGetLookupIdsFuncForSingleValue(getLinkFunc),
                 GetReferencesFuncForSingleValue<TIChildLinkedSource>(),
@@ -171,7 +171,7 @@ namespace HeterogeneousDataSources
             var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
             includes(includeBuilder);
 
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
                 linkTarget.Id,
                 getLinksFunc,
                 linkTarget.GetTargetProperty,
@@ -184,7 +184,7 @@ namespace HeterogeneousDataSources
             return AddLoadLinkExpression(loadLinkExpression);
         }
 
-        private Dictionary<bool, IPolymorphicInclude> CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) {
+        private Dictionary<bool, IInclude> CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) {
             return CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                 CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
                     initChildLinkedSourceAction
@@ -192,10 +192,10 @@ namespace HeterogeneousDataSources
             );
         }
 
-        private IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
+        private INestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
-            Type ctorGenericType = typeof(PolymorphicNestedLinkedSourceInclude<,,,,,>);
+            Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
 
             var childLinkedSourceType = typeof(TChildLinkedSource);
             var idType = typeof(TId);
@@ -213,7 +213,7 @@ namespace HeterogeneousDataSources
             //stle: change to single once obsolete constructor is deleted
             var ctor = ctorSpecificType.GetConstructors().First();
 
-            return (IPolymorphicNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>)ctor.Invoke(
+            return (INestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>)ctor.Invoke(
                 new object[]{
                     CreateIdentityFunc<TId>(),
                     initChildLinkedSourceAction
@@ -231,14 +231,14 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
                 linkTarget.Id,
                 ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc),
                 GetReferencesFuncForSingleValue<TChildLinkedSource>(),
                 SetReferencesActionForSingleValue(linkTarget),
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    new PolymorphicSubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>()
+                    new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>()
                 ),
                 LoadLinkExpressionType.SubLinkedSource
             );
@@ -254,14 +254,14 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
                 linkTarget.Id,
                 getSubLinkedSourceModelsFunc,
                 linkTarget.GetTargetProperty,
                 linkTarget.SetTargetProperty,
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    new PolymorphicSubLinkedSourceInclude<TChildLinkedSource,TChildLinkedSource,TChildLinkedSourceModel>()
+                    new SubLinkedSourceInclude<TChildLinkedSource,TChildLinkedSource,TChildLinkedSourceModel>()
                 ),
                 LoadLinkExpressionType.SubLinkedSource
             );
@@ -278,7 +278,7 @@ namespace HeterogeneousDataSources
             var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>();
             includes(includeBuilder);
 
-            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>(
                 linkTarget.Id,
                 getSubLinkedSourceModelsFunc,
                 linkTarget.GetTargetProperty,
@@ -400,8 +400,8 @@ namespace HeterogeneousDataSources
             //using a special value work around this limitation of generics
         }
 
-        private Dictionary<bool, IPolymorphicInclude> CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(IPolymorphicInclude include) {
-            return new Dictionary<bool, IPolymorphicInclude>
+        private Dictionary<bool, IInclude> CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(IInclude include) {
+            return new Dictionary<bool, IInclude>
             {
                 {
                     true, //always one include when not polymorphic

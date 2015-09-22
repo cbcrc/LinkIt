@@ -1,8 +1,8 @@
 using System;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Polymorphic
+namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public interface IPolymorphicInclude
+    public interface IInclude
     {
         //stle: is this really common? sub linked source has no reference concept
         Type ReferenceType { get; }
