@@ -9,6 +9,21 @@ namespace HeterogeneousDataSources
     {
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
 
+
+        public void AddSingle<TReference, TId>(TId lookupId) {
+            if (lookupId == null) { return; }
+
+            var tReference = typeof(TReference);
+            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
+                _lookupIdsByReferenceType.Add(tReference, new List<TId>());
+            }
+
+            var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
+            currentLookupIds.Add(lookupId);
+        }
+
+
+        //stle: obsolete, rename AddSingle
         public void Add<TReference, TId>(List<TId> lookupIds)
         {
             //Assume that that lookupIds cannot contains null

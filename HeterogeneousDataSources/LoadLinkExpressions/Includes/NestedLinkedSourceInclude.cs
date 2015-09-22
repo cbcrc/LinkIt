@@ -24,22 +24,25 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public Type ReferenceType { get; private set; }
 
-        public void AddLookupIds(TLink link, LookupIdContext lookupIdContext){
+        public void AddLookupId(TLink link, LookupIdContext lookupIdContext){
             var lookupIds = GetLookupIds(link);
             lookupIdContext.Add<TChildLinkedSourceModel, TId>(lookupIds);
         }
 
-        public List<TIChildLinkedSource> CreateChildLinkedSources(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
-            //stle: dry with other load link expressions
-            var ids = GetLookupIds(link);
-            var references = loadedReferenceContext.GetOptionalReferences<TChildLinkedSourceModel, TId>(ids);
-            var childLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
+        public TIChildLinkedSource CreateChildLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
+            //stle: renenable
+            return default(TIChildLinkedSource);
 
-            InitChildLinkedSource(link, childLinkedSources, linkedSource, referenceIndex);
+            ////stle: dry with other load link expressions
+            //var ids = GetLookupIds(link);
+            //var references = loadedReferenceContext.GetOptionalReferences<TChildLinkedSourceModel, TId>(ids);
+            //var childLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
 
-            return childLinkedSources
-                .Cast<TIChildLinkedSource>()
-                .ToList();
+            //InitChildLinkedSource(link, childLinkedSources, linkedSource, referenceIndex);
+
+            //return childLinkedSources
+            //    .Cast<TIChildLinkedSource>()
+            //    .ToList();
         }
 
         private void InitChildLinkedSource(TLink link, List<TChildLinkedSource> childLinkedSources, TLinkedSource linkedSource, int referenceIndex){

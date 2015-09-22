@@ -60,7 +60,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
             foreach (var linkForReferenceType in linksForReferenceType) {
                 var include = GetSelectedPolymorphicNestedLinkedSourceInclude(linkForReferenceType);
-                include.AddLookupIds(linkForReferenceType, lookupIdContext);
+                include.AddLookupId(linkForReferenceType, lookupIdContext);
             }
         }
 
@@ -137,12 +137,15 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var include = GetSelectedPolymorphicNestedLinkedSourceInclude(link);
             if (include.ReferenceType != referenceTypeToBeLinked) { return; }
 
-            var childLinkedSources = include
-                .CreateChildLinkedSources(link, loadedReferenceContext, linkedSource, 0)
-                .Where(childLinkedSource => childLinkedSource != null)
-                .ToList();
+            var childLinkedSource = include
+                .CreateChildLinkedSource(link, loadedReferenceContext, linkedSource, 0);
 
-            _setReferences(linkedSource, childLinkedSources);
+            //stle: simplify that
+            var asChildLinkedSources = childLinkedSource != null
+                ? new List<TIChildLinkedSource> { childLinkedSource }
+                : new List<TIChildLinkedSource>();
+
+            _setReferences(linkedSource, asChildLinkedSources);
         }
 
         private void LinkNestedLinkedSourceListWithManyReferences(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
@@ -156,15 +159,14 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             {
                 var include = GetSelectedPolymorphicNestedLinkedSourceInclude(linkToEntityOfReferenceType.Link);
 
-                var childLinkedSources = include.CreateChildLinkedSources(
+                var childLinkedSource = include.CreateChildLinkedSource(
                     linkToEntityOfReferenceType.Link,
                     loadedReferenceContext,
                     linkedSource,
                     linkToEntityOfReferenceType.Index
                 );
 
-                //stle: need single
-                _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSources.SingleOrDefault();
+                _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSource;
             }
         }
 
