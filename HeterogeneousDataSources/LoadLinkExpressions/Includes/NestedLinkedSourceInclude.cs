@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
@@ -24,42 +22,32 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public Type ReferenceType { get; private set; }
 
-        public void AddLookupId(TLink link, LookupIdContext lookupIdContext){
-            var lookupIds = GetLookupIds(link);
-            lookupIdContext.Add<TChildLinkedSourceModel, TId>(lookupIds);
+        public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
+        {
+            var lookupId = _getLookupIdFunc(link);
+            lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
         public TIChildLinkedSource CreateChildLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
-            //stle: renenable
-            return default(TIChildLinkedSource);
+            //stle: dry with other load link expressions
+            var lookupId = _getLookupIdFunc(link);
+            var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
+            var childLinkedSource = LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+                reference, 
+                loadedReferenceContext
+            );
 
-            ////stle: dry with other load link expressions
-            //var ids = GetLookupIds(link);
-            //var references = loadedReferenceContext.GetOptionalReferences<TChildLinkedSourceModel, TId>(ids);
-            //var childLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
+            InitChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
 
-            //InitChildLinkedSource(link, childLinkedSources, linkedSource, referenceIndex);
-
-            //return childLinkedSources
-            //    .Cast<TIChildLinkedSource>()
-            //    .ToList();
+            return childLinkedSource;
         }
 
-        private void InitChildLinkedSource(TLink link, List<TChildLinkedSource> childLinkedSources, TLinkedSource linkedSource, int referenceIndex){
-            var childLinkedSource = childLinkedSources.SingleOrDefault();
-            if (childLinkedSource == null) { return; }
+        private void InitChildLinkedSource(TLinkedSource linkedSource, int referenceIndex, TChildLinkedSource childLinkedSource) {
+        if (childLinkedSource == null) { return; }
 
             if (_initChildLinkedSourceAction != null) {
-                _initChildLinkedSourceAction(linkedSource, referenceIndex, childLinkedSources.Single());
+                _initChildLinkedSourceAction(linkedSource, referenceIndex, childLinkedSource);
             }
-        }
-
-
-        //stle: dry with load link expressions
-        private List<TId> GetLookupIds(TLink link) {
-            var lookupId = _getLookupIdFunc(link);
-            var lookupIds = new List<TId> { lookupId };
-            return LoadLinkExpressionUtil.GetCleanedLookupIds(lookupIds);
         }
 
         public Type ChildLinkedSourceType { get; private set; }

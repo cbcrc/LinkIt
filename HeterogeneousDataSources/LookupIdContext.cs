@@ -11,12 +11,16 @@ namespace HeterogeneousDataSources
 
 
         public void AddSingle<TReference, TId>(TId lookupId) {
-            if (lookupId == null) { return; }
-
             var tReference = typeof(TReference);
             if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
                 _lookupIdsByReferenceType.Add(tReference, new List<TId>());
             }
+
+            //stle: think of how we can
+            //  avoid depending on reference loader to optimize for empty ids
+            //  and
+            //  to have a simple list initilization mechanism in linking (especially in poly)
+            if (lookupId == null) { return; }
 
             var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
             currentLookupIds.Add(lookupId);

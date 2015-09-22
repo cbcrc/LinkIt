@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
     //stle: refactor that
     //stle: hey you and your inheritance crap! Try a functional approach
     internal static class LoadLinkExpressionUtil {
-        internal static List<TLinkedSource> CreateLinkedSources<TLinkedSource, TLinkedSourceModel>(List<TLinkedSourceModel> models, LoadedReferenceContext loadedReferenceContext)
-            where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
+
+        internal static TLinkedSource CreateLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, LoadedReferenceContext loadedReferenceContext)
+            where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new() 
         {
-            if (models == null) { return new List<TLinkedSource>(); }
+            if (model == null) { return null; }
 
-            var linkedSources = models
-                .Where(model => model != null)
-                .Select(model => new TLinkedSource {Model = model})
-                .ToList();
+            var linkedSource = new TLinkedSource {Model = model};
 
-            loadedReferenceContext.AddLinkedSourcesToBeBuilt(linkedSources);
+            loadedReferenceContext.AddLinkedSourceToBeBuilt(linkedSource);
 
-            return linkedSources;
+            return linkedSource;
         }
 
         internal static void EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(object linkedSource) {

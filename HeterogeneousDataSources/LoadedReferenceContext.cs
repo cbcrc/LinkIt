@@ -47,13 +47,13 @@ namespace HeterogeneousDataSources {
             referenceDictionnary.Add(id,reference);
         }
 
-        public void AddLinkedSourcesToBeBuilt<TLinkedSource>(List<TLinkedSource> linkedSources)
+        public void AddLinkedSourceToBeBuilt<TLinkedSource>(TLinkedSource linkedSource)
         {
-            var linkedSourcesAsObject = linkedSources
-                .Where(linkedSource=>linkedSources!=null)
-                .Cast<object>()
-                .ToList();
-            _linkedSourcesToBeBuilt.AddRange(linkedSourcesAsObject);
+            if (linkedSource == null){
+                throw new InvalidOperationException("Cannot add null linked source to be built.");
+            }
+
+            _linkedSourcesToBeBuilt.Add(linkedSource);
         }
 
         public List<object> LinkedSourcesToBeBuilt{
@@ -85,6 +85,22 @@ namespace HeterogeneousDataSources {
             return (Dictionary<TId, TReference>)_referenceDictionaryByReferenceType[tReference];
         }
 
+        public TReference GetOptionalReference<TReference, TId>(TId lookupId) {
+            var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
+
+            //stle: do we want to filter out null? 
+                //I'm not sure, maybe it's not the linker responsability
+                //Maybe we do not have to clear the list of null
+                //Think about the impact on transform, how can we filter out easily?
+            //stle: do wa want to allow for struct as TReference? 
+                //Does not make sense to me, but why not, especially if null are not filtered out anymore      
+            if (!referenceDictionnary.ContainsKey(lookupId)) { return default(TReference); }
+
+            return referenceDictionnary[lookupId];
+        }
+
+
+        //stle: obsolete
         public List<TReference> GetOptionalReferences<TReference, TId>(List<TId> ids)
         {
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();

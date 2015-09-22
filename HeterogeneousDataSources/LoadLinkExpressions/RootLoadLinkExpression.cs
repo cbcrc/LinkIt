@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
     public class RootLoadLinkExpression<TChildLinkedSource, TChildLinkedSourceModel, TId>
@@ -30,7 +31,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
         //stle: simplify this please!
         private void LinkNestedLinkedSource(TId linkedSourceForBase, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
             var references = GetReferences(linkedSourceForBase, loadedReferenceContext);
-            LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(references, loadedReferenceContext);
+
+            LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+                references.SingleOrDefault(), 
+                loadedReferenceContext
+            );
         }
 
         public override LoadLinkExpressionType LoadLinkExpressionType {

@@ -59,7 +59,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var linksForReferenceType = GetLinksForReferenceType((TLinkedSource)linkedSource, referenceTypeToBeLoaded);
 
             foreach (var linkForReferenceType in linksForReferenceType) {
-                var include = GetSelectedPolymorphicNestedLinkedSourceInclude(linkForReferenceType);
+                var include = GetSelectedNestedLinkedSourceInclude(linkForReferenceType);
                 include.AddLookupId(linkForReferenceType, lookupIdContext);
             }
         }
@@ -134,7 +134,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 return;
             }
 
-            var include = GetSelectedPolymorphicNestedLinkedSourceInclude(link);
+            var include = GetSelectedNestedLinkedSourceInclude(link);
             if (include.ReferenceType != referenceTypeToBeLinked) { return; }
 
             var childLinkedSource = include
@@ -157,7 +157,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
             foreach (var linkToEntityOfReferenceType in linksToEntityOfReferenceType)
             {
-                var include = GetSelectedPolymorphicNestedLinkedSourceInclude(linkToEntityOfReferenceType.Link);
+                var include = GetSelectedNestedLinkedSourceInclude(linkToEntityOfReferenceType.Link);
 
                 var childLinkedSource = include.CreateChildLinkedSource(
                     linkToEntityOfReferenceType.Link,
@@ -202,7 +202,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             return links
                 .Select((link, index) => new LinkWithIndex<TLink>(link, index))
                 .Where(linkWithIndex => linkWithIndex.Link != null)
-                .Where(linkWithIndex => GetSelectedPolymorphicNestedLinkedSourceInclude(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded)
+                .Where(linkWithIndex => GetSelectedNestedLinkedSourceInclude(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded)
                 .ToList();
         }
 
@@ -219,7 +219,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         }
 
         private INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> 
-        GetSelectedPolymorphicNestedLinkedSourceInclude(TLink link) 
+        GetSelectedNestedLinkedSourceInclude(TLink link) 
         {
             var castedSelectedInclude = GetPolymorphicInclude(link) 
                 as INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>;

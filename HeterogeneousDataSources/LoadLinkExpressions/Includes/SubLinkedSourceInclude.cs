@@ -32,12 +32,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
             var castedChildLinkedSourceModel = (TChildLinkedSourceModel)childLinkedSourceModel;
 
-            var subLinkedSources = LoadLinkExpressionUtil.CreateLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(
-                new List<TChildLinkedSourceModel> { castedChildLinkedSourceModel }, 
+            return LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+                castedChildLinkedSourceModel, 
                 loadedReferenceContext
             );
-            //stle: please make it explicit that include works at single value level not at list level
-            return subLinkedSources.SingleOrDefault();
         }
     }
 }
