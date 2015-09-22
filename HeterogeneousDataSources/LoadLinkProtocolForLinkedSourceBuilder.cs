@@ -231,12 +231,19 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            return AddLoadLinkExpression(
-                new SubLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>(
-                    ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc),
-                    ToLinkActionForSingleValue(linkTarget)
-                )
+            var loadLinkExpression = new PolymorphicNestedLinkedSourcesLoadLinkExpression<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
+                linkTarget.Id,
+                ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc),
+                GetReferencesFuncForSingleValue<TChildLinkedSource>(),
+                SetReferencesActionForSingleValue(linkTarget),
+                link => true,
+                CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
+                    new PolymorphicSubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>()
+                ),
+                LoadLinkExpressionType.SubLinkedSource
             );
+
+            return AddLoadLinkExpression(loadLinkExpression);
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
