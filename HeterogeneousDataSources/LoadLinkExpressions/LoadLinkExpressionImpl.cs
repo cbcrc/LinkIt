@@ -171,35 +171,33 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
 
 
-
-
-
-
         public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
         {
-            //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-
             SetLinkTargetValue(
-                (TLinkedSource)linkedSource, 
+                linkedSource, 
                 linkedWithIndex => 
                     GetNestedLinkedSource(
                         linkedWithIndex,
                         loadedReferenceContext,
                         referenceTypeToBeLinked,
-                        (TLinkedSource)linkedSource
+                        linkedSource
                     )
             );
         }
 
+        //stle: maybe responsabilize the Include
+        private TIChildLinkedSource GetNestedLinkedSource(
+            LinkWithIndex<TLink> linkWithIndex,
+            LoadedReferenceContext loadedReferenceContext,
+            Type referenceTypeToBeLinked,
+            object linkedSource)
+        {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
-
-
-
-
-
-
+            return GetNestedLinkedSource(linkWithIndex, loadedReferenceContext, referenceTypeToBeLinked, (TLinkedSource)linkedSource);
+        }
 
         //stle: maybe responsabilize the Include
         private TIChildLinkedSource GetNestedLinkedSource(
@@ -223,6 +221,23 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 linkWithIndex.Index
             );
         }
+
+
+
+
+
+
+
+
+
+
+
+
+        private void SetLinkTargetValue(object linkedSource, Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink) {
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            SetLinkTargetValue((TLinkedSource)linkedSource,getLinkTargetValueForLink);
+        }
+
 
         private void SetLinkTargetValue(TLinkedSource linkedSource, Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink)
         {
@@ -287,6 +302,14 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             );
         }
 
+
+
+
+
+
+
+
+
         private List<LinkWithIndex<TLink>> GetListOfLinkWithIndex(TLinkedSource linkedSource) 
         {
             var links = GetLinks(linkedSource);
@@ -295,118 +318,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 .Select((link, index) => new LinkWithIndex<TLink>(link, index))
                 .ToList();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private void LinkNestedLinkedSource(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
-            Type referenceTypeToBeLinked)
-        {
-            //stle: dry with link count and null
-            if (GetLinks(linkedSource).Count == 0)
-            {
-                LinkNestedLinkedSourceListWithZeroReference(linkedSource);
-            }
-            if (GetLinks(linkedSource).Count == 1)
-            {
-                LinkNestedLinkedSourceListWithOneReference(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
-            }
-            else
-            {
-                LinkNestedLinkedSourceListWithManyReferences(linkedSource, loadedReferenceContext,
-                    referenceTypeToBeLinked);
-            }
-        }
-
-        private void LinkNestedLinkedSourceListWithZeroReference(TLinkedSource linkedSource)
-        {
-            _setReferences(linkedSource, new List<TIChildLinkedSource>());
-        }
-
-        private void LinkNestedLinkedSourceListWithOneReference(TLinkedSource linkedSource,
-            LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
-        {
-            var linksToEntityOfReferenceType = GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLinked);
-
-            //If not of the reference type to be linked
-            if (!linksToEntityOfReferenceType.Any())
-            {
-                return;
-            }
-
-            var link = linksToEntityOfReferenceType.Single().Link;
-
-            var include = _includeSet.GetIncludeWithCreateNestedLinkedSource(link);
-
-            //stle: temp to remove expression type
-            if (include == null)
-            {
-                return;
-            }
-
-            var childLinkedSource = include
-                .CreateNestedLinkedSource(link, loadedReferenceContext, linkedSource, 0);
-
-            _setReferences(linkedSource, new List<TIChildLinkedSource> {childLinkedSource});
-        }
-
-        private void LinkNestedLinkedSourceListWithManyReferences(TLinkedSource linkedSource,
-            LoadedReferenceContext loadedReferenceContext,
-            Type referenceTypeToBeLinked)
-        {
-            InitListOfReferencesIfNull(linkedSource);
-
-            var linksToEntityOfReferenceType = GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLinked);
-
-            foreach (var linkToEntityOfReferenceType in linksToEntityOfReferenceType)
-            {
-                var include = _includeSet.GetIncludeWithCreateNestedLinkedSource(linkToEntityOfReferenceType.Link);
-
-                //stle: temp to remove expression type
-                if (include != null)
-                {
-                    var childLinkedSource = include.CreateNestedLinkedSource(
-                        linkToEntityOfReferenceType.Link,
-                        loadedReferenceContext,
-                        linkedSource,
-                        linkToEntityOfReferenceType.Index
-                        );
-
-                    _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSource;
-                }
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         private void InitListOfReferencesIfNull(TLinkedSource linkedSource)
         {
