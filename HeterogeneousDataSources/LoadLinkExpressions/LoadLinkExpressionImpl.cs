@@ -177,6 +177,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             LinkNestedLinkedSource((TLinkedSource) linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
         }
 
+
+
         private void LinkNestedLinkedSource(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
         {
@@ -225,12 +227,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var childLinkedSource = include
                 .CreateNestedLinkedSource(link, loadedReferenceContext, linkedSource, 0);
 
-            //stle: simplify that
-            var asChildLinkedSources = childLinkedSource != null
-                ? new List<TIChildLinkedSource> {childLinkedSource}
-                : new List<TIChildLinkedSource>();
-
-            _setReferences(linkedSource, asChildLinkedSources);
+            _setReferences(linkedSource, new List<TIChildLinkedSource> {childLinkedSource});
         }
 
         private void LinkNestedLinkedSourceListWithManyReferences(TLinkedSource linkedSource,
@@ -243,7 +240,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
             foreach (var linkToEntityOfReferenceType in linksToEntityOfReferenceType)
             {
-                //stle:dry for Generic passing, make a GetNestedInclude, etc.
                 var include = _includeSet.GetIncludeWithCreateNestedLinkedSource(linkToEntityOfReferenceType.Link);
 
                 //stle: temp to remove expression type

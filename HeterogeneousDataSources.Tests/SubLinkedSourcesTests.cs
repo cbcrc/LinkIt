@@ -73,7 +73,7 @@ namespace HeterogeneousDataSources.Tests
         }
 
         [Test]
-        public void LoadLink_SubLinkedSourcesWithNullInReferenceIds_ShouldIgnoreNull() {
+        public void LoadLink_SubLinkedSourcesWithNullInReferenceIds_ShouldLinkNull() {
             _fakeReferenceLoader.FixValue(
                 new SubContentsOwner {
                     Id = "1",
