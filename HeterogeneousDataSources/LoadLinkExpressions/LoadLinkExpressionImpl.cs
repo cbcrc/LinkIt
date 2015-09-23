@@ -71,50 +71,25 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
-            //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-
-            LinkSubLinkedSources((TLinkedSource) linkedSource, loadedReferenceContext);
+            SetLinkTargetValue(
+                linkedSource,
+                linkWithIndex =>
+                    GetSubLinkedSource(
+                        linkWithIndex,
+                        loadedReferenceContext
+                    )
+            );
         }
 
-        public void LinkSubLinkedSources(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
-        {
-            var tempIgnoreMixedMode = false;
-            var subLinkedSources = new List<TIChildLinkedSource>();
-
-            var links = GetLinks(linkedSource);
-
-            //stle: this is not a link and not a reference but a sub linked source model
-            //      find a good abstraction for the concept
-            foreach (var link in links)
-            {
-                if (link == null)
-                {
-                    subLinkedSources.Add(default(TIChildLinkedSource));
-                }
-                else
-                {
-                    var include = _includeSet.GetIncludeWithCreateSubLinkedSource(link);
-
-                    //stle: will not work if sub linked source is mixed with other expressions 
-                    //This case is not supported for now
-                    if (include == null)
-                    {
-                        tempIgnoreMixedMode = true;
-                    }
-                    else
-                    {
-                        var subLinkedSource = include.CreateSubLinkedSource(link, loadedReferenceContext);
-                        //stle: use linq
-                        subLinkedSources.Add(subLinkedSource);
-                    }
-                }
+        private TIChildLinkedSource GetSubLinkedSource(LinkWithIndex<TLink> linkWithIndex, LoadedReferenceContext loadedReferenceContext) {
+            //stle: dry on no include
+            var include = _includeSet.GetIncludeWithCreateSubLinkedSource(linkWithIndex.Link);
+            if (include == null) {
+                //stle: default mean do not assign
+                return default(TIChildLinkedSource);
             }
 
-            if (!tempIgnoreMixedMode)
-            {
-                _setReferences(linkedSource, subLinkedSources);
-            }
+            return include.CreateSubLinkedSource(linkWithIndex.Link, loadedReferenceContext);
         }
 
         public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
