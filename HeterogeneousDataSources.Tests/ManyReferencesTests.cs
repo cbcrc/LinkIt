@@ -55,7 +55,7 @@ namespace HeterogeneousDataSources.Tests
         }
 
         [Test]
-        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldIgnoreNull() {
+        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull() {
             _fakeReferenceLoader.FixValue(
                 new ManyReferencesContent {
                     Id = 1,
@@ -67,7 +67,8 @@ namespace HeterogeneousDataSources.Tests
 
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>(1);
 
-            Assert.That(actual.FavoriteImages.Count, Is.EqualTo(2));
+            Assert.That(actual.FavoriteImages.Count, Is.EqualTo(3));
+            Assert.That(actual.FavoriteImages[1], Is.Null);
         }
 
         [Test]
@@ -105,7 +106,7 @@ namespace HeterogeneousDataSources.Tests
 
 
         [Test]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkEmptySet() {
+        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             _fakeReferenceLoader.FixValue(
                 new ManyReferencesContent {
                     Id = 1,
@@ -117,7 +118,7 @@ namespace HeterogeneousDataSources.Tests
 
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>(1);
 
-            Assert.That(actual.FavoriteImages, Is.Empty);
+            Assert.That(actual.FavoriteImages, Is.EquivalentTo(new List<Image>{null,null}));
         }
 
     }

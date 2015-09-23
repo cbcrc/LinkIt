@@ -88,7 +88,8 @@ namespace HeterogeneousDataSources.Tests
 
             var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>("1");
 
-            Assert.That(actual.SubSubContents.Count, Is.EqualTo(2));
+            Assert.That(actual.SubSubContents.Count, Is.EqualTo(3));
+            Assert.That(actual.SubSubContents[1], Is.Null);
         }
 
         [Test]

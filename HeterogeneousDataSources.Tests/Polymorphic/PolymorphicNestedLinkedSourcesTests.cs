@@ -67,7 +67,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
         }
 
         [Test]
-        public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldIgnoreNull() {
+        public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldLinkNull() {
             _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicContents {
                     Id = "1",
@@ -89,7 +89,8 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
-            Assert.That(actual.Contents.Count, Is.EqualTo(2));
+            Assert.That(actual.Contents.Count, Is.EqualTo(3));
+            Assert.That(actual.Contents[1], Is.Null);
         }
 
         [Test]
@@ -137,7 +138,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
         }
 
         [Test]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkEmptySet() {
+        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             _fakeReferenceLoader.FixValue(
                 new WithNestedPolymorphicContents {
                     Id = "1",
@@ -158,7 +159,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
 
-            Assert.That(actual.Contents, Is.Empty);
+            Assert.That(actual.Contents, Is.EquivalentTo(new List<IPolymorphicSource>{null,null}));
         }
 
         public class WithNestedPolymorphicContentsLinkedSource : ILinkedSource<WithNestedPolymorphicContents> {

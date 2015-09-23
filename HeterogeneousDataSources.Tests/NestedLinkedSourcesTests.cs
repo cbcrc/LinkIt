@@ -49,7 +49,7 @@ namespace HeterogeneousDataSources.Tests {
         }
 
         [Test]
-        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldIgnoreNull() {
+        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull() {
             _fakeReferenceLoader.FixValue(
                 new NestedContents {
                     Id = 1,
@@ -59,7 +59,8 @@ namespace HeterogeneousDataSources.Tests {
 
             var actual = _sut.LoadLink<NestedLinkedSources>(1);
 
-            Assert.That(actual.Authors.Count, Is.EqualTo(2));
+            Assert.That(actual.Authors.Count, Is.EqualTo(3));
+            Assert.That(actual.Authors[1], Is.Null);
         }
 
         [Test]
@@ -94,7 +95,7 @@ namespace HeterogeneousDataSources.Tests {
         }
 
         [Test]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkEmptySet() {
+        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             _fakeReferenceLoader.FixValue(
                 new NestedContents {
                     Id = 1,
@@ -104,7 +105,7 @@ namespace HeterogeneousDataSources.Tests {
 
             var actual = _sut.LoadLink<NestedLinkedSources>(1);
 
-            Assert.That(actual.Authors, Is.Empty);
+            Assert.That(actual.Authors, Is.EquivalentTo(new List<PersonLinkedSource>{null,null}));
         }
 
     }

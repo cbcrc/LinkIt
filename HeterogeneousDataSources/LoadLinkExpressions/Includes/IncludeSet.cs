@@ -43,6 +43,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         private TInclude GetInclude<TInclude>(TLink link) 
             where TInclude:class
         {
+            if (link == null){
+                throw new ArgumentNullException("link","Cannot invoke GetInclude with a null link."); 
+            }
+
             var discriminant = _getDiscriminantFunc(link);
             if (!_includes.ContainsKey(discriminant)) {
                 throw new InvalidOperationException(

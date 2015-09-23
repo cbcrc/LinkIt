@@ -82,27 +82,32 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var tempIgnoreMixedMode = false;
             var subLinkedSources = new List<TIChildLinkedSource>();
 
-            var notNullLinks = GetLinks(linkedSource)
-                .Where(link => link != null)
-                .ToList();
+            var links = GetLinks(linkedSource);
 
             //stle: this is not a link and not a reference but a sub linked source model
             //      find a good abstraction for the concept
-            foreach (var link in notNullLinks)
+            foreach (var link in links)
             {
-                var include = _includeSet.GetIncludeWithCreateSubLinkedSource(link);
-
-                //stle: will not work if sub linked source is mixed with other expressions 
-                //This case is not supported for now
-                if (include == null)
+                if (link == null)
                 {
-                    tempIgnoreMixedMode = true;
+                    subLinkedSources.Add(default(TIChildLinkedSource));
                 }
                 else
                 {
-                    var subLinkedSource = include.CreateSubLinkedSource(link, loadedReferenceContext);
-                    //stle: use linq
-                    subLinkedSources.Add(subLinkedSource);
+                    var include = _includeSet.GetIncludeWithCreateSubLinkedSource(link);
+
+                    //stle: will not work if sub linked source is mixed with other expressions 
+                    //This case is not supported for now
+                    if (include == null)
+                    {
+                        tempIgnoreMixedMode = true;
+                    }
+                    else
+                    {
+                        var subLinkedSource = include.CreateSubLinkedSource(link, loadedReferenceContext);
+                        //stle: use linq
+                        subLinkedSources.Add(subLinkedSource);
+                    }
                 }
             }
 
@@ -125,27 +130,32 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var tempIgnoreMixedMode = false;
             var references = new List<TIChildLinkedSource>();
 
-            var notNullLinks = GetLinks(linkedSource)
-                .Where(link => link != null)
-                .ToList();
+            var links = GetLinks(linkedSource).ToList();
 
             //stle: this is not a link and not a reference but a sub linked source model
             //      find a good abstraction for the concept
-            foreach (var link in notNullLinks)
+            foreach (var link in links)
             {
-                var include = _includeSet.GetIncludeWithGetReference(link);
-
-                //stle: will not work if sub linked source is mixed with other expressions 
-                //This case is not supported for now
-                if (include == null)
-                {
-                    tempIgnoreMixedMode = true;
+                if (link == null){
+                    references.Add(default(TIChildLinkedSource));
                 }
                 else
                 {
-                    var reference = include.GetReference(link, loadedReferenceContext);
-                    //stle: use linq
-                    references.Add(reference);
+
+                    var include = _includeSet.GetIncludeWithGetReference(link);
+
+                    //stle: will not work if sub linked source is mixed with other expressions 
+                    //This case is not supported for now
+                    if (include == null)
+                    {
+                        tempIgnoreMixedMode = true;
+                    }
+                    else
+                    {
+                        var reference = include.GetReference(link, loadedReferenceContext);
+                        //stle: use linq
+                        references.Add(reference);
+                    }
                 }
             }
 
@@ -154,7 +164,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 _setReferences(
                     linkedSource,
                     references
-                        .Where(reference => reference != null)
                         .ToList()
                     );
             }
@@ -255,21 +264,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         private void InitListOfReferencesIfNull(TLinkedSource linkedSource,
             LoadedReferenceContext loadedReferenceContext)
         {
-            if (_getReferences(linkedSource) == null)
-            {
+            if (_getReferences(linkedSource) == null){
                 var polymorphicListToBeBuilt = new TIChildLinkedSource[GetLinkCount(linkedSource)].ToList();
-                loadedReferenceContext.OnLinkCompleted(
-                    () => RemoveNullFromPolymorphicList(polymorphicListToBeBuilt)
-                    );
-
                 _setReferences(linkedSource, polymorphicListToBeBuilt);
             }
-        }
-
-        private void RemoveNullFromPolymorphicList<TIChildLinkedSource>(
-            List<TIChildLinkedSource> polymorphicListToBeBuilt)
-        {
-            polymorphicListToBeBuilt.RemoveAll(item => item == null);
         }
 
         private List<TLink> GetLinksForReferenceType(TLinkedSource linkedSource, Type referenceTypeToBeLoaded)
