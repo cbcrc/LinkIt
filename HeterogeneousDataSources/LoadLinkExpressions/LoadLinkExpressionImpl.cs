@@ -119,66 +119,36 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
-            //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            LinkReference((TLinkedSource) linkedSource, loadedReferenceContext);
+            SetLinkTargetValue(
+                linkedSource,
+                linkWithIndex =>
+                    GetReference(
+                        linkWithIndex,
+                        loadedReferenceContext
+                    )
+            );
         }
 
-        //stle: dry
-        public void LinkReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
+        private TIChildLinkedSource GetReference(LinkWithIndex<TLink> linkWithIndex, LoadedReferenceContext loadedReferenceContext)
         {
-            var tempIgnoreMixedMode = false;
-            var references = new List<TIChildLinkedSource>();
-
-            var links = GetLinks(linkedSource).ToList();
-
-            //stle: this is not a link and not a reference but a sub linked source model
-            //      find a good abstraction for the concept
-            foreach (var link in links)
-            {
-                if (link == null){
-                    references.Add(default(TIChildLinkedSource));
-                }
-                else
-                {
-
-                    var include = _includeSet.GetIncludeWithGetReference(link);
-
-                    //stle: will not work if sub linked source is mixed with other expressions 
-                    //This case is not supported for now
-                    if (include == null)
-                    {
-                        tempIgnoreMixedMode = true;
-                    }
-                    else
-                    {
-                        var reference = include.GetReference(link, loadedReferenceContext);
-                        //stle: use linq
-                        references.Add(reference);
-                    }
-                }
+            //stle: dry on no include
+            var include = _includeSet.GetIncludeWithGetReference(linkWithIndex.Link);
+            if (include == null){
+                //stle: default mean do not assign
+                return default(TIChildLinkedSource);
             }
 
-            if (!tempIgnoreMixedMode)
-            {
-                _setReferences(
-                    linkedSource,
-                    references
-                        .ToList()
-                    );
-            }
+            return include.GetReference(linkWithIndex.Link, loadedReferenceContext);
         }
-
-
 
         public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
         {
             SetLinkTargetValue(
                 linkedSource, 
-                linkedWithIndex => 
+                linkWithIndex => 
                     GetNestedLinkedSource(
-                        linkedWithIndex,
+                        linkWithIndex,
                         loadedReferenceContext,
                         referenceTypeToBeLinked,
                         linkedSource
