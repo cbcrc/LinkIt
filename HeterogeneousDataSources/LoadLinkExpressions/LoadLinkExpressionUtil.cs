@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions {
     //stle: refactor that
@@ -43,25 +41,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions {
                         String.Join(",",loadLinkExpression.ReferenceTypes),
                         loadLinkExpression.LinkedSourceType
                     )
-                );
-            }
-        }
-
-        //stle: functional approach is coming!
-        internal static List<TId> GetCleanedLookupIds<TId>(List<TId> lookupIds){
-            if (lookupIds == null) { return new List<TId>(); }
-
-            return lookupIds
-                .Where(id => id != null)
-                .ToList();
-        }
-
-        //stle: dry
-        public static void EnsureGenericParameterCannotBeList<T>(string context, string genericParameterName) {
-            if (typeof(List<>).IsAssignableFrom(typeof(T))) {
-                throw new ArgumentException(
-                    string.Format("{0}: {1} cannot be a list.", context, genericParameterName),
-                    genericParameterName
                 );
             }
         }

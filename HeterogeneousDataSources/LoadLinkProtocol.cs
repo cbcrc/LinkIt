@@ -74,7 +74,7 @@ namespace HeterogeneousDataSources {
 
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded){
                 foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt) {
-                    var loadLinkExpressions = _config.GetLoadExpressions(linkedSource, referenceTypeToBeLoaded);
+                    var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                     foreach (var loadLinkExpression in loadLinkExpressions) {
                         loadLinkExpression.AddLookupIds(linkedSource, lookupIdContext, referenceTypeToBeLoaded);
                     }
@@ -87,7 +87,7 @@ namespace HeterogeneousDataSources {
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded){
                 foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt)
                 {
-                    var loadLinkExpressions = _config.GetLinkNestedLinkedSourceExpressions(linkedSource, referenceTypeToBeLoaded);
+                    var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                     foreach (var loadLinkExpression in loadLinkExpressions)
                     {
                         loadLinkExpression.LinkNestedLinkedSource(linkedSource, loadedReferenceContext, referenceTypeToBeLoaded);
@@ -114,7 +114,7 @@ namespace HeterogeneousDataSources {
 
         private void LinkReferences(LoadedReferenceContext loadedReferenceContext) {
             foreach (var linkedSource in loadedReferenceContext.LinkedSourcesToBeBuilt) {
-                var loadLinkExpressions = _config.GetLinkReferenceExpressions(linkedSource);
+                var loadLinkExpressions = _config.GetLoadExpressions(linkedSource);
                 foreach (var loadLinkExpression in loadLinkExpressions) {
                     loadLinkExpression.LinkReference(
                         linkedSource, 

@@ -19,20 +19,4 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext);
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
     }
-
-    public interface ILoadLinkExpression2 {
-        //remove: LinkTargetId / link target already contains LinkedSourceType
-        string LinkTargetId { get; }
-        Type LinkedSourceType { get; }
-
-        //broke cycle detection, move to includes
-        List<Type> ReferenceTypes { get; }
-
-        void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
-
-        void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked);
-        void LinkSubLinkedSource(object linkedSource);
-        void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
-    }
-
 }

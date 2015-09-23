@@ -7,9 +7,6 @@ namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private readonly Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
-        private readonly List<ILoadLinkExpression> _referenceLoadLinkExpressions;
-        private readonly List<ILoadLinkExpression> _nestedLinkedSourceLoadLinkExpressions;
-        private readonly List<ILoadLinkExpression> _subLinkedSourceLoadLinkExpressions;
 
         #region Initialization
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions) {
@@ -25,21 +22,6 @@ namespace HeterogeneousDataSources {
                 );
 
             _allLoadLinkExpressions = loadLinkExpressions;
-
-            _referenceLoadLinkExpressions = loadLinkExpressions
-                .Where(loadLinkExpression => loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Reference)
-                .ToList();
-
-            _nestedLinkedSourceLoadLinkExpressions = loadLinkExpressions
-                .Where(loadLinkExpression =>
-                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource ||
-                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root
-                )
-                .ToList();
-
-            _subLinkedSourceLoadLinkExpressions = loadLinkExpressions
-                .Where(loadLinkExpression => loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.SubLinkedSource)
-                .ToList();
         }
 
         private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory) {
@@ -124,29 +106,15 @@ namespace HeterogeneousDataSources {
             return referenceTypeByLoadingLevel[loadingLevel];
         }
 
+        //stle: should go in protocol
         public List<ILoadLinkExpression> GetLoadExpressions(object linkedSource) {
             return GetLoadLinkExpressions(linkedSource, _allLoadLinkExpressions);
         }
 
-
         //stle: should go in protocol
-        public List<ILoadLinkExpression> GetLoadExpressions(object linkedSource, Type referenceType)
+        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
             return GetLoadLinkExpressions(linkedSource, _allLoadLinkExpressions, referenceType);
-        }
-
-        public List<ILoadLinkExpression> GetLinkNestedLinkedSourceExpressions(object linkedSource, Type referenceType) {
-            return GetLoadLinkExpressions(linkedSource, _nestedLinkedSourceLoadLinkExpressions, referenceType);
-        }
-
-        public List<ILoadLinkExpression> GetLinkReferenceExpressions(object linkedSource) {
-            return GetLoadLinkExpressions(linkedSource, _referenceLoadLinkExpressions)
-                .ToList();
-        }
-
-        public List<ILoadLinkExpression> GetSubLinkedSourceExpressions(object linkedSource) {
-            return GetLoadLinkExpressions(linkedSource, _subLinkedSourceLoadLinkExpressions)
-                .ToList();
         }
 
         public bool DoesLoadLinkExpressionForRootLinkedSourceTypeExists(Type rootLinkedSourceType)

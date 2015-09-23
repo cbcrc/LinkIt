@@ -178,6 +178,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             }
 
             var include = GetSelectedNestedLinkedSourceInclude(link);
+
+            //stle: temp to remove expression type
+            if (include == null) { return; }
+
             if (include.ReferenceType != referenceTypeToBeLinked) { return; }
 
             var childLinkedSource = include
@@ -202,14 +206,18 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             {
                 var include = GetSelectedNestedLinkedSourceInclude(linkToEntityOfReferenceType.Link);
 
-                var childLinkedSource = include.CreateChildLinkedSource(
-                    linkToEntityOfReferenceType.Link,
-                    loadedReferenceContext,
-                    linkedSource,
-                    linkToEntityOfReferenceType.Index
-                );
+                //stle: temp to remove expression type
+                if (include != null)
+                {
+                    var childLinkedSource = include.CreateChildLinkedSource(
+                        linkToEntityOfReferenceType.Link,
+                        loadedReferenceContext,
+                        linkedSource,
+                        linkToEntityOfReferenceType.Index
+                        );
 
-                _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSource;
+                    _getReferences(linkedSource)[linkToEntityOfReferenceType.Index] = childLinkedSource;
+                }
             }
         }
 
@@ -267,7 +275,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var castedSelectedInclude = GetPolymorphicInclude(link) 
                 as INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>;
 
-            if (castedSelectedInclude==null){
+            if (castedSelectedInclude==null)
+            {
+                //stle: temp to remove expression type
+                return null;
+
                 throw new InvalidOperationException(
                     string.Format(
                         "There is no nested linked source include for discriminant={0} in {1}.",
