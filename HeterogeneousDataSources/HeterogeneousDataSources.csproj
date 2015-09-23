@@ -57,6 +57,7 @@
     <Compile Include="LoadLinkExpressions\Includes\SubLinkedSourceInclude.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LoadLinkExpressions\LinkTargetValueWithIndex.cs" />
     <Compile Include="LoadLinkExpressionTreeFactory.cs" />
     <Compile Include="LoadLinkProtocolBuilder.cs" />
     <Compile Include="LoadLinkProtocolForLinkedSourceBuilder.cs" />
