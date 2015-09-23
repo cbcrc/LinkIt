@@ -55,17 +55,21 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
+            //stle: dry
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
             LoadLinkExpressionUtil.EnsureIsOfReferenceType(this, referenceTypeToBeLoaded);
 
-            var linksForReferenceType = GetLinksForReferenceType((TLinkedSource) linkedSource, referenceTypeToBeLoaded);
+            var notNullLinks = GetLinks((TLinkedSource)linkedSource)
+                .Where(link => link != null)
+                .ToList();
 
-            foreach (var linkForReferenceType in linksForReferenceType)
+            foreach (var link in notNullLinks)
             {
-                var include = _includeSet.GetIncludeWithAddLookupId(linkForReferenceType);
-                //stle: assume include!=null
+                var include = _includeSet.GetIncludeWithAddLookupId(link);
 
-                include.AddLookupId(linkForReferenceType, lookupIdContext);
+                if (include != null && include.ReferenceType == referenceTypeToBeLoaded) {
+                    include.AddLookupId(link, lookupIdContext);
+                }
             }
         }
 
@@ -270,29 +274,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 var polymorphicListToBeBuilt = new TIChildLinkedSource[GetLinks(linkedSource).Count].ToList();
                 _setReferences(linkedSource, polymorphicListToBeBuilt);
             }
-        }
-
-        private List<TLink> GetLinksForReferenceType(TLinkedSource linkedSource, Type referenceTypeToBeLoaded)
-        {
-            return GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLoaded)
-                .Select(linkWithIndex => linkWithIndex.Link)
-                .ToList();
-        }
-
-
-        private List<LinkWithIndex<TLink>> GetLinksWithIndexForReferenceType(TLinkedSource linkedSource,
-            Type referenceTypeToBeLoaded)
-        {
-            var links = GetLinks(linkedSource);
-
-            return links
-                .Select((link, index) => new LinkWithIndex<TLink>(link, index))
-                .Where(linkWithIndex => linkWithIndex.Link != null)
-                //stle: assume that GetWithAddLookupIdInclude wont never return null
-                .Where(linkWithIndex =>
-                    _includeSet.GetIncludeWithAddLookupId(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded
-                )
-                .ToList();
         }
 
         private List<TLink> GetLinks(TLinkedSource linkedSource)
