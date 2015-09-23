@@ -215,7 +215,7 @@ namespace HeterogeneousDataSources
             );
         }
 
-        private INestedLinkedSourceInclude<TLinkTargetOwner, TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkTargetOwner, TChildLinkedSource, TId>(
+        private IInclude CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkTargetOwner, TChildLinkedSource, TId>(
             Action<TLinkTargetOwner, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
             Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
@@ -236,7 +236,7 @@ namespace HeterogeneousDataSources
             //stle: change to single once obsolete constructor is deleted
             var ctor = ctorSpecificType.GetConstructors().First();
 
-            return (INestedLinkedSourceInclude<TLinkTargetOwner, TChildLinkedSource, TId>)ctor.Invoke(
+            return (IInclude)ctor.Invoke(
                 new object[]{
                     CreateIdentityFunc<TId>(),
                     initChildLinkedSourceAction

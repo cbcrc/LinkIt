@@ -2,8 +2,11 @@ using System;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class NestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId>
-        : INestedLinkedSourceInclude<TLinkedSource,TIChildLinkedSource, TLink>
+    public class NestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
+        IWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>, 
+        IWithAddLookupId<TLink>, 
+        IWithChildLinkedSource, 
+        IInclude
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;
@@ -28,7 +31,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
-        public TIChildLinkedSource CreateChildLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
+        public TIChildLinkedSource CreateNestedLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
             //stle: dry with other load link expressions
             var lookupId = _getLookupIdFunc(link);
             var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);

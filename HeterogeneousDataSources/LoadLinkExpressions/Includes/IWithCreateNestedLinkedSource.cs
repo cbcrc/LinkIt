@@ -2,9 +2,9 @@ using System;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public interface INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> : IInclude, IWithAddLookupId<TLink>
+    public interface IWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink> 
     {
-        TIChildLinkedSource CreateChildLinkedSource(
+        TIChildLinkedSource CreateNestedLinkedSource(
             TLink link, 
             LoadedReferenceContext loadedReferenceContext, 
             TLinkedSource linkedSource, 

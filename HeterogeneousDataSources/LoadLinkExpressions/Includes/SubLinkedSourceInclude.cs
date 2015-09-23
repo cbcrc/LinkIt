@@ -4,8 +4,10 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class SubLinkedSourceInclude<TIChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>
-        : ISubLinkedSourceInclude<TIChildLinkedSource>
+    public class SubLinkedSourceInclude<TIChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>: 
+        IWithCreateSubLinkedSource<TIChildLinkedSource>, 
+        IWithChildLinkedSource,
+        IInclude
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         public SubLinkedSourceInclude(){

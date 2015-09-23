@@ -35,10 +35,14 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             LinkedSourceType = typeof (TLinkedSource);
 
             ReferenceTypes = _includes.Values
+                .Where(include=>include is IWithAddLookupId<TLink>)
+                .Cast<IWithAddLookupId<TLink>>()
                 .Select(include => include.ReferenceType)
-                .Where(referenceType=>referenceType!=null)
                 .ToList();
+
             ChildLinkedSourceTypes = _includes.Values
+                .Where(include => include is IWithChildLinkedSource)
+                .Cast<IWithChildLinkedSource>()
                 .Select(include => include.ChildLinkedSourceType)
                 .ToList();
 
@@ -60,7 +64,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var linksForReferenceType = GetLinksForReferenceType((TLinkedSource)linkedSource, referenceTypeToBeLoaded);
 
             foreach (var linkForReferenceType in linksForReferenceType) {
-                var include = GetWithAddLookupIdInclude(linkForReferenceType);
+                var include = GetInclude<IWithAddLookupId<TLink>>(linkForReferenceType);
+                //stle: assume include!=null
+
                 include.AddLookupId(linkForReferenceType, lookupIdContext);
             }
         }
@@ -84,19 +90,17 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             //stle: this is not a link and not a reference but a sub linked source model
             //      find a good abstraction for the concept
             foreach (var link in notNullLinks) {
-                var include = GetPolymorphicInclude(link);
-                var asSubLinkedSourceInclude =
-                    include as ISubLinkedSourceInclude<TIChildLinkedSource>;
+                var include = GetInclude<IWithCreateSubLinkedSource<TIChildLinkedSource>>(link);
 
                 //stle: will not work if sub linked source is mixed with other expressions 
                 //This case is not supported for now
-                if (asSubLinkedSourceInclude == null)
+                if (include == null)
                 {
                     tempIgnoreMixedMode = true;
                 }
                 else
                 {
-                    var subLinkedSource = asSubLinkedSourceInclude.CreateSubLinkedSource(link, loadedReferenceContext);
+                    var subLinkedSource = include.CreateSubLinkedSource(link, loadedReferenceContext);
                     //stle: use linq
                     subLinkedSources.Add(subLinkedSource);
                 }
@@ -127,17 +131,15 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             //stle: this is not a link and not a reference but a sub linked source model
             //      find a good abstraction for the concept
             foreach (var link in notNullLinks) {
-                var include = GetPolymorphicInclude(link);
-                var asSubLinkedSourceInclude =
-                    include as IReferenceInclude<TIChildLinkedSource,TLink>;
+                var include = GetInclude<IWithGetReference<TIChildLinkedSource,TLink>>(link);
 
                 //stle: will not work if sub linked source is mixed with other expressions 
                 //This case is not supported for now
-                if (asSubLinkedSourceInclude == null) {
+                if (include == null) {
                     tempIgnoreMixedMode = true;
                 }
                 else {
-                    var reference = asSubLinkedSourceInclude.GetReference(link, loadedReferenceContext);
+                    var reference = include.GetReference(link, loadedReferenceContext);
                     //stle: use linq
                     references.Add(reference);
                 }
@@ -161,31 +163,38 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         private void LinkNestedLinkedSource(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
         {
-            if (GetLinks(linkedSource).Count <= 1){
-                LinkNestedLinkedSourceListWithZeroOrOneReference(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+            //stle: dry with link count and null
+            if (GetLinks(linkedSource).Count == 0){
+                LinkNestedLinkedSourceListWithZeroReference(linkedSource);
+            }
+            if (GetLinks(linkedSource).Count == 1){
+                LinkNestedLinkedSourceListWithOneReference(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
             }
             else{
                 LinkNestedLinkedSourceListWithManyReferences(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
             }
         }
 
-        private void LinkNestedLinkedSourceListWithZeroOrOneReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
-        {
-            var link = GetLinks(linkedSource).SingleOrDefault();
-            if (link == null){
-                _setReferences(linkedSource, new List<TIChildLinkedSource>());
-                return;
-            }
+        private void LinkNestedLinkedSourceListWithZeroReference(TLinkedSource linkedSource) {
+            _setReferences(linkedSource, new List<TIChildLinkedSource>());
+        }
 
-            var include = GetSelectedNestedLinkedSourceInclude(link);
+        private void LinkNestedLinkedSourceListWithOneReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        {
+            var linksToEntityOfReferenceType = GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLinked);
+            
+            //If not of the reference type to be linked
+            if (!linksToEntityOfReferenceType.Any()) { return; }
+
+            var link = linksToEntityOfReferenceType.Single().Link;
+
+            var include = GetInclude<IWithCreateNestedLinkedSource<TLinkedSource,TIChildLinkedSource,TLink>>(link);
 
             //stle: temp to remove expression type
             if (include == null) { return; }
 
-            if (include.ReferenceType != referenceTypeToBeLinked) { return; }
-
             var childLinkedSource = include
-                .CreateChildLinkedSource(link, loadedReferenceContext, linkedSource, 0);
+                .CreateNestedLinkedSource(link, loadedReferenceContext, linkedSource, 0);
 
             //stle: simplify that
             var asChildLinkedSources = childLinkedSource != null
@@ -204,12 +213,13 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
             foreach (var linkToEntityOfReferenceType in linksToEntityOfReferenceType)
             {
-                var include = GetSelectedNestedLinkedSourceInclude(linkToEntityOfReferenceType.Link);
+                //stle:dry for Generic passing, make a GetNestedInclude, etc.
+                var include = GetInclude<IWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>>(linkToEntityOfReferenceType.Link);
 
                 //stle: temp to remove expression type
                 if (include != null)
                 {
-                    var childLinkedSource = include.CreateChildLinkedSource(
+                    var childLinkedSource = include.CreateNestedLinkedSource(
                         linkToEntityOfReferenceType.Link,
                         loadedReferenceContext,
                         linkedSource,
@@ -253,7 +263,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             return links
                 .Select((link, index) => new LinkWithIndex<TLink>(link, index))
                 .Where(linkWithIndex => linkWithIndex.Link != null)
-                .Where(linkWithIndex => GetWithAddLookupIdInclude(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded)
+                //stle: assume that GetWithAddLookupIdInclude wont never return null
+                .Where(linkWithIndex => 
+                    GetInclude<IWithAddLookupId<TLink>>(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded
+                )
                 .ToList();
         }
 
@@ -268,50 +281,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
             return links;
         }
+       
 
-        private INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> 
-        GetSelectedNestedLinkedSourceInclude(TLink link) 
+        private TInclude GetInclude<TInclude>(TLink link) 
+            where TInclude:class
         {
-            var castedSelectedInclude = GetPolymorphicInclude(link) 
-                as INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>;
-
-            if (castedSelectedInclude==null)
-            {
-                //stle: temp to remove expression type
-                return null;
-
-                throw new InvalidOperationException(
-                    string.Format(
-                        "There is no nested linked source include for discriminant={0} in {1}.",
-                        _getDiscriminantFunc(link),
-                        LinkedSourceType
-                    )
-                );
-            }
-
-            return castedSelectedInclude;
-        }
-
-        //stle: dry with GetSelectedNestedLinkedSourceInclude
-        private IWithAddLookupId<TLink> GetWithAddLookupIdInclude(TLink link) {
-            var castedSelectedInclude = GetPolymorphicInclude(link)
-                as IWithAddLookupId<TLink>;
-
-            //stle: think of a better error msg
-            if (castedSelectedInclude == null) {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "There is no include with add lookup id for discriminant={0} in {1}.",
-                        _getDiscriminantFunc(link),
-                        LinkedSourceType
-                    )
-                );
-            }
-
-            return castedSelectedInclude;
-        }
-
-        private IInclude GetPolymorphicInclude(TLink link) {
             var discriminant = _getDiscriminantFunc(link);
             if (!_includes.ContainsKey(discriminant)) {
                 throw new InvalidOperationException(
@@ -323,7 +297,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 );
             }
 
-            return _includes[discriminant];
+            var include = _includes[discriminant];
+
+            return include as TInclude;
         }
 
         public List<Type> ChildLinkedSourceTypes { get; private set; }

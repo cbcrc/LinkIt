@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes {
 
     //stle: use func instead of one method interface
-    public interface IWithAddLookupId<TLink>:IInclude {
+    public interface IWithAddLookupId<TLink> {
+        Type ReferenceType { get; }
         void AddLookupId(TLink link, LookupIdContext lookupIdContext);
     }
 }

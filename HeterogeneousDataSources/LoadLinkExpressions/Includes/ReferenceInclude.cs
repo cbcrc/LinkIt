@@ -2,7 +2,10 @@ using System;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class ReferenceInclude<TIReference, TLink, TReference, TId> : IReferenceInclude<TIReference, TLink> 
+    public class ReferenceInclude<TIReference, TLink, TReference, TId>: 
+        IWithGetReference<TIReference, TLink>, 
+        IWithAddLookupId<TLink>,
+        IInclude
         where TReference: TIReference
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;
