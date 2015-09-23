@@ -22,20 +22,25 @@ namespace HeterogeneousDataSources
 
         #region Root
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> IsRoot<TId>() {
-            return AddLoadLinkExpression(CreateRootLoadLinkExpression<TId>());
+            //stle: simplify the whole root in linked source concept
+
+            var loadLinkExpression = new LoadLinkExpressionImpl<TId, TLinkedSource, TId, bool>(
+                typeof(TLinkedSource).ToString(),
+                linkedSourceIsIdForRoot => new List<TId> { linkedSourceIsIdForRoot },
+                GetReferencesFuncForSingleValue<TId,TLinkedSource>(),
+                (linkedSource, linkTargetValue) => { },
+                link => true,
+                CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
+                    CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TId,TLinkedSource,TId>(
+                        null
+                    )
+                ),
+                LoadLinkExpressionType.Root
+            );
+
+            return AddLoadLinkExpression(loadLinkExpression);
         }
 
-        private ILoadLinkExpression CreateRootLoadLinkExpression<TId>() {
-            Type rootLoadLinkExpressionGenericType = typeof(RootLoadLinkExpression<,,>);
-            Type[] typeArgs ={
-                _linkedSourceType, 
-                GetLinkedSourceModelType(_linkedSourceType), 
-                typeof(TId)
-            };
-            Type rootLoadLinkExpressionSpecificType = rootLoadLinkExpressionGenericType.MakeGenericType(typeArgs);
-
-            return (ILoadLinkExpression)Activator.CreateInstance(rootLoadLinkExpressionSpecificType);
-        }
         #endregion
 
         #region Reference
@@ -204,21 +209,21 @@ namespace HeterogeneousDataSources
 
         private Dictionary<bool, IInclude> CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) {
             return CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
+                CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkedSource,TChildLinkedSource, TId>(
                     initChildLinkedSourceAction
                 )
             );
         }
 
-        private INestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TChildLinkedSource, TId>(
-            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
+        private INestedLinkedSourceInclude<TLinkTargetOwner, TChildLinkedSource, TId> CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkTargetOwner, TChildLinkedSource, TId>(
+            Action<TLinkTargetOwner, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
             Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
 
             var childLinkedSourceType = typeof(TChildLinkedSource);
             var idType = typeof(TId);
             Type[] typeArgs ={
-                _linkedSourceType,
+                typeof(TLinkTargetOwner),
                 childLinkedSourceType, 
                 idType,
                 childLinkedSourceType, 
@@ -231,7 +236,7 @@ namespace HeterogeneousDataSources
             //stle: change to single once obsolete constructor is deleted
             var ctor = ctorSpecificType.GetConstructors().First();
 
-            return (INestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId>)ctor.Invoke(
+            return (INestedLinkedSourceInclude<TLinkTargetOwner, TChildLinkedSource, TId>)ctor.Invoke(
                 new object[]{
                     CreateIdentityFunc<TId>(),
                     initChildLinkedSourceAction
@@ -384,11 +389,17 @@ namespace HeterogeneousDataSources
                 linkTarget.SetTargetProperty(linkedSource, childLinkedSources.SingleOrDefault());
         }
 
-        private static Func<TLinkedSource, List<TIChildLinkedSource>> GetReferencesFuncForSingleValue<TIChildLinkedSource>() {
+        private static Func<TLinkedSource, List<TIChildLinkedSource>> GetReferencesFuncForSingleValue<TIChildLinkedSource>()
+        {
+            return GetReferencesFuncForSingleValue<TLinkedSource, TIChildLinkedSource>();
+        }
+
+        private static Func<TReferenceOwner, List<TIChildLinkedSource>> GetReferencesFuncForSingleValue<TReferenceOwner, TIChildLinkedSource>() {
             return linkedSource => {
                 throw new InvalidOperationException("Cannot get reference list for single reference.");
             };
         }
+
 
         private Func<T, T> CreateIdentityFunc<T>() {
             return x => x;
