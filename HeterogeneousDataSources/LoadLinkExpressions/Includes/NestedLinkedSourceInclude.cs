@@ -3,10 +3,9 @@ using System;
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
     public class NestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
-        IWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>, 
-        IWithAddLookupId<TLink>, 
-        IWithChildLinkedSource, 
-        IInclude
+        IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>, 
+        IIncludeWithAddLookupId<TLink>, 
+        IIncludeWithChildLinkedSource 
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;

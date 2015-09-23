@@ -44,11 +44,12 @@
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IWithChildLinkedSource.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IWithCreateNestedLinkedSource.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IWithAddLookupId.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IWithCreateSubLinkedSource.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IWithGetReference.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IIncludeWithChildLinkedSource.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IIncludeWithCreateNestedLinkedSource.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IIncludeWithAddLookupId.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IIncludeWithCreateSubLinkedSource.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IIncludeWithGetReference.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IncludeSet.cs" />
     <Compile Include="LoadLinkExpressions\Includes\ReferenceInclude.cs" />
     <Compile Include="LoadLinkExpressions\LinkWithIndex.cs" />
     <Compile Include="LoadLinkExpressions\Includes\NestedLinkedSourceInclude.cs" />

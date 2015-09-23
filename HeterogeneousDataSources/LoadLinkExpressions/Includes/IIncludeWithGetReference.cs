@@ -1,6 +1,6 @@
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public interface IReferenceInclude<TIReference, TLink> : IInclude, IWithAddLookupId<TLink>
+    public interface IIncludeWithGetReference<TIReference, TLink>
     {
         TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext);
     }

@@ -6,13 +6,13 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
     //stle: TIChildLinkedSource is not more of a TTarget
-    public class LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : ILoadLinkExpression, INestedLoadLinkExpression
+    public class LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> :
+        INestedLoadLinkExpression
     {
         private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
         private readonly Func<TLinkedSource, List<TIChildLinkedSource>> _getReferences;
         private readonly Action<TLinkedSource, List<TIChildLinkedSource>> _setReferences;
-        private readonly Func<TLink, TDiscriminant> _getDiscriminantFunc;
-        private readonly Dictionary<TDiscriminant, IInclude> _includes;
+        private readonly IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> _includeSet;
 
         public LoadLinkExpressionImpl(
             string linkTargetId,
@@ -29,20 +29,17 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             _getLinksFunc = getLinksFunc;
             _getReferences = getReferences;
             _setReferences = setReferences;
-            _getDiscriminantFunc = getDiscriminantFunc;
-            _includes = includes;
-
+            _includeSet = new IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
+                includes,
+                getDiscriminantFunc
+                );
             LinkedSourceType = typeof (TLinkedSource);
 
-            ReferenceTypes = _includes.Values
-                .Where(include=>include is IWithAddLookupId<TLink>)
-                .Cast<IWithAddLookupId<TLink>>()
+            ReferenceTypes = _includeSet.GetIncludesWithAddLookupId()
                 .Select(include => include.ReferenceType)
                 .ToList();
 
-            ChildLinkedSourceTypes = _includes.Values
-                .Where(include => include is IWithChildLinkedSource)
-                .Cast<IWithChildLinkedSource>()
+            ChildLinkedSourceTypes = _includeSet.GetIncludesWithChildLinkedSource()
                 .Select(include => include.ChildLinkedSourceType)
                 .ToList();
 
@@ -59,23 +56,25 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            LoadLinkExpressionUtil.EnsureIsOfReferenceType(this,referenceTypeToBeLoaded);
+            LoadLinkExpressionUtil.EnsureIsOfReferenceType(this, referenceTypeToBeLoaded);
 
-            var linksForReferenceType = GetLinksForReferenceType((TLinkedSource)linkedSource, referenceTypeToBeLoaded);
+            var linksForReferenceType = GetLinksForReferenceType((TLinkedSource) linkedSource, referenceTypeToBeLoaded);
 
-            foreach (var linkForReferenceType in linksForReferenceType) {
-                var include = GetInclude<IWithAddLookupId<TLink>>(linkForReferenceType);
+            foreach (var linkForReferenceType in linksForReferenceType)
+            {
+                var include = _includeSet.GetIncludeWithAddLookupId(linkForReferenceType);
                 //stle: assume include!=null
 
                 include.AddLookupId(linkForReferenceType, lookupIdContext);
             }
         }
 
-        public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext){
+        public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
             //stle: dry
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
-            LinkSubLinkedSources((TLinkedSource)linkedSource, loadedReferenceContext);
+            LinkSubLinkedSources((TLinkedSource) linkedSource, loadedReferenceContext);
         }
 
         public void LinkSubLinkedSources(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
@@ -89,8 +88,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
             //stle: this is not a link and not a reference but a sub linked source model
             //      find a good abstraction for the concept
-            foreach (var link in notNullLinks) {
-                var include = GetInclude<IWithCreateSubLinkedSource<TIChildLinkedSource>>(link);
+            foreach (var link in notNullLinks)
+            {
+                var include = _includeSet.GetIncludeWithCreateSubLinkedSource(link);
 
                 //stle: will not work if sub linked source is mixed with other expressions 
                 //This case is not supported for now
@@ -106,7 +106,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 }
             }
 
-            if (!tempIgnoreMixedMode){
+            if (!tempIgnoreMixedMode)
+            {
                 _setReferences(linkedSource, subLinkedSources);
             }
         }
@@ -115,7 +116,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         {
             //stle: dry
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            LinkReference((TLinkedSource)linkedSource, loadedReferenceContext);
+            LinkReference((TLinkedSource) linkedSource, loadedReferenceContext);
         }
 
         //stle: dry
@@ -130,81 +131,101 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
             //stle: this is not a link and not a reference but a sub linked source model
             //      find a good abstraction for the concept
-            foreach (var link in notNullLinks) {
-                var include = GetInclude<IWithGetReference<TIChildLinkedSource,TLink>>(link);
+            foreach (var link in notNullLinks)
+            {
+                var include = _includeSet.GetIncludeWithGetReference(link);
 
                 //stle: will not work if sub linked source is mixed with other expressions 
                 //This case is not supported for now
-                if (include == null) {
+                if (include == null)
+                {
                     tempIgnoreMixedMode = true;
                 }
-                else {
+                else
+                {
                     var reference = include.GetReference(link, loadedReferenceContext);
                     //stle: use linq
                     references.Add(reference);
                 }
             }
 
-            if (!tempIgnoreMixedMode) {
+            if (!tempIgnoreMixedMode)
+            {
                 _setReferences(
-                    linkedSource, 
+                    linkedSource,
                     references
-                        .Where(reference=>reference!=null)
+                        .Where(reference => reference != null)
                         .ToList()
-                );
+                    );
             }
         }
 
-        public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
+        public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext,
+            Type referenceTypeToBeLinked)
+        {
             //stle: dry
             LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            LinkNestedLinkedSource((TLinkedSource)linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+            LinkNestedLinkedSource((TLinkedSource) linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
         }
 
-        private void LinkNestedLinkedSource(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        private void LinkNestedLinkedSource(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
+            Type referenceTypeToBeLinked)
         {
             //stle: dry with link count and null
-            if (GetLinks(linkedSource).Count == 0){
+            if (GetLinks(linkedSource).Count == 0)
+            {
                 LinkNestedLinkedSourceListWithZeroReference(linkedSource);
             }
-            if (GetLinks(linkedSource).Count == 1){
+            if (GetLinks(linkedSource).Count == 1)
+            {
                 LinkNestedLinkedSourceListWithOneReference(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
             }
-            else{
-                LinkNestedLinkedSourceListWithManyReferences(linkedSource, loadedReferenceContext, referenceTypeToBeLinked);
+            else
+            {
+                LinkNestedLinkedSourceListWithManyReferences(linkedSource, loadedReferenceContext,
+                    referenceTypeToBeLinked);
             }
         }
 
-        private void LinkNestedLinkedSourceListWithZeroReference(TLinkedSource linkedSource) {
+        private void LinkNestedLinkedSourceListWithZeroReference(TLinkedSource linkedSource)
+        {
             _setReferences(linkedSource, new List<TIChildLinkedSource>());
         }
 
-        private void LinkNestedLinkedSourceListWithOneReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
+        private void LinkNestedLinkedSourceListWithOneReference(TLinkedSource linkedSource,
+            LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked)
         {
             var linksToEntityOfReferenceType = GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLinked);
-            
+
             //If not of the reference type to be linked
-            if (!linksToEntityOfReferenceType.Any()) { return; }
+            if (!linksToEntityOfReferenceType.Any())
+            {
+                return;
+            }
 
             var link = linksToEntityOfReferenceType.Single().Link;
 
-            var include = GetInclude<IWithCreateNestedLinkedSource<TLinkedSource,TIChildLinkedSource,TLink>>(link);
+            var include = _includeSet.GetIncludeWithCreateNestedLinkedSource(link);
 
             //stle: temp to remove expression type
-            if (include == null) { return; }
+            if (include == null)
+            {
+                return;
+            }
 
             var childLinkedSource = include
                 .CreateNestedLinkedSource(link, loadedReferenceContext, linkedSource, 0);
 
             //stle: simplify that
             var asChildLinkedSources = childLinkedSource != null
-                ? new List<TIChildLinkedSource> { childLinkedSource }
+                ? new List<TIChildLinkedSource> {childLinkedSource}
                 : new List<TIChildLinkedSource>();
 
             _setReferences(linkedSource, asChildLinkedSources);
         }
 
-        private void LinkNestedLinkedSourceListWithManyReferences(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext,
+        private void LinkNestedLinkedSourceListWithManyReferences(TLinkedSource linkedSource,
+            LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
         {
             InitListOfReferencesIfNull(linkedSource, loadedReferenceContext);
@@ -214,7 +235,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             foreach (var linkToEntityOfReferenceType in linksToEntityOfReferenceType)
             {
                 //stle:dry for Generic passing, make a GetNestedInclude, etc.
-                var include = GetInclude<IWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>>(linkToEntityOfReferenceType.Link);
+                var include = _includeSet.GetIncludeWithCreateNestedLinkedSource(linkToEntityOfReferenceType.Link);
 
                 //stle: temp to remove expression type
                 if (include != null)
@@ -231,32 +252,36 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             }
         }
 
-        private void InitListOfReferencesIfNull(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
+        private void InitListOfReferencesIfNull(TLinkedSource linkedSource,
+            LoadedReferenceContext loadedReferenceContext)
         {
             if (_getReferences(linkedSource) == null)
             {
                 var polymorphicListToBeBuilt = new TIChildLinkedSource[GetLinkCount(linkedSource)].ToList();
                 loadedReferenceContext.OnLinkCompleted(
-                    ()=>RemoveNullFromPolymorphicList(polymorphicListToBeBuilt)
-                );
+                    () => RemoveNullFromPolymorphicList(polymorphicListToBeBuilt)
+                    );
 
                 _setReferences(linkedSource, polymorphicListToBeBuilt);
             }
         }
 
-        private void RemoveNullFromPolymorphicList<TIChildLinkedSource>(List<TIChildLinkedSource> polymorphicListToBeBuilt)
+        private void RemoveNullFromPolymorphicList<TIChildLinkedSource>(
+            List<TIChildLinkedSource> polymorphicListToBeBuilt)
         {
             polymorphicListToBeBuilt.RemoveAll(item => item == null);
         }
 
-        private List<TLink> GetLinksForReferenceType(TLinkedSource linkedSource, Type referenceTypeToBeLoaded) {
+        private List<TLink> GetLinksForReferenceType(TLinkedSource linkedSource, Type referenceTypeToBeLoaded)
+        {
             return GetLinksWithIndexForReferenceType(linkedSource, referenceTypeToBeLoaded)
                 .Select(linkWithIndex => linkWithIndex.Link)
                 .ToList();
         }
 
 
-        private List<LinkWithIndex<TLink>> GetLinksWithIndexForReferenceType(TLinkedSource linkedSource, Type referenceTypeToBeLoaded)
+        private List<LinkWithIndex<TLink>> GetLinksWithIndexForReferenceType(TLinkedSource linkedSource,
+            Type referenceTypeToBeLoaded)
         {
             var links = GetLinks(linkedSource);
 
@@ -264,42 +289,27 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 .Select((link, index) => new LinkWithIndex<TLink>(link, index))
                 .Where(linkWithIndex => linkWithIndex.Link != null)
                 //stle: assume that GetWithAddLookupIdInclude wont never return null
-                .Where(linkWithIndex => 
-                    GetInclude<IWithAddLookupId<TLink>>(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded
+                .Where(linkWithIndex =>
+                    _includeSet.GetIncludeWithAddLookupId(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded
                 )
                 .ToList();
         }
 
-        private int GetLinkCount(TLinkedSource linkedSource){
+        private int GetLinkCount(TLinkedSource linkedSource)
+        {
             return GetLinks(linkedSource).Count;
         }
 
-        private List<TLink> GetLinks(TLinkedSource linkedSource){
+        private List<TLink> GetLinks(TLinkedSource linkedSource)
+        {
             var links = _getLinksFunc(linkedSource);
 
-            if (links == null) { return new List<TLink>(); }
-
-            return links;
-        }
-       
-
-        private TInclude GetInclude<TInclude>(TLink link) 
-            where TInclude:class
-        {
-            var discriminant = _getDiscriminantFunc(link);
-            if (!_includes.ContainsKey(discriminant)) {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "There is no include for discriminant={0} in {1}.",
-                        discriminant,
-                        LinkedSourceType
-                    )
-                );
+            if (links == null)
+            {
+                return new List<TLink>();
             }
 
-            var include = _includes[discriminant];
-
-            return include as TInclude;
+            return links;
         }
 
         public List<Type> ChildLinkedSourceTypes { get; private set; }

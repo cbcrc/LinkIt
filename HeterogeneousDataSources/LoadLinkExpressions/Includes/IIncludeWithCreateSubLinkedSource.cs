@@ -1,6 +1,6 @@
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public interface IWithCreateSubLinkedSource<TIChildLinkedSource>
+    public interface IIncludeWithCreateSubLinkedSource<TIChildLinkedSource>:IInclude
     {
         TIChildLinkedSource CreateSubLinkedSource(object childLinkedSourceModel, LoadedReferenceContext loadedReferenceContext);
     }
