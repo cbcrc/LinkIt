@@ -1,9 +1,9 @@
+using System;
+
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public interface INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink>: IInclude
+    public interface INestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink> : IInclude, IWithAddLookupId<TLink>
     {
-        void AddLookupId(TLink link, LookupIdContext lookupIdContext);
-
         TIChildLinkedSource CreateChildLinkedSource(
             TLink link, 
             LoadedReferenceContext loadedReferenceContext, 

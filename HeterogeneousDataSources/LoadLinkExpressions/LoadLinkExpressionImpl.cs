@@ -5,6 +5,7 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
+    //stle: TIChildLinkedSource is not more of a TTarget
     public class LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : ILoadLinkExpression, INestedLoadLinkExpression
     {
         private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
@@ -59,7 +60,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             var linksForReferenceType = GetLinksForReferenceType((TLinkedSource)linkedSource, referenceTypeToBeLoaded);
 
             foreach (var linkForReferenceType in linksForReferenceType) {
-                var include = GetSelectedNestedLinkedSourceInclude(linkForReferenceType);
+                var include = GetWithAddLookupIdInclude(linkForReferenceType);
                 include.AddLookupId(linkForReferenceType, lookupIdContext);
             }
         }
@@ -108,6 +109,48 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            LinkReference((TLinkedSource)linkedSource, loadedReferenceContext);
+        }
+
+        //stle: dry
+        public void LinkReference(TLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext)
+        {
+            var tempIgnoreMixedMode = false;
+            var references = new List<TIChildLinkedSource>();
+
+            var notNullLinks = GetLinks(linkedSource)
+                .Where(link => link != null)
+                .ToList();
+
+            //stle: this is not a link and not a reference but a sub linked source model
+            //      find a good abstraction for the concept
+            foreach (var link in notNullLinks) {
+                var include = GetPolymorphicInclude(link);
+                var asSubLinkedSourceInclude =
+                    include as IReferenceInclude<TIChildLinkedSource,TLink>;
+
+                //stle: will not work if sub linked source is mixed with other expressions 
+                //This case is not supported for now
+                if (asSubLinkedSourceInclude == null) {
+                    tempIgnoreMixedMode = true;
+                }
+                else {
+                    var reference = asSubLinkedSourceInclude.GetReference(link, loadedReferenceContext);
+                    //stle: use linq
+                    references.Add(reference);
+                }
+            }
+
+            if (!tempIgnoreMixedMode) {
+                _setReferences(
+                    linkedSource, 
+                    references
+                        .Where(reference=>reference!=null)
+                        .ToList()
+                );
+            }
         }
 
         public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked) {
@@ -202,7 +245,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             return links
                 .Select((link, index) => new LinkWithIndex<TLink>(link, index))
                 .Where(linkWithIndex => linkWithIndex.Link != null)
-                .Where(linkWithIndex => GetSelectedNestedLinkedSourceInclude(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded)
+                .Where(linkWithIndex => GetWithAddLookupIdInclude(linkWithIndex.Link).ReferenceType == referenceTypeToBeLoaded)
                 .ToList();
         }
 
@@ -228,6 +271,25 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 throw new InvalidOperationException(
                     string.Format(
                         "There is no nested linked source include for discriminant={0} in {1}.",
+                        _getDiscriminantFunc(link),
+                        LinkedSourceType
+                    )
+                );
+            }
+
+            return castedSelectedInclude;
+        }
+
+        //stle: dry with GetSelectedNestedLinkedSourceInclude
+        private IWithAddLookupId<TLink> GetWithAddLookupIdInclude(TLink link) {
+            var castedSelectedInclude = GetPolymorphicInclude(link)
+                as IWithAddLookupId<TLink>;
+
+            //stle: think of a better error msg
+            if (castedSelectedInclude == null) {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "There is no include with add lookup id for discriminant={0} in {1}.",
                         _getDiscriminantFunc(link),
                         LinkedSourceType
                     )

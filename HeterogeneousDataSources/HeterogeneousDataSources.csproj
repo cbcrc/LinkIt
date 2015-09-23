@@ -45,7 +45,10 @@
     <Compile Include="LinkTargetFactory.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
     <Compile Include="LoadLinkExpressions\Includes\INestedLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IReferenceInclude.cs" />
     <Compile Include="LoadLinkExpressions\Includes\ISubLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IWithAddLookupId.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\ReferenceInclude.cs" />
     <Compile Include="LoadLinkExpressions\LinkWithIndex.cs" />
     <Compile Include="LoadLinkExpressions\Includes\NestedLinkedSourceInclude.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionImpl.cs" />
@@ -67,9 +70,6 @@
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionType.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionUtil.cs" />
     <Compile Include="LoadLinkExpressions\RootLoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressions\ReferencesLoadLinkExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="LookupIdContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

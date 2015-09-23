@@ -45,27 +45,45 @@ namespace HeterogeneousDataSources
         {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            return AddLoadLinkExpression(
-                new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
-                    linkTarget.Id,
-                    ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
-                    ToLinkActionForSingleValue(linkTarget)
-                )
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TReference, TId, bool>(
+                linkTarget.Id,
+                ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
+                GetReferencesFuncForSingleValue<TReference>(),
+                SetReferencesActionForSingleValue(linkTarget),
+                link => true,
+                CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
+                    new ReferenceInclude<TReference, TId, TReference, TId>(
+                        CreateIdentityFunc<TId>()
+                    )
+                ),
+                LoadLinkExpressionType.Reference
             );
+
+            return AddLoadLinkExpression(loadLinkExpression);
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
-            Expression<Func<TLinkedSource, List<TReference>>> linkTargetFunc) {
+            Expression<Func<TLinkedSource, List<TReference>>> linkTargetFunc) 
+        {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
-            return AddLoadLinkExpression(
-                new ReferencesLoadLinkExpression<TLinkedSource, TReference, TId>(
-                    linkTarget.Id,
-                    getLookupIdsFunc,
-                    linkTarget.SetTargetProperty
-                )
+
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TReference, TId, bool>(
+                linkTarget.Id,
+                getLookupIdsFunc,
+                linkTarget.GetTargetProperty,
+                linkTarget.SetTargetProperty,
+                link => true,
+                CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
+                    new ReferenceInclude<TReference, TId, TReference, TId>(
+                        CreateIdentityFunc<TId>()
+                    )
+                ),
+                LoadLinkExpressionType.Reference
             );
+
+            return AddLoadLinkExpression(loadLinkExpression);
         } 
         #endregion
 
