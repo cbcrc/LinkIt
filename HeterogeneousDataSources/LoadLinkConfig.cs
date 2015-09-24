@@ -87,7 +87,7 @@ namespace HeterogeneousDataSources {
         private List<INestedLoadLinkExpression> GetRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
             return loadLinkExpressions
                 .Where(loadLinkExpression =>
-                    loadLinkExpression.LoadLinkExpressionType == LoadLinkExpressionType.Root)
+                    loadLinkExpression.TempIsRoot)
                 .Cast<INestedLoadLinkExpression>()
                 .ToList();
         } 

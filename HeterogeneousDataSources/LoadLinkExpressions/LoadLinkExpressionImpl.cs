@@ -22,13 +22,16 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             Action<TLinkedSource, List<TIChildLinkedSource>> setReferences,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Dictionary<TDiscriminant, IInclude> includes,
-            LoadLinkExpressionType tempLoadLinkExpressionType
+            //stle: remove me
+            LoadLinkExpressionType tempLoadLinkExpressionType,
+            bool tempIsRoot=false
             )
         {
             LinkTargetId = linkTargetId;
             _getLinksFunc = getLinksFunc;
             _getReferences = getReferences;
             _setReferences = setReferences;
+            TempIsRoot = tempIsRoot;
             _includeSet = new IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
                 includes,
                 getDiscriminantFunc
@@ -46,6 +49,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             //stle: this must go away
             LoadLinkExpressionType = tempLoadLinkExpressionType;
         }
+
+        public bool TempIsRoot { get; private set; }
 
         public string LinkTargetId { get; private set; }
 

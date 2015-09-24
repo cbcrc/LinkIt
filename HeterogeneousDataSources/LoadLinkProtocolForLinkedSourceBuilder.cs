@@ -35,7 +35,8 @@ namespace HeterogeneousDataSources
                         null
                     )
                 ),
-                LoadLinkExpressionType.Root
+                LoadLinkExpressionType.Root,
+                true
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
