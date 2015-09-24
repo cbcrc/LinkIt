@@ -8,7 +8,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     {
         bool TempIsRoot { get; }
 
-        bool IsInSameLoadingLevel(ILoadLinkExpression child);
+        bool IsInDifferentLoadingLevel(ILoadLinkExpression child);
 
         string LinkTargetId { get; }
 

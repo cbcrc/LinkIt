@@ -52,9 +52,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public bool TempIsRoot { get; private set; }
 
-        public bool IsInSameLoadingLevel(ILoadLinkExpression child)
+        public bool IsInDifferentLoadingLevel(ILoadLinkExpression child)
         {
-            throw new NotImplementedException();
+            return _includeSet.GetIncludesWithChildLinkedSource()
+                .Where(include => include.ChildLinkedSourceType == child.LinkedSourceType)
+                .Any(include => include is IIncludeWithAddLookupId<TLink>);
         }
 
         public string LinkTargetId { get; private set; }

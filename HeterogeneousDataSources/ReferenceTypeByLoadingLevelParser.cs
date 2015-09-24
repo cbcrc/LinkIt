@@ -24,16 +24,19 @@ namespace HeterogeneousDataSources {
             var node = linkedExpressionTree.Node;
             ParseNode(node, loadingLevelByReferenceType, loadingLevel);
 
-            var nextLoadingLevel = GetNextLoadingLevel(node, loadingLevel);
             foreach (var child in linkedExpressionTree.Children) {
-                ParseTree(child, nextLoadingLevel, loadingLevelByReferenceType);
+                ParseTree(
+                    child, 
+                    GetNextLoadingLevel(node, child.Node, loadingLevel),
+                    loadingLevelByReferenceType
+                );
             }
         }
 
-        private static int GetNextLoadingLevel(ILoadLinkExpression node, int loadingLevel) {
-            if (node.LoadLinkExpressionType == LoadLinkExpressionType.SubLinkedSource) { return loadingLevel; }
-
-            return loadingLevel + 1;
+        private static int GetNextLoadingLevel(ILoadLinkExpression node, ILoadLinkExpression child, int loadingLevel) {
+            return node.IsInDifferentLoadingLevel(child)
+                ? loadingLevel + 1
+                : loadingLevel;
         }
 
         private void ParseNode(ILoadLinkExpression node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel) {

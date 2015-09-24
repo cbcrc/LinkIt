@@ -9,7 +9,7 @@ namespace HeterogeneousDataSources.Tests {
     public class ReferenceTypeByLoadingLevelParser_ManyLevelsTests
     {
         [Test]
-        public void GetReferenceTypeForLoadingLevel_ManyLevels()
+        public void ParseReferenceTypeByLoadingLevel_ManyLevels()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<ManyLoadingLevelContentLinkedSource>()

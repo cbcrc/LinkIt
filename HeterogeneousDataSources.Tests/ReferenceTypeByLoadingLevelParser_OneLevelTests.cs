@@ -11,23 +11,14 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class ReferenceTypeByLoadingLevelParser_OneLevelTests
     {
-        private FakeReferenceLoader<NestedContents, int> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
-
-        private ReferenceTypeByLoadingLevelParser CreateSut(List<ILoadLinkExpression> loadLinkExpressions)
-        {
-            var factory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
-            return new ReferenceTypeByLoadingLevelParser(factory);
-        }
-
         [Test]
-        public void GetReferenceTypeForLoadingLevel_OneLevel()
+        public void ParseReferenceTypeByLoadingLevel_OneLevel()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<OneLoadingLevelContentLinkedSource>()
                 .IsRoot<string>();
             var rootLoadLinkExpression = loadLinkProtocolBuilder.GetLoadLinkExpressions()[0];
-            var sut = CreateSut(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
 
             var actual = sut.ParseReferenceTypeByLoadingLevel(rootLoadLinkExpression);
 
