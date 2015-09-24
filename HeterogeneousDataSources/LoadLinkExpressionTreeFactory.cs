@@ -60,11 +60,7 @@ namespace HeterogeneousDataSources
             //Make sure referenceTypesOfAncestors is not altered
             var result = referenceTypesOfAncestors.ToList();
 
-            if (node.LoadLinkExpressionType == LoadLinkExpressionType.Root ||
-                node.LoadLinkExpressionType == LoadLinkExpressionType.NestedLinkedSource)
-            {
-                result.AddRange(node.ReferenceTypes);
-            }
+            result.AddRange(node.ReferenceTypes);
             return result;
         }
 
