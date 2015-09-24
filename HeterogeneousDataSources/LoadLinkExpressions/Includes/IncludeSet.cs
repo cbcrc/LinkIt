@@ -16,8 +16,12 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             _getDiscriminantFunc = getDiscriminantFunc;
         }
 
-        public IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSource(TLink link) {
-            return GetInclude<IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>>(link);
+        public IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceForReferenceType(TLink link, Type referenceType) {
+            var include = GetInclude<IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>>(link);
+            
+            if (include == null || include.ReferenceType != referenceType){ return null; }
+
+            return include;
         }
 
         public IIncludeWithCreateSubLinkedSource<TIChildLinkedSource> GetIncludeWithCreateSubLinkedSource(TLink link) {

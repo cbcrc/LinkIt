@@ -75,215 +75,115 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+
             SetLinkTargetValue(
-                linkedSource,
-                linkWithIndex =>
-                    GetSubLinkedSource(
-                        linkWithIndex,
-                        loadedReferenceContext
-                    )
+                (TLinkedSource)linkedSource,
+                link => _includeSet.GetIncludeWithCreateSubLinkedSource(link),
+                linkWithIndexAndInclude => linkWithIndexAndInclude.Include.CreateSubLinkedSource(
+                    linkWithIndexAndInclude.Link, 
+                    loadedReferenceContext
+                )
             );
-        }
-
-        private TIChildLinkedSource GetSubLinkedSource(LinkWithIndex<TLink> linkWithIndex, LoadedReferenceContext loadedReferenceContext) {
-            //stle: dry on no include
-            var include = _includeSet.GetIncludeWithCreateSubLinkedSource(linkWithIndex.Link);
-            if (include == null) {
-                //stle: default mean do not assign
-                return default(TIChildLinkedSource);
-            }
-
-            return include.CreateSubLinkedSource(linkWithIndex.Link, loadedReferenceContext);
         }
 
         public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+
             SetLinkTargetValue(
-                linkedSource,
-                linkWithIndex =>
-                    GetReference(
-                        linkWithIndex,
-                        loadedReferenceContext
-                    )
+                (TLinkedSource)linkedSource,
+                link => _includeSet.GetIncludeWithGetReference(link),
+                linkWithIndexAndInclude => linkWithIndexAndInclude.Include.GetReference(
+                    linkWithIndexAndInclude.Link, 
+                    loadedReferenceContext
+                )
             );
-        }
-
-        private TIChildLinkedSource GetReference(LinkWithIndex<TLink> linkWithIndex, LoadedReferenceContext loadedReferenceContext)
-        {
-            //stle: dry on no include
-            var include = _includeSet.GetIncludeWithGetReference(linkWithIndex.Link);
-            if (include == null){
-                //stle: default mean do not assign
-                return default(TIChildLinkedSource);
-            }
-
-            return include.GetReference(linkWithIndex.Link, loadedReferenceContext);
         }
 
         public void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
         {
+            //stle: dry
+            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+
             SetLinkTargetValue(
-                linkedSource, 
-                linkWithIndex => 
-                    GetNestedLinkedSource(
-                        linkWithIndex,
+                (TLinkedSource)linkedSource, 
+                link => _includeSet.GetIncludeWithCreateNestedLinkedSourceForReferenceType(link, referenceTypeToBeLinked),
+                linkWithIndexAndInclude =>
+                    linkWithIndexAndInclude.Include.CreateNestedLinkedSource(
+                        linkWithIndexAndInclude.Link,
                         loadedReferenceContext,
-                        referenceTypeToBeLinked,
-                        linkedSource
+                        (TLinkedSource)linkedSource,
+                        linkWithIndexAndInclude.Index
                     )
             );
         }
 
-        //stle: maybe responsabilize the Include
-        private TIChildLinkedSource GetNestedLinkedSource(
-            LinkWithIndex<TLink> linkWithIndex,
-            LoadedReferenceContext loadedReferenceContext,
-            Type referenceTypeToBeLinked,
-            object linkedSource)
-        {
-            //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+        #region SetLinkTargetValue
 
-            return GetNestedLinkedSource(linkWithIndex, loadedReferenceContext, referenceTypeToBeLinked, (TLinkedSource)linkedSource);
-        }
-
-        //stle: maybe responsabilize the Include
-        private TIChildLinkedSource GetNestedLinkedSource(
-            LinkWithIndex<TLink> linkWithIndex, 
-            LoadedReferenceContext loadedReferenceContext,
-            Type referenceTypeToBeLinked,
-            TLinkedSource linkedSource)
-        {
-
-            //stle: split the two query to simplify things
-            var include = _includeSet.GetIncludeWithCreateNestedLinkedSource(linkWithIndex.Link);
-            if (include == null || include.ReferenceType != referenceTypeToBeLinked){
-                //stle: default mean do not assign
-                return default(TIChildLinkedSource);
-            }
-
-            return include.CreateNestedLinkedSource(
-                linkWithIndex.Link,
-                loadedReferenceContext,
-                linkedSource,
-                linkWithIndex.Index
-            );
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-        private void SetLinkTargetValue(object linkedSource, Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink) {
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            SetLinkTargetValue((TLinkedSource)linkedSource,getLinkTargetValueForLink);
-        }
-
-
-        private void SetLinkTargetValue(TLinkedSource linkedSource, Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink)
-        {
-            var linkCount = GetLinks(linkedSource).Count;
-
-            //stle: dry with link count and null
-            if (linkCount == 0){
+        //stle: simplify me
+        private void SetLinkTargetValue<TInclude>(
+            TLinkedSource linkedSource,
+            Func<TLink, TInclude> getInclude,
+            Func<LinkWithIndexAndInclude<TLink, TInclude>, TIChildLinkedSource> getLinkTargetValueForLink) {
+            var links = GetLinks(linkedSource);
+            var linkCount = links.Count;
+            if (linkCount == 0) {
                 SetLinkTargetWithZeroValue(linkedSource);
+                return;
             }
+
+            var linkTargetResolver = new LinkTargetValueResolver<TIChildLinkedSource, TLink, TInclude>(
+                links,
+                getInclude,
+                getLinkTargetValueForLink
+            );
+            var listOfLinkTargetValueWithIndex = linkTargetResolver.Resolve();
+
             if (linkCount == 1) {
-                SetLinkTargetWithOneValue(linkedSource, getLinkTargetValueForLink);
+                SetLinkTargetWithOneValue(linkedSource, listOfLinkTargetValueWithIndex);
             }
-            else{
-                SetLinkTargetWithManyValues(linkedSource, getLinkTargetValueForLink);
+            else {
+                SetLinkTargetWithManyValues(linkedSource, listOfLinkTargetValueWithIndex);
             }
         }
 
-        private void SetLinkTargetWithZeroValue(TLinkedSource linkedSource)
-        {
+        private void SetLinkTargetWithZeroValue(TLinkedSource linkedSource) {
             _setReferences(linkedSource, new List<TIChildLinkedSource>());
         }
 
-        private void SetLinkTargetWithOneValue(TLinkedSource linkedSource, Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink) {
-            var listOfLinkTargetWithIndex = GetListOfLinkTargetValueWithIndex(linkedSource, getLinkTargetValueForLink);
-            if (!listOfLinkTargetWithIndex.Any()) { return; }
+        private void SetLinkTargetWithOneValue(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex) {
 
-            var targetValue = listOfLinkTargetWithIndex
-                .Single()
-                .TargetValue;
+            if (!listOfLinkTargetValueWithIndex.Any()) { return; }
 
-            _setReferences(linkedSource, new List<TIChildLinkedSource>{ targetValue });
+            var targetValue = listOfLinkTargetValueWithIndex.Single().TargetValue;
+            _setReferences(linkedSource, new List<TIChildLinkedSource> { targetValue });
         }
 
-        private void SetLinkTargetWithManyValues(TLinkedSource linkedSource, Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink) 
-        {
+        private void SetLinkTargetWithManyValues(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex) {
             InitListOfReferencesIfNull(linkedSource);
-            var listOfLinkTargetWithIndex = GetListOfLinkTargetValueWithIndex(linkedSource, getLinkTargetValueForLink);
 
-            foreach (var linkTargetWithIndex in listOfLinkTargetWithIndex) {
-                _getReferences(linkedSource)[linkTargetWithIndex.Index] = linkTargetWithIndex.TargetValue;
+            foreach (var linkTargetValueWithIndex in listOfLinkTargetValueWithIndex) {
+                _getReferences(linkedSource)[linkTargetValueWithIndex.Index] = linkTargetValueWithIndex.TargetValue;
             }
         }
 
-        private List<LinkTargetValueWithIndex<TIChildLinkedSource>> GetListOfLinkTargetValueWithIndex(
-            TLinkedSource linkedSource,
-            Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink)
-        {
-            return GetListOfLinkWithIndex(linkedSource)
-                .Where(linkWithIndex => linkWithIndex.Link != null)
-                .Select(linkWithIndex => CreateLinkTargetValueWithIndex(linkWithIndex, getLinkTargetValueForLink))
-                //stle: if has match worth it?
-                //stle: do not overwrite for other include
-                .Where(linkTargetValueWithIndex => !Equals(linkTargetValueWithIndex.TargetValue, default(TIChildLinkedSource)))
-                .ToList();
-        }
-
-        private static LinkTargetValueWithIndex<TIChildLinkedSource> CreateLinkTargetValueWithIndex(LinkWithIndex<TLink> linkWithIndex, Func<LinkWithIndex<TLink>, TIChildLinkedSource> getLinkTargetValueForLink)
-        {
-            return new LinkTargetValueWithIndex<TIChildLinkedSource>(
-                getLinkTargetValueForLink(linkWithIndex),
-                linkWithIndex.Index
-            );
-        }
-
-
-
-
-
-
-
-
-
-        private List<LinkWithIndex<TLink>> GetListOfLinkWithIndex(TLinkedSource linkedSource) 
-        {
-            var links = GetLinks(linkedSource);
-
-            return links
-                .Select((link, index) => new LinkWithIndex<TLink>(link, index))
-                .ToList();
-        }
-
-        private void InitListOfReferencesIfNull(TLinkedSource linkedSource)
-        {
-            if (_getReferences(linkedSource) == null){
+        private void InitListOfReferencesIfNull(TLinkedSource linkedSource) {
+            if (_getReferences(linkedSource) == null) {
                 var polymorphicListToBeBuilt = new TIChildLinkedSource[GetLinks(linkedSource).Count].ToList();
                 _setReferences(linkedSource, polymorphicListToBeBuilt);
             }
-        }
+        } 
+        #endregion
 
         private List<TLink> GetLinks(TLinkedSource linkedSource)
         {
             var links = _getLinksFunc(linkedSource);
 
-            if (links == null)
-            {
-                return new List<TLink>();
-            }
+            if (links == null) { return new List<TLink>(); }
 
             return links;
         }
