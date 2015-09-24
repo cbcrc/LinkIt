@@ -79,6 +79,10 @@
     </Compile>
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\MixedPolymorphicTests.cs" />
+    <Compile Include="ReferenceTypeByLoadingLevelParser_ManyLevelsTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ReferenceTypeByLoadingLevelParser_OneLevelTests.cs" />
     <Compile Include="Shared\IPolymorphicSource.cs" />
     <Compile Include="Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
@@ -94,6 +98,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
+    <Compile Include="Shared\TestSetupHelper.cs" />
     <Compile Include="SingleReferenceTests.cs">
       <SubType>Code</SubType>
     </Compile>

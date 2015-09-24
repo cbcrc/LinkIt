@@ -8,6 +8,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     {
         bool TempIsRoot { get; }
 
+        bool IsInSameLoadingLevel(ILoadLinkExpression child);
+
         string LinkTargetId { get; }
 
         Type LinkedSourceType { get; }

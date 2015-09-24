@@ -52,6 +52,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public bool TempIsRoot { get; private set; }
 
+        public bool IsInSameLoadingLevel(ILoadLinkExpression child)
+        {
+            throw new NotImplementedException();
+        }
+
         public string LinkTargetId { get; private set; }
 
         public Type LinkedSourceType { get; private set; }
