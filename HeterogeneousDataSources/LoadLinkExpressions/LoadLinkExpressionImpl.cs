@@ -124,40 +124,45 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         #region SetLinkTargetValue
 
-        //stle: simplify me
         private void SetLinkTargetValue<TInclude>(
             TLinkedSource linkedSource,
             Func<TLink, TInclude> getInclude,
-            Func<LinkWithIndexAndInclude<TLink, TInclude>, TIChildLinkedSource> getLinkTargetValueForLink) {
-            var links = GetLinks(linkedSource);
-            var linkCount = links.Count;
-            if (linkCount == 0) {
-                SetLinkTargetWithZeroValue(linkedSource);
-                return;
-            }
-
+            Func<LinkWithIndexAndInclude<TLink, TInclude>, TIChildLinkedSource> getLinkTargetValueForLink) 
+        {
             var linkTargetResolver = new LinkTargetValueResolver<TIChildLinkedSource, TLink, TInclude>(
-                links,
+                GetLinks(linkedSource),
                 getInclude,
                 getLinkTargetValueForLink
             );
             var listOfLinkTargetValueWithIndex = linkTargetResolver.Resolve();
 
-            if (linkCount == 1) {
+            SetLinkTargetValue(linkedSource, listOfLinkTargetValueWithIndex);
+        }
+
+        private void SetLinkTargetValue(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex)
+        {
+            var linkCount = GetLinks(linkedSource).Count;
+            if (linkCount == 0){
+                SetLinkTargetWithZeroValue(linkedSource);
+            }
+            if (linkCount == 1){
                 SetLinkTargetWithOneValue(linkedSource, listOfLinkTargetValueWithIndex);
             }
-            else {
+            else{
                 SetLinkTargetWithManyValues(linkedSource, listOfLinkTargetValueWithIndex);
             }
         }
 
         private void SetLinkTargetWithZeroValue(TLinkedSource linkedSource) {
+            //It does not matter if each include set the value to empty set
             _setReferences(linkedSource, new List<TIChildLinkedSource>());
         }
 
         private void SetLinkTargetWithOneValue(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex) {
-
-            if (!listOfLinkTargetValueWithIndex.Any()) { return; }
+            if (!listOfLinkTargetValueWithIndex.Any()){
+                //In order to avoid overriding value set by another include
+                return;
+            }
 
             var targetValue = listOfLinkTargetValueWithIndex.Single().TargetValue;
             _setReferences(linkedSource, new List<TIChildLinkedSource> { targetValue });
@@ -166,6 +171,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         private void SetLinkTargetWithManyValues(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex) {
             InitListOfReferencesIfNull(linkedSource);
 
+            //In order to avoid overriding value set by another include
             foreach (var linkTargetValueWithIndex in listOfLinkTargetValueWithIndex) {
                 _getReferences(linkedSource)[linkTargetValueWithIndex.Index] = linkTargetValueWithIndex.TargetValue;
             }
