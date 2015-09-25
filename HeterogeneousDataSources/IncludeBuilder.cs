@@ -10,7 +10,7 @@ namespace HeterogeneousDataSources
         private Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue
             = new Dictionary<TDiscriminant, IInclude>();
 
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> When<TChildLinkedSource, TId>(
+        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenNestedLinkedSource<TChildLinkedSource, TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
@@ -24,7 +24,7 @@ namespace HeterogeneousDataSources
             return this;
         }
 
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenSub<TChildLinkedSource>(
+        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenSubLinkedSource<TChildLinkedSource>(
             TDiscriminant discriminantValue) 
         {
             _includeByDiscriminantValue.Add(

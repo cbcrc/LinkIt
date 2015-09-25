@@ -22,10 +22,10 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Subs,
                     subContent => subContent.GetType(),
                     includes => includes
-                        .WhenSub<SubContentWithImageLinkedSource>(
+                        .WhenSubLinkedSource<SubContentWithImageLinkedSource>(
                             typeof(SubContentWithImage)
                         )
-                        .WhenSub<SubContentWithoutReferencesLinkedSource>(
+                        .WhenSubLinkedSource<SubContentWithoutReferencesLinkedSource>(
                             typeof(SubContentWithoutReferences)
                         )
                 );

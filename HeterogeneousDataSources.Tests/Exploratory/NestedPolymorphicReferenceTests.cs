@@ -21,10 +21,10 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Contents,
                     reference => reference.GetType(),
                     includes => includes
-                        .When<PersonLinkedSource, string>(
+                        .WhenNestedLinkedSource<PersonLinkedSource, string>(
                             typeof(string),
                             reference => (string)reference)
-                        .When<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
+                        .WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
                             typeof(int),
                             reference => ((int)reference).ToString()));
 
