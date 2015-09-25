@@ -12,12 +12,10 @@ namespace HeterogeneousDataSources
     public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>
     {
         private readonly Action<ILoadLinkExpression> _addLoadLinkExpressionAction;
-        private Type _linkedSourceType;
 
         public LoadLinkProtocolForLinkedSourceBuilder(Action<ILoadLinkExpression> addLoadLinkExpressionAction)
         {
             _addLoadLinkExpressionAction = addLoadLinkExpressionAction;
-            _linkedSourceType = typeof(TLinkedSource);
         }
 
         #region Root
@@ -160,54 +158,6 @@ namespace HeterogeneousDataSources
             return AddLoadLinkExpression(loadLinkExpression);
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TIChildLinkedSource, TLink, TDiscriminant>(
-           Func<TLinkedSource, TLink> getLinkFunc,
-           Expression<Func<TLinkedSource, TIChildLinkedSource>> linkTargetFunc,
-           Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
-        {
-            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-            //stle: dry
-            var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
-            includes(includeBuilder);
-
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
-                linkTarget.Id,
-                ToGetLookupIdsFuncForSingleValue(getLinkFunc),
-                GetReferencesFuncForSingleValue<TIChildLinkedSource>(),
-                SetReferencesActionForSingleValue(linkTarget),
-                getDiscriminantFunc,
-                includeBuilder.Build(),
-                LoadLinkExpressionType.NestedLinkedSource
-            );
-
-            return AddLoadLinkExpression(loadLinkExpression);
-        }
-
-
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TIChildLinkedSource, TLink, TDiscriminant>(
-           Func<TLinkedSource, List<TLink>> getLinksFunc,
-           Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
-           Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
-        {
-            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-            var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
-            includes(includeBuilder);
-
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
-                linkTarget.Id,
-                getLinksFunc,
-                linkTarget.GetTargetProperty,
-                linkTarget.SetTargetProperty,
-                getDiscriminantFunc,
-                includeBuilder.Build(),
-                LoadLinkExpressionType.NestedLinkedSource
-            );
-
-            return AddLoadLinkExpression(loadLinkExpression);
-        }
-
         private Dictionary<bool, IInclude> CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) {
             return CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                 CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkedSource,TChildLinkedSource, TId>(
@@ -247,7 +197,7 @@ namespace HeterogeneousDataSources
         #endregion
 
         #region SubLinkedSource
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
             Func<TLinkedSource, TChildLinkedSourceModel> getSubLinkedSourceModelsFunc,
             Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc
         )
@@ -270,7 +220,7 @@ namespace HeterogeneousDataSources
             return AddLoadLinkExpression(loadLinkExpression);
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
             Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc
         )
@@ -293,40 +243,55 @@ namespace HeterogeneousDataSources
             return AddLoadLinkExpression(loadLinkExpression);
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>(
-   Func<TLinkedSource, List<TIChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
-   Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
-   Func<TIChildLinkedSourceModel, TDiscriminant> getDiscriminantFunc,
-   Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>> includes) {
+        #endregion
+
+        #region Polymorphic
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TIChildLinkedSource, TLink, TDiscriminant>(
+           Func<TLinkedSource, TLink> getLinkFunc,
+           Expression<Func<TLinkedSource, TIChildLinkedSource>> linkTargetFunc,
+           Func<TLink, TDiscriminant> getDiscriminantFunc,
+           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+        {
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-            var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>();
+            //stle: dry
+            var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
             includes(includeBuilder);
 
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
                 linkTarget.Id,
-                getSubLinkedSourceModelsFunc,
-                linkTarget.GetTargetProperty,
-                linkTarget.SetTargetProperty,
+                ToGetLookupIdsFuncForSingleValue(getLinkFunc),
+                GetReferencesFuncForSingleValue<TIChildLinkedSource>(),
+                SetReferencesActionForSingleValue(linkTarget),
                 getDiscriminantFunc,
                 includeBuilder.Build(),
-                LoadLinkExpressionType.SubLinkedSource
+                LoadLinkExpressionType.NestedLinkedSource
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
         }
 
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLinkForList<TIChildLinkedSource, TLink, TDiscriminant>(
+           Func<TLinkedSource, List<TLink>> getLinksFunc,
+           Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
+           Func<TLink, TDiscriminant> getDiscriminantFunc,
+           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+        {
+            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
+            var includeBuilder = new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
+            includes(includeBuilder);
 
-        //public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LinkSubLinkedSource<TIChildLinkedSource, TIChildLinkedSourceModel, TDiscriminant>(
-        //    Func<TLinkedSource, List<TIChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
-        //    Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
-        //    Func<TIChildLinkedSourceModel, TDiscriminant> getDiscriminantFunc,
-        //    Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
-        //{
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
+                linkTarget.Id,
+                getLinksFunc,
+                linkTarget.GetTargetProperty,
+                linkTarget.SetTargetProperty,
+                getDiscriminantFunc,
+                includeBuilder.Build(),
+                LoadLinkExpressionType.NestedLinkedSource
+            );
 
-          
-        //}
-
-
+            return AddLoadLinkExpression(loadLinkExpression);
+        }
         #endregion
 
         #region Shared
