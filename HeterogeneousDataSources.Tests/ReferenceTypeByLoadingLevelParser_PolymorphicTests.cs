@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.Tests.Polymorphic;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
@@ -16,8 +15,58 @@ namespace HeterogeneousDataSources.Tests {
         private LoadLinkProtocol _sut;
 
         [Test]
-        public void ParseReferenceTypeByLoadingLevel_WithNestedPerson()
+        public void ParseReferenceTypeByLoadingLevel_WithNestedPerson_ShouldLoadPersonBeforeImage()
         {
+            ParseReferenceTypeByLoadingLevelParameterizableTest(
+                includes => includes
+                    .When<PersonLinkedSource, string>(
+                        typeof(string),
+                        reference => (string)reference
+                    )
+            );
+        }
+
+        [Test]
+        public void ParseReferenceTypeByLoadingLevel_WithSubPerson_ShouldNotLoadPerson()
+        {
+            ParseReferenceTypeByLoadingLevelParameterizableTest(
+                includes => includes
+                    .WhenSub<PersonLinkedSource>(
+                        typeof (PersonLinkedSource)
+                    )
+            );
+        }
+
+        [Test]
+        public void ParseReferenceTypeByLoadingLevel_WithSubAndNestedPerson_NestedPersonShouldWin() {
+            ParseReferenceTypeByLoadingLevelParameterizableTest(
+                includes => includes
+                    .WhenSub<PersonLinkedSource>(
+                        typeof(PersonLinkedSource)
+                    )
+                    .When<PersonLinkedSource, string>(
+                        typeof(string),
+                        reference => (string)reference
+                    )
+            );
+        }
+
+        [Test]
+        public void ParseReferenceTypeByLoadingLevel_WithNestedPersonAndSub_NestedPersonShouldWin() {
+            ParseReferenceTypeByLoadingLevelParameterizableTest(
+                includes => includes
+                    .When<PersonLinkedSource, string>(
+                        typeof(string),
+                        reference => (string)reference
+                    )
+                    .WhenSub<PersonLinkedSource>(
+                        typeof(PersonLinkedSource)
+                    )
+            );
+        }
+
+
+        public void ParseReferenceTypeByLoadingLevelParameterizableTest(Action<IncludeBuilder<LinkedSource, object, object, Type>> setupIncludes) {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
                 .IsRoot<string>()
@@ -25,15 +74,13 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Model.PolyTargetLinks,
                     linkedSource => linkedSource.PolyTargets,
                     reference => reference.GetType(),
-                    includes => includes
-                        .When<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
+                    includes => {
+                        includes.When<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
                             typeof(int),
                             reference => (string)reference
-                        )
-                        .When<PersonLinkedSource, string>(
-                            typeof(string),
-                            reference => (string)reference
-                        )
+                        );
+                        setupIncludes(includes);
+                    }
                 );
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
                 .LoadLinkReference(
@@ -47,37 +94,6 @@ namespace HeterogeneousDataSources.Tests {
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
-
-        //[Test]
-        //public void ParseReferenceTypeByLoadingLevel_WithSubPerson() {
-        //    var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-        //    loadLinkProtocolBuilder.For<LinkedSource>()
-        //        .IsRoot<string>()
-        //        .PolymorphicLoadLink(
-        //            linkedSource => linkedSource.Model.PolyTargetLinks,
-        //            linkedSource => linkedSource.PolyTargets,
-        //            reference => reference.GetType(),
-        //            includes => includes
-        //                //stle: keep as nested
-        //                .WhenSub<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource>(
-        //                    typeof(PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource)
-        //                )
-        //                .WhenSub<PersonLinkedSource>(
-        //                    typeof(PersonLinkedSource)
-        //                )
-        //        );
-        //    loadLinkProtocolBuilder.For<PersonLinkedSource>()
-        //        .LoadLinkReference(
-        //            linkedSource => linkedSource.Model.SummaryImageId,
-        //            linkedSource => linkedSource.SummaryImage
-        //        );
-        //    var rootLoadLinkExpression = loadLinkProtocolBuilder.GetLoadLinkExpressions()[0];
-        //    var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
-
-        //    var actual = sut.ParseReferenceTypeByLoadingLevel(rootLoadLinkExpression);
-
-        //    ApprovalsExt.VerifyPublicProperties(actual);
-        //}
 
         public class LinkedSource : ILinkedSource<Model> {
             public Model Model { get; set; }

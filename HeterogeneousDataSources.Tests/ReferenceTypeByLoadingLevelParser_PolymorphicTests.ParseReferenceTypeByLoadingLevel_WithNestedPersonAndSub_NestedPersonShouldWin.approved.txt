@@ -1,0 +1,11 @@
+﻿{
+  "0": [
+    "HeterogeneousDataSources.Tests.ReferenceTypeByLoadingLevelParser_PolymorphicTests+Model, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ],
+  "2": [
+    "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ],
+  "1": [
+    "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
+}
