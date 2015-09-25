@@ -4,12 +4,16 @@ using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class SubLinkedSourceInclude<TIChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>: 
-        IIncludeWithCreateSubLinkedSource<TIChildLinkedSource>, 
+    public class SubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
+        IIncludeWithCreateSubLinkedSource<TIChildLinkedSource,TLink>, 
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
-        public SubLinkedSourceInclude(){
+        private readonly Func<TLink, TChildLinkedSourceModel> _getSubLinkedSourceModel;
+
+        public SubLinkedSourceInclude(Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
+        {
+            _getSubLinkedSourceModel = getSubLinkedSourceModel;
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
@@ -19,24 +23,32 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public Type ChildLinkedSourceType { get; private set; }
 
-        public TIChildLinkedSource CreateSubLinkedSource(object childLinkedSourceModel, LoadedReferenceContext loadedReferenceContext) {
-            if (!(childLinkedSourceModel is TChildLinkedSourceModel)) {
-                //stle: all error message should have a way to identity context: at least linked source and target property
-                throw new InvalidOperationException(
+        public TIChildLinkedSource CreateSubLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext)
+        {
+            var childLinkSourceModel = _getSubLinkedSourceModel!=null
+                ? _getSubLinkedSourceModel(link)
+                : UseLinkAsSubLinkedSourceModel(link);
+
+            return LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+                childLinkSourceModel, 
+                loadedReferenceContext
+            );
+        }
+
+        private TChildLinkedSourceModel UseLinkAsSubLinkedSourceModel(object link)
+        {
+            if (!(link is TChildLinkedSourceModel)){
+                //stle: identifiy expression with id
+                throw new Exception(
                     string.Format(
-                        "Sub linked source of type {0} cannot have model of type {1}.",
+                        "Please provide a getSubLinkedSourceModel function in order to create a sub linked source model of type {0} from a link of type {1}.",
                         typeof(TChildLinkedSource),
-                        childLinkedSourceModel.GetType()
+                        typeof(TLink)
                     )
                 );
             }
 
-            var castedChildLinkedSourceModel = (TChildLinkedSourceModel)childLinkedSourceModel;
-
-            return LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
-                castedChildLinkedSourceModel, 
-                loadedReferenceContext
-            );
+            return (TChildLinkedSourceModel)link;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace HeterogeneousDataSources.Tests {
         {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenSubLinkedSource<PersonLinkedSource>(
+                    .WhenSubLinkedSource<PersonLinkedSource, Person>(
                         typeof (PersonLinkedSource)
                     )
             );
@@ -41,7 +41,7 @@ namespace HeterogeneousDataSources.Tests {
         public void ParseReferenceTypeByLoadingLevel_WithSubAndNestedPerson_NestedPersonShouldWin() {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenSubLinkedSource<PersonLinkedSource>(
+                    .WhenSubLinkedSource<PersonLinkedSource, Person>(
                         typeof(PersonLinkedSource)
                     )
                     .WhenNestedLinkedSource<PersonLinkedSource, string>(
@@ -59,7 +59,7 @@ namespace HeterogeneousDataSources.Tests {
                         typeof(string),
                         reference => (string)reference
                     )
-                    .WhenSubLinkedSource<PersonLinkedSource>(
+                    .WhenSubLinkedSource<PersonLinkedSource,Person>(
                         typeof(PersonLinkedSource)
                     )
             );

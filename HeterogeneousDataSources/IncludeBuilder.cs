@@ -24,36 +24,20 @@ namespace HeterogeneousDataSources
             return this;
         }
 
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenSubLinkedSource<TChildLinkedSource>(
-            TDiscriminant discriminantValue) 
+        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+            TDiscriminant discriminantValue,
+            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel = null
+        )
+            where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
         {
             _includeByDiscriminantValue.Add(
                 discriminantValue,
-                CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSource>()
+                new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>(
+                    getSubLinkedSourceModel
+                )
             );
 
             return this;
-        }
-
-        private IInclude CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSource>(){
-            Type ctorGenericType = typeof(SubLinkedSourceInclude<,,>);
-
-            var iChildLinkedSourceType = typeof (TIChildLinkedSource); //stle:dry
-            var childLinkedSourceType = typeof(TChildLinkedSource);
-
-            Type[] typeArgs ={
-                iChildLinkedSourceType,
-                childLinkedSourceType,
-                //stle: move this out
-                LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(childLinkedSourceType)
-            };
-
-            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
-
-            //stle: change to single once obsolete constructor is deleted
-            var ctor = ctorSpecificType.GetConstructors().First();
-
-            return (IInclude)ctor.Invoke(new object[]{});
         }
 
 

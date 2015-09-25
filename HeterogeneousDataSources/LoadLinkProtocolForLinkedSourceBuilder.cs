@@ -207,7 +207,9 @@ namespace HeterogeneousDataSources
                 SetReferencesActionForSingleValue(linkTarget),
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>()
+                    new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
+                        null
+                    )
                 )
             );
 
@@ -229,7 +231,10 @@ namespace HeterogeneousDataSources
                 linkTarget.SetTargetProperty,
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    new SubLinkedSourceInclude<TChildLinkedSource,TChildLinkedSource,TChildLinkedSourceModel>()
+                    //stle: dry 
+                    new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
+                        null
+                    )
                 )
             );
 
@@ -357,8 +362,7 @@ namespace HeterogeneousDataSources
             };
         }
 
-
-        private Func<T, T> CreateIdentityFunc<T>() {
+        public static Func<T, T> CreateIdentityFunc<T>() {
             return x => x;
         }
 
