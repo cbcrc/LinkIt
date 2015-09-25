@@ -1,0 +1,28 @@
+﻿{
+  "model": {
+    "id": "1",
+    "target": [
+      {
+        "type": "person",
+        "id": "a"
+      },
+      {
+        "type": "image",
+        "id": "a"
+      }
+    ]
+  },
+  "target": [
+    {
+      "$type": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests",
+      "id": "a",
+      "name": "name-a",
+      "summaryImageId": "person-img-a"
+    },
+    {
+      "$type": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests",
+      "id": "a",
+      "alt": "alt-a"
+    }
+  ]
+}
