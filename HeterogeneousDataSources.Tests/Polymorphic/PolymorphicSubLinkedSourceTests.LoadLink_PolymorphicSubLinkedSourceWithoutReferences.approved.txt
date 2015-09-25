@@ -1,0 +1,16 @@
+﻿{
+  "model": {
+    "id": "1",
+    "target": {
+      "type": "pdf",
+      "id": "a"
+    }
+  },
+  "target": {
+    "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourceTests+PdfReferenceLinkedSource, HeterogeneousDataSources.Tests",
+    "model": {
+      "type": "pdf",
+      "id": "a"
+    }
+  }
+}

@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\MixedPolymorphicTests.cs" />
+    <Compile Include="Polymorphic\PolymorphicSubLinkedSourceTests.cs" />
     <Compile Include="ReferenceTypeByLoadingLevelParser_ManyLevelsTests.cs">
       <SubType>Code</SubType>
     </Compile>
