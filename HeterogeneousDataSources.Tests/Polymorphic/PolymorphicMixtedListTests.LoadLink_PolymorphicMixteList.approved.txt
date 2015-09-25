@@ -1,0 +1,47 @@
+﻿{
+  "model": {
+    "id": "1",
+    "targetReference": [
+      1,
+      "nested",
+      {
+        "$type": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests",
+        "id": "as-sub-linked-source",
+        "name": "The Name",
+        "summaryImageId": "the-id"
+      }
+    ]
+  },
+  "target": [
+    {
+      "$type": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests",
+      "id": "1",
+      "name": "name-1",
+      "summaryImageId": "person-img-1"
+    },
+    {
+      "$type": "HeterogeneousDataSources.Tests.PersonLinkedSource, HeterogeneousDataSources.Tests",
+      "model": {
+        "id": "nested",
+        "name": "name-nested",
+        "summaryImageId": "person-img-nested"
+      },
+      "summaryImage": {
+        "id": "person-img-nested",
+        "alt": "alt-person-img-nested"
+      }
+    },
+    {
+      "$type": "HeterogeneousDataSources.Tests.PersonLinkedSource, HeterogeneousDataSources.Tests",
+      "model": {
+        "id": "as-sub-linked-source",
+        "name": "The Name",
+        "summaryImageId": "the-id"
+      },
+      "summaryImage": {
+        "id": "the-id",
+        "alt": "alt-the-id"
+      }
+    }
+  ]
+}
