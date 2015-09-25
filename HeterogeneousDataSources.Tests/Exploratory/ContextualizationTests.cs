@@ -18,10 +18,8 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 .LoadLinkNestedLinkedSource(
                     linkedSource => linkedSource.Model.PersonContextualization.Id,
                     linkedSource => linkedSource.Person,
-                    (linkedSource, childLinkedSource) => {
-                        childLinkedSource.Contextualization = linkedSource.Model.PersonContextualization;
-                        return childLinkedSource;
-                    }
+                    (linkedSource, childLinkedSource) => 
+                        childLinkedSource.Contextualization = linkedSource.Model.PersonContextualization
                 );
             loadLinkProtocolBuilder.For<PersonContextualizedLinkedSource>()
                 .LoadLinkReference(

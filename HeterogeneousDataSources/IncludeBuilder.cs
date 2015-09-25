@@ -13,12 +13,12 @@ namespace HeterogeneousDataSources
         public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenNestedLinkedSource<TChildLinkedSource, TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc,
-            Func<TLinkedSource, int, TChildLinkedSource, TChildLinkedSource> initChildLinkedSource = null
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
             ) 
         {
             _includeByDiscriminantValue.Add(
                 discriminantValue,
-                CreatePolymorphicNestedLinkedSourceInclude(getLookupIdFunc, initChildLinkedSource)
+                CreatePolymorphicNestedLinkedSourceInclude(getLookupIdFunc, initChildLinkedSourceAction)
             );
 
             return this;
@@ -58,8 +58,8 @@ namespace HeterogeneousDataSources
 
 
         private IInclude CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
-            Func<TLink, TId> getLookupIdFunc,
-            Func<TLinkedSource, int, TChildLinkedSource, TChildLinkedSource> initChildLinkedSource) 
+            Func<TLink, TId> getLookupIdFunc, 
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
             Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
 
@@ -81,7 +81,7 @@ namespace HeterogeneousDataSources
             return (IInclude)ctor.Invoke(
                 new object[]{
                     getLookupIdFunc,
-                    initChildLinkedSource
+                    initChildLinkedSourceAction
                 }
             );
         }

@@ -30,10 +30,8 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                             reference => (string)reference.Id,
                             (linkedSource, referenceIndex, childLinkedSource) =>
                             {
-                                if (childLinkedSource == null) { return null; }
                                 var contextualization = linkedSource.Model.ContentContextualizations[referenceIndex];
                                 childLinkedSource.ContentContextualization = contextualization;
-                                return childLinkedSource;
                             }
                         )
                 );

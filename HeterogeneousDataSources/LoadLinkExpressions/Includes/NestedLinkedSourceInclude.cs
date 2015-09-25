@@ -9,15 +9,15 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;
-        private readonly Func<TLinkedSource, int, TChildLinkedSource, TChildLinkedSource> _initChildLinkedSource;
+        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
 
         public NestedLinkedSourceInclude(
             Func<TLink, TId> getLookupIdFunc,
-            Func<TLinkedSource, int, TChildLinkedSource, TChildLinkedSource> initChildLinkedSource = null
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
         )
         {
             _getLookupIdFunc = getLookupIdFunc;
-            _initChildLinkedSource = initChildLinkedSource;
+            _initChildLinkedSourceAction = initChildLinkedSourceAction;
             ReferenceType = typeof(TChildLinkedSourceModel);
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
@@ -39,16 +39,17 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
                 loadedReferenceContext
             );
 
-            var initializedChildLinkedSource = InitChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
+            InitChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
 
-            return initializedChildLinkedSource;
+            return childLinkedSource;
         }
 
-        private TChildLinkedSource InitChildLinkedSource(TLinkedSource linkedSource, int referenceIndex, TChildLinkedSource childLinkedSource) 
-        {
-            if (_initChildLinkedSource == null) { return childLinkedSource; }
+        private void InitChildLinkedSource(TLinkedSource linkedSource, int referenceIndex, TChildLinkedSource childLinkedSource) {
+        if (childLinkedSource == null) { return; }
 
-            return _initChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
+            if (_initChildLinkedSourceAction != null) {
+                _initChildLinkedSourceAction(linkedSource, referenceIndex, childLinkedSource);
+            }
         }
 
         public Type ChildLinkedSourceType { get; private set; }
