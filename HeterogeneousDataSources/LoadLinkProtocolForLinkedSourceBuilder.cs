@@ -33,7 +33,6 @@ namespace HeterogeneousDataSources
                         null
                     )
                 ),
-                LoadLinkExpressionType.Root,
                 true
             );
 
@@ -59,8 +58,7 @@ namespace HeterogeneousDataSources
                     new ReferenceInclude<TReference, TId, TReference, TId>(
                         CreateIdentityFunc<TId>()
                     )
-                ),
-                LoadLinkExpressionType.Reference
+                )
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -83,8 +81,7 @@ namespace HeterogeneousDataSources
                     new ReferenceInclude<TReference, TId, TReference, TId>(
                         CreateIdentityFunc<TId>()
                     )
-                ),
-                LoadLinkExpressionType.Reference
+                )
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -118,8 +115,7 @@ namespace HeterogeneousDataSources
                 link => true,
                 CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(
                     InitChildLinkedSourceActionForSingleValue(initChildLinkedSourceAction)
-                ),
-                LoadLinkExpressionType.NestedLinkedSource
+                )
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -151,8 +147,7 @@ namespace HeterogeneousDataSources
                 link => true,
                 CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(
                     initChildLinkedSourceAction
-                ),
-                LoadLinkExpressionType.NestedLinkedSource
+                )
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -213,8 +208,7 @@ namespace HeterogeneousDataSources
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                     new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>()
-                ),
-                LoadLinkExpressionType.SubLinkedSource
+                )
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -236,8 +230,7 @@ namespace HeterogeneousDataSources
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                     new SubLinkedSourceInclude<TChildLinkedSource,TChildLinkedSource,TChildLinkedSourceModel>()
-                ),
-                LoadLinkExpressionType.SubLinkedSource
+                )
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -263,8 +256,7 @@ namespace HeterogeneousDataSources
                 GetReferencesFuncForSingleValue<TIChildLinkedSource>(),
                 SetReferencesActionForSingleValue(linkTarget),
                 getDiscriminantFunc,
-                includeBuilder.Build(),
-                LoadLinkExpressionType.NestedLinkedSource
+                includeBuilder.Build()
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -286,8 +278,7 @@ namespace HeterogeneousDataSources
                 linkTarget.GetTargetProperty,
                 linkTarget.SetTargetProperty,
                 getDiscriminantFunc,
-                includeBuilder.Build(),
-                LoadLinkExpressionType.NestedLinkedSource
+                includeBuilder.Build()
             );
 
             return AddLoadLinkExpression(loadLinkExpression);

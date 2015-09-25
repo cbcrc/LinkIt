@@ -14,7 +14,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         Type LinkedSourceType { get; }
         List<Type> ReferenceTypes { get; }
-        LoadLinkExpressionType LoadLinkExpressionType { get; }
 
         void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
 

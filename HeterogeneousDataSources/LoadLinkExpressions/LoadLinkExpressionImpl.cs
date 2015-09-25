@@ -23,7 +23,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Dictionary<TDiscriminant, IInclude> includes,
             //stle: remove me
-            LoadLinkExpressionType tempLoadLinkExpressionType,
             bool tempIsRoot=false
             )
         {
@@ -45,9 +44,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             ChildLinkedSourceTypes = _includeSet.GetIncludesWithChildLinkedSource()
                 .Select(include => include.ChildLinkedSourceType)
                 .ToList();
-
-            //stle: this must go away
-            LoadLinkExpressionType = tempLoadLinkExpressionType;
         }
 
         public bool TempIsRoot { get; private set; }
@@ -63,7 +59,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public Type LinkedSourceType { get; private set; }
         public List<Type> ReferenceTypes { get; private set; }
-        public LoadLinkExpressionType LoadLinkExpressionType { get; private set; }
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
