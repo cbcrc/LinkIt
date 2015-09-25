@@ -20,14 +20,14 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 .PolymorphicLoadLink(
                     linkedSource => linkedSource.Model.ContentContextualization,
                     linkedSource => linkedSource.Content,
-                    reference => reference.ContentType,
+                    link => link.ContentType,
                     includes => includes
                         .WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.PersonWithoutContextualizationLinkedSource, string>(
                             "person",
-                            reference => (string)reference.Id)
+                            link => (string)link.Id)
                         .WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
                             "image",
-                            reference => (string)reference.Id,
+                            link => (string)link.Id,
                             (linkedSource, referenceIndex, childLinkedSource) =>
                                 childLinkedSource.ContentContextualization = linkedSource.Model.ContentContextualization)
                 );

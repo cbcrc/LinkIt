@@ -1,0 +1,18 @@
+﻿{
+  "model": {
+    "id": "1",
+    "targetReference": "nested"
+  },
+  "target": {
+    "$type": "HeterogeneousDataSources.Tests.PersonLinkedSource, HeterogeneousDataSources.Tests",
+    "model": {
+      "id": "nested",
+      "name": "name-nested",
+      "summaryImageId": "person-img-nested"
+    },
+    "summaryImage": {
+      "id": "person-img-nested",
+      "alt": "alt-person-img-nested"
+    }
+  }
+}

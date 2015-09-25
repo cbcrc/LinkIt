@@ -21,7 +21,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 .PolymorphicLoadLink(
                     linkedSource => linkedSource.Model.Target,
                     linkedSource => linkedSource.Target,
-                    subContent => subContent.Type,
+                    link => link.Type,
                     includes => includes
                         .WhenSubLinkedSource<PdfReferenceLinkedSource, PolymorphicReference>(
                             "pdf"

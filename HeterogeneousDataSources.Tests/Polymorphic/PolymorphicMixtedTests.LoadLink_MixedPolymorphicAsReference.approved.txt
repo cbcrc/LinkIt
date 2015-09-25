@@ -1,0 +1,12 @@
+﻿{
+  "model": {
+    "id": "1",
+    "targetReference": 1
+  },
+  "target": {
+    "$type": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests",
+    "id": "1",
+    "name": "name-1",
+    "summaryImageId": "person-img-1"
+  }
+}

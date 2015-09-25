@@ -1,4 +1,5 @@
-﻿using ApprovalTests.Reporters;
+﻿using System.Collections.Generic;
+using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -6,7 +7,7 @@ using RC.Testing;
 namespace HeterogeneousDataSources.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class PolymorphicReferenceTests {
+    public class PolymorphicMixtedTests {
         private FakeReferenceLoader<Model, string> _fakeReferenceLoader;
         private LoadLinkProtocol _sut;
 
@@ -17,18 +18,26 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
             loadLinkProtocolBuilder.For<LinkedSource>()
                 .IsRoot<string>()
                 .PolymorphicLoadLink(
-                    linkedSource => linkedSource.Model.Target,
+                    linkedSource => linkedSource.Model.TargetReference,
                     linkedSource => linkedSource.Target,
-                    link => link.Type,
+                    link => link.GetType(),
                     includes => includes
-                        .WhenReference<Image,string>(
-                            "image",
-                            link=>link.Id
+                        .WhenReference<Person,string>(
+                            typeof(int),
+                            link=>link.ToString()
                         )
-                        .WhenReference<Person, string>(
-                            "person",
-                            link => link.Id
+                        .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                            typeof(string),
+                            link => link.ToString()
                         )
+                        .WhenSubLinkedSource<PersonLinkedSource, Person>(
+                            typeof(Person)
+                        )
+                );
+            loadLinkProtocolBuilder.For<PersonLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
                 );
 
             _fakeReferenceLoader =
@@ -37,14 +46,11 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
         }
 
         [Test]
-        public void LoadLink_PolymorphicReferenceWithImage() {
+        public void LoadLink_MixedPolymorphicAsReference() {
             _fakeReferenceLoader.FixValue(
                 new Model {
                     Id = "1",
-                    Target = new PolymorphicReference{
-                        Type = "image",
-                        Id = "a"
-                    }
+                    TargetReference = 1
                 }
             );
 
@@ -54,13 +60,28 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
         }
 
         [Test]
-        public void LoadLink_PolymorphicReferenceWithPerson() {
+        public void LoadLink_MixedPolymorphicAsNestedLinkedSource() {
             _fakeReferenceLoader.FixValue(
                 new Model {
                     Id = "1",
-                    Target = new PolymorphicReference {
-                        Type = "person",
-                        Id = "a"
+                    TargetReference = "nested"
+                }
+            );
+
+            var actual = _sut.LoadLink<LinkedSource>("1");
+
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        [Test]
+        public void LoadLink_MixedPolymorphicAsSubLinkedSource() {
+            _fakeReferenceLoader.FixValue(
+                new Model {
+                    Id = "1",
+                    TargetReference = new Person{
+                        Id = "as-sub-linked-source",
+                        Name = "The Name",
+                        SummaryImageId = "the-id"
                     }
                 }
             );
@@ -77,12 +98,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
 
         public class Model{
             public string Id { get; set; }
-            public PolymorphicReference Target { get; set; }
-        }
-
-        public class PolymorphicReference {
-            public string Type { get; set; }
-            public string Id { get; set; }
+            public object TargetReference { get; set; }
         }
     }
 }

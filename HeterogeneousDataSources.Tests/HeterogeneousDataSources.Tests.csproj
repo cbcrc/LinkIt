@@ -78,7 +78,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
-    <Compile Include="Polymorphic\MixedPolymorphicTests.cs" />
+    <Compile Include="Polymorphic\PolymorphicMixtedTests.cs" />
     <Compile Include="Polymorphic\PolymorphicReferencesTests.cs" />
     <Compile Include="Polymorphic\PolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicSubLinkedSourceTests.cs" />
