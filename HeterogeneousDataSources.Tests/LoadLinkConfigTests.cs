@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.LoadLinkExpressions;
+using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 
@@ -10,15 +11,25 @@ namespace HeterogeneousDataSources.Tests {
     public class LoadLinkConfigTests
     {
         [Test]
-        public void CreateLoadLinkConfig_ManyRootExpressionForTheSameChildLinkedSource_ShouldThrow() {
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<PersonLinkedSource>()
-                .IsRoot<string>()
-                .IsRoot<int>();
+        public void CreateLoadLinkConfig_ManyLoadLinkExpressionWithSameLinkTargetId_ShouldThrow() {
+            TestDelegate act = () => new LoadLinkConfig(
+                new List<ILoadLinkExpression>{
+                    new LoadLinkExpressionImpl<object, object, object, object>(
+                        "the-duplicate", null, null, null, null, new Dictionary<object, IInclude>()
+                    ),
+                    new LoadLinkExpressionImpl<object, object, object, object>(
+                        "the-duplicate", null, null, null, null, new Dictionary<object, IInclude>()
+                    )
+                }
+            );
 
-            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
-
-            Assert.That(act, Throws.ArgumentException.With.Message.ContainsSubstring("PersonLinkedSource"));
+            Assert.That(
+                act, 
+                Throws.ArgumentException
+                    .With.Message.ContainsSubstring("link target id").And
+                    .With.Message.ContainsSubstring("the-duplicate")
+            );
         }
+
     }
 }

@@ -9,10 +9,12 @@ namespace HeterogeneousDataSources {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
 
         #region Initialization
-        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions) {
-            var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
+        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions)
+        {
+            EnsureLoadLinkExpressionLinkTargetIdsAreUnique(loadLinkExpressions);
 
-            EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(loadLinkExpressions);
+            var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
+            
             //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
 
             _referenceTypeByLoadingLevelByRootLinkedSourceType =
@@ -40,19 +42,14 @@ namespace HeterogeneousDataSources {
                 );
         }
 
-        private void EnsureChildLinkedSourceTypeIsUniqueInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions) {
-            var childLinkedSourceTypeWithDuplicates = GetRootLoadLinkExpressions(loadLinkExpressions)
-                .SelectMany(rootExpression => rootExpression.ChildLinkedSourceTypes)
-                .GroupBy(rootLinkedSource => rootLinkedSource)
-                .Where(group => group.Count() > 1)
-                .Select(group => group.Key)
-                .ToList();
+        private void EnsureLoadLinkExpressionLinkTargetIdsAreUnique(List<ILoadLinkExpression> loadLinkExpressions) {
+            var linkTargetIdsWithDuplicates = loadLinkExpressions.GetNotUniqueKey(loadLinkExpression => loadLinkExpression.LinkTargetId);
 
-            if (childLinkedSourceTypeWithDuplicates.Any()) {
+            if (linkTargetIdsWithDuplicates.Any()) {
                 throw new ArgumentException(
                     string.Format(
-                        "Can only have one root expression per child linked source, but there are many for : {0}.",
-                        String.Join(",", childLinkedSourceTypeWithDuplicates)
+                        "Can only have one load link expression per link target id, but there are many for : {0}.",
+                        String.Join(",", linkTargetIdsWithDuplicates)
                     )
                 );
             }

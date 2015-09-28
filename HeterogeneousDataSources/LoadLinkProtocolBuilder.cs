@@ -6,7 +6,8 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 namespace HeterogeneousDataSources {
     public class LoadLinkProtocolBuilder
     {
-        private readonly List<ILoadLinkExpression> _loadLinkExpressions = new List<ILoadLinkExpression>();
+        private readonly Dictionary<string, ILoadLinkExpression> _loadLinkExpressionsById = 
+            new Dictionary<string, ILoadLinkExpression>();
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> For<TLinkedSource>(){
             return new LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>(AddLoadLinkExpression);
@@ -14,7 +15,7 @@ namespace HeterogeneousDataSources {
 
         private void AddLoadLinkExpression(ILoadLinkExpression loadLinkExpression)
         {
-            _loadLinkExpressions.Add(loadLinkExpression);
+            _loadLinkExpressionsById[loadLinkExpression.LinkTargetId] = loadLinkExpression;
         }
 
         public LoadLinkProtocol Build(IReferenceLoader referenceLoader)
@@ -22,13 +23,13 @@ namespace HeterogeneousDataSources {
             if (referenceLoader == null) { throw new ArgumentNullException("referenceLoader"); }
 
             return new LoadLinkProtocol(
-                referenceLoader, 
-                new LoadLinkConfig(_loadLinkExpressions)
+                referenceLoader,
+                new LoadLinkConfig(GetLoadLinkExpressions())
             );
         }
 
         public List<ILoadLinkExpression> GetLoadLinkExpressions(){
-            return _loadLinkExpressions.ToList();
+            return _loadLinkExpressionsById.Values.ToList();
         }
     }
 }
