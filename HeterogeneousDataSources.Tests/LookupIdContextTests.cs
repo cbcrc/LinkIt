@@ -18,29 +18,24 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void Add_Distinct_ShouldAdd()
         {
-            _sut.Add<Image,string>(new List<string> { "a", "b" });
+            _sut.AddSingle<Image>("a");
+            _sut.AddSingle<Image>("b");
 
             Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new []{"a","b"}));
         }
 
         [Test]
         public void Add_WithDuplicates_DuplicatesShouldNotBeAdded() {
-            _sut.Add<Image,string>(new List<string>{ "a", "a", "b" });
-
-            Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
-        }
-
-        [Test]
-        public void Add_SameReferenceTypeTwice_ShouldMerge() {
-            _sut.Add<Image, string>(new List<string> { "a" });
-            _sut.Add<Image, string>(new List<string> { "b" });
+            _sut.AddSingle<Image>("a");
+            _sut.AddSingle<Image>("a");
+            _sut.AddSingle<Image>("b");
 
             Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
         }
 
         [Test]
         public void Add_NullId_ShouldIgnoreNullId() {
-            _sut.AddSingle<Image, string>(null);
+            _sut.AddSingle<Image>(null);
 
             //stle: think of how we can
             //  avoid depending on reference loader to optimize for empty ids
