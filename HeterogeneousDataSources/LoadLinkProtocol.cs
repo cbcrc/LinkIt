@@ -21,12 +21,17 @@ namespace HeterogeneousDataSources {
 
             //stle: dry
 
-            var loadedReferenceContext = Load2<TRootLinkedSource, TRootLinkedSourceModel>(model);
+            var loadedReferenceContext = new LoadedReferenceContext();
+            var rootLinkedSource = LoadLinkExpressionUtil.CreateLinkedSource<TRootLinkedSource, TRootLinkedSourceModel>(
+                model,
+                loadedReferenceContext
+            );
+
+            Load2<TRootLinkedSource>(loadedReferenceContext);
 
             LinkReferences(loadedReferenceContext);
 
-            return (TRootLinkedSource)loadedReferenceContext.LinkedSourcesToBeBuilt
-                .SingleOrDefault(linkedSource => linkedSource is TRootLinkedSource);
+            return rootLinkedSource;
         }
 
 
@@ -58,15 +63,8 @@ namespace HeterogeneousDataSources {
         }
 
         //stle dry
-        private LoadedReferenceContext Load2<TRootLinkedSource, TRootLinkedSourceModel>(TRootLinkedSourceModel model)
-            where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new() 
+        private void Load2<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext)
         {
-            var loadedReferenceContext = new LoadedReferenceContext();
-            LoadLinkExpressionUtil.CreateLinkedSource<TRootLinkedSource, TRootLinkedSourceModel>(
-                model,
-                loadedReferenceContext
-            );
-
             using (_referenceLoader) {
                 var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TRootLinkedSource>();
 
@@ -78,7 +76,6 @@ namespace HeterogeneousDataSources {
                     LinkSubLinkedSources(loadedReferenceContext);
                 }
             }
-            return loadedReferenceContext;
         }
 
 
