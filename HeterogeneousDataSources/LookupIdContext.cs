@@ -10,7 +10,7 @@ namespace HeterogeneousDataSources
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
 
 
-        public void AddSingle<TReference, TId>(TId lookupId) {
+        public void Add<TReference, TId>(TId lookupId) {
             var tReference = typeof(TReference);
             if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
                 _lookupIdsByReferenceType.Add(tReference, new List<TId>());
