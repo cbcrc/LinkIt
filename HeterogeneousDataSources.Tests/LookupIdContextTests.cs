@@ -13,24 +13,24 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void Add_Distinct_ShouldAdd() {
-            _sut.AddSingle<Image, string>("a");
-            _sut.AddSingle<Image, string>("b");
+            _sut.Add<Image, string>("a");
+            _sut.Add<Image, string>("b");
 
             Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
         }
 
         [Test]
         public void Add_WithDuplicates_DuplicatesShouldNotBeAdded() {
-            _sut.AddSingle<Image, string>("a");
-            _sut.AddSingle<Image, string>("a");
-            _sut.AddSingle<Image, string>("b");
+            _sut.Add<Image, string>("a");
+            _sut.Add<Image, string>("a");
+            _sut.Add<Image, string>("b");
 
             Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
         }
 
         [Test]
         public void Add_NullId_ShouldIgnoreNullId() {
-            _sut.AddSingle<Image, string>(null);
+            _sut.Add<Image, string>(null);
 
             //stle: think of how we can
             //  avoid depending on reference loader to optimize for empty ids
