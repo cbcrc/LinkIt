@@ -13,24 +13,12 @@ namespace HeterogeneousDataSources
             _loadLinkExpressions = loadLinkExpressions;
         }
 
-        public Tree<ILoadLinkExpression> Create<TRootLinkedSource>() {
-            var childLoadLinkExpressions = GetChildLoadLinkExpressions(new List<Type> { typeof(TRootLinkedSource) });
-            return Create(null, childLoadLinkExpressions);
-        }
-
-        //stle: private?
         public Tree<ILoadLinkExpression> Create(ILoadLinkExpression node)
         {
             var childLoadLinkExpressions = GetChildLoadLinkExpressions(node);
-            return Create(node, childLoadLinkExpressions);
-        }
-
-        private Tree<ILoadLinkExpression> Create(ILoadLinkExpression node, List<ILoadLinkExpression> childLoadLinkExpressions)
-        {
             var children = childLoadLinkExpressions
                 .Select(Create)
                 .ToList();
-
             return new Tree<ILoadLinkExpression>(
                 node,
                 children
@@ -82,15 +70,10 @@ namespace HeterogeneousDataSources
             var nodeAsNestedLoadLinkExpression = node as INestedLoadLinkExpression;
             if (nodeAsNestedLoadLinkExpression == null) { return new List<ILoadLinkExpression>(); }
 
-            return GetChildLoadLinkExpressions(nodeAsNestedLoadLinkExpression.ChildLinkedSourceTypes);
-        }
-
-        private List<ILoadLinkExpression> GetChildLoadLinkExpressions(List<Type> linkedSourceTypes) {
             return _loadLinkExpressions
                 .Where(loadLinkExpression =>
-                    linkedSourceTypes.Contains(loadLinkExpression.LinkedSourceType))
+                    nodeAsNestedLoadLinkExpression.ChildLinkedSourceTypes.Contains(loadLinkExpression.LinkedSourceType))
                 .ToList();
         }
-
     }
 }

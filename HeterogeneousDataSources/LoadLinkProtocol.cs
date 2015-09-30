@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
     public class LoadLinkProtocol {
@@ -13,27 +12,6 @@ namespace HeterogeneousDataSources {
             _referenceLoader = referenceLoader;
             _config = config;
         }
-
-        public TRootLinkedSource LoadLinkModel<TRootLinkedSource, TRootLinkedSourceModel>(TRootLinkedSourceModel model)
-            where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new() 
-        {
-            //stle: make LinkedSource a base class???
-
-            //stle: dry
-
-            var loadedReferenceContext = new LoadedReferenceContext();
-            var rootLinkedSource = LoadLinkExpressionUtil.CreateLinkedSource<TRootLinkedSource, TRootLinkedSourceModel>(
-                model,
-                loadedReferenceContext
-            );
-
-            Load2<TRootLinkedSource>(loadedReferenceContext);
-
-            LinkReferences(loadedReferenceContext);
-
-            return rootLinkedSource;
-        }
-
 
         public TRootLinkedSource LoadLink<TRootLinkedSource>(object modelId)
         {
@@ -61,23 +39,6 @@ namespace HeterogeneousDataSources {
                 );
             }
         }
-
-        //stle dry
-        private void Load2<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext)
-        {
-            using (_referenceLoader) {
-                var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel2<TRootLinkedSource>();
-
-                for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++) {
-                    var referenceTypeToBeLoaded = _config.GetReferenceTypeToBeLoaded2<TRootLinkedSource>(loadingLevel);
-
-                    LoadNestingLevel(loadedReferenceContext, referenceTypeToBeLoaded);
-                    LinkNestedLinkedSources(loadedReferenceContext, referenceTypeToBeLoaded);
-                    LinkSubLinkedSources(loadedReferenceContext);
-                }
-            }
-        }
-
 
         private LoadedReferenceContext Load<TRootLinkedSource>(object modelId)
         {
