@@ -7,6 +7,9 @@ namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private readonly Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
+        
+        //stle: delete this
+        private LoadLinkExpressionTreeFactory _tempLinkExpressionTreeFactory;
 
         #region Initialization
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions)
@@ -14,6 +17,7 @@ namespace HeterogeneousDataSources {
             EnsureLoadLinkExpressionLinkTargetIdsAreUnique(loadLinkExpressions);
 
             var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
+            _tempLinkExpressionTreeFactory = linkExpressionTreeFactory;
             
             //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
 
@@ -26,6 +30,7 @@ namespace HeterogeneousDataSources {
             _allLoadLinkExpressions = loadLinkExpressions;
         }
 
+        //stle: adapt this
         private Dictionary<Type, Dictionary<int, List<Type>>> GetReferenceTypeByLoadingLevelByRootLinkedSourceType(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory linkExpressionTreeFactory) {
             var parser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
 
@@ -90,6 +95,19 @@ namespace HeterogeneousDataSources {
         } 
         #endregion
 
+        public int GetNumberOfLoadingLevel2<TRootLinkedSource>() {
+            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel2<TRootLinkedSource>();
+
+            return referenceTypeByLoadingLevel.Count;
+        }
+
+        public List<Type> GetReferenceTypeToBeLoaded2<TRootLinkedSource>(int loadingLevel) {
+            var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel2<TRootLinkedSource>();
+
+            return referenceTypeByLoadingLevel[loadingLevel];
+        }
+        
+        //stle: still required?
         public int GetNumberOfLoadingLevel<TRootLinkedSource>()
         {
             var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
@@ -97,6 +115,7 @@ namespace HeterogeneousDataSources {
             return referenceTypeByLoadingLevel.Count;
         }
 
+        //stle: still required?
         public List<Type> GetReferenceTypeToBeLoaded<TRootLinkedSource>(int loadingLevel) {
             var referenceTypeByLoadingLevel = GetReferenceTypeByLoadingLevel<TRootLinkedSource>();
 
@@ -133,9 +152,16 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
+        //stle: still required?
         private Dictionary<int, List<Type>> GetReferenceTypeByLoadingLevel<TRootLinkedSource>(){
             var rootLinkedSourceType = typeof(TRootLinkedSource);
             return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType];
         }
+
+        private Dictionary<int, List<Type>> GetReferenceTypeByLoadingLevel2<TRootLinkedSource>() {
+            var parser = new ReferenceTypeByLoadingLevelParser(_tempLinkExpressionTreeFactory);
+            return parser.ParseReferenceTypeByLoadingLevel<TRootLinkedSource>();
+        }
+
     }
 }

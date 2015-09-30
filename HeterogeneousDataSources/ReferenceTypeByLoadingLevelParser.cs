@@ -5,13 +5,23 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
     public class ReferenceTypeByLoadingLevelParser {
-        private LoadLinkExpressionTreeFactory _linkExpressionTreeFactory;
+        private readonly LoadLinkExpressionTreeFactory _linkExpressionTreeFactory;
 
         public ReferenceTypeByLoadingLevelParser(LoadLinkExpressionTreeFactory linkExpressionTreeFactory)
         {
             _linkExpressionTreeFactory = linkExpressionTreeFactory;
         }
 
+        public Dictionary<int, List<Type>> ParseReferenceTypeByLoadingLevel<TRootLinkedSource>() {
+            var linkedExpressionTree = _linkExpressionTreeFactory.Create<TRootLinkedSource>();
+
+            var loadingLevelByReferenceType = new Dictionary<Type, int>();
+            ParseTree(linkedExpressionTree, 0, loadingLevelByReferenceType);
+            return ToReferenceTypeByLoadingLevel(loadingLevelByReferenceType);
+        }
+
+
+        //stle: still required?
         public Dictionary<int, List<Type>> ParseReferenceTypeByLoadingLevel(ILoadLinkExpression rootExpression) {
             var linkedExpressionTree = _linkExpressionTreeFactory.Create(rootExpression);
 
@@ -33,13 +43,19 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        private static int GetNextLoadingLevel(ILoadLinkExpression node, ILoadLinkExpression child, int loadingLevel) {
+        private static int GetNextLoadingLevel(ILoadLinkExpression node, ILoadLinkExpression child, int loadingLevel)
+        {
+            if (node == null) { return loadingLevel; }
+
             return node.IsInDifferentLoadingLevel(child)
                 ? loadingLevel + 1
                 : loadingLevel;
         }
 
-        private void ParseNode(ILoadLinkExpression node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel) {
+        private void ParseNode(ILoadLinkExpression node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel)
+        {
+            if (node == null) { return; }
+
             foreach (var referenceType in node.ReferenceTypes){
                 var currentValue = GetLoadingLevelCurrentValue(referenceType, loadingLevelByReferenceType);
                 var newValue = Math.Max(currentValue, loadingLevel);

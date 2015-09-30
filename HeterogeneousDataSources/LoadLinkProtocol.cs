@@ -66,10 +66,10 @@ namespace HeterogeneousDataSources {
         private void Load2<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext)
         {
             using (_referenceLoader) {
-                var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TRootLinkedSource>();
+                var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel2<TRootLinkedSource>();
 
-                for (int loadingLevel = 1; loadingLevel < numberOfLoadingLevel; loadingLevel++) {
-                    var referenceTypeToBeLoaded = _config.GetReferenceTypeToBeLoaded<TRootLinkedSource>(loadingLevel);
+                for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++) {
+                    var referenceTypeToBeLoaded = _config.GetReferenceTypeToBeLoaded2<TRootLinkedSource>(loadingLevel);
 
                     LoadNestingLevel(loadedReferenceContext, referenceTypeToBeLoaded);
                     LinkNestedLinkedSources(loadedReferenceContext, referenceTypeToBeLoaded);
