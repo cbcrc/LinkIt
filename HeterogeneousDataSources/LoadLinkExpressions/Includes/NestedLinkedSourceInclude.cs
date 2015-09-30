@@ -27,7 +27,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
         {
             var lookupId = _getLookupIdFunc(link);
-            lookupIdContext.AddSingle<TChildLinkedSourceModel>(lookupId);
+            lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
         public TIChildLinkedSource CreateNestedLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){

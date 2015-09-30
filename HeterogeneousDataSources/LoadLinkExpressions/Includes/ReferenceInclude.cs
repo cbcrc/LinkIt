@@ -23,7 +23,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
         {
             var lookupId = _getLookupIdFunc(link);
-            lookupIdContext.AddSingle<TReference>(lookupId);
+            lookupIdContext.AddSingle<TReference, TId>(lookupId);
         }
 
         public TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext) {

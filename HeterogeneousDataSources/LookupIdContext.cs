@@ -7,13 +7,13 @@ namespace HeterogeneousDataSources
     //stle: this may become a builder
     public class LookupIdContext
     {
-        private readonly Dictionary<Type, List<object>> _lookupIdsByReferenceType = new Dictionary<Type, List<object>>();
+        private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
 
 
-        public void AddSingle<TReference>(object lookupId) {
+        public void AddSingle<TReference, TId>(TId lookupId) {
             var tReference = typeof(TReference);
             if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
-                _lookupIdsByReferenceType.Add(tReference, new List<object>());
+                _lookupIdsByReferenceType.Add(tReference, new List<TId>());
             }
 
             //stle: think of how we can
@@ -22,12 +22,14 @@ namespace HeterogeneousDataSources
             //  to have a simple list initilization mechanism in linking (especially in poly)
             if (lookupId == null) { return; }
 
-            var currentLookupIds = _lookupIdsByReferenceType[tReference];
+            var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
             currentLookupIds.Add(lookupId);
         }
 
         public List<Type> GetReferenceTypes() {
-            return _lookupIdsByReferenceType.Keys.ToList();
+            return _lookupIdsByReferenceType
+                .Keys
+                .ToList();
         }
 
         public List<TId> GetReferenceIds<TReference, TId>()
@@ -41,11 +43,9 @@ namespace HeterogeneousDataSources
                 );
             }
 
-            //stle: invalid id type: explicit error msg
+            var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
 
-
-            return _lookupIdsByReferenceType[tReference]
-                .Cast<TId>()
+            return casted
                 .Distinct()
                 .ToList();
         }

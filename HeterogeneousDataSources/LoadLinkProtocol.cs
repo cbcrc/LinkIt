@@ -19,8 +19,6 @@ namespace HeterogeneousDataSources {
         {
             //stle: make LinkedSource a base class???
 
-            //stle: sub linked source
-
             //stle: dry
 
             var loadedReferenceContext = new LoadedReferenceContext();
@@ -28,26 +26,12 @@ namespace HeterogeneousDataSources {
                 model,
                 loadedReferenceContext
             );
-            LinkSubLinkedSources(loadedReferenceContext);
 
             Load2<TRootLinkedSource>(loadedReferenceContext);
 
             LinkReferences(loadedReferenceContext);
 
             return rootLinkedSource;
-        }
-
-        public TRootLinkedSource LoadLinkWithoutRoot<TRootLinkedSource, TRootLinkedSourceModel, TId>(TId modelId)
-            where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new() 
-        {
-            var lookupIdContext = new LookupIdContext();
-            lookupIdContext.AddSingle<TRootLinkedSourceModel>(modelId);
-            var loadedReferenceContext = new LoadedReferenceContext();
-
-            _referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
-
-            var model = loadedReferenceContext.GetOptionalReference<TRootLinkedSourceModel, TId>(modelId);
-            return LoadLinkModel<TRootLinkedSource, TRootLinkedSourceModel>(model);
         }
 
 
