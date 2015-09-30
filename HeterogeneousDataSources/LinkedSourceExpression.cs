@@ -11,13 +11,15 @@ namespace HeterogeneousDataSources
         public LinkedSourceExpression()
         {
             LinkedSourceType = typeof (TLinkedSource);
+            ReferenceType = typeof (TLinkedSourceModel);
             ReferenceTypes = new List<Type>{
-                typeof (TLinkedSourceModel)
+                ReferenceType
             };
         }
 
         //stle: interface segragation
         public Type LinkedSourceType { get; private set; }
+        public Type ReferenceType { get; private set; }
         public List<Type> ReferenceTypes { get; private set; }
 
         //Is LoadLinkExpressionUtil still required?
@@ -30,5 +32,24 @@ namespace HeterogeneousDataSources
                 loadedReferenceContext
             );
         }
+
+        public TLinkedSource LoadLinkModel(
+            object modelId, 
+            LoadedReferenceContext loadedReferenceContext,
+            IReferenceLoader referenceLoader)
+        {
+            //stle: TId is problematic, remove it (what about int?) or get it by reflection
+            var modelIdAsString = (string) modelId;
+
+            var lookupIdContext = new LookupIdContext();
+            lookupIdContext.AddSingle<TLinkedSourceModel,string>(modelIdAsString);
+
+            referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
+            var model = loadedReferenceContext.GetOptionalReference<TLinkedSourceModel, string>(modelIdAsString);
+
+            return CreateLinkedSource(model, loadedReferenceContext);
+        }
+
+
     }
 }

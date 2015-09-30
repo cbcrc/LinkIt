@@ -27,16 +27,8 @@ namespace HeterogeneousDataSources {
                 .GetLinkedSourceExpression<TRootLinkedSource>()
                 .CreateLinkedSource(model, loadedReferenceContext);
 
-            //stle: do it at creation???? by linkedSource expression
-            LinkSubLinkedSources(loadedReferenceContext);
-
-            Load<TRootLinkedSource>(loadedReferenceContext, 1);
-
-            LinkReferences(loadedReferenceContext);
-            
-            return linkedSource;
+            return LoadLinkRootLinkedSource(linkedSource, loadedReferenceContext);
         }
-
 
         public TRootLinkedSource LoadLink<TRootLinkedSource>(object modelId)
         {
@@ -44,15 +36,22 @@ namespace HeterogeneousDataSources {
             EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>();
 
             var loadedReferenceContext = new LoadedReferenceContext();
-            loadedReferenceContext.AddLinkedSourceToBeBuilt(modelId);
+            var rootLinkedSource = _config
+                .GetLinkedSourceExpression<TRootLinkedSource>()
+                .LoadLinkModel(modelId, loadedReferenceContext, _referenceLoader);
 
-            Load<TRootLinkedSource>(loadedReferenceContext, 0);
-            
-            //stle: dry
+            return LoadLinkRootLinkedSource(rootLinkedSource, loadedReferenceContext);
+        }
+
+        private TRootLinkedSource LoadLinkRootLinkedSource<TRootLinkedSource>(TRootLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
+            //stle: do it at creation???? by linkedSource expression
+            LinkSubLinkedSources(loadedReferenceContext);
+
+            Load<TRootLinkedSource>(loadedReferenceContext, 1);
+
             LinkReferences(loadedReferenceContext);
 
-            return (TRootLinkedSource)loadedReferenceContext.LinkedSourcesToBeBuilt
-                .SingleOrDefault(linkedSource => linkedSource is TRootLinkedSource);
+            return linkedSource;
         }
 
         private void EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>()
