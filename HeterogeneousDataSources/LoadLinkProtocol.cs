@@ -14,14 +14,20 @@ namespace HeterogeneousDataSources {
         }
 
         //stle: dry
-        public TRootLinkedSource LoadLinkModel<TRootLinkedSource>(TRootLinkedSource linkedSource)
+        public TRootLinkedSource LoadLinkModel<TRootLinkedSource>(object model)
         {
             //stle: beaviour on model null? and id null
 
+            //stle: remove this eventually
             EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>();
 
             var loadedReferenceContext = new LoadedReferenceContext();
-            loadedReferenceContext.AddLinkedSourceToBeBuilt(linkedSource);
+
+            var linkedSource = _config
+                .GetLinkedSourceExpression<TRootLinkedSource>()
+                .CreateLinkedSource(model, loadedReferenceContext);
+
+            //stle: do it at creation???? by linkedSource expression
             LinkSubLinkedSources(loadedReferenceContext);
 
             Load<TRootLinkedSource>(loadedReferenceContext, 1);

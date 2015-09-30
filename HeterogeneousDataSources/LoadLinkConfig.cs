@@ -137,5 +137,32 @@ namespace HeterogeneousDataSources {
             var rootLinkedSourceType = typeof(TRootLinkedSource);
             return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType];
         }
+
+        public ILinkedSourceExpression<TLinkedSource> GetLinkedSourceExpression<TLinkedSource>()
+        {
+            //stle: preload these expressions: no reflexion after init phase
+
+            return CreateLinkedSourceExpression<TLinkedSource>();
+        }
+
+        public ILinkedSourceExpression<TLinkedSource> CreateLinkedSourceExpression<TLinkedSource>()
+        {
+            Type ctorGenericType = typeof(LinkedSourceExpression<,>);
+
+            var linkedSourceType = typeof(TLinkedSource);
+
+            Type[] typeArgs ={
+                linkedSourceType,
+                //stle: dry; !move this into LinkedSourceExpression
+                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>.GetLinkedSourceModelType(linkedSourceType)
+            };
+
+            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
+
+            var ctor = ctorSpecificType.GetConstructors().Single();
+            var uncasted = ctor.Invoke(new object[] {});
+            return (ILinkedSourceExpression<TLinkedSource>) uncasted;
+            
+        }
     }
 }

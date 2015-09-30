@@ -31,13 +31,10 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_WithModel_ShouldLinkModel() {
-            var actual = _sut.LoadLinkModel(
-                new SingleReferenceLinkedSource
-                {
-                    Model = new SingleReferenceContent {
-                        Id = "1",
-                        SummaryImageId = "a"
-                    }
+            var actual = _sut.LoadLinkModel<SingleReferenceLinkedSource>(
+                new SingleReferenceContent {
+                    Id = "1",
+                    SummaryImageId = "a"
                 }
             );
 

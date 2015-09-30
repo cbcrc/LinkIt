@@ -42,6 +42,8 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ILinkTarget.cs" />
     <Compile Include="IncludeBuilder.cs" />
+    <Compile Include="ILinkedSourceExpression.cs" />
+    <Compile Include="LinkedSourceExpression.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
