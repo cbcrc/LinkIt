@@ -13,13 +13,36 @@ namespace HeterogeneousDataSources {
             _config = config;
         }
 
+        //stle: dry
+        public TRootLinkedSource LoadLinkModel<TRootLinkedSource>(TRootLinkedSource linkedSource)
+        {
+            //stle: beaviour on model null? and id null
+
+            EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>();
+
+            var loadedReferenceContext = new LoadedReferenceContext();
+            loadedReferenceContext.AddLinkedSourceToBeBuilt(linkedSource);
+            LinkSubLinkedSources(loadedReferenceContext);
+
+            Load<TRootLinkedSource>(loadedReferenceContext, 1);
+
+            LinkReferences(loadedReferenceContext);
+            
+            return linkedSource;
+        }
+
+
         public TRootLinkedSource LoadLink<TRootLinkedSource>(object modelId)
         {
             if (modelId == null) { throw new ArgumentNullException("modelId");}
             EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>();
 
-            var loadedReferenceContext = Load<TRootLinkedSource>(modelId);
+            var loadedReferenceContext = new LoadedReferenceContext();
+            loadedReferenceContext.AddLinkedSourceToBeBuilt(modelId);
+
+            Load<TRootLinkedSource>(loadedReferenceContext, 0);
             
+            //stle: dry
             LinkReferences(loadedReferenceContext);
 
             return (TRootLinkedSource)loadedReferenceContext.LinkedSourcesToBeBuilt
@@ -40,16 +63,13 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        private LoadedReferenceContext Load<TRootLinkedSource>(object modelId)
+        private void Load<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext, int startAtLoadingLevel)
         {
-            var loadedReferenceContext = new LoadedReferenceContext();
-            loadedReferenceContext.AddLinkedSourceToBeBuilt(modelId);
-            
             using (_referenceLoader)
             {
                 var numberOfLoadingLevel = _config.GetNumberOfLoadingLevel<TRootLinkedSource>();
 
-                for (int loadingLevel = 0; loadingLevel < numberOfLoadingLevel; loadingLevel++){
+                for (int loadingLevel = startAtLoadingLevel; loadingLevel < numberOfLoadingLevel; loadingLevel++) {
                     var referenceTypeToBeLoaded = _config.GetReferenceTypeToBeLoaded<TRootLinkedSource>(loadingLevel);
 
                     LoadNestingLevel(loadedReferenceContext, referenceTypeToBeLoaded);
@@ -57,7 +77,6 @@ namespace HeterogeneousDataSources {
                     LinkSubLinkedSources(loadedReferenceContext);
                 }
             }
-            return loadedReferenceContext;
         }
 
         private void LoadNestingLevel(LoadedReferenceContext loadedReferenceContext, List<Type> referenceTypeToBeLoaded)

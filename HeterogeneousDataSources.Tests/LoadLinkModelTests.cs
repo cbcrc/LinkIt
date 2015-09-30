@@ -18,6 +18,7 @@ namespace HeterogeneousDataSources.Tests {
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
+                .IsRoot<string>()
                 .LoadLinkReference(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
@@ -30,10 +31,13 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_WithModel_ShouldLinkModel() {
-            var actual = _sut.LoadLinkModel<SingleReferenceLinkedSource, SingleReferenceContent>(
-                new SingleReferenceContent {
-                    Id = "1",
-                    SummaryImageId = "a"
+            var actual = _sut.LoadLinkModel(
+                new SingleReferenceLinkedSource
+                {
+                    Model = new SingleReferenceContent {
+                        Id = "1",
+                        SummaryImageId = "a"
+                    }
                 }
             );
 
