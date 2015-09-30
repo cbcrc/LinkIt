@@ -89,6 +89,7 @@
     </Compile>
     <Compile Include="ReferenceTypeByLoadingLevelParser_PolymorphicTests.cs" />
     <Compile Include="ReferenceTypeByLoadingLevelParser_OneLevelTests.cs" />
+    <Compile Include="LoadLinkModelTests.cs" />
     <Compile Include="Shared\IPolymorphicSource.cs" />
     <Compile Include="Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
