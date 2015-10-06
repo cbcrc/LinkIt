@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources.Tests.Shared;
@@ -41,5 +40,27 @@ namespace HeterogeneousDataSources.Tests {
             Assert.That(actual.Model.Id, Is.EqualTo("1"));
             Assert.That(actual.SummaryImage.Id, Is.EqualTo("a"));
         }
+
+        [Test]
+        public void LoadLink_WithModels_ShouldLinkModels() {
+            var actual = _sut.LoadLinkModel<SingleReferenceLinkedSource>(
+                new List<object>{
+                    new SingleReferenceContent {
+                        Id = "1",
+                        SummaryImageId = "a"
+                    },
+                    new SingleReferenceContent {
+                        Id = "2",
+                        SummaryImageId = "b"
+                    }
+                }
+            );
+
+            var summaryImageIds = actual
+                .Select(item => item.SummaryImage.Id)
+                .ToList();
+            Assert.That(summaryImageIds, Is.EquivalentTo(new[] {"a", "b"}));
+        }
+
     }
 }

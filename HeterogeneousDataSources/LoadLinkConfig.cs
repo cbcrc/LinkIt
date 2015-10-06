@@ -140,7 +140,7 @@ namespace HeterogeneousDataSources {
 
         public ILinkedSourceExpression<TLinkedSource> GetLinkedSourceExpression<TLinkedSource>()
         {
-            //stle: preload these expressions: no reflexion after init phase
+            //stle: lazy load is good enough
 
             return CreateLinkedSourceExpression<TLinkedSource>();
         }

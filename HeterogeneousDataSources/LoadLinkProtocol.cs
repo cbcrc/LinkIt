@@ -16,6 +16,13 @@ namespace HeterogeneousDataSources {
         //stle: dry
         public TRootLinkedSource LoadLinkModel<TRootLinkedSource>(object model)
         {
+            var asList = new List<object> {model};
+            return LoadLinkModel<TRootLinkedSource>(asList)
+                .SingleOrDefault();
+        }
+
+        //stle: dry
+        public List<TRootLinkedSource> LoadLinkModel<TRootLinkedSource>(List<object> models) {
             //stle: beaviour on model null? and id null
 
             //stle: remove this eventually
@@ -23,11 +30,17 @@ namespace HeterogeneousDataSources {
 
             var loadedReferenceContext = new LoadedReferenceContext();
 
-            var linkedSource = _config
-                .GetLinkedSourceExpression<TRootLinkedSource>()
-                .CreateLinkedSource(model, loadedReferenceContext);
+            var linkedSources = 
+                models
+                .Select(model =>
+                    _config
+                        .GetLinkedSourceExpression<TRootLinkedSource>()
+                        .CreateLinkedSource(model, loadedReferenceContext)
+                )
+                .ToList();
 
-            return LoadLinkRootLinkedSource(linkedSource, loadedReferenceContext);
+            LoadLinkRootLinkedSource<TRootLinkedSource>(loadedReferenceContext);
+            return linkedSources;
         }
 
         public TRootLinkedSource LoadLink<TRootLinkedSource>(object modelId)
@@ -40,18 +53,18 @@ namespace HeterogeneousDataSources {
                 .GetLinkedSourceExpression<TRootLinkedSource>()
                 .LoadLinkModel(modelId, loadedReferenceContext, _referenceLoader);
 
-            return LoadLinkRootLinkedSource(rootLinkedSource, loadedReferenceContext);
+            LoadLinkRootLinkedSource<TRootLinkedSource>(loadedReferenceContext);
+
+            return rootLinkedSource;
         }
 
-        private TRootLinkedSource LoadLinkRootLinkedSource<TRootLinkedSource>(TRootLinkedSource linkedSource, LoadedReferenceContext loadedReferenceContext) {
+        private void LoadLinkRootLinkedSource<TRootLinkedSource>(LoadedReferenceContext loadedReferenceContext) {
             //stle: do it at creation???? by linkedSource expression
             LinkSubLinkedSources(loadedReferenceContext);
 
             Load<TRootLinkedSource>(loadedReferenceContext, 1);
 
             LinkReferences(loadedReferenceContext);
-
-            return linkedSource;
         }
 
         private void EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>()
