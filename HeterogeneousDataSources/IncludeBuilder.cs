@@ -11,9 +11,9 @@ namespace HeterogeneousDataSources
             = new Dictionary<TDiscriminant, IInclude>();
 
         //stle: improve usability
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenNestedLinkedSource<TChildLinkedSource, TId>(
+        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenNestedLinkedSource<TChildLinkedSource>(
             TDiscriminant discriminantValue,
-            Func<TLink, TId> getLookupIdFunc,
+            Func<TLink, object> getLookupIdFunc,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
             ) 
         {
@@ -25,10 +25,10 @@ namespace HeterogeneousDataSources
             return this;
         }
 
-        private IInclude CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
-            Func<TLink, TId> getLookupIdFunc,
+        private IInclude CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource>(
+            Func<TLink, object> getLookupIdFunc,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) {
-            Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
+            Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,>);
 
             var childLinkedSourceType = typeof(TChildLinkedSource);
             Type[] typeArgs ={
@@ -37,7 +37,6 @@ namespace HeterogeneousDataSources
                 typeof(TLink),
                 childLinkedSourceType, 
                 LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(childLinkedSourceType),
-                typeof(TId)
             };
 
             Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
@@ -71,15 +70,15 @@ namespace HeterogeneousDataSources
         }
 
         //stle: improve usability
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenReference<TReference, TId>(
+        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenReference<TReference>(
             TDiscriminant discriminantValue,
-            Func<TLink, TId> getLookupIdFunc
+            Func<TLink, object> getLookupIdFunc
         )
             where TReference:TIChildLinkedSource
         {
             _includeByDiscriminantValue.Add(
                 discriminantValue,
-                new ReferenceInclude<TIChildLinkedSource, TLink, TReference, TId>(
+                new ReferenceInclude<TIChildLinkedSource, TLink, TReference>(
                     getLookupIdFunc
                 )
             );

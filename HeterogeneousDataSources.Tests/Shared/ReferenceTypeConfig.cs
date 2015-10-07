@@ -25,7 +25,7 @@ namespace HeterogeneousDataSources.Tests.Shared
         public void Load(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext) {
             var lookupIds = lookupIdContext.GetReferenceIds<TReference, TId>();
             var references = _loadReferencesFunc(lookupIds);
-            loadedReferenceContext.AddReferences(references, _getReferenceIdFunc);
+            loadedReferenceContext.AddReferences(references, reference => _getReferenceIdFunc(reference));
         }
     }
 }

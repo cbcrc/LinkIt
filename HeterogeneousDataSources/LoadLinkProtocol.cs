@@ -62,7 +62,7 @@ namespace HeterogeneousDataSources {
             //stle: do it at creation???? by linkedSource expression
             LinkSubLinkedSources(loadedReferenceContext);
 
-            Load<TRootLinkedSource>(loadedReferenceContext, 1);
+            Load<TRootLinkedSource>(loadedReferenceContext, 0);
 
             LinkReferences(loadedReferenceContext);
         }

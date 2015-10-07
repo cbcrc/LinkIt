@@ -38,14 +38,11 @@ namespace HeterogeneousDataSources
             LoadedReferenceContext loadedReferenceContext,
             IReferenceLoader referenceLoader)
         {
-            //stle: TId is problematic, remove it (what about int?) or get it by reflection
-            var modelIdAsString = (string) modelId;
-
             var lookupIdContext = new LookupIdContext();
-            lookupIdContext.AddSingle<TLinkedSourceModel,string>(modelIdAsString);
+            lookupIdContext.AddSingle<TLinkedSourceModel>(modelId);
 
             referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
-            var model = loadedReferenceContext.GetOptionalReference<TLinkedSourceModel, string>(modelIdAsString);
+            var model = loadedReferenceContext.GetOptionalReference<TLinkedSourceModel>(modelId);
 
             return CreateLinkedSource(model, loadedReferenceContext);
         }

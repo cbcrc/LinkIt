@@ -7,13 +7,12 @@ namespace HeterogeneousDataSources
     //stle: this may become a builder
     public class LookupIdContext
     {
-        private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, List<object>> _lookupIdsByReferenceType = new Dictionary<Type, List<object>>();
 
-
-        public void AddSingle<TReference, TId>(TId lookupId) {
+        public void AddSingle<TReference>(object lookupId) {
             var tReference = typeof(TReference);
             if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
-                _lookupIdsByReferenceType.Add(tReference, new List<TId>());
+                _lookupIdsByReferenceType.Add(tReference, new List<object>());
             }
 
             //stle: think of how we can
@@ -22,25 +21,10 @@ namespace HeterogeneousDataSources
             //  to have a simple list initilization mechanism in linking (especially in poly)
             if (lookupId == null) { return; }
 
-            var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
+            var currentLookupIds = _lookupIdsByReferenceType[tReference];
             currentLookupIds.Add(lookupId);
         }
 
-
-        //stle: obsolete, rename AddSingle
-        public void Add<TReference, TId>(List<TId> lookupIds)
-        {
-            //Assume that that lookupIds cannot contains null
-
-            var tReference = typeof(TReference);
-
-            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
-                _lookupIdsByReferenceType.Add(tReference, new List<TId>());
-            }
-
-            var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
-            currentLookupIds.AddRange(lookupIds);
-        }
 
         public List<Type> GetReferenceTypes() {
             return _lookupIdsByReferenceType
@@ -59,9 +43,8 @@ namespace HeterogeneousDataSources
                 );
             }
 
-            var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
-
-            return casted
+            return _lookupIdsByReferenceType[tReference]
+                .Cast<TId>()
                 .Distinct()
                 .ToList();
         }

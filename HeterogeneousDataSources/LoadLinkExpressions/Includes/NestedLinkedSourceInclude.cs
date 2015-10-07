@@ -2,17 +2,17 @@ using System;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class NestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
+    public class NestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel> :
         IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>, 
         IIncludeWithAddLookupId<TLink>, 
         IIncludeWithChildLinkedSource 
         where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
     {
-        private readonly Func<TLink, TId> _getLookupIdFunc;
+        private readonly Func<TLink, object> _getLookupIdFunc;
         private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
 
         public NestedLinkedSourceInclude(
-            Func<TLink, TId> getLookupIdFunc,
+            Func<TLink, object> getLookupIdFunc,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
         )
         {
@@ -27,13 +27,13 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
         {
             var lookupId = _getLookupIdFunc(link);
-            lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
+            lookupIdContext.AddSingle<TChildLinkedSourceModel>(lookupId);
         }
 
         public TIChildLinkedSource CreateNestedLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
             //stle: dry with other load link expressions
             var lookupId = _getLookupIdFunc(link);
-            var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
+            var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel>(lookupId);
             var childLinkedSource = LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
                 reference, 
                 loadedReferenceContext

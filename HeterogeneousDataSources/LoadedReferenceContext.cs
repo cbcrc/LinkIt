@@ -8,7 +8,7 @@ namespace HeterogeneousDataSources {
         private readonly List<object> _linkedSourcesWhereSubLinkedSourceAreLinked = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
-        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
+        public void AddReferences<TReference>(List<TReference> references, Func<TReference,object> getReferenceIdFunc){
             var tReference = typeof (TReference);
             if (_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
                 throw new InvalidOperationException(
@@ -27,13 +27,13 @@ namespace HeterogeneousDataSources {
         }
 
         //stle: temporary work around for image, fix the root cause by solving the query vs id problem
-        public void AddReference<TReference, TId>(TReference reference, TId id) {
+        public void AddReference<TReference>(TReference reference, object id) {
             var tReference = typeof(TReference);
             if (!_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
-                _referenceDictionaryByReferenceType.Add(tReference, new Dictionary<TId, TReference>());
+                _referenceDictionaryByReferenceType.Add(tReference, new Dictionary<object, TReference>());
             }
 
-            var referenceDictionnary = (Dictionary<TId, TReference>)
+            var referenceDictionnary = (Dictionary<object, TReference>)
                 _referenceDictionaryByReferenceType[tReference];
 
             referenceDictionnary.Add(id,reference);
@@ -64,7 +64,7 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>() {
+        private Dictionary<object, TReference> GetReferenceDictionary<TReference>() {
             var tReference = typeof (TReference);
             if (!_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
                 throw new InvalidOperationException(
@@ -74,13 +74,13 @@ namespace HeterogeneousDataSources {
                 );
             }
 
-            return (Dictionary<TId, TReference>)_referenceDictionaryByReferenceType[tReference];
+            return (Dictionary<object, TReference>)_referenceDictionaryByReferenceType[tReference];
         }
 
-        public TReference GetOptionalReference<TReference, TId>(TId lookupId) {
+        public TReference GetOptionalReference<TReference>(object lookupId) {
             if (lookupId == null) { return default(TReference); }
 
-            var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
+            var referenceDictionnary = GetReferenceDictionary<TReference>();
 
             if (!referenceDictionnary.ContainsKey(lookupId)) { return default(TReference); }
 

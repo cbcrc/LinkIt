@@ -21,11 +21,11 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Target,
                     link => link.Type,
                     includes => includes
-                        .WhenReference<Image,string>(
+                        .WhenReference<Image>(
                             "image",
                             link=>link.Id
                         )
-                        .WhenReference<Person, string>(
+                        .WhenReference<Person>(
                             "person",
                             link => link.Id
                         )

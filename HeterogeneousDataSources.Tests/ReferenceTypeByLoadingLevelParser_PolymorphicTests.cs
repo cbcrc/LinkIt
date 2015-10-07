@@ -19,7 +19,7 @@ namespace HeterogeneousDataSources.Tests {
         {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                    .WhenNestedLinkedSource<PersonLinkedSource>(
                         typeof(string),
                         reference => (string)reference
                     )
@@ -44,7 +44,7 @@ namespace HeterogeneousDataSources.Tests {
                     .WhenSubLinkedSource<PersonLinkedSource, Person>(
                         typeof(PersonLinkedSource)
                     )
-                    .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                    .WhenNestedLinkedSource<PersonLinkedSource>(
                         typeof(string),
                         reference => (string)reference
                     )
@@ -55,7 +55,7 @@ namespace HeterogeneousDataSources.Tests {
         public void ParseReferenceTypeByLoadingLevel_WithNestedPersonAndSub_NestedPersonShouldWin() {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                    .WhenNestedLinkedSource<PersonLinkedSource>(
                         typeof(string),
                         reference => (string)reference
                     )
@@ -75,7 +75,7 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.PolyTargets,
                     reference => reference.GetType(),
                     includes => {
-                        includes.WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
+                        includes.WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource>(
                             typeof(int),
                             reference => (string)reference
                         );

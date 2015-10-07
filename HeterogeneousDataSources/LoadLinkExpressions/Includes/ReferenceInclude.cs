@@ -2,14 +2,14 @@ using System;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class ReferenceInclude<TIReference, TLink, TReference, TId>: 
+    public class ReferenceInclude<TIReference, TLink, TReference>: 
         IIncludeWithGetReference<TIReference, TLink>, 
         IIncludeWithAddLookupId<TLink>
         where TReference: TIReference
     {
-        private readonly Func<TLink, TId> _getLookupIdFunc;
+        private readonly Func<TLink, object> _getLookupIdFunc;
 
-        public ReferenceInclude(Func<TLink, TId> getLookupIdFunc){
+        public ReferenceInclude(Func<TLink, object> getLookupIdFunc){
             _getLookupIdFunc = getLookupIdFunc;
             ReferenceType = typeof(TReference);
         }
@@ -23,13 +23,13 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
         {
             var lookupId = _getLookupIdFunc(link);
-            lookupIdContext.AddSingle<TReference, TId>(lookupId);
+            lookupIdContext.AddSingle<TReference>(lookupId);
         }
 
         public TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext) {
             //stle: dry with other load link expressions
             var lookupId = _getLookupIdFunc(link);
-            return loadedReferenceContext.GetOptionalReference<TReference, TId>(lookupId);
+            return loadedReferenceContext.GetOptionalReference<TReference>(lookupId);
         }
     }
 }
