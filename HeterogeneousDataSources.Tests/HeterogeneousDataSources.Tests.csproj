@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exploratory\ContextualizationTests.cs" />
+    <Compile Include="Exploratory\Generics\GenericPieTests.cs" />
+    <Compile Include="Exploratory\Generics\Pie.cs" />
     <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
     <Compile Include="LinkTargetTests.cs" />
     <Compile Include="LinkTargetFactoryTests.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Shared\IPolymorphicModel.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />
     <Compile Include="Shared\Person.cs" />
+    <Compile Include="Exploratory\Generics\PieRepository.cs" />
     <Compile Include="Shared\PersonRepository.cs" />
     <Compile Include="Shared\Image.cs" />
     <Compile Include="Shared\ImageRepository.cs" />

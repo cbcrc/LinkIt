@@ -1,0 +1,10 @@
+﻿{
+  "model": {
+    "id": "1",
+    "pieContent": "String"
+  },
+  "summaryImage": {
+    "id": "String",
+    "alt": "alt-String"
+  }
+}
