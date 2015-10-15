@@ -13,6 +13,8 @@ namespace HeterogeneousDataSources {
             _config = config;
         }
 
+        public IReferenceLoader ReferenceLoader { get { return _referenceLoader; } }
+
         //stle: dry
         public TRootLinkedSource LoadLinkModel<TRootLinkedSource>(object model)
         {
@@ -22,6 +24,13 @@ namespace HeterogeneousDataSources {
         }
 
         //stle: dry
+        //stle: I really think Id as object was an error, it causes the problem of List<T> invoking the object overload.
+        //      Think of a better solution, 
+        //      ex: loadLinkProtocol.For<SeasonSummaryLinkedSource>.LoadLinkModel(x);
+        //      ex: loadLinkProtocol.For<SeasonSummaryLinkedSource>.LoadLinkModel(listOfX);
+        //      ex: loadLinkProtocol.For<SeasonSummaryLinkedSource>.LoadLink(id);
+        //      ex: loadLinkProtocol.For<SeasonSummaryLinkedSource>.LoadLink(listOfIds);
+        //stle: think of the impact on include config
         public List<TRootLinkedSource> LoadLinkModel<TRootLinkedSource>(List<object> models) {
             //stle: beaviour on model null? and id null
 
