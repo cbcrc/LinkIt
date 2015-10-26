@@ -48,7 +48,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<LinkedSource>("1");
+            var actual = _sut.LoadLink<LinkedSource,string>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -65,7 +65,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<LinkedSource>("1");
+            var actual = _sut.LoadLink<LinkedSource,string>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

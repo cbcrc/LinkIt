@@ -4,8 +4,8 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources
 {
-    public class LinkedSourceExpression<TLinkedSource, TLinkedSourceModel> 
-        : ILinkedSourceExpression<TLinkedSource>
+    public class LinkedSourceExpression<TLinkedSource, TLinkedSourceModel, TId> 
+        : ILinkedSourceExpression<TLinkedSource,TId>
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new() 
     {
         public LinkedSourceExpression()
@@ -34,18 +34,15 @@ namespace HeterogeneousDataSources
         }
 
         public TLinkedSource LoadLinkModel(
-            object modelId, 
+            TId modelId, 
             LoadedReferenceContext loadedReferenceContext,
             IReferenceLoader referenceLoader)
         {
-            //stle: TId is problematic, remove it (what about int?) or get it by reflection
-            var modelIdAsString = (string) modelId;
-
             var lookupIdContext = new LookupIdContext();
-            lookupIdContext.AddSingle<TLinkedSourceModel,string>(modelIdAsString);
+            lookupIdContext.AddSingle<TLinkedSourceModel,TId>(modelId);
 
             referenceLoader.LoadReferences(lookupIdContext, loadedReferenceContext);
-            var model = loadedReferenceContext.GetOptionalReference<TLinkedSourceModel, string>(modelIdAsString);
+            var model = loadedReferenceContext.GetOptionalReference<TLinkedSourceModel, TId>(modelId);
 
             return CreateLinkedSource(model, loadedReferenceContext);
         }

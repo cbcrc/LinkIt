@@ -48,7 +48,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 }
             );
 
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource,string>("1");
 
             Assert.That(actual.Person.Contextualization.SummaryImageId, Is.Null);
             Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("person-img-32"));
@@ -67,7 +67,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 }
             );
 
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource,string>("1");
 
             Assert.That(actual.Person.Contextualization.SummaryImageId, Is.EqualTo("overriden-image"));
             Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("overriden-image"));

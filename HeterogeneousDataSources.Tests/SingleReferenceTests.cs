@@ -37,7 +37,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource, string>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -51,7 +51,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource, string>("1");
 
             Assert.That(actual.SummaryImage, Is.Null);
         }
@@ -65,7 +65,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource, string>("1");
 
             Assert.That(actual.SummaryImage, Is.Null);
         }

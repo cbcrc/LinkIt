@@ -138,30 +138,31 @@ namespace HeterogeneousDataSources {
             return _referenceTypeByLoadingLevelByRootLinkedSourceType[rootLinkedSourceType];
         }
 
-        public ILinkedSourceExpression<TLinkedSource> GetLinkedSourceExpression<TLinkedSource>()
+        public ILinkedSourceExpression<TLinkedSource, TId> GetLinkedSourceExpression<TLinkedSource, TId>()
         {
             //stle: lazy load is good enough
 
-            return CreateLinkedSourceExpression<TLinkedSource>();
+            return CreateLinkedSourceExpression<TLinkedSource,TId>();
         }
 
-        public ILinkedSourceExpression<TLinkedSource> CreateLinkedSourceExpression<TLinkedSource>()
+        public ILinkedSourceExpression<TLinkedSource, TId> CreateLinkedSourceExpression<TLinkedSource, TId>()
         {
-            Type ctorGenericType = typeof(LinkedSourceExpression<,>);
+            Type ctorGenericType = typeof(LinkedSourceExpression<,,>);
 
             var linkedSourceType = typeof(TLinkedSource);
 
             Type[] typeArgs ={
                 linkedSourceType,
                 //stle: dry; !move this into LinkedSourceExpression
-                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>.GetLinkedSourceModelType(linkedSourceType)
+                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>.GetLinkedSourceModelType(linkedSourceType),
+                typeof(TId)
             };
 
             Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
 
             var ctor = ctorSpecificType.GetConstructors().Single();
             var uncasted = ctor.Invoke(new object[] {});
-            return (ILinkedSourceExpression<TLinkedSource>) uncasted;
+            return (ILinkedSourceExpression<TLinkedSource,TId>) uncasted;
             
         }
     }

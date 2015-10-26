@@ -30,7 +30,7 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_WithModel_ShouldLinkModel() {
-            var actual = _sut.LoadLinkModel<SingleReferenceLinkedSource>(
+            var actual = _sut.LoadLinkModel<SingleReferenceLinkedSource,string>(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = "a"
@@ -43,7 +43,7 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_WithModels_ShouldLinkModels() {
-            var actual = _sut.LoadLinkModel<SingleReferenceLinkedSource>(
+            var actual = _sut.LoadLinkModel<SingleReferenceLinkedSource,string>(
                 new List<object>{
                     new SingleReferenceContent {
                         Id = "1",

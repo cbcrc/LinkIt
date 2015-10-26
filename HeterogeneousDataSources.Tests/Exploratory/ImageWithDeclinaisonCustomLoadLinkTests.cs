@@ -43,7 +43,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
                 }
             );
 
-            var actual = _sut.LoadLink<WithImageLinkedSource>("1");
+            var actual = _sut.LoadLink<WithImageLinkedSource,string>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

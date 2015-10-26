@@ -2,12 +2,12 @@ using System;
 
 namespace HeterogeneousDataSources
 {
-    public interface ILinkedSourceExpression<TLinkedSource>
+    public interface ILinkedSourceExpression<TLinkedSource,TId>
     {
         TLinkedSource CreateLinkedSource(object model, LoadedReferenceContext loadedReferenceContext);
 
         TLinkedSource LoadLinkModel(
-            object modelId, 
+            TId modelId, 
             LoadedReferenceContext loadedReferenceContext,
             IReferenceLoader referenceLoader
         );

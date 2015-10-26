@@ -15,16 +15,18 @@ namespace HeterogeneousDataSources {
 
         public IReferenceLoader ReferenceLoader { get { return _referenceLoader; } }
 
+        //stle: TId doesnot make sense in that context
         //stle: dry
-        public TRootLinkedSource LoadLinkModel<TRootLinkedSource>(object model)
+        public TRootLinkedSource LoadLinkModel<TRootLinkedSource,TId>(object model)
         {
             var asList = new List<object> {model};
-            return LoadLinkModel<TRootLinkedSource>(asList)
+            return LoadLinkModel<TRootLinkedSource,TId>(asList)
                 .SingleOrDefault();
         }
 
+        //stle: TId doesnot make sense in that context
         //stle: dry
-        public List<TRootLinkedSource> LoadLinkModel<TRootLinkedSource>(List<object> models) {
+        public List<TRootLinkedSource> LoadLinkModel<TRootLinkedSource,TId>(List<object> models) {
             //stle: beaviour on model null? and id null
 
             //stle: remove this eventually
@@ -36,7 +38,7 @@ namespace HeterogeneousDataSources {
                 models
                 .Select(model =>
                     _config
-                        .GetLinkedSourceExpression<TRootLinkedSource>()
+                        .GetLinkedSourceExpression<TRootLinkedSource,TId>()
                         .CreateLinkedSource(model, loadedReferenceContext)
                 )
                 .ToList();
@@ -45,14 +47,14 @@ namespace HeterogeneousDataSources {
             return linkedSources;
         }
 
-        public TRootLinkedSource LoadLink<TRootLinkedSource>(object modelId)
+        public TRootLinkedSource LoadLink<TRootLinkedSource,TId>(TId modelId)
         {
             if (modelId == null) { throw new ArgumentNullException("modelId");}
             EnsureRootLinedSourceTypeIsConfigured<TRootLinkedSource>();
 
             var loadedReferenceContext = new LoadedReferenceContext();
             var rootLinkedSource = _config
-                .GetLinkedSourceExpression<TRootLinkedSource>()
+                .GetLinkedSourceExpression<TRootLinkedSource,TId>()
                 .LoadLinkModel(modelId, loadedReferenceContext, _referenceLoader);
 
             LoadLinkRootLinkedSource<TRootLinkedSource>(loadedReferenceContext);

@@ -61,7 +61,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource,string>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -87,7 +87,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource,string>("1");
 
             Assert.That(actual.Contents.Count, Is.EqualTo(3));
             Assert.That(actual.Contents[1], Is.Null);
@@ -102,7 +102,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource,string>("1");
 
             Assert.That(actual.Contents, Is.Empty);
         }
@@ -127,7 +127,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource,string>("1");
 
             var asImageIds = actual.Contents
                 .Cast<ImageWithContextualizationLinkedSource>()
@@ -157,7 +157,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource,string>("1");
 
             Assert.That(actual.Contents, Is.EquivalentTo(new List<IPolymorphicSource>{null,null}));
         }

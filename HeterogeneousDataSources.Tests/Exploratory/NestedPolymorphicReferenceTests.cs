@@ -42,7 +42,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource, string>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

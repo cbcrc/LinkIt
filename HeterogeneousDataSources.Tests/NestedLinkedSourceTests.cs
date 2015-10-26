@@ -44,7 +44,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource,int>(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -59,7 +59,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            _sut.LoadLink<NestedLinkedSource>(1);
+            _sut.LoadLink<NestedLinkedSource,int>(1);
 
             //stle: improve this by allowing test visibility on which image id was resolved
             //assert that does not throw
@@ -74,7 +74,7 @@ namespace HeterogeneousDataSources.Tests {
                     ClientSummaryId = "33"
                 }
             );
-            var actual = _sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource,int>(1);
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
@@ -89,7 +89,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource,int>(1);
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
@@ -98,7 +98,7 @@ namespace HeterogeneousDataSources.Tests {
         public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot() {
             _fakeReferenceLoader.FixValue(null);
 
-            var actual = _sut.LoadLink<NestedLinkedSource>(1);
+            var actual = _sut.LoadLink<NestedLinkedSource,int>(1);
 
             Assert.That(actual, Is.Null);
         }

@@ -51,7 +51,7 @@ namespace HeterogeneousDataSources.Tests
                 }
                 );
 
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>("1");
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource,string>("1");
 
             Assert.That(actual.SummaryImage.Id, Is.EqualTo("a-overridden"));
         }

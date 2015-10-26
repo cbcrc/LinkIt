@@ -50,7 +50,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource,string>("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -68,7 +68,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>("1");
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource,string>("1");
 
             var contentAsImage =
                 actual.Content as PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource;

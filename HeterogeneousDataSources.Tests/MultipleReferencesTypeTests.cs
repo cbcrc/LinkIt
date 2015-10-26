@@ -43,7 +43,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<MultipleReferencesTypeLinkedSource>(1);
+            var actual = _sut.LoadLink<MultipleReferencesTypeLinkedSource,int>(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
