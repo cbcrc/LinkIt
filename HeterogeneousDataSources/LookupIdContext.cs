@@ -26,22 +26,6 @@ namespace HeterogeneousDataSources
             currentLookupIds.Add(lookupId);
         }
 
-
-        //stle: obsolete, rename AddSingle
-        public void Add<TReference, TId>(List<TId> lookupIds)
-        {
-            //Assume that that lookupIds cannot contains null
-
-            var tReference = typeof(TReference);
-
-            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
-                _lookupIdsByReferenceType.Add(tReference, new List<TId>());
-            }
-
-            var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
-            currentLookupIds.AddRange(lookupIds);
-        }
-
         public List<Type> GetReferenceTypes() {
             return _lookupIdsByReferenceType
                 .Keys
