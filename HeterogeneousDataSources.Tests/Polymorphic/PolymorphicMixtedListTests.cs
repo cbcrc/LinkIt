@@ -22,11 +22,11 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Target,
                     link => link.GetType(),
                     includes => includes
-                        .WhenReference<Person>(
+                        .WhenReference<Person,string>(
                             typeof(int),
                             link=>link.ToString()
                         )
-                        .WhenNestedLinkedSource<PersonLinkedSource>(
+                        .WhenNestedLinkedSource<PersonLinkedSource, string>(
                             typeof(string),
                             link => link.ToString()
                         )

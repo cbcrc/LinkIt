@@ -6,9 +6,9 @@ namespace HeterogeneousDataSources.Tests.Shared
     public class ReferenceTypeConfig<TReference, TId> : IReferenceTypeConfig {
         private readonly Func<List<TId>, List<TReference>> _loadReferencesFunc;
         //the necessity of this function could be generalized
-        private readonly Func<TReference, object> _getReferenceIdFunc;
+        private readonly Func<TReference, TId> _getReferenceIdFunc;
 
-        public ReferenceTypeConfig(Func<List<TId>, List<TReference>> loadReferencesFunc, Func<TReference, object> getReferenceIdFunc, string requiredConnection = null)
+        public ReferenceTypeConfig(Func<List<TId>, List<TReference>> loadReferencesFunc, Func<TReference, TId> getReferenceIdFunc, string requiredConnection = null)
         {
             _loadReferencesFunc = loadReferencesFunc;
             _getReferenceIdFunc = getReferenceIdFunc;
@@ -25,7 +25,7 @@ namespace HeterogeneousDataSources.Tests.Shared
         public void Load(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext) {
             var lookupIds = lookupIdContext.GetReferenceIds<TReference, TId>();
             var references = _loadReferencesFunc(lookupIds);
-            loadedReferenceContext.AddReferences(references, _getReferenceIdFunc);
+            loadedReferenceContext.AddReferences(references, reference => _getReferenceIdFunc(reference));
         }
     }
 }

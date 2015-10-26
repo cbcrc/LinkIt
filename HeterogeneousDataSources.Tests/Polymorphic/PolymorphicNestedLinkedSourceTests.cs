@@ -22,10 +22,10 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Content,
                     link => link.ContentType,
                     includes => includes
-                        .WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.PersonWithoutContextualizationLinkedSource>(
+                        .WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.PersonWithoutContextualizationLinkedSource, string>(
                             "person",
                             link => (string)link.Id)
-                        .WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource>(
+                        .WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
                             "image",
                             link => (string)link.Id,
                             (linkedSource, referenceIndex, childLinkedSource) =>

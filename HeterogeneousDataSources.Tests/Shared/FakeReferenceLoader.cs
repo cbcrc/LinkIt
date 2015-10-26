@@ -6,7 +6,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
     
     public class FakeReferenceLoader<TReference, TId>:IReferenceLoader
     {
-        private readonly Func<TReference, object> _getReferenceIdFunc;
+        private readonly Func<TReference, TId> _getReferenceIdFunc;
         private readonly Dictionary<Type, IReferenceTypeConfig> _referenceTypeConfigByReferenceType;
         private bool _isConnectionOpen = false;
 
@@ -26,7 +26,7 @@ namespace HeterogeneousDataSources.Tests.Shared {
             };
         }
 
-        public FakeReferenceLoader(Func<TReference, object> getReferenceIdFunc, params IReferenceTypeConfig[] customReferenceTypeConfigs)
+        public FakeReferenceLoader(Func<TReference, TId> getReferenceIdFunc, params IReferenceTypeConfig[] customReferenceTypeConfigs)
         {
             _getReferenceIdFunc = getReferenceIdFunc;
             var config = customReferenceTypeConfigs

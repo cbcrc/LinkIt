@@ -8,6 +8,7 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources
 {
+    //stle: enhance that: TId could dispear after query are supported
     public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>
     {
         private readonly Action<ILoadLinkExpression> _addLoadLinkExpressionAction;
@@ -28,7 +29,7 @@ namespace HeterogeneousDataSources
                 (linkedSource, linkTargetValue) => { },
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TId,TLinkedSource, TId>(
+                    CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TId,TLinkedSource,TId>(
                         null
                     )
                 ),
@@ -39,6 +40,7 @@ namespace HeterogeneousDataSources
         }
 
         #endregion
+
         #region Reference
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
            Func<TLinkedSource, TId> getLookupIdFunc,
@@ -53,8 +55,8 @@ namespace HeterogeneousDataSources
                 SetReferencesActionForSingleValue(linkTarget),
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    new ReferenceInclude<TReference, TId, TReference>(
-                        CreateAsObjectFunc<TId>()
+                    new ReferenceInclude<TReference, TId, TReference, TId>(
+                        CreateIdentityFunc<TId>()
                     )
                 )
             );
@@ -76,8 +78,8 @@ namespace HeterogeneousDataSources
                 linkTarget.SetTargetProperty,
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    new ReferenceInclude<TReference, TId, TReference>(
-                        CreateAsObjectFunc<TId>()
+                    new ReferenceInclude<TReference, TId, TReference, TId>(
+                        CreateIdentityFunc<TId>()
                     )
                 )
             );
@@ -143,7 +145,7 @@ namespace HeterogeneousDataSources
                 linkTarget.GetTargetProperty,
                 linkTarget.SetTargetProperty,
                 link => true,
-                CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource,TId>(
+                CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(
                     initChildLinkedSourceAction
                 )
             );
@@ -162,15 +164,17 @@ namespace HeterogeneousDataSources
         private IInclude CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkTargetOwner, TChildLinkedSource, TId>(
             Action<TLinkTargetOwner, int, TChildLinkedSource> initChildLinkedSourceAction) 
         {
-            Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,>);
+            Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
 
             var childLinkedSourceType = typeof(TChildLinkedSource);
+            var idType = typeof(TId);
             Type[] typeArgs ={
                 typeof(TLinkTargetOwner),
                 childLinkedSourceType, 
-                typeof(TId),
+                idType,
                 childLinkedSourceType, 
-                GetLinkedSourceModelType(childLinkedSourceType)
+                GetLinkedSourceModelType(childLinkedSourceType),
+                idType
             };
 
             Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
@@ -180,7 +184,7 @@ namespace HeterogeneousDataSources
 
             return (IInclude)ctor.Invoke(
                 new object[]{
-                    CreateAsObjectFunc<TId>(),
+                    CreateIdentityFunc<TId>(),
                     initChildLinkedSourceAction
                 }
             );
@@ -356,10 +360,6 @@ namespace HeterogeneousDataSources
             return linkedSource => {
                 throw new InvalidOperationException("Cannot get reference list for single reference.");
             };
-        }
-
-        public static Func<T, object> CreateAsObjectFunc<T>(){
-            return x => (object)x;
         }
 
         public static Func<T, T> CreateIdentityFunc<T>() {
