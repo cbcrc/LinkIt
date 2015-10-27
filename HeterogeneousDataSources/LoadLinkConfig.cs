@@ -86,11 +86,18 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
+
+        private Dictionary<Type,object> _linkedSourceConfigs = new Dictionary<Type, object>();
         public ILinkedSourceConfig<TLinkedSource> GetLinkedSourceConfig<TLinkedSource>()
         {
-            //stle: lazy load is good enough
+            var linkedSourceType = typeof(TLinkedSource);
+            
+            //Lazy init to minimize required configuration by the client.
+            if (!_linkedSourceConfigs.ContainsKey(linkedSourceType)) {
+                _linkedSourceConfigs.Add(linkedSourceType,CreateLinkedSourceConfig<TLinkedSource>());
+            }
 
-            return CreateLinkedSourceConfig<TLinkedSource>();
+            return (ILinkedSourceConfig<TLinkedSource>)_linkedSourceConfigs[linkedSourceType];
         }
 
         public ILinkedSourceConfig<TLinkedSource> CreateLinkedSourceConfig<TLinkedSource>()
