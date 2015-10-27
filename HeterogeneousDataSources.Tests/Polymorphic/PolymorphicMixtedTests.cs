@@ -16,7 +16,6 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
             loadLinkProtocolBuilder.For<LinkedSource>()
-                .IsRoot<string>()
                 .PolymorphicLoadLink(
                     linkedSource => linkedSource.Model.TargetReference,
                     linkedSource => linkedSource.Target,

@@ -15,14 +15,12 @@ namespace HeterogeneousDataSources.Tests {
         public void ParseReferenceTypeByLoadingLevel_OneLevel()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<OneLoadingLevelContentLinkedSource>()
-                .IsRoot<string>();
-            var rootLoadLinkExpression = loadLinkProtocolBuilder.GetLoadLinkExpressions()[0];
+            loadLinkProtocolBuilder.For<OneLoadingLevelContentLinkedSource>();
+
             var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
+            var actual = sut.ParseReferenceTypeByLoadingLevel(typeof(OneLoadingLevelContentLinkedSource));
 
-            var actual = sut.ParseReferenceTypeByLoadingLevel(rootLoadLinkExpression);
-
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.That(actual,Is.Empty);
         }
     }
 

@@ -21,16 +21,12 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             Func<TLinkedSource, List<TIChildLinkedSource>> getReferences,
             Action<TLinkedSource, List<TIChildLinkedSource>> setReferences,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
-            Dictionary<TDiscriminant, IInclude> includes,
-            //stle: remove me
-            bool tempIsRoot=false
-            )
+            Dictionary<TDiscriminant, IInclude> includes)
         {
             LinkTargetId = linkTargetId;
             _getLinksFunc = getLinksFunc;
             _getReferences = getReferences;
             _setReferences = setReferences;
-            TempIsRoot = tempIsRoot;
             _includeSet = new IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
                 includes,
                 getDiscriminantFunc
@@ -45,8 +41,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 .Select(include => include.ChildLinkedSourceType)
                 .ToList();
         }
-
-        public bool TempIsRoot { get; private set; }
 
         public bool IsInDifferentLoadingLevel(ILoadLinkExpression child)
         {

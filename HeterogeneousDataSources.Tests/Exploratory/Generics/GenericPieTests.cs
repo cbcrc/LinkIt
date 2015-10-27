@@ -17,14 +17,12 @@ namespace HeterogeneousDataSources.Tests.Exploratory.Generics
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<StringPieLinkedSource>()
-                .IsRoot<string>()
                 .LoadLinkReference(
                     linkedSource => linkedSource.Model.PieContent,
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            loadLinkProtocolBuilder.For<IntPieLinkedSource>()
-                .IsRoot<string>();
+            loadLinkProtocolBuilder.For<IntPieLinkedSource>();
 
             _fakeReferenceLoader = 
                 new FakeReferenceLoader<object, string>(

@@ -6,8 +6,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     //stle: may go away or be simplified to a strict minimum
     public interface ILoadLinkExpression
     {
-        bool TempIsRoot { get; }
-
         bool IsInDifferentLoadingLevel(ILoadLinkExpression child);
 
         string LinkTargetId { get; }

@@ -17,8 +17,7 @@ namespace HeterogeneousDataSources.Tests {
         [SetUp]
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<RootLinkedSource>()
-                .IsRoot<string>();
+            loadLinkProtocolBuilder.For<RootLinkedSource>();
 
             _fakeReferenceLoader = new FakeReferenceLoader<RootContent, string>(
                 reference => reference.Id,

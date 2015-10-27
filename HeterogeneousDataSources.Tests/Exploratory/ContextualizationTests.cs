@@ -14,7 +14,6 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithContextualizedReferenceLinkedSource>()
-                .IsRoot<string>()
                 .LoadLinkNestedLinkedSource(
                     linkedSource => linkedSource.Model.PersonContextualization.Id,
                     linkedSource => linkedSource.Person,

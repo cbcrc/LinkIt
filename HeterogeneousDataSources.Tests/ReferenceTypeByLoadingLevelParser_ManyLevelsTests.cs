@@ -13,7 +13,6 @@ namespace HeterogeneousDataSources.Tests {
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<ManyLoadingLevelContentLinkedSource>()
-                .IsRoot<string>()
                 .LoadLinkReference(
                     linkedSource => linkedSource.Model.BlogPostId,
                     linkedSource => linkedSource.BlogPost
@@ -35,10 +34,9 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            var rootLoadLinkExpression = loadLinkProtocolBuilder.GetLoadLinkExpressions()[0];
-            var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
 
-            var actual = sut.ParseReferenceTypeByLoadingLevel(rootLoadLinkExpression);
+            var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
+            var actual = sut.ParseReferenceTypeByLoadingLevel(typeof(ManyLoadingLevelContentLinkedSource));
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

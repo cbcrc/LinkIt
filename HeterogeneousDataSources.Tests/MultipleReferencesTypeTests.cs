@@ -16,7 +16,6 @@ namespace HeterogeneousDataSources.Tests {
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<MultipleReferencesTypeLinkedSource>()
-                .IsRoot<int>()
                 .LoadLinkReference(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage

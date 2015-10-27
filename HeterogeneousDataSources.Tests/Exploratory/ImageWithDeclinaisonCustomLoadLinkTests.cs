@@ -19,7 +19,6 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithImageLinkedSource>()
-                .IsRoot<string>()
                 .LoadLinkReference(
                     linkedSource => linkedSource.Model.ImageUrl,
                     linkedSource => linkedSource.Image

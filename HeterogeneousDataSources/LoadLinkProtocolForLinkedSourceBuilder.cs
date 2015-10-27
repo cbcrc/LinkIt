@@ -18,29 +18,6 @@ namespace HeterogeneousDataSources
             _addLoadLinkExpressionAction = addLoadLinkExpressionAction;
         }
 
-        #region Root
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> IsRoot<TId>() {
-            //stle: simplify the whole root in linked source concept
-
-            var loadLinkExpression = new LoadLinkExpressionImpl<TId, TLinkedSource, TId, bool>(
-                typeof(TLinkedSource).ToString(),
-                linkedSourceIsIdForRoot => new List<TId> { linkedSourceIsIdForRoot },
-                GetReferencesFuncForSingleValue<TId,TLinkedSource>(),
-                (linkedSource, linkTargetValue) => { },
-                link => true,
-                CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TId,TLinkedSource,TId>(
-                        null
-                    )
-                ),
-                true
-            );
-
-            return AddLoadLinkExpression(loadLinkExpression);
-        }
-
-        #endregion
-
         #region Reference
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
            Func<TLinkedSource, TId> getLookupIdFunc,

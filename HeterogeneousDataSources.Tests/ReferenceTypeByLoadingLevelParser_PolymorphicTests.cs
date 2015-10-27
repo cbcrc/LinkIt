@@ -69,7 +69,6 @@ namespace HeterogeneousDataSources.Tests {
         public void ParseReferenceTypeByLoadingLevelParameterizableTest(Action<IncludeBuilder<LinkedSource, object, object, Type>> setupIncludes) {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
-                .IsRoot<string>()
                 .PolymorphicLoadLinkForList(
                     linkedSource => linkedSource.Model.PolyTargetLinks,
                     linkedSource => linkedSource.PolyTargets,
@@ -87,10 +86,9 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            var rootLoadLinkExpression = loadLinkProtocolBuilder.GetLoadLinkExpressions()[0];
             var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
 
-            var actual = sut.ParseReferenceTypeByLoadingLevel(rootLoadLinkExpression);
+            var actual = sut.ParseReferenceTypeByLoadingLevel(typeof(LinkedSource));
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

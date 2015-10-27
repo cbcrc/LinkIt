@@ -19,7 +19,6 @@ namespace HeterogeneousDataSources.Tests
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
-                .IsRoot<string>()
                 .LoadLinkReference(
                     linkedSource =>
                     {

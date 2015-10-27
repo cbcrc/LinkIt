@@ -19,7 +19,6 @@ namespace HeterogeneousDataSources.Tests {
         public void SetUp(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LoadLinkExpressionTreeLinkedSource>()
-                .IsRoot<int>()
                 .LoadLinkNestedLinkedSource(
                     linkedSource => linkedSource.Model.PersonId,
                     linkedSource => linkedSource.Person

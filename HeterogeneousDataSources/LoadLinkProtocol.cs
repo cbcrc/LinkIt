@@ -18,7 +18,7 @@ namespace HeterogeneousDataSources {
         public TRootLinkedSource LoadLinkModel<TRootLinkedSource,TId>(object model)
         {
             var loadLinker = _config
-                .CreateLinkedSourceConfig<TRootLinkedSource>()
+                .GetLinkedSourceConfig<TRootLinkedSource>()
                 .CreateLoadLinker(_referenceLoader);
 
             return loadLinker.FromModel(model);
@@ -28,7 +28,7 @@ namespace HeterogeneousDataSources {
         //stle: dry
         public List<TRootLinkedSource> LoadLinkModel<TRootLinkedSource,TId>(List<object> models) {
             var loadLinker = _config
-                .CreateLinkedSourceConfig<TRootLinkedSource>()
+                .GetLinkedSourceConfig<TRootLinkedSource>()
                 .CreateLoadLinker(_referenceLoader);
 
             return loadLinker.FromModel(models);
@@ -37,7 +37,7 @@ namespace HeterogeneousDataSources {
         public TRootLinkedSource LoadLink<TRootLinkedSource,TId>(TId modelId)
         {
             var loadLinker = _config
-                .CreateLinkedSourceConfig<TRootLinkedSource>()
+                .GetLinkedSourceConfig<TRootLinkedSource>()
                 .CreateLoadLinker(_referenceLoader);
 
             return loadLinker.ById(modelId);

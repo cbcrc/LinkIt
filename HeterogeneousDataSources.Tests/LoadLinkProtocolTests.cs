@@ -13,8 +13,7 @@ namespace HeterogeneousDataSources.Tests
         public void LoadLink_ShouldDisposeLoader()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>()
-                .IsRoot<string>();
+            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
             var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 

@@ -16,7 +16,6 @@ namespace HeterogeneousDataSources.Tests
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SubContentOwnerLinkedSource>()
-                .IsRoot<string>()
                 .LoadLinkSubLinkedSource(
                     linkedSource => linkedSource.Model.SubContent,
                     linkedSource => linkedSource.SubContent
