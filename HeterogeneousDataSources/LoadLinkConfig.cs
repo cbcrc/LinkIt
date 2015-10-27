@@ -159,9 +159,13 @@ namespace HeterogeneousDataSources {
 
             Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
 
+            //stle: simplify this
+            var referenceTypeByLoadingLevel = _referenceTypeByLoadingLevelByRootLinkedSourceType[typeof (TLinkedSource)];
+            var referenceTypeToBeLoadedForEachLoadingLevel = referenceTypeByLoadingLevel.Values.ToList();
+
             var ctor = ctorSpecificType.GetConstructors().Single();
             var args = new object[]{
-                null,
+                referenceTypeToBeLoadedForEachLoadingLevel,
                 this
             };
             var uncasted = ctor.Invoke(args);
