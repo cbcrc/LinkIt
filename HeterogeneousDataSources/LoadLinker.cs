@@ -39,7 +39,7 @@ namespace HeterogeneousDataSources
 
             var linkedSources = models
                 .Cast<TExpectedRootLinkedSourceModel>()
-                .Select(model => CreateLinkedSource(model))
+                .Select(CreateLinkedSource)
                 .ToList();
 
             LoadLinkRootLinkedSource();
