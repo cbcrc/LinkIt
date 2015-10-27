@@ -40,12 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="ILinkedSourceConfig.cs" />
     <Compile Include="ILinkTarget.cs" />
+    <Compile Include="ILoadLinker.cs" />
     <Compile Include="IncludeBuilder.cs" />
     <Compile Include="ILinkedSourceExpression.cs" />
-    <Compile Include="LinkedSourceExpression.cs" />
+    <Compile Include="LinkedSourceConfig.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />
+    <Compile Include="LoadLinker.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IIncludeWithChildLinkedSource.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IIncludeWithCreateNestedLinkedSource.cs" />
