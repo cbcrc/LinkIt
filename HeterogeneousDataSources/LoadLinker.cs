@@ -5,8 +5,8 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources
 {
-    public class LoadLinker<TRootLinkedSource, TRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
-        where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new() 
+    public class LoadLinker<TRootLinkedSource, TExpectedRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
+        where TRootLinkedSource : class, ILinkedSource<TExpectedRootLinkedSourceModel>, new() 
     {
         //stle: handle dispose in using!
         private readonly IReferenceLoader _referenceLoader;
@@ -21,27 +21,46 @@ namespace HeterogeneousDataSources
             _config = config;
         }
 
-        //stle: fix naming: TRootLinkedSourceModel1
-        public TRootLinkedSource FromModel<TRootLinkedSourceModel1>(TRootLinkedSourceModel1 model)
+        //stle: fix naming: TRootLinkedSourceModel
+        public TRootLinkedSource FromModel<TRootLinkedSourceModel>(TRootLinkedSourceModel model)
         {
             return FromModel(new List<object> { model })
                 .SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> FromModel<TRootLinkedSourceModel1>(List<TRootLinkedSourceModel1> models)
+        public List<TRootLinkedSource> FromModel<TRootLinkedSourceModel>(List<TRootLinkedSourceModel> models)
         {
-            //stle: beaviour on model null? and id null
+            //stle: beaviour on id null
 
-            //stle: ensure TRootLinkedSourceModel1=TRootLinkedSourceModel
+            //Put it back after new syntaxe
+            //EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
+
             _loadedReferenceContext = new LoadedReferenceContext();
 
             var linkedSources = models
-                .Cast<TRootLinkedSourceModel>()
+                .Cast<TExpectedRootLinkedSourceModel>()
                 .Select(model => CreateLinkedSource(model))
                 .ToList();
 
             LoadLinkRootLinkedSource();
             return linkedSources;
+        }
+
+        private void EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>()
+        {
+            var rootLinkedSourceModelType1 = typeof(TRootLinkedSourceModel);
+            var rootLinkedSourceModelType = typeof(TExpectedRootLinkedSourceModel);
+
+            if (rootLinkedSourceModelType1 != rootLinkedSourceModelType){
+                throw new ArgumentException(
+                    string.Format(
+                        "Invalid root linked source model type. Expected {0} but was {1}.",
+                        rootLinkedSourceModelType,
+                        rootLinkedSourceModelType1
+                    ),
+                    "TRootLinkedSourceModel"
+                );
+            }
         }
 
         public TRootLinkedSource ById<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
@@ -50,18 +69,18 @@ namespace HeterogeneousDataSources
             return FromModel(model);
         }
 
-        private TRootLinkedSourceModel LoadRootLinkedSourceModel<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
+        private TExpectedRootLinkedSourceModel LoadRootLinkedSourceModel<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
         {
             if (modelId == null) { throw new ArgumentNullException("modelId"); }
 
             var lookupIdContext = new LookupIdContext();
-            lookupIdContext.AddSingle<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelId);
+            lookupIdContext.AddSingle<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelId);
 
             var loadedRootLinkedSourceModel = new LoadedReferenceContext();
             _referenceLoader.LoadReferences(lookupIdContext, loadedRootLinkedSourceModel);
 
             return loadedRootLinkedSourceModel
-                .GetOptionalReference<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelId);
+                .GetOptionalReference<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelId);
         }
 
         private void LoadLinkRootLinkedSource() {
@@ -143,8 +162,8 @@ namespace HeterogeneousDataSources
         }
 
         ////Is LoadLinkExpressionUtil still required?
-        public TRootLinkedSource CreateLinkedSource(TRootLinkedSourceModel model) {
-            return LoadLinkExpressionUtil.CreateLinkedSource<TRootLinkedSource, TRootLinkedSourceModel>(
+        public TRootLinkedSource CreateLinkedSource(TExpectedRootLinkedSourceModel model) {
+            return LoadLinkExpressionUtil.CreateLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(
                 model,
                 _loadedReferenceContext
             );
