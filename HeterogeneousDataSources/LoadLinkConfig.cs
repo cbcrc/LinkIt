@@ -7,6 +7,7 @@ namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private readonly Dictionary<Type, Dictionary<int, List<Type>>> _referenceTypeByLoadingLevelByRootLinkedSourceType;
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
+        private readonly ReferenceTypeByLoadingLevelParser _referenceTypeByLoadingLevelParser;
 
         #region Initialization
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions)
@@ -14,6 +15,7 @@ namespace HeterogeneousDataSources {
             EnsureLoadLinkExpressionLinkTargetIdsAreUnique(loadLinkExpressions);
 
             var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
+            _referenceTypeByLoadingLevelParser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
             
             //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
 
@@ -160,8 +162,8 @@ namespace HeterogeneousDataSources {
             Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
 
             //stle: simplify this
-            var referenceTypeByLoadingLevel = _referenceTypeByLoadingLevelByRootLinkedSourceType[typeof (TLinkedSource)];
-            var referenceTypeToBeLoadedForEachLoadingLevel = referenceTypeByLoadingLevel.Values.ToList();
+            var referenceTypeToBeLoadedForEachLoadingLevel = _referenceTypeByLoadingLevelParser
+                .ParseReferenceTypeByLoadingLevel(linkedSourceType);
 
             var ctor = ctorSpecificType.GetConstructors().Single();
             var args = new object[]{

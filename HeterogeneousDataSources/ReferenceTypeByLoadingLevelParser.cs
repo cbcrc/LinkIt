@@ -5,7 +5,7 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources {
     public class ReferenceTypeByLoadingLevelParser {
-        private LoadLinkExpressionTreeFactory _linkExpressionTreeFactory;
+        private readonly LoadLinkExpressionTreeFactory _linkExpressionTreeFactory;
 
         public ReferenceTypeByLoadingLevelParser(LoadLinkExpressionTreeFactory linkExpressionTreeFactory)
         {
@@ -20,6 +20,16 @@ namespace HeterogeneousDataSources {
             return ToReferenceTypeByLoadingLevel(loadingLevelByReferenceType);
         }
 
+        public List<List<Type>> ParseReferenceTypeByLoadingLevel(Type rootLinkedSourceType) {
+            var linkedExpressionTree = _linkExpressionTreeFactory.Create(rootLinkedSourceType);
+
+            var loadingLevelByReferenceType = new Dictionary<Type, int>();
+            ParseTree(linkedExpressionTree, 0, loadingLevelByReferenceType);
+
+            return ToReferenceTypeToBeLoadedForEachLoadingLevel(loadingLevelByReferenceType);
+        }
+
+
         private void ParseTree(Tree<ILoadLinkExpression> linkedExpressionTree, int loadingLevel, Dictionary<Type, int> loadingLevelByReferenceType) {
             var node = linkedExpressionTree.Node;
             ParseNode(node, loadingLevelByReferenceType, loadingLevel);
@@ -33,13 +43,18 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        private static int GetNextLoadingLevel(ILoadLinkExpression node, ILoadLinkExpression child, int loadingLevel) {
+        private static int GetNextLoadingLevel(ILoadLinkExpression node, ILoadLinkExpression child, int loadingLevel){
+            if (node == null){ return loadingLevel; }
+
             return node.IsInDifferentLoadingLevel(child)
                 ? loadingLevel + 1
                 : loadingLevel;
         }
 
-        private void ParseNode(ILoadLinkExpression node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel) {
+        private void ParseNode(ILoadLinkExpression node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel)
+        {
+            if (node == null) { return; }
+
             foreach (var referenceType in node.ReferenceTypes){
                 var currentValue = GetLoadingLevelCurrentValue(referenceType, loadingLevelByReferenceType);
                 var newValue = Math.Max(currentValue, loadingLevel);
@@ -68,6 +83,16 @@ namespace HeterogeneousDataSources {
                     p => p.LoadingLevel,
                     p => p.ReferenceTypes
                 );
+        }
+
+        private List<List<Type>> ToReferenceTypeToBeLoadedForEachLoadingLevel(Dictionary<Type, int> loadingLevelByReferenceType) {
+            return loadingLevelByReferenceType
+                .GroupBy(
+                    keySelector: p => p.Value, //loadingLevel
+                    elementSelector: p => p.Key, //referenceType
+                    resultSelector: (key, elements) => elements.ToList()
+                )
+                .ToList();
         }
     }
 }

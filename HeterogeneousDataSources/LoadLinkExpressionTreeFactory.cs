@@ -13,6 +13,24 @@ namespace HeterogeneousDataSources
             _loadLinkExpressions = loadLinkExpressions;
         }
 
+        public Tree<ILoadLinkExpression> Create(Type rootLinkedSourceType) {
+            var children = _loadLinkExpressions
+                .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType == rootLinkedSourceType)
+                .Select(Create)
+                .ToList();
+
+            return new Tree<ILoadLinkExpression>(
+                null, //no expressions at root level
+                children
+            );
+        }
+
+        public Type GetReferenceTypeThatCreatesACycleFromTree(ILoadLinkExpression node) {
+            return GetReferenceTypeThatCreatesACycleFromTree(node, new List<Type>());
+        }
+
+
+        //stle: private
         public Tree<ILoadLinkExpression> Create(ILoadLinkExpression node)
         {
             var childLoadLinkExpressions = GetChildLoadLinkExpressions(node);
@@ -23,10 +41,6 @@ namespace HeterogeneousDataSources
                 node,
                 children
             );
-        }
-
-        public Type GetReferenceTypeThatCreatesACycleFromTree(ILoadLinkExpression node){
-            return GetReferenceTypeThatCreatesACycleFromTree(node, new List<Type>());
         }
 
         private Type GetReferenceTypeThatCreatesACycleFromTree(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors)
@@ -63,7 +77,6 @@ namespace HeterogeneousDataSources
             result.AddRange(node.ReferenceTypes);
             return result;
         }
-
 
         private List<ILoadLinkExpression> GetChildLoadLinkExpressions(ILoadLinkExpression node)
         {
