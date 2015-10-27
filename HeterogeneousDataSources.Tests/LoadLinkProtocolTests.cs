@@ -38,21 +38,6 @@ namespace HeterogeneousDataSources.Tests
                     .With.Message.ContainsSubstring("modelId")
             );
         }
-
-        [Test]
-        public void LoadLink_NotARootLinkedSourceType_ShouldThrow() {
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
-            var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
-            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
-
-            TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource, string>("dont-care");
-
-            Assert.That(
-                act,
-                Throws.ArgumentException.With.Message.ContainsSubstring("WithoutReferenceLinkedSource")
-            );
-        }
     }
 
     public class WithoutReferenceLinkedSource : ILinkedSource<Image> {

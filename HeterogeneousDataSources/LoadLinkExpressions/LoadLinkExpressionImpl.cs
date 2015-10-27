@@ -57,8 +57,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
             //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            LoadLinkExpressionUtil.EnsureIsOfReferenceType(this, referenceTypeToBeLoaded);
+            EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            EnsureIsOfReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource)linkedSource)
                 .Where(link => link != null)
@@ -77,7 +77,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
             //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
             SetLinkTargetValue(
                 (TLinkedSource)linkedSource,
@@ -92,7 +92,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
         {
             //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
             SetLinkTargetValue(
                 (TLinkedSource)linkedSource,
@@ -108,7 +108,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             Type referenceTypeToBeLinked)
         {
             //stle: dry
-            LoadLinkExpressionUtil.EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
             SetLinkTargetValue(
                 (TLinkedSource)linkedSource, 
@@ -196,5 +196,32 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         }
 
         public List<Type> ChildLinkedSourceTypes { get; private set; }
+
+        private static void EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(object linkedSource) {
+            if (!(linkedSource is TLinkedSource)) {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Cannot invoke load-link expression for {0} with linked source of type {1}",
+                        typeof(TLinkedSource),
+                        linkedSource != null
+                            ? linkedSource.GetType().ToString()
+                            : "Null"
+                        )
+                    );
+            }
+        }
+
+        private static void EnsureIsOfReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType) {
+            if (!loadLinkExpression.ReferenceTypes.Contains(referenceType)) {
+                throw new InvalidOperationException(
+                    string.Format(
+                        "Cannot invoke this load link expression for reference type {0}. Supported reference types are {1}. This load link expression is for {2}.",
+                        referenceType,
+                        String.Join(",", loadLinkExpression.ReferenceTypes),
+                        loadLinkExpression.LinkedSourceType
+                    )
+                );
+            }
+        }
     }
 }

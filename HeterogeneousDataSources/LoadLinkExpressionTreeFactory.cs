@@ -29,9 +29,7 @@ namespace HeterogeneousDataSources
             return GetReferenceTypeThatCreatesACycleFromTree(node, new List<Type>());
         }
 
-
-        //stle: private
-        public Tree<ILoadLinkExpression> Create(ILoadLinkExpression node)
+        private Tree<ILoadLinkExpression> Create(ILoadLinkExpression node)
         {
             var childLoadLinkExpressions = GetChildLoadLinkExpressions(node);
             var children = childLoadLinkExpressions

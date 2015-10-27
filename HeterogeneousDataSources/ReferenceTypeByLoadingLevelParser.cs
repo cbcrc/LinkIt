@@ -12,14 +12,6 @@ namespace HeterogeneousDataSources {
             _linkExpressionTreeFactory = linkExpressionTreeFactory;
         }
 
-        public Dictionary<int, List<Type>> ParseReferenceTypeByLoadingLevel(ILoadLinkExpression rootExpression) {
-            var linkedExpressionTree = _linkExpressionTreeFactory.Create(rootExpression);
-
-            var loadingLevelByReferenceType = new Dictionary<Type, int>();
-            ParseTree(linkedExpressionTree, 0, loadingLevelByReferenceType);
-            return ToReferenceTypeByLoadingLevel(loadingLevelByReferenceType);
-        }
-
         public List<List<Type>> ParseReferenceTypeByLoadingLevel(Type rootLinkedSourceType) {
             var linkedExpressionTree = _linkExpressionTreeFactory.Create(rootLinkedSourceType);
 
@@ -28,7 +20,6 @@ namespace HeterogeneousDataSources {
 
             return ToReferenceTypeToBeLoadedForEachLoadingLevel(loadingLevelByReferenceType);
         }
-
 
         private void ParseTree(Tree<ILoadLinkExpression> linkedExpressionTree, int loadingLevel, Dictionary<Type, int> loadingLevelByReferenceType) {
             var node = linkedExpressionTree.Node;
@@ -65,24 +56,6 @@ namespace HeterogeneousDataSources {
         private int GetLoadingLevelCurrentValue(Type referenceType, Dictionary<Type, int> loadingLevelByReferenceType) {
             if (!loadingLevelByReferenceType.ContainsKey(referenceType)) { return -1; }
             return loadingLevelByReferenceType[referenceType];
-        }
-
-        private static Dictionary<int, List<Type>> ToReferenceTypeByLoadingLevel(Dictionary<Type, int> loadingLevelByReferenceType) {
-            var referenceTypeGroupByLoadingLevel = loadingLevelByReferenceType
-                .GroupBy(
-                    keySelector: p => p.Value, //loadingLevel
-                    elementSelector: p => p.Key, //referenceType
-                    resultSelector: (key, elements) => new {
-                        LoadingLevel = key,
-                        ReferenceTypes = elements.ToList()
-                    }
-                );
-
-            return referenceTypeGroupByLoadingLevel
-                .ToDictionary(
-                    p => p.LoadingLevel,
-                    p => p.ReferenceTypes
-                );
         }
 
         private List<List<Type>> ToReferenceTypeToBeLoadedForEachLoadingLevel(Dictionary<Type, int> loadingLevelByReferenceType) {

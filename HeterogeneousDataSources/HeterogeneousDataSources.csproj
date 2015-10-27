@@ -44,7 +44,6 @@
     <Compile Include="ILinkTarget.cs" />
     <Compile Include="ILoadLinker.cs" />
     <Compile Include="IncludeBuilder.cs" />
-    <Compile Include="ILinkedSourceExpression.cs" />
     <Compile Include="LinkedSourceConfig.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />
@@ -76,7 +75,6 @@
     <Compile Include="LoadedReferenceContext.cs" />
     <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\INestedLoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressions\LoadLinkExpressionType.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionUtil.cs" />
     <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="LookupIdContext.cs" />

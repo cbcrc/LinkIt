@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources
 {
@@ -23,7 +22,7 @@ namespace HeterogeneousDataSources
 
         public ILoadLinker<TLinkedSource> CreateLoadLinker(IReferenceLoader referenceLoader)
         {
-            return new LoadLinker<TLinkedSource, TLinkedSourceModel>(this, referenceLoader, _referenceTypeToBeLoadedForEachLoadingLevel, _config);
+            return new LoadLinker<TLinkedSource, TLinkedSourceModel>(referenceLoader, _referenceTypeToBeLoadedForEachLoadingLevel, _config);
         }
     }
 }

@@ -36,9 +36,12 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void Create()
         {
-            var actual = _sut.Create(_loadLinkExpressions.First());
+            var actual = _sut.Create(typeof(LoadLinkExpressionTreeLinkedSource));
 
-            var asModelTree = actual.Projection(n => n.LinkTargetId);
+            var asModelTree = actual.Projection(node => node==null
+                ? "Root"
+                : node.LinkTargetId
+            );
 
             ApprovalsExt.VerifyPublicProperties(asModelTree);
         }

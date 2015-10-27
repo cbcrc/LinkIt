@@ -7,7 +7,7 @@ namespace HeterogeneousDataSources
 {
     public class IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>
     {
-        private Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue
+        private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue
             = new Dictionary<TDiscriminant, IInclude>();
 
         //stle: improve usability
