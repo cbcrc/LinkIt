@@ -24,16 +24,17 @@ namespace HeterogeneousDataSources
         //stle: fix naming: TRootLinkedSourceModel
         public TRootLinkedSource FromModel<TRootLinkedSourceModel>(TRootLinkedSourceModel model)
         {
-            return FromModel(new List<object> { model })
+            return FromModels(model)
                 .SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> FromModel<TRootLinkedSourceModel>(List<TRootLinkedSourceModel> models)
-        {
-            //stle: beaviour on id null
+        public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(params TRootLinkedSourceModel[] models){
+            //stle: support model that are not class? if not, used null instead of default(T)
+            if (models == null){
+                models = new TRootLinkedSourceModel[] { default(TRootLinkedSourceModel) };
+            }
 
-            //Put it back after new syntaxe
-            //EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
+            EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
 
             _loadedReferenceContext = new LoadedReferenceContext();
 
@@ -71,6 +72,7 @@ namespace HeterogeneousDataSources
 
         private TExpectedRootLinkedSourceModel LoadRootLinkedSourceModel<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
         {
+            //stle: beaviour on id null: should return null: same behaviour as in nested linked source
             if (modelId == null) { throw new ArgumentNullException("modelId"); }
 
             var lookupIdContext = new LookupIdContext();

@@ -42,7 +42,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSources,int>(1);
+            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -56,7 +56,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSources,int>(1);
+            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             Assert.That(actual.Authors.Count, Is.EqualTo(3));
             Assert.That(actual.Authors[1], Is.Null);
@@ -71,7 +71,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSources,int>(1);
+            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             Assert.That(actual.Authors, Is.Empty);
         }
@@ -85,7 +85,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSources,int>(1);
+            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             var linkedAuthroIds = actual.Authors.Select(author => author.Model.Id);
             Assert.That(linkedAuthroIds, Is.EquivalentTo(new[] { "a", "a" }));
@@ -102,7 +102,7 @@ namespace HeterogeneousDataSources.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSources,int>(1);
+            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             Assert.That(actual.Authors, Is.EquivalentTo(new List<PersonLinkedSource>{null,null}));
         }

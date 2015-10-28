@@ -17,7 +17,7 @@ namespace HeterogeneousDataSources.Tests
             var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
-            var actual = sut.LoadLink<WithoutReferenceLinkedSource,string>("dont-care");
+            var actual = sut.LoadLink<WithoutReferenceLinkedSource>().ById("dont-care");
 
             Assert.That(fakeReferenceLoader.IsDisposed, Is.True);
         }
@@ -29,7 +29,7 @@ namespace HeterogeneousDataSources.Tests
             var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
-            TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource, string>(null);
+            TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource>().ById<string>(null);
 
             Assert.That(
                 act, 

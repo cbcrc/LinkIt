@@ -13,34 +13,11 @@ namespace HeterogeneousDataSources {
 
         public IReferenceLoader ReferenceLoader { get { return _referenceLoader; } }
 
-        //stle: TId doesnot make sense in that context
-        //stle: dry
-        public TRootLinkedSource LoadLinkModel<TRootLinkedSource,TId>(object model)
+        public ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>()
         {
-            var loadLinker = _config
+            return _config
                 .GetLinkedSourceConfig<TRootLinkedSource>()
                 .CreateLoadLinker(_referenceLoader);
-
-            return loadLinker.FromModel(model);
-        }
-
-        //stle: TId doesnot make sense in that context
-        //stle: dry
-        public List<TRootLinkedSource> LoadLinkModel<TRootLinkedSource,TId>(List<object> models) {
-            var loadLinker = _config
-                .GetLinkedSourceConfig<TRootLinkedSource>()
-                .CreateLoadLinker(_referenceLoader);
-
-            return loadLinker.FromModel(models);
-        }
-
-        public TRootLinkedSource LoadLink<TRootLinkedSource,TId>(TId modelId)
-        {
-            var loadLinker = _config
-                .GetLinkedSourceConfig<TRootLinkedSource>()
-                .CreateLoadLinker(_referenceLoader);
-
-            return loadLinker.ById(modelId);
         }
     }
 }

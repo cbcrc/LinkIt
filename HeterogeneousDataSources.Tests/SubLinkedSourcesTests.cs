@@ -66,7 +66,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource,string>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -85,7 +85,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource,string>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
 
             Assert.That(actual.SubSubContents.Count, Is.EqualTo(3));
             Assert.That(actual.SubSubContents[1], Is.Null);
@@ -101,7 +101,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource,string>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
 
             Assert.That(actual.SubSubContents, Is.Empty);
         }
@@ -120,7 +120,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource,string>("1");
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
 
             var linkedImagesIds = actual.SubSubContents.Select(subSubContent => subSubContent.Model.SummaryImageId);
             Assert.That(linkedImagesIds, Is.EquivalentTo(new[] { "a", "a" }));

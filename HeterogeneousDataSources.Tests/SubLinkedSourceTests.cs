@@ -57,7 +57,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentOwnerLinkedSource,string>("1");
+            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -74,7 +74,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentOwnerLinkedSource,string>("1");
+            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().ById("1");
 
             Assert.That(actual.SubContent.SubSubContent, Is.Null);
             Assert.That(actual.SubSubContent, Is.Null);

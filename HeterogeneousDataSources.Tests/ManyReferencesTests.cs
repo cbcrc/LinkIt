@@ -48,7 +48,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource,int>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
             
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -64,7 +64,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource,int>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
 
             Assert.That(actual.FavoriteImages.Count, Is.EqualTo(3));
             Assert.That(actual.FavoriteImages[1], Is.Null);
@@ -81,7 +81,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource,int>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
 
             Assert.That(actual.FavoriteImages, Is.Empty);
         }
@@ -97,7 +97,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource,int>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
 
             var linkedImagesIds = actual.FavoriteImages.Select(image => image.Id);
             Assert.That(linkedImagesIds, Is.EquivalentTo(new []{"a", "a"}));
@@ -115,7 +115,7 @@ namespace HeterogeneousDataSources.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource,int>(1);
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
 
             Assert.That(actual.FavoriteImages, Is.EquivalentTo(new List<Image>{null,null}));
         }

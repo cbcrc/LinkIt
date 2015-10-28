@@ -42,14 +42,14 @@ namespace HeterogeneousDataSources.Tests.Exploratory.Generics
         [Test]
         public void LoadLink_StringPie()
         {
-            var actual = _sut.LoadLink<StringPieLinkedSource,string>("1");
+            var actual = _sut.LoadLink<StringPieLinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_IntPie() {
-            var actual = _sut.LoadLink<IntPieLinkedSource,string>("2");
+            var actual = _sut.LoadLink<IntPieLinkedSource>().ById("2");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

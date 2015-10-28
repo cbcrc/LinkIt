@@ -31,21 +31,21 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void LoadLink_WithReferenceId_ShouldLinkModel() {
-            var actual = _sut.LoadLink<RootLinkedSource,string>("can-be-resolved");
+            var actual = _sut.LoadLink<RootLinkedSource>().ById("can-be-resolved");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_WithoutReferenceId_ShouldLinkNull(){
-            TestDelegate act = () => _sut.LoadLink<RootLinkedSource, string>(null);
+            TestDelegate act = () => _sut.LoadLink<RootLinkedSource>().ById<string>(null);
 
             Assert.That(act, Throws.InstanceOf<ArgumentNullException>());
         }
 
         [Test]
         public void LoadLink_CannotBeResolved_ShouldLinkNull() {
-            var actual = _sut.LoadLink<RootLinkedSource, string>("cannot-be-resolved");
+            var actual = _sut.LoadLink<RootLinkedSource>().ById("cannot-be-resolved");
 
             Assert.That(actual, Is.Null);
         }
