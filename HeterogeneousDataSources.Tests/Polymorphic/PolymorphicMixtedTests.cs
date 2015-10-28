@@ -21,15 +21,15 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Target,
                     link => link.GetType(),
                     includes => includes
-                        .WhenReference<Person,string>(
+                        .Include<Person>().AsReference(
                             typeof(int),
                             link=>link.ToString()
                         )
-                        .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                        .Include<PersonLinkedSource>().AsNestedLinkedSource(
                             typeof(string),
                             link => link.ToString()
                         )
-                        .WhenSubLinkedSource<PersonLinkedSource, Person>(
+                        .Include<PersonLinkedSource>().AsSubLinkedSource(
                             typeof(Person)
                         )
                 );

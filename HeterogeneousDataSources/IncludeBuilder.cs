@@ -1,42 +1,47 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources
 {
-    public class IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>
+    public class IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant, TTargetConcreteType>
+        where TTargetConcreteType : TIChildLinkedSource
     {
-        private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue
-            = new Dictionary<TDiscriminant, IInclude>();
+        private readonly IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> _includeTargetConcreteTypeBuilder;
 
-        //stle: improve usability
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenNestedLinkedSource<TChildLinkedSource, TId>(
+        public IncludeBuilder(IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> includeTargetConcreteTypeBuilder)
+        {
+            _includeTargetConcreteTypeBuilder = includeTargetConcreteTypeBuilder;
+        }
+
+        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsNestedLinkedSource<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc,
-            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
+            Action<TLinkedSource, int, TTargetConcreteType> initChildLinkedSourceAction = null
             ) 
         {
-            _includeByDiscriminantValue.Add(
+            _includeTargetConcreteTypeBuilder.AddInclude(
                 discriminantValue,
                 CreatePolymorphicNestedLinkedSourceInclude(getLookupIdFunc, initChildLinkedSourceAction)
             );
 
-            return this;
+            return _includeTargetConcreteTypeBuilder;
         }
 
-        private IInclude CreatePolymorphicNestedLinkedSourceInclude<TChildLinkedSource, TId>(
+        //stle: can we avoid reflection here?
+        private IInclude CreatePolymorphicNestedLinkedSourceInclude<TId>(
             Func<TLink, TId> getLookupIdFunc,
-            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) {
+            Action<TLinkedSource, int, TTargetConcreteType> initChildLinkedSourceAction) 
+        {
             Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
 
-            var childLinkedSourceType = typeof(TChildLinkedSource);
+            var targetConcreteTypeType = typeof(TTargetConcreteType);
             Type[] typeArgs ={
                 typeof(TLinkedSource),
                 typeof(TIChildLinkedSource), 
                 typeof(TLink),
-                childLinkedSourceType, 
-                LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(childLinkedSourceType),
+                targetConcreteTypeType, 
+                LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(targetConcreteTypeType),
                 typeof(TId)
             };
 
@@ -53,42 +58,70 @@ namespace HeterogeneousDataSources
             );
         }
 
-        //stle: improve usability
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
-            TDiscriminant discriminantValue,
-            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel = null
-        )
-            where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
+        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsSubLinkedSource(
+            TDiscriminant discriminantValue)
         {
-            _includeByDiscriminantValue.Add(
+            //stle: should not have to know that TLink = TChildLinkedSourceModel if getSubLinkedSourceModel is null
+            return AsSubLinkedSource<TLink>(discriminantValue, null);
+        }
+
+        //stle:dry
+        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsSubLinkedSource<TChildLinkedSourceModel>(
+            TDiscriminant discriminantValue,
+            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel) 
+        {
+            _includeTargetConcreteTypeBuilder.AddInclude(
                 discriminantValue,
-                new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>(
+                CreatePolymorphicSubLinkedSourceInclude(
                     getSubLinkedSourceModel
                 )
             );
 
-            return this;
+            return _includeTargetConcreteTypeBuilder;
         }
 
-        //stle: improve usability
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> WhenReference<TReference, TId>(
+        //stle: can we avoid reflection here?
+        private IInclude CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSourceModel>(
+            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel) 
+        {
+            Type ctorGenericType = typeof(SubLinkedSourceInclude<,,,>);
+
+            //stle: test this 
+            //stle: better error msg
+            //Ensure TChildLinkedSourceModel == LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(TTargetConcreteType)
+
+            var targetConcreteTypeType = typeof(TTargetConcreteType);
+            Type[] typeArgs ={
+                typeof(TIChildLinkedSource), 
+                typeof(TLink),
+                targetConcreteTypeType, 
+                LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(targetConcreteTypeType),
+            };
+
+            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
+
+            var ctor = ctorSpecificType.GetConstructors().First();
+
+            return (IInclude)ctor.Invoke(
+                new object[]{
+                    getSubLinkedSourceModel
+                }
+            );
+        }
+
+        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsReference<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc
         )
-            where TReference:TIChildLinkedSource
         {
-            _includeByDiscriminantValue.Add(
+            _includeTargetConcreteTypeBuilder.AddInclude(
                 discriminantValue,
-                new ReferenceInclude<TIChildLinkedSource, TLink, TReference, TId>(
+                new ReferenceInclude<TIChildLinkedSource, TLink, TTargetConcreteType, TId>(
                     getLookupIdFunc
                 )
             );
 
-            return this;
-        }
-
-        public Dictionary<TDiscriminant, IInclude> Build() {
-            return _includeByDiscriminantValue;
+            return _includeTargetConcreteTypeBuilder;
         }
     }
 }

@@ -22,10 +22,10 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Target,
                     link => link.Type,
                     includes => includes
-                        .WhenSubLinkedSource<PdfReferenceLinkedSource, PolymorphicReference>(
+                        .Include<PdfReferenceLinkedSource>().AsSubLinkedSource(
                             "pdf"
                         )
-                        .WhenSubLinkedSource<WebPageReferenceLinkedSource, WebPageReference>(
+                        .Include<WebPageReferenceLinkedSource>().AsSubLinkedSource(
                             "web-page",
                             link=>link.GetAsBlogPostReference()
                         )

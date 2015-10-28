@@ -44,6 +44,7 @@
     <Compile Include="ILinkTarget.cs" />
     <Compile Include="ILoadLinker.cs" />
     <Compile Include="IncludeBuilder.cs" />
+    <Compile Include="IncludeTargetConcreteTypeBuilder.cs" />
     <Compile Include="LinkedSourceConfig.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />

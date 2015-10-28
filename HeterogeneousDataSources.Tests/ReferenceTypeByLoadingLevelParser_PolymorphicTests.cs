@@ -19,7 +19,7 @@ namespace HeterogeneousDataSources.Tests {
         {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                    .Include<PersonLinkedSource>().AsNestedLinkedSource(
                         typeof(string),
                         reference => (string)reference
                     )
@@ -31,7 +31,7 @@ namespace HeterogeneousDataSources.Tests {
         {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenSubLinkedSource<PersonLinkedSource, Person>(
+                    .Include<PersonLinkedSource>().AsSubLinkedSource(
                         typeof (PersonLinkedSource)
                     )
             );
@@ -41,10 +41,10 @@ namespace HeterogeneousDataSources.Tests {
         public void ParseReferenceTypeByLoadingLevel_WithSubAndNestedPerson_NestedPersonShouldWin() {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenSubLinkedSource<PersonLinkedSource, Person>(
+                    .Include<PersonLinkedSource>().AsSubLinkedSource(
                         typeof(PersonLinkedSource)
                     )
-                    .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                    .Include<PersonLinkedSource>().AsNestedLinkedSource(
                         typeof(string),
                         reference => (string)reference
                     )
@@ -55,18 +55,17 @@ namespace HeterogeneousDataSources.Tests {
         public void ParseReferenceTypeByLoadingLevel_WithNestedPersonAndSub_NestedPersonShouldWin() {
             ParseReferenceTypeByLoadingLevelParameterizableTest(
                 includes => includes
-                    .WhenNestedLinkedSource<PersonLinkedSource, string>(
+                    .Include<PersonLinkedSource>().AsNestedLinkedSource(
                         typeof(string),
                         reference => (string)reference
                     )
-                    .WhenSubLinkedSource<PersonLinkedSource,Person>(
+                    .Include<PersonLinkedSource>().AsSubLinkedSource(
                         typeof(PersonLinkedSource)
                     )
             );
         }
 
-
-        public void ParseReferenceTypeByLoadingLevelParameterizableTest(Action<IncludeBuilder<LinkedSource, object, object, Type>> setupIncludes) {
+        public void ParseReferenceTypeByLoadingLevelParameterizableTest(Action<IncludeTargetConcreteTypeBuilder<LinkedSource, object, object, Type>> setupIncludes) {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
                 .PolymorphicLoadLinkForList(
@@ -74,7 +73,7 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.PolyTargets,
                     reference => reference.GetType(),
                     includes => {
-                        includes.WhenNestedLinkedSource<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource, string>(
+                        includes.Include<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource>().AsNestedLinkedSource(
                             typeof(int),
                             reference => (string)reference
                         );
