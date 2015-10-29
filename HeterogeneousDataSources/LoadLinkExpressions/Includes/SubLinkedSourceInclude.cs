@@ -7,7 +7,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
     public class SubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
         IIncludeWithCreateSubLinkedSource<TIChildLinkedSource,TLink>, 
         IIncludeWithChildLinkedSource
-        where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
+        where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TChildLinkedSourceModel> _getSubLinkedSourceModel;
 
@@ -28,7 +28,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             var childLinkSourceModel = _getSubLinkedSourceModel!=null
                 ? _getSubLinkedSourceModel(link)
                 : UseLinkAsSubLinkedSourceModel(link);
-            return loadedReferenceContext
+
+            //stle: move double cast to loadedReferenceContext
+            //stle: dry with nested linked source
+            return (TIChildLinkedSource) (object) loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel);
         }
 

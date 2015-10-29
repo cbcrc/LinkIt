@@ -18,5 +18,9 @@ namespace HeterogeneousDataSources
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction = null
         );
+
+        IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
+            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel
+        );
     }
 }

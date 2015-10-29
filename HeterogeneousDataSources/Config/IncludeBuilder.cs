@@ -46,43 +46,18 @@ namespace HeterogeneousDataSources
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel) 
         {
+            //stle: term TTargetConcreteType is incoherent with the rest
+            var include = LinkedSourceConfigs.GetConfigFor<TTargetConcreteType>()
+                .CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
+                    getSubLinkedSourceModel
+                );
+
             _includeTargetConcreteTypeBuilder.AddInclude(
                 discriminantValue,
-                CreatePolymorphicSubLinkedSourceInclude(
-                    getSubLinkedSourceModel
-                )
+                include
             );
 
             return _includeTargetConcreteTypeBuilder;
-        }
-
-        //stle: can we avoid reflection here?
-        private IInclude CreatePolymorphicSubLinkedSourceInclude<TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel) 
-        {
-            Type ctorGenericType = typeof(SubLinkedSourceInclude<,,,>);
-
-            //stle: test this 
-            //stle: better error msg
-            //Ensure TChildLinkedSourceModel == LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(TTargetConcreteType)
-
-            var targetConcreteTypeType = typeof(TTargetConcreteType);
-            Type[] typeArgs ={
-                typeof(TIChildLinkedSource), 
-                typeof(TLink),
-                targetConcreteTypeType, 
-                LoadLinkProtocolForLinkedSourceBuilder<string>.GetLinkedSourceModelType(targetConcreteTypeType),
-            };
-
-            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
-
-            var ctor = ctorSpecificType.GetConstructors().First();
-
-            return (IInclude)ctor.Invoke(
-                new object[]{
-                    getSubLinkedSourceModel
-                }
-            );
         }
 
         public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsReference<TId>(
