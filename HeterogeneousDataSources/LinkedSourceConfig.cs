@@ -29,8 +29,8 @@ namespace HeterogeneousDataSources
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction = null
         )//stle: can make it mandatory?
         {
+            EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
             //stle: ensure TChildLinkedSource == TLinkedSource
-            //stle: ensure TLinkedSource impl TIChildLinkedSource
 
             return new NestedLinkedSourceInclude<TLinkTargetOwner, TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
                 getLookupIdFunc,
@@ -41,7 +41,7 @@ namespace HeterogeneousDataSources
         public IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
         {
-            //stle: ensure TLinkedSource impl TIChildLinkedSource
+            EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
             //stle: ensure TChildLinkedSourceModel == TLinkedSourceModel
 
             //stle: what to do about null vs special value for func?
@@ -57,5 +57,22 @@ namespace HeterogeneousDataSources
 
             return link => (TLinkedSourceModel) (object) getSubLinkedSourceModel(link);
         }
+
+        //stle: error identification
+        private void EnsureClassImplementsInterface<TClass,TInterface>()
+        {
+            var classType = typeof (TClass);
+            var interfaceType = typeof (TInterface);
+            if (!interfaceType.IsAssignableFrom(classType)){
+                throw new ArgumentException(
+                    string.Format(
+                        "{0} does not implement {1}.",
+                        classType,
+                        interfaceType
+                    )
+                );
+            }
+        }
+        
     }
 }

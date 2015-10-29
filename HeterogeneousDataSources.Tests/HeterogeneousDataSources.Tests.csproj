@@ -64,6 +64,7 @@
     <Compile Include="Exploratory\Generics\GenericPieTests.cs" />
     <Compile Include="Exploratory\Generics\Pie.cs" />
     <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
+    <Compile Include="LinkedSourceConfigTests.cs" />
     <Compile Include="LinkTargetTests.cs" />
     <Compile Include="LinkTargetFactoryTests.cs" />
     <Compile Include="LoadLinkExpressionOverridingTests.cs" />
