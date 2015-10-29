@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources
 {
@@ -13,5 +14,9 @@ namespace HeterogeneousDataSources
             LoadLinkConfig config
         );
 
+        IInclude CreateNestedLinkedSourceInclude<TLinkTargetOwner, TIChildLinkedSource, TLink, TId>(
+            Func<TLink, TId> getLookupIdFunc,
+            Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction = null
+        );
     }
 }

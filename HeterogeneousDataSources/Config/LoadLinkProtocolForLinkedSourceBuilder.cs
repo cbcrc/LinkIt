@@ -129,42 +129,18 @@ namespace HeterogeneousDataSources
             return AddLoadLinkExpression(loadLinkExpression);
         }
 
-        private Dictionary<bool, IInclude> CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction) {
-            return CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkedSource,TChildLinkedSource, TId>(
-                    initChildLinkedSourceAction
-                )
-            );
-        }
-
-        private IInclude CreatePolymorphicNestedLinkedSourceIncludeForNestedLinkedSource<TLinkTargetOwner, TChildLinkedSource, TId>(
-            Action<TLinkTargetOwner, int, TChildLinkedSource> initChildLinkedSourceAction) 
+        private Dictionary<bool, IInclude> CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction)
         {
-            Type ctorGenericType = typeof(NestedLinkedSourceInclude<,,,,,>);
-
-            var childLinkedSourceType = typeof(TChildLinkedSource);
-            var idType = typeof(TId);
-            Type[] typeArgs ={
-                typeof(TLinkTargetOwner),
-                childLinkedSourceType, 
-                idType,
-                childLinkedSourceType, 
-                GetLinkedSourceModelType(childLinkedSourceType),
-                idType
-            };
-
-            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
-
-            //stle: change to single once obsolete constructor is deleted
-            var ctor = ctorSpecificType.GetConstructors().First();
-
-            return (IInclude)ctor.Invoke(
-                new object[]{
+            var include = LinkedSourceConfigs.GetConfigFor<TChildLinkedSource>()
+                .CreateNestedLinkedSourceInclude<TLinkedSource, TChildLinkedSource, TId, TId>(
                     CreateIdentityFunc<TId>(),
                     initChildLinkedSourceAction
-                }
+                );
+
+            return CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
+                include
             );
-        } 
+        }
         #endregion
 
         #region SubLinkedSource

@@ -6,7 +6,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>, 
         IIncludeWithAddLookupId<TLink>, 
         IIncludeWithChildLinkedSource 
-        where TChildLinkedSource : class, TIChildLinkedSource, ILinkedSource<TChildLinkedSourceModel>, new()
+        where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;
         private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
@@ -39,7 +39,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
             InitChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
 
-            return childLinkedSource;
+            return (TIChildLinkedSource)(object)childLinkedSource;
         }
 
         private void InitChildLinkedSource(TLinkedSource linkedSource, int referenceIndex, TChildLinkedSource childLinkedSource) {
