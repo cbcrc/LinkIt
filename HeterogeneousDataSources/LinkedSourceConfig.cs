@@ -30,7 +30,6 @@ namespace HeterogeneousDataSources
         )//stle: can make it mandatory?
         {
             EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
-            //stle: ensure TChildLinkedSource == TLinkedSource
 
             return new NestedLinkedSourceInclude<TLinkTargetOwner, TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
                 getLookupIdFunc,
@@ -42,7 +41,7 @@ namespace HeterogeneousDataSources
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
         {
             EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
-            //stle: ensure TChildLinkedSourceModel == TLinkedSourceModel
+            EnsureExpectedChildLinkedSourceModelType<TChildLinkedSourceModel,TLinkedSourceModel>();
 
             //stle: what to do about null vs special value for func?
             return new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
@@ -59,8 +58,7 @@ namespace HeterogeneousDataSources
         }
 
         //stle: error identification
-        private void EnsureClassImplementsInterface<TClass,TInterface>()
-        {
+        private void EnsureClassImplementsInterface<TClass,TInterface>(){
             var classType = typeof (TClass);
             var interfaceType = typeof (TInterface);
             if (!interfaceType.IsAssignableFrom(classType)){
@@ -73,6 +71,24 @@ namespace HeterogeneousDataSources
                 );
             }
         }
-        
+
+        //stle: error identification
+        private void EnsureExpectedChildLinkedSourceModelType<TChildLinkedSourceModel, TLinkedSourceModel>()
+        {
+            var childLinkedSourceModelType = typeof (TChildLinkedSourceModel);
+            var linkedSourceModelType = typeof (TLinkedSourceModel);
+
+            if (childLinkedSourceModelType != linkedSourceModelType)
+            {
+                throw new ArgumentException(
+                    string.Format(
+                        "TChildLinkedSourceModel type must be {0} but was {1}.",
+                        linkedSourceModelType,
+                        childLinkedSourceModelType
+                    )
+                );
+            }
+        }
+
     }
 }
