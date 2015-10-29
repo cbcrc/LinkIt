@@ -87,7 +87,7 @@ namespace HeterogeneousDataSources.Tests {
                 );
             var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
 
-            var actual = sut.ParseReferenceTypeByLoadingLevel(typeof(LinkedSource));
+            var actual = sut.ParseLoadingLevels(typeof(LinkedSource));
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

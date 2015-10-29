@@ -6,7 +6,8 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
-        private readonly ReferenceTypeByLoadingLevelParser _referenceTypeByLoadingLevelParser;
+//stle: term: rename by LoadingLevelParser
+        private readonly ReferenceTypeByLoadingLevelParser _loadingLevelParser;
 
         #region Initialization
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions)
@@ -14,7 +15,7 @@ namespace HeterogeneousDataSources {
             EnsureLoadLinkExpressionLinkTargetIdsAreUnique(loadLinkExpressions);
 
             var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
-            _referenceTypeByLoadingLevelParser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
+            _loadingLevelParser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
             
             //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
 
@@ -87,44 +88,32 @@ namespace HeterogeneousDataSources {
         }
 
 
-        private Dictionary<Type,object> _linkedSourceConfigs = new Dictionary<Type, object>();
-        public ILinkedSourceConfig<TLinkedSource> GetLinkedSourceConfig<TLinkedSource>()
+        public ILoadLinker<TRootLinkedSource> CreateLoadLinker<TRootLinkedSource>(IReferenceLoader referenceLoader) 
         {
-            var linkedSourceType = typeof(TLinkedSource);
+            var rootLinkedSourceType = typeof(TRootLinkedSource);
             
-            //Lazy init to minimize required configuration by the client.
-            if (!_linkedSourceConfigs.ContainsKey(linkedSourceType)) {
-                _linkedSourceConfigs.Add(linkedSourceType,CreateLinkedSourceConfig<TLinkedSource>());
-            }
-
-            return (ILinkedSourceConfig<TLinkedSource>)_linkedSourceConfigs[linkedSourceType];
+            return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
+                referenceLoader,
+                GetLoadingLevelsFor<TRootLinkedSource>(),
+                this
+            );
         }
 
-        public ILinkedSourceConfig<TLinkedSource> CreateLinkedSourceConfig<TLinkedSource>()
+        private readonly Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType
+            = new Dictionary<Type, List<List<Type>>>();
+
+        private List<List<Type>> GetLoadingLevelsFor<TRootLinkedSource>()
         {
-            Type ctorGenericType = typeof(LinkedSourceConfig<,>);
+            var rootLinkedSourceType = typeof(TRootLinkedSource);
 
-            var linkedSourceType = typeof(TLinkedSource);
+            //Lazy init to minimize required configuration by the client.
+            //stle: dangerous for multithreading
+            if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType)){
+                var loadingLevels = _loadingLevelParser.ParseLoadingLevels(rootLinkedSourceType);
+                _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
+            }
 
-            Type[] typeArgs ={
-                linkedSourceType,
-                //stle: dry; !move this into LinkedSourceExpression
-                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>.GetLinkedSourceModelType(linkedSourceType)
-            };
-
-            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
-
-            //stle: simplify this
-            var referenceTypeToBeLoadedForEachLoadingLevel = _referenceTypeByLoadingLevelParser
-                .ParseReferenceTypeByLoadingLevel(linkedSourceType);
-
-            var ctor = ctorSpecificType.GetConstructors().Single();
-            var args = new object[]{
-                referenceTypeToBeLoadedForEachLoadingLevel,
-                this
-            };
-            var uncasted = ctor.Invoke(args);
-            return (ILinkedSourceConfig<TLinkedSource>)uncasted;
+            return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
         }
     }
 }

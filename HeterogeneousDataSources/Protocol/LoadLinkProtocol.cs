@@ -15,9 +15,7 @@ namespace HeterogeneousDataSources {
 
         public ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>()
         {
-            return _config
-                .GetLinkedSourceConfig<TRootLinkedSource>()
-                .CreateLoadLinker(_referenceLoader);
+            return _config.CreateLoadLinker<TRootLinkedSource>(_referenceLoader);
         }
     }
 }

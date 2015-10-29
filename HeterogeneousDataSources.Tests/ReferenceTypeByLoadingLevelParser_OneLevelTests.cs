@@ -18,7 +18,7 @@ namespace HeterogeneousDataSources.Tests {
             loadLinkProtocolBuilder.For<OneLoadingLevelContentLinkedSource>();
 
             var sut = TestSetupHelper.CreateReferenceTypeByLoadingLevelParser(loadLinkProtocolBuilder);
-            var actual = sut.ParseReferenceTypeByLoadingLevel(typeof(OneLoadingLevelContentLinkedSource));
+            var actual = sut.ParseLoadingLevels(typeof(OneLoadingLevelContentLinkedSource));
 
             Assert.That(actual,Is.Empty);
         }

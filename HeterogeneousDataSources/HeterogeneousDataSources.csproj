@@ -40,15 +40,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumerableExtensions.cs" />
-    <Compile Include="ILinkedSourceConfig.cs" />
     <Compile Include="ILinkTarget.cs" />
-    <Compile Include="ILoadLinker.cs" />
-    <Compile Include="IncludeBuilder.cs" />
-    <Compile Include="IncludeTargetConcreteTypeBuilder.cs" />
     <Compile Include="LinkedSourceConfig.cs" />
+    <Compile Include="LinkedSourceConfigs.cs" />
+    <Compile Include="Protocol\ILoadLinker.cs" />
+    <Compile Include="Config\IncludeBuilder.cs" />
+    <Compile Include="Config\IncludeTargetConcreteTypeBuilder.cs" />
+    <Compile Include="ILinkedSourceConfig.cs" />
     <Compile Include="LinkTarget.cs" />
     <Compile Include="LinkTargetFactory.cs" />
-    <Compile Include="LoadLinker.cs" />
+    <Compile Include="Protocol\LoadLinker.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IIncludeWithChildLinkedSource.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IIncludeWithCreateNestedLinkedSource.cs" />
@@ -66,18 +67,18 @@
     </Compile>
     <Compile Include="LoadLinkExpressions\LinkTargetValueWithIndex.cs" />
     <Compile Include="LoadLinkExpressionTreeFactory.cs" />
-    <Compile Include="LoadLinkProtocolBuilder.cs" />
-    <Compile Include="LoadLinkProtocolForLinkedSourceBuilder.cs" />
+    <Compile Include="Config\LoadLinkProtocolBuilder.cs" />
+    <Compile Include="Config\LoadLinkProtocolForLinkedSourceBuilder.cs" />
     <Compile Include="ReferenceTypeByLoadingLevelParser.cs" />
     <Compile Include="Tree.cs" />
     <Compile Include="LoadLinkConfig.cs" />
     <Compile Include="ILinkedSource.cs" />
     <Compile Include="IReferenceLoader.cs" />
-    <Compile Include="LoadedReferenceContext.cs" />
+    <Compile Include="Protocol\LoadedReferenceContext.cs" />
     <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\INestedLoadLinkExpression.cs" />
-    <Compile Include="LoadLinkProtocol.cs" />
-    <Compile Include="LookupIdContext.cs" />
+    <Compile Include="Protocol\LoadLinkProtocol.cs" />
+    <Compile Include="Protocol\LookupIdContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

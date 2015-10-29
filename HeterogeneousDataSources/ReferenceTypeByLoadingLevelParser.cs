@@ -12,7 +12,7 @@ namespace HeterogeneousDataSources {
             _linkExpressionTreeFactory = linkExpressionTreeFactory;
         }
 
-        public List<List<Type>> ParseReferenceTypeByLoadingLevel(Type rootLinkedSourceType) {
+        public List<List<Type>> ParseLoadingLevels(Type rootLinkedSourceType) {
             var linkedExpressionTree = _linkExpressionTreeFactory.Create(rootLinkedSourceType);
 
             var loadingLevelByReferenceType = new Dictionary<Type, int>();

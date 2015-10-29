@@ -8,7 +8,6 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources
 {
-    //stle: enhance that: TId could dispear after query are supported
     public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>
     {
         private readonly Action<ILoadLinkExpression> _addLoadLinkExpressionAction;
@@ -299,6 +298,7 @@ namespace HeterogeneousDataSources
             return iLinkedSourceType.GenericTypeArguments.Single();
         }
 
+        //stle: useless now...?
         private static void EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(Type linkedSourceType, List<Type> iLinkedSourceTypes) {
             if (!iLinkedSourceTypes.Any()) {
                 throw new ArgumentException(
