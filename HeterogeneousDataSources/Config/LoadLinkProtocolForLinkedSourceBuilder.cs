@@ -260,7 +260,7 @@ namespace HeterogeneousDataSources
             return this;
         }
 
-        //stle: dry
+        //stle: HEREEEE
         public static Type GetLinkedSourceModelType(Type linkedSourceType) {
             var iLinkedSourceTypes = linkedSourceType.GetInterfaces()
                 .Where(interfaceType =>
