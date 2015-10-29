@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public NestedLinkedSourceInclude(
             Func<TLink, TId> getLookupIdFunc,
-            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction = null
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction
         )
         {
             _getLookupIdFunc = getLookupIdFunc;

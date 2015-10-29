@@ -26,7 +26,7 @@ namespace HeterogeneousDataSources
 
         public IInclude CreateNestedLinkedSourceInclude<TLinkTargetOwner, TIChildLinkedSource, TLink, TId>(
             Func<TLink, TId> getLookupIdFunc,
-            Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction = null
+            Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction
         )//stle: can make it mandatory?
         {
             EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
