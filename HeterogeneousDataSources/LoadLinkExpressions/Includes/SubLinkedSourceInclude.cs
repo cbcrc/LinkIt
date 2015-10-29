@@ -28,11 +28,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             var childLinkSourceModel = _getSubLinkedSourceModel!=null
                 ? _getSubLinkedSourceModel(link)
                 : UseLinkAsSubLinkedSourceModel(link);
-
-            return LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
-                childLinkSourceModel, 
-                loadedReferenceContext
-            );
+            return loadedReferenceContext
+                .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel);
         }
 
         private TChildLinkedSourceModel UseLinkAsSubLinkedSourceModel(object link)

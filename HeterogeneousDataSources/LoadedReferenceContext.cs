@@ -39,15 +39,6 @@ namespace HeterogeneousDataSources {
             referenceDictionnary.Add(id,reference);
         }
 
-        public void AddLinkedSourceToBeBuilt<TLinkedSource>(TLinkedSource linkedSource)
-        {
-            if (linkedSource == null){
-                throw new InvalidOperationException("Cannot add null linked source to be built.");
-            }
-
-            _linkedSourcesToBeBuilt.Add(linkedSource);
-        }
-
         public List<object> LinkedSourcesToBeBuilt{
             get { return _linkedSourcesToBeBuilt.ToList(); }
         }
@@ -85,6 +76,18 @@ namespace HeterogeneousDataSources {
             if (!referenceDictionnary.ContainsKey(lookupId)) { return default(TReference); }
 
             return referenceDictionnary[lookupId];
+        }
+
+        //stle: TLinkedSourceModel not required, check this pattern everywhere
+        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model)
+            where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
+        {
+            if (model == null) { return null; }
+
+            var linkedSource = new TLinkedSource { Model = model };
+            _linkedSourcesToBeBuilt.Add(linkedSource);
+
+            return linkedSource;
         }
     }
 }

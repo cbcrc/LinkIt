@@ -163,12 +163,9 @@ namespace HeterogeneousDataSources
             }
         }
 
-        ////Is LoadLinkExpressionUtil still required?
         public TRootLinkedSource CreateLinkedSource(TExpectedRootLinkedSourceModel model) {
-            return LoadLinkExpressionUtil.CreateLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(
-                model,
-                _loadedReferenceContext
-            );
+            return _loadedReferenceContext
+                .CreatePartiallyBuiltLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(model);
         }
     }
 }

@@ -34,10 +34,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             //stle: dry with other load link expressions
             var lookupId = _getLookupIdFunc(link);
             var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
-            var childLinkedSource = LoadLinkExpressionUtil.CreateLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
-                reference, 
-                loadedReferenceContext
-            );
+            var childLinkedSource = loadedReferenceContext
+                .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(reference);
 
             InitChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
 

@@ -76,7 +76,6 @@
     <Compile Include="LoadedReferenceContext.cs" />
     <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
     <Compile Include="LoadLinkExpressions\INestedLoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressions\LoadLinkExpressionUtil.cs" />
     <Compile Include="LoadLinkProtocol.cs" />
     <Compile Include="LookupIdContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
