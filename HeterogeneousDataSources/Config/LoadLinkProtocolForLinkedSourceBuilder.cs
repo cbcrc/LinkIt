@@ -260,43 +260,6 @@ namespace HeterogeneousDataSources
             return this;
         }
 
-        //stle: HEREEEE
-        public static Type GetLinkedSourceModelType(Type linkedSourceType) {
-            var iLinkedSourceTypes = linkedSourceType.GetInterfaces()
-                .Where(interfaceType =>
-                    interfaceType.IsGenericType &&
-                    interfaceType.GetGenericTypeDefinition() == typeof(ILinkedSource<>))
-                .ToList();
-
-            EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(linkedSourceType, iLinkedSourceTypes);
-
-            var iLinkedSourceType = iLinkedSourceTypes.Single();
-            return iLinkedSourceType.GenericTypeArguments.Single();
-        }
-
-        //stle: useless now...?
-        private static void EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(Type linkedSourceType, List<Type> iLinkedSourceTypes) {
-            if (!iLinkedSourceTypes.Any()) {
-                throw new ArgumentException(
-                    string.Format(
-                        "{0} must implement ILinkedSource<>.",
-                        linkedSourceType
-                    ), 
-                    "TLinkedSource"
-                );
-            }
-
-            if (iLinkedSourceTypes.Count > 1) {
-                throw new ArgumentException(
-                    string.Format(
-                        "{0} must implement ILinkedSource<> only once.",
-                        linkedSourceType
-                    ),
-                    "TLinkedSource"
-                );
-            }
-        }
-
         private static Action<TLinkedSource, List<TIChildLinkedSource>> SetReferencesActionForSingleValue<TIChildLinkedSource>(
             LinkTarget<TLinkedSource, TIChildLinkedSource> linkTarget) 
         {
