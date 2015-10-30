@@ -37,7 +37,6 @@ namespace HeterogeneousDataSources
         public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsSubLinkedSource(
             TDiscriminant discriminantValue)
         {
-            //stle: should not have to know that TLink = TChildLinkedSourceModel if getSubLinkedSourceModel is null
             return AsSubLinkedSource<TLink>(discriminantValue, null);
         }
 

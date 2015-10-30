@@ -17,10 +17,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
-        public Type ReferenceType{
-            get { return null; }
-        }
-
         public Type ChildLinkedSourceType { get; private set; }
 
         public TIChildLinkedSource CreateSubLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext)
