@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources
 {
@@ -31,11 +29,12 @@ namespace HeterogeneousDataSources
             return Equals(asILinkTarget);
         }
 
-        //stle: simplify by putting loop in the load link expression
-        public abstract void SetLinkTargetValues(
-            TLinkedSource linkedSource,
-            List<LinkTargetValueWithIndex<TTargetProperty>> listOfLinkTargetValueWithIndex,
-            int numOfLinkedTargetValue
+        public abstract void SetLinkTargetValue(
+            TLinkedSource linkedSource, 
+            TTargetProperty linkTargetValue, 
+            int linkTargetValueIndex 
         );
+
+        public abstract void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues);
     }
 }

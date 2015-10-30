@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources
 {
@@ -21,25 +20,15 @@ namespace HeterogeneousDataSources
             _setterAction = setterAction;
         }
 
-        //stle: simplify by putting loop in the load link expression
-        public override void SetLinkTargetValues(
-            TLinkedSource linkedSource,
-            List<LinkTargetValueWithIndex<TTargetProperty>> listOfLinkTargetValueWithIndex,
-            int numOfLinkedTargetValue
-            )
+        public override void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
         {
-            LazyInit(linkedSource, numOfLinkedTargetValue);
-
-            //In order to avoid overriding value set by another include
-            foreach (var linkTargetValueWithIndex in listOfLinkTargetValueWithIndex) {
-                _getterFunc(linkedSource)[linkTargetValueWithIndex.Index] = linkTargetValueWithIndex.TargetValue;
-            }
+            _getterFunc(linkedSource)[linkTargetValueIndex] = linkTargetValue;
         }
 
-        private void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValue)
+        public override void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues)
         {
             if (_getterFunc(linkedSource) == null) {
-                var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValue].ToList();
+                var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValues].ToList();
                 _setterAction(linkedSource, polymorphicListToBeBuilt);
             }
         }

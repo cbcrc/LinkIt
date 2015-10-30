@@ -61,14 +61,11 @@
     <Compile Include="LoadLinkExpressions\Includes\IIncludeWithGetReference.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeSet.cs" />
     <Compile Include="LoadLinkExpressions\Includes\ReferenceInclude.cs" />
-    <Compile Include="LoadLinkExpressions\LinkWithIndexAndInclude.cs" />
     <Compile Include="LoadLinkExpressions\Includes\NestedLinkedSourceInclude.cs" />
-    <Compile Include="LoadLinkExpressions\LinkTargetValueResolver.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionImpl.cs" />
     <Compile Include="LoadLinkExpressions\Includes\SubLinkedSourceInclude.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LoadLinkExpressions\LinkTargetValueWithIndex.cs" />
     <Compile Include="LoadLinkExpressionTreeFactory.cs" />
     <Compile Include="Config\LoadLinkProtocolBuilder.cs" />
     <Compile Include="Config\LoadLinkProtocolForLinkedSourceBuilder.cs" />

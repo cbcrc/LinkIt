@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources
 {
@@ -18,18 +15,12 @@ namespace HeterogeneousDataSources
             _setterAction = setterAction;
         }
 
-        //stle: simplify by putting loop in the load link expression
-        public override void SetLinkTargetValues(
-            TLinkedSource linkedSource,
-            List<LinkTargetValueWithIndex<TTargetProperty>> listOfLinkTargetValueWithIndex,
-            int numOfLinkedTargetValue)
-        {
-            if (!listOfLinkTargetValueWithIndex.Any()) {
-                //In order to avoid overriding value set by another include
-                return;
-            }
+        public override void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex){
+            _setterAction(linkedSource, linkTargetValue);
+        }
 
-            _setterAction(linkedSource, listOfLinkTargetValueWithIndex.Single().TargetValue);
+        public override void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues){
+            //Do nothing for single value
         }
     }
 }
