@@ -43,23 +43,5 @@ namespace HeterogeneousDataSources.Tests
                     .With.Message.Contains("IPolymorphicSource")
             );
         }
-
-        [Test]
-        public void CreateSubLinkedSourceInclude_UnexpectedChildLinkedSourceModelType_ShouldThrow()
-        {
-            TestDelegate act =
-                () => LinkedSourceConfigs.GetConfigFor<NestedLinkedSource>()
-                    .CreateSubLinkedSourceInclude<object, object, string>(
-                        link => (string)link
-                    );
-
-            Assert.That(
-                act,
-                Throws.ArgumentException
-                    .With.Message.Contains("String").And
-                    .With.Message.Contains("NestedContent")
-            );
-        }
-
     }
 }

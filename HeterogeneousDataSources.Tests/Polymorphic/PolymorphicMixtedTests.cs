@@ -30,7 +30,8 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                             link => link.ToString()
                         )
                         .Include<PersonLinkedSource>().AsSubLinkedSource(
-                            typeof(Person)
+                            typeof(Person),
+                            link => (Person)link
                         )
                 );
             loadLinkProtocolBuilder.For<PersonLinkedSource>()

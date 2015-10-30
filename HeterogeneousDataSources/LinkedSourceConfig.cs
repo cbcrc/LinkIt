@@ -40,7 +40,6 @@ namespace HeterogeneousDataSources
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
         {
             EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
-            EnsureExpectedChildLinkedSourceModelType<TChildLinkedSourceModel,TLinkedSourceModel>();
 
             //stle: what to do about null vs special value for func?
             return new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
@@ -53,6 +52,7 @@ namespace HeterogeneousDataSources
         {
             if(getSubLinkedSourceModel==null){ return null; }
 
+            //stle: error identification: if wrong model type
             return link => (TLinkedSourceModel) (object) getSubLinkedSourceModel(link);
         }
 
@@ -70,24 +70,5 @@ namespace HeterogeneousDataSources
                 );
             }
         }
-
-        //stle: error identification
-        private void EnsureExpectedChildLinkedSourceModelType<TChildLinkedSourceModel, TLinkedSourceModel>()
-        {
-            var childLinkedSourceModelType = typeof (TChildLinkedSourceModel);
-            var linkedSourceModelType = typeof (TLinkedSourceModel);
-
-            if (childLinkedSourceModelType != linkedSourceModelType)
-            {
-                throw new ArgumentException(
-                    string.Format(
-                        "TChildLinkedSourceModel type must be {0} but was {1}.",
-                        linkedSourceModelType,
-                        childLinkedSourceModelType
-                    )
-                );
-            }
-        }
-
     }
 }
