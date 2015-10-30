@@ -1,0 +1,10 @@
+﻿{
+  "model": {
+    "id": "1",
+    "mediaId": 32
+  },
+  "media": {
+    "id": 32,
+    "title": "title-32"
+  }
+}

@@ -36,6 +36,18 @@ namespace HeterogeneousDataSources
             );
         }
 
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
+           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Expression<Func<TLinkedSource, TReference>> linkTargetFunc
+        )
+            where TId:struct 
+        {
+            return LoadLinkReference(
+                LinkTargetFactory.Create(linkTargetFunc),
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc)
+            );
+        }
+
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TTargetProperty, TId>(
             LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc) 
@@ -226,8 +238,25 @@ namespace HeterogeneousDataSources
 
         #region Shared
         private static Func<TLinkedSource, List<TId>> ToGetLookupIdsFuncForSingleValue<TId>(
-            Func<TLinkedSource, TId> getLookupIdFunc) {
+            Func<TLinkedSource, TId> getLookupIdFunc) 
+        {
             return linkedSource => new List<TId> { getLookupIdFunc(linkedSource) };
+        }
+
+        private static Func<TLinkedSource, List<TId>> ToGetLookupIdsFuncForOptionalSingleValue<TId>(
+            Func<TLinkedSource, TId?> getOptionalLookupIdFunc
+        ) 
+            where TId:struct
+        {
+            return linkedSource => OptionalIdToList(getOptionalLookupIdFunc(linkedSource));
+        }
+
+        private static List<TId> OptionalIdToList<TId>(TId? optionalId)
+            where TId : struct
+        {
+            return optionalId.HasValue
+                ? new List<TId> { optionalId.Value }
+                : new List<TId>();
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddLoadLinkExpression(

@@ -22,6 +22,10 @@ namespace HeterogeneousDataSources.Tests.Shared {
                 new ReferenceTypeConfig<Person, string>(
                     ids => new PersonRepository().GetByIds(ids),
                     reference => reference.Id
+                ),
+                new ReferenceTypeConfig<Media, int>(
+                    ids => new MediaRepository().GetByIds(ids),
+                    reference => reference.Id
                 )
             };
         }

@@ -93,6 +93,8 @@
     </Compile>
     <Compile Include="ReferenceTypeByLoadingLevelParser_PolymorphicTests.cs" />
     <Compile Include="ReferenceTypeByLoadingLevelParser_OneLevelTests.cs" />
+    <Compile Include="Shared\Media.cs" />
+    <Compile Include="Shared\MediaRepository.cs" />
     <Compile Include="Shared\IPolymorphicSource.cs" />
     <Compile Include="Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
     <Compile Include="Shared\TestSetupHelper.cs" />
+    <Compile Include="OptionalReferenceTests.cs" />
     <Compile Include="SingleReferenceTests.cs">
       <SubType>Code</SubType>
     </Compile>
