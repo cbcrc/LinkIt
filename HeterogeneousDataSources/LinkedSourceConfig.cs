@@ -41,7 +41,6 @@ namespace HeterogeneousDataSources
         {
             EnsureClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
-            //stle: what to do about null vs special value for func?
             return new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
                 WrapGetSubLinkedSourceModel(getSubLinkedSourceModel)
             );
