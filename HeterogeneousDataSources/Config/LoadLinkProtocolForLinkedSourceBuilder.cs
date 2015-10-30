@@ -88,6 +88,34 @@ namespace HeterogeneousDataSources
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc
+        )
+            where TId : struct
+        {
+            return LoadLinkNestedLinkedSource(
+                LinkTargetFactory.Create(linkTargetFunc),
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc),
+                NullInitChildLinkedSourceAction
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc,
+           Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction
+        )
+            where TId : struct 
+        {
+            return LoadLinkNestedLinkedSource(
+                LinkTargetFactory.Create(linkTargetFunc),
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc),
+                (linkedSource, referenceIndex, childLinkedSource) =>
+                    initChildLinkedSourceAction(linkedSource, childLinkedSource)
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc)
         {
@@ -109,7 +137,7 @@ namespace HeterogeneousDataSources
                 initChildLinkedSourceAction
             );
         }
-        
+
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TTargetProperty, TId>(
             LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,

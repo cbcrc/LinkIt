@@ -10,7 +10,8 @@ namespace HeterogeneousDataSources.Tests.Shared
             return ids
                 .Select(id => new Media{
                     Id = id, 
-                    Title = "title-" + id
+                    Title = "title-" + id,
+                    SummaryImageId = "img" + id
                 })
                 .ToList();
         }
