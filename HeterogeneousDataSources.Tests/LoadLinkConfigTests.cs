@@ -11,14 +11,17 @@ namespace HeterogeneousDataSources.Tests {
     public class LoadLinkConfigTests
     {
         [Test]
-        public void CreateLoadLinkConfig_ManyLoadLinkExpressionWithSameLinkTargetId_ShouldThrow() {
+        public void CreateLoadLinkConfig_ManyLoadLinkExpressionWithSameLinkTargetId_ShouldThrow()
+        {
+            var duplicate = new SingleValueLinkTarget<object, object>("the-duplicate", null);
+
             TestDelegate act = () => new LoadLinkConfig(
                 new List<ILoadLinkExpression>{
                     new LoadLinkExpressionImpl<object, object, object, object>(
-                        "the-duplicate", null, null, null, null, new Dictionary<object, IInclude>()
+                        duplicate, null, null, new Dictionary<object, IInclude>()
                     ),
                     new LoadLinkExpressionImpl<object, object, object, object>(
-                        "the-duplicate", null, null, null, null, new Dictionary<object, IInclude>()
+                        duplicate, null, null, new Dictionary<object, IInclude>()
                     )
                 }
             );

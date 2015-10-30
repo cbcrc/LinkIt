@@ -9,24 +9,18 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     public class LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> :
         INestedLoadLinkExpression
     {
+        private readonly LinkTargetBase<TLinkedSource, TIChildLinkedSource> _linkTarget;
         private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
-        private readonly Func<TLinkedSource, List<TIChildLinkedSource>> _getReferences;
-        private readonly Action<TLinkedSource, List<TIChildLinkedSource>> _setReferences;
         private readonly IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> _includeSet;
 
         public LoadLinkExpressionImpl(
-            string linkTargetId,
+            LinkTargetBase<TLinkedSource,TIChildLinkedSource> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
-            //stle: http://stackoverflow.com/questions/7723744
-            Func<TLinkedSource, List<TIChildLinkedSource>> getReferences,
-            Action<TLinkedSource, List<TIChildLinkedSource>> setReferences,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Dictionary<TDiscriminant, IInclude> includes)
         {
-            LinkTargetId = linkTargetId;
+            _linkTarget = linkTarget;
             _getLinksFunc = getLinksFunc;
-            _getReferences = getReferences;
-            _setReferences = setReferences;
             _includeSet = new IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
                 includes,
                 getDiscriminantFunc
@@ -49,8 +43,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 .Any(include => include is IIncludeWithAddLookupId<TLink>);
         }
 
-        public string LinkTargetId { get; private set; }
-
+        public string LinkTargetId { get { return _linkTarget.Id; } }
         public Type LinkedSourceType { get; private set; }
         public List<Type> ReferenceTypes { get; private set; }
 
@@ -142,48 +135,12 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         private void SetLinkTargetValue(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex)
         {
-            var linkCount = GetLinks(linkedSource).Count;
-            if (linkCount == 0){
-                SetLinkTargetWithZeroValue(linkedSource);
-            }
-            if (linkCount == 1){
-                SetLinkTargetWithOneValue(linkedSource, listOfLinkTargetValueWithIndex);
-            }
-            else{
-                SetLinkTargetWithManyValues(linkedSource, listOfLinkTargetValueWithIndex);
-            }
+            _linkTarget.SetLinkTargetValues(
+                linkedSource, 
+                listOfLinkTargetValueWithIndex,
+                GetLinks(linkedSource).Count
+            );
         }
-
-        private void SetLinkTargetWithZeroValue(TLinkedSource linkedSource) {
-            //It does not matter if each include set the value to empty set
-            _setReferences(linkedSource, new List<TIChildLinkedSource>());
-        }
-
-        private void SetLinkTargetWithOneValue(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex) {
-            if (!listOfLinkTargetValueWithIndex.Any()){
-                //In order to avoid overriding value set by another include
-                return;
-            }
-
-            var targetValue = listOfLinkTargetValueWithIndex.Single().TargetValue;
-            _setReferences(linkedSource, new List<TIChildLinkedSource> { targetValue });
-        }
-
-        private void SetLinkTargetWithManyValues(TLinkedSource linkedSource, List<LinkTargetValueWithIndex<TIChildLinkedSource>> listOfLinkTargetValueWithIndex) {
-            InitListOfReferencesIfNull(linkedSource);
-
-            //In order to avoid overriding value set by another include
-            foreach (var linkTargetValueWithIndex in listOfLinkTargetValueWithIndex) {
-                _getReferences(linkedSource)[linkTargetValueWithIndex.Index] = linkTargetValueWithIndex.TargetValue;
-            }
-        }
-
-        private void InitListOfReferencesIfNull(TLinkedSource linkedSource) {
-            if (_getReferences(linkedSource) == null) {
-                var polymorphicListToBeBuilt = new TIChildLinkedSource[GetLinks(linkedSource).Count].ToList();
-                _setReferences(linkedSource, polymorphicListToBeBuilt);
-            }
-        } 
         #endregion
 
         private List<TLink> GetLinks(TLinkedSource linkedSource)

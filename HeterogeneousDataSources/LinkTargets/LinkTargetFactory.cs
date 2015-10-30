@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -8,21 +9,34 @@ namespace HeterogeneousDataSources
     //http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette
     public static class LinkTargetFactory {
 
-        public static LinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
+        public static LinkTargetBase<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
             Expression<Func<TLinkedSource, TTargetProperty>> linkTargetGetterFunc) 
         {
             PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
             EnsureNoWriteOnlyProperty(property);
             EnsureNoReadOnlyProperty(property);
 
-            return new LinkTarget<TLinkedSource, TTargetProperty>(
+            return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(
                 property.Name,
-                linkTargetGetterFunc.Compile(),
-                CreateLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
+                CreateSingleValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
         }
 
-        private static Action<TLinkedSource, TTargetProperty> CreateLinkTargetSetterAction<TLinkedSource, TTargetProperty>(PropertyInfo property)
+        public static LinkTargetBase<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
+            Expression<Func<TLinkedSource, List<TTargetProperty>>> linkTargetGetterFunc) 
+        {
+            PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
+            EnsureNoWriteOnlyProperty(property);
+            EnsureNoReadOnlyProperty(property);
+
+            return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(
+                property.Name,
+                linkTargetGetterFunc.Compile(),
+                CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
+            );
+        }
+
+        private static Action<TLinkedSource, TTargetProperty> CreateSingleValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(PropertyInfo property)
         {
             MethodInfo setter = property.GetSetMethod();
             return (Action<TLinkedSource, TTargetProperty>) Delegate.CreateDelegate(
@@ -30,6 +44,17 @@ namespace HeterogeneousDataSources
                 setter
             );
         }
+
+        //stle: move to type constructor?
+        //stle: http://stackoverflow.com/questions/7723744
+        private static Action<TLinkedSource, List<TTargetProperty>> CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(PropertyInfo property) {
+            MethodInfo setter = property.GetSetMethod();
+            return (Action<TLinkedSource, List<TTargetProperty>>)Delegate.CreateDelegate(
+                typeof(Action<TLinkedSource, List<TTargetProperty>>),
+                setter
+            );
+        }
+
 
         private static PropertyInfo GetPropertyFromGetter<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter) {
             EnsureNoFunctionOrAction(getter);

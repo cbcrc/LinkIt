@@ -25,10 +25,8 @@ namespace HeterogeneousDataSources
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TReference, TId, bool>(
-                linkTarget.Id,
+                linkTarget,
                 ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
-                GetReferencesFuncForSingleValue<TReference>(),
-                SetReferencesActionForSingleValue(linkTarget),
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                     new ReferenceInclude<TReference, TId, TReference, TId>(
@@ -48,10 +46,8 @@ namespace HeterogeneousDataSources
 
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TReference, TId, bool>(
-                linkTarget.Id,
+                linkTarget,
                 getLookupIdsFunc,
-                linkTarget.GetTargetProperty,
-                linkTarget.SetTargetProperty,
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                     new ReferenceInclude<TReference, TId, TReference, TId>(
@@ -84,10 +80,8 @@ namespace HeterogeneousDataSources
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TId, bool>(
-                linkTarget.Id,
+                linkTarget,
                 ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
-                GetReferencesFuncForSingleValue<TChildLinkedSource>(),
-                SetReferencesActionForSingleValue(linkTarget),
                 link => true,
                 CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(
                     InitChildLinkedSourceActionForSingleValue(initChildLinkedSourceAction)
@@ -116,10 +110,8 @@ namespace HeterogeneousDataSources
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TId, bool>(
-                linkTarget.Id,
+                linkTarget,
                 getLookupIdsFunc,
-                linkTarget.GetTargetProperty,
-                linkTarget.SetTargetProperty,
                 link => true,
                 CreateNestedLinkedSourceIncludeForNonPolymorphicLoadLinkExpression<TChildLinkedSource, TId>(
                     initChildLinkedSourceAction
@@ -153,10 +145,8 @@ namespace HeterogeneousDataSources
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
-                linkTarget.Id,
+                linkTarget,
                 ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc),
-                GetReferencesFuncForSingleValue<TChildLinkedSource>(),
-                SetReferencesActionForSingleValue(linkTarget),
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                     new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
@@ -177,10 +167,8 @@ namespace HeterogeneousDataSources
             var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
-                linkTarget.Id,
+                linkTarget,
                 getSubLinkedSourceModelsFunc,
-                linkTarget.GetTargetProperty,
-                linkTarget.SetTargetProperty,
                 link => true,
                 CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
                     //stle: dry 
@@ -208,10 +196,8 @@ namespace HeterogeneousDataSources
             includes(includeBuilder);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
-                linkTarget.Id,
+                linkTarget,
                 ToGetLookupIdsFuncForSingleValue(getLinkFunc),
-                GetReferencesFuncForSingleValue<TIChildLinkedSource>(),
-                SetReferencesActionForSingleValue(linkTarget),
                 getDiscriminantFunc,
                 includeBuilder.Build()
             );
@@ -230,10 +216,8 @@ namespace HeterogeneousDataSources
             includes(includeBuilder);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
-                linkTarget.Id,
+                linkTarget,
                 getLinksFunc,
-                linkTarget.GetTargetProperty,
-                linkTarget.SetTargetProperty,
                 getDiscriminantFunc,
                 includeBuilder.Build()
             );
@@ -248,34 +232,10 @@ namespace HeterogeneousDataSources
             return linkedSource => new List<TId> { getLookupIdFunc(linkedSource) };
         }
 
-        private static Action<TLinkedSource, List<TTargetProperty>> ToLinkActionForSingleValue<TTargetProperty>(
-            LinkTarget<TLinkedSource, TTargetProperty> linkTarget) {
-            return (linkedSource, propertyValues) =>
-                linkTarget.SetTargetProperty(linkedSource, propertyValues.SingleOrDefault());
-        }
-
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddLoadLinkExpression(
            ILoadLinkExpression loadLinkExpression) {
             _addLoadLinkExpressionAction(loadLinkExpression);
             return this;
-        }
-
-        private static Action<TLinkedSource, List<TIChildLinkedSource>> SetReferencesActionForSingleValue<TIChildLinkedSource>(
-            LinkTarget<TLinkedSource, TIChildLinkedSource> linkTarget) 
-        {
-            return (linkedSource, childLinkedSources) =>
-                linkTarget.SetTargetProperty(linkedSource, childLinkedSources.SingleOrDefault());
-        }
-
-        private static Func<TLinkedSource, List<TIChildLinkedSource>> GetReferencesFuncForSingleValue<TIChildLinkedSource>()
-        {
-            return GetReferencesFuncForSingleValue<TLinkedSource, TIChildLinkedSource>();
-        }
-
-        private static Func<TReferenceOwner, List<TIChildLinkedSource>> GetReferencesFuncForSingleValue<TReferenceOwner, TIChildLinkedSource>() {
-            return linkedSource => {
-                throw new InvalidOperationException("Cannot get reference list for single reference.");
-            };
         }
 
         public static Func<T, T> CreateIdentityFunc<T>() {
