@@ -48,28 +48,6 @@ namespace HeterogeneousDataSources
                 )
             );
         }
-
-        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddNonPolymorphicLoadLinkExpression<TTargetProperty, TId>(
-            LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
-            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
-            IInclude include) 
-        {
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TId, bool>(
-                linkTarget,
-                getLookupIdsFunc,
-                link => true,
-                new Dictionary<bool, IInclude>
-                {
-                    {
-                        true, //always one include when not polymorphic
-                        include
-                    }
-                }
-            );
-
-            return AddLoadLinkExpression(loadLinkExpression);
-
-        }
         #endregion
 
         #region NestedLinkedSource
@@ -154,43 +132,37 @@ namespace HeterogeneousDataSources
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
-            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
-                linkTarget,
-                ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc),
-                link => true,
-                CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
-                        null
-                    )
-                )
+            return LoadLinkSubLinkedSource(
+                LinkTargetFactory.Create(linkTargetFunc),
+                ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc)
             );
-
-            return AddLoadLinkExpression(loadLinkExpression);
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
             Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc
         )
+            where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
+        {
+            return LoadLinkSubLinkedSource(
+                LinkTargetFactory.Create(linkTargetFunc),
+                getSubLinkedSourceModelsFunc
+            );
+        }
+
+        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
+            LinkTargetBase<TLinkedSource, TChildLinkedSource> linkTarget,
+            Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc
+        )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
-            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, bool>(
+            return AddNonPolymorphicLoadLinkExpression(
                 linkTarget,
                 getSubLinkedSourceModelsFunc,
-                link => true,
-                CreatePolymorphicIncludesForNonPolymorphicLoadLinkExpression(
-                    //stle: dry 
-                    new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
-                        null
-                    )
+                new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
+                    null
                 )
             );
-
-            return AddLoadLinkExpression(loadLinkExpression);
         }
 
         #endregion
@@ -288,6 +260,26 @@ namespace HeterogeneousDataSources
             };
         }
 
+        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddNonPolymorphicLoadLinkExpression<TTargetProperty, TId>(
+            LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
+            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            IInclude include) {
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TId, bool>(
+                linkTarget,
+                getLookupIdsFunc,
+                link => true,
+                new Dictionary<bool, IInclude>
+                {
+                    {
+                        true, //always one include when not polymorphic
+                        include
+                    }
+                }
+            );
+
+            return AddLoadLinkExpression(loadLinkExpression);
+
+        }
         #endregion
     }
 }
