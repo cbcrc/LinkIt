@@ -28,7 +28,7 @@ namespace HeterogeneousDataSources
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction)
         {
-            EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
+            EnsureClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
             return new NestedLinkedSourceInclude<TLinkTargetOwner, TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
                 getLookupIdFunc,
@@ -39,7 +39,7 @@ namespace HeterogeneousDataSources
         public IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
         {
-            EnsureClassImplementsInterface<TLinkedSource, TIChildLinkedSource>();
+            EnsureClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
             //stle: what to do about null vs special value for func?
             return new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
@@ -57,15 +57,16 @@ namespace HeterogeneousDataSources
         }
 
         //stle: error identification
-        private void EnsureClassImplementsInterface<TClass,TInterface>(){
-            var classType = typeof (TClass);
-            var interfaceType = typeof (TInterface);
-            if (!interfaceType.IsAssignableFrom(classType)){
+        private void EnsureClassIsAssignableFrom<TAbstract,TConcrete>(){
+            var abstractType = typeof (TAbstract);
+            var concreteType = typeof(TConcrete);
+
+            if (!abstractType.IsAssignableFrom(concreteType)){
                 throw new ArgumentException(
                     string.Format(
-                        "{0} does not implement {1}.",
-                        classType,
-                        interfaceType
+                        "{0} is not assignable from {1}.",
+                        abstractType,
+                        concreteType
                     )
                 );
             }
