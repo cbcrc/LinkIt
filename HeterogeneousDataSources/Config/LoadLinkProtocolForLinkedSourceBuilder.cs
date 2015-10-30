@@ -174,32 +174,38 @@ namespace HeterogeneousDataSources
            Func<TLink, TDiscriminant> getDiscriminantFunc,
            Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
         {
-            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-            //stle: dry
-            var includeBuilder = new IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
-            includes(includeBuilder);
-
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
-                linkTarget,
+            return PolymorphicLoadLink(
+                LinkTargetFactory.Create(linkTargetFunc),
                 ToGetLookupIdsFuncForSingleValue(getLinkFunc),
                 getDiscriminantFunc,
-                includeBuilder.Build()
+                includes
             );
-
-            return AddLoadLinkExpression(loadLinkExpression);
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLinkForList<TIChildLinkedSource, TLink, TDiscriminant>(
            Func<TLinkedSource, List<TLink>> getLinksFunc,
            Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
            Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+           Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes)
         {
-            var linkTarget = LinkTargetFactory.Create(linkTargetFunc);
-            var includeBuilder = new IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>();
+            return PolymorphicLoadLink(
+                LinkTargetFactory.Create(linkTargetFunc),
+                getLinksFunc,
+                getDiscriminantFunc,
+                includes
+            );
+        }
+
+        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TTargetProperty, TLink, TDiscriminant>(
+            LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
+            Func<TLinkedSource, List<TLink>> getLinksFunc,
+            Func<TLink, TDiscriminant> getDiscriminantFunc,
+            Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>> includes) 
+        {
+            var includeBuilder = new IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>();
             includes(includeBuilder);
 
-            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>(
+            var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TLink, TDiscriminant>(
                 linkTarget,
                 getLinksFunc,
                 getDiscriminantFunc,
