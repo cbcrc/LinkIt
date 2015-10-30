@@ -50,7 +50,6 @@
     <Compile Include="Config\IncludeBuilder.cs" />
     <Compile Include="Config\IncludeTargetConcreteTypeBuilder.cs" />
     <Compile Include="ILinkedSourceConfig.cs" />
-    <Compile Include="LinkTargets\LinkTarget.cs" />
     <Compile Include="LinkTargets\LinkTargetFactory.cs" />
     <Compile Include="Protocol\LoadLinker.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
