@@ -25,10 +25,6 @@ namespace HeterogeneousDataSources
             );
         }
 
-        public Type GetReferenceTypeThatCreatesACycleFromTree(ILoadLinkExpression node) {
-            return GetReferenceTypeThatCreatesACycleFromTree(node, new List<Type>());
-        }
-
         private Tree<ILoadLinkExpression> Create(ILoadLinkExpression node)
         {
             var childLoadLinkExpressions = GetChildLoadLinkExpressions(node);
@@ -41,12 +37,16 @@ namespace HeterogeneousDataSources
             );
         }
 
-        private Type GetReferenceTypeThatCreatesACycleFromTree(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors)
-        {
-            var referenceTypeTypeThatCreatesACycle = 
+        #region Cycle detection
+        public Type GetReferenceTypeThatCreatesACycleFromTree(ILoadLinkExpression node) {
+            return GetReferenceTypeThatCreatesACycleFromTree(node, new List<Type>());
+        }
+
+        private Type GetReferenceTypeThatCreatesACycleFromTree(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors) {
+            var referenceTypeTypeThatCreatesACycle =
                 GetReferenceTypeThatCreateACycleFromNode(node, referenceTypesOfAncestors);
 
-            if (referenceTypeTypeThatCreatesACycle != null){ return referenceTypeTypeThatCreatesACycle; }
+            if (referenceTypeTypeThatCreatesACycle != null) { return referenceTypeTypeThatCreatesACycle; }
 
             return GetReferenceTypeThatCreatesACycleFromChildren(node, referenceTypesOfAncestors);
         }
@@ -56,8 +56,7 @@ namespace HeterogeneousDataSources
                 .FirstOrDefault(referenceTypesOfAncestors.Contains);
         }
 
-        private Type GetReferenceTypeThatCreatesACycleFromChildren(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors)
-        {
+        private Type GetReferenceTypeThatCreatesACycleFromChildren(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors) {
             var referenceTypesOfAncestorsOfChildren = GetReferenceTypesOfAncestorsOfChildren(node, referenceTypesOfAncestors);
 
             var children = GetChildLoadLinkExpressions(node);
@@ -67,15 +66,16 @@ namespace HeterogeneousDataSources
                 .FirstOrDefault(referenceTypeThatCreateACycle => referenceTypeThatCreateACycle != null);
         }
 
-        private static List<Type> GetReferenceTypesOfAncestorsOfChildren(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors)
-        {
+        private static List<Type> GetReferenceTypesOfAncestorsOfChildren(ILoadLinkExpression node, List<Type> referenceTypesOfAncestors) {
             //Make sure referenceTypesOfAncestors is not altered
             var result = referenceTypesOfAncestors.ToList();
 
             result.AddRange(node.ReferenceTypes);
             return result;
-        }
+        } 
+        #endregion
 
+        #region Shared
         private List<ILoadLinkExpression> GetChildLoadLinkExpressions(ILoadLinkExpression node)
         {
             var nodeAsNestedLoadLinkExpression = node as INestedLoadLinkExpression;
@@ -86,5 +86,6 @@ namespace HeterogeneousDataSources
                     nodeAsNestedLoadLinkExpression.ChildLinkedSourceTypes.Contains(loadLinkExpression.LinkedSourceType))
                 .ToList();
         }
+	    #endregion    
     }
 }

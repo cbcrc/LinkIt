@@ -67,6 +67,7 @@
     <Compile Include="LinkedSourceConfigTests.cs" />
     <Compile Include="LinkTargetTests.cs" />
     <Compile Include="LinkTargetFactoryTests.cs" />
+    <Compile Include="LoadLinkConfig_WithCycleTests.cs" />
     <Compile Include="LoadLinkExpressionOverridingTests.cs" />
     <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
     <Compile Include="LoadLinkModelTests.cs" />
