@@ -40,6 +40,20 @@ namespace HeterogeneousDataSources.Tests
         }
 
         [Test]
+        public void LoadLinkByIds_WithListOfNulls_ShouldLinkNullWithoutLoading() {
+            var actual = _sut.LoadLink<LinkedSource>().ByIds<string>(null, null);
+
+            Assert.That(actual, Is.EquivalentTo(new string[]{null,null}));
+
+            var loadedReferenceTypes = _fakeReferenceLoader.RecordedLookupIdContexts
+                .Single()
+                .GetReferenceTypes();
+
+            Assert.That(loadedReferenceTypes, Is.Empty);
+        }
+
+
+        [Test]
         public void LoadLinkByIds_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet(){
             string[] modelIds = null;
             TestDelegate act = () => _sut.LoadLink<LinkedSource>().ByIds(modelIds);
@@ -57,6 +71,12 @@ namespace HeterogeneousDataSources.Tests
 
             var linkedSourceModelIds = actual.Select(linkedSource => linkedSource.Model.Id);
             Assert.That(linkedSourceModelIds, Is.EquivalentTo(new[] { "a", "a" }));
+
+            var loadedImageIds = _fakeReferenceLoader.RecordedLookupIdContexts
+                .Single()
+                .GetReferenceIds<Image, string>();
+            
+            Assert.That(loadedImageIds, Is.EquivalentTo(new[] { "a" }));
         }
 
 

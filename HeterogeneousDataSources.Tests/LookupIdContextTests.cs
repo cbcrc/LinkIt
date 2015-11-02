@@ -37,21 +37,9 @@ namespace HeterogeneousDataSources.Tests {
         public void Add_NullId_ShouldIgnoreNullId() {
             _sut.AddSingle<Image, string>(null);
 
-            //stle: think of how we can
-            //  avoid depending on reference loader to optimize for empty ids
-            //  and
-            //  to have a simple list initilization mechanism in linking (especially in poly)
-            var actual = _sut.GetReferenceIds<Image, string>();
+            var actual = _sut.GetReferenceTypes();
 
             Assert.That(actual, Is.Empty);
-
-
-            //stle: think of 
-            //Assert.That(
-            //    _sut.GetReferenceTypes().Any(referenceType=>referenceType==typeof(Image)), 
-            //    Is.False
-            //);
-            //Assert.That(act, Throws.InvalidOperationException.With.Message.ContainsSubstring("Image"));
         }
 
     }

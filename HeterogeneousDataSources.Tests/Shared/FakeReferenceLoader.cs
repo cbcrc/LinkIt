@@ -59,8 +59,11 @@ namespace HeterogeneousDataSources.Tests.Shared {
             _referenceTypeConfigByReferenceType[typeof (TReference)] = fixedReferenceTypeConfig;
         }
 
+        public readonly List<LookupIdContext> RecordedLookupIdContexts = new List<LookupIdContext>();
+
         public void LoadReferences(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext)
         {
+            RecordedLookupIdContexts.Add(lookupIdContext);
             OpenConnectionIfRequired(lookupIdContext);
 
             foreach (var referenceType in lookupIdContext.GetReferenceTypes())
