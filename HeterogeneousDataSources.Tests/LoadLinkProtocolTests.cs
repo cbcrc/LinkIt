@@ -22,22 +22,16 @@ namespace HeterogeneousDataSources.Tests
             Assert.That(fakeReferenceLoader.IsDisposed, Is.True);
         }
 
-        //stle: id null should return null
         [Test]
-        public void LoadLink_ModelIdIsNull_ShouldThrow() {
+        public void LoadLink_ModelIdIsNull_ShouldLinkNull() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
             var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
-            TestDelegate act = () => sut.LoadLink<WithoutReferenceLinkedSource>().ById<string>(null);
+            var actual = sut.LoadLink<WithoutReferenceLinkedSource>().ById<string>(null);
 
-            Assert.That(
-                act, 
-                Throws
-                    .InstanceOf<ArgumentNullException>()
-                    .With.Message.ContainsSubstring("modelId")
-            );
+            Assert.That(actual, Is.Null);
         }
     }
 

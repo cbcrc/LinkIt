@@ -29,18 +29,12 @@ namespace HeterogeneousDataSources.Tests {
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
+        //stle: dry test?
         [Test]
         public void LoadLink_WithReferenceId_ShouldLinkModel() {
             var actual = _sut.LoadLink<RootLinkedSource>().ById("can-be-resolved");
 
             ApprovalsExt.VerifyPublicProperties(actual);
-        }
-
-        [Test]
-        public void LoadLink_WithoutReferenceId_ShouldLinkNull(){
-            TestDelegate act = () => _sut.LoadLink<RootLinkedSource>().ById<string>(null);
-
-            Assert.That(act, Throws.InstanceOf<ArgumentNullException>());
         }
 
         [Test]
