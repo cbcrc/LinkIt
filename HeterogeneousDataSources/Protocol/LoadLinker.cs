@@ -69,13 +69,19 @@ namespace HeterogeneousDataSources
                 .SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(params TRootLinkedSourceModelId[] modelIds){
-            if (modelIds == null) {
-                modelIds = new TRootLinkedSourceModelId[0];
-            }
+        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(params TRootLinkedSourceModelId[] modelIds)
+        {
+            EnsureModelIdIsNotNull(modelIds);
 
             var models = LoadRootLinkedSourceModel(modelIds.ToList());
             return FromModels(models.ToArray());
+        }
+
+        private void EnsureModelIdIsNotNull<TRootLinkedSourceModelId>(TRootLinkedSourceModelId[] modelIds)
+        {
+            if (modelIds == null) {
+                throw new ArgumentException("The argument modelIds cannot be a null array.");
+            }
         }
 
         private List<TExpectedRootLinkedSourceModel> LoadRootLinkedSourceModel<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds){

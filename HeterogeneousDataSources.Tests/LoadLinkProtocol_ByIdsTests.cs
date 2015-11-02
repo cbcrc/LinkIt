@@ -40,10 +40,15 @@ namespace HeterogeneousDataSources.Tests
         }
 
         [Test]
-        public void LoadLinkByIds_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet() {
-            var actual = _sut.LoadLink<LinkedSource>().ByIds<string>(null);
+        public void LoadLinkByIds_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet(){
+            string[] modelIds = null;
+            TestDelegate act = () => _sut.LoadLink<LinkedSource>().ByIds(modelIds);
 
-            Assert.That(actual, Is.Empty);
+            Assert.That(act,
+                Throws.ArgumentException
+                    .With.Message.Contains("null array").And
+                    .With.Message.Contains("modelIds")
+            );
         }
 
         [Test]
@@ -56,7 +61,7 @@ namespace HeterogeneousDataSources.Tests
 
 
         [Test]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
+        public void LoadLinkByIds_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<LinkedSource>().ByIds("cannot-be-resolved");
 
             Assert.That(actual.Single(), Is.Null);
