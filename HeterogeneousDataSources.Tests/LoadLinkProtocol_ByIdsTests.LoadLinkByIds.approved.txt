@@ -1,0 +1,14 @@
+﻿[
+  {
+    "model": {
+      "id": "one",
+      "alt": "alt-one"
+    }
+  },
+  {
+    "model": {
+      "id": "two",
+      "alt": "alt-two"
+    }
+  }
+]

@@ -70,6 +70,7 @@
     <Compile Include="LoadLinkExpressionOverridingTests.cs" />
     <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
     <Compile Include="LoadLinkModelTests.cs" />
+    <Compile Include="LoadLinkProtocol_ByIdsTests.cs" />
     <Compile Include="LoadLinkProtocolTests.cs" />
     <Compile Include="ManyReferencesTests.cs">
       <SubType>Code</SubType>

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions;
 
 namespace HeterogeneousDataSources
 {
@@ -66,23 +65,28 @@ namespace HeterogeneousDataSources
 
         public TRootLinkedSource ById<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
         {
-            var model = LoadRootLinkedSourceModel(modelId);
-            return FromModel(model);
+            return ByIds(modelId)
+                .SingleOrDefault();
         }
 
-        private TExpectedRootLinkedSourceModel LoadRootLinkedSourceModel<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
-        {
-            //stle: beaviour on id null: should return null: same behaviour as in nested linked source
-            if (modelId == null) { throw new ArgumentNullException("modelId"); }
+        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(params TRootLinkedSourceModelId[] modelIds){
+            if (modelIds == null) {
+                modelIds = new TRootLinkedSourceModelId[0];
+            }
 
+            var models = LoadRootLinkedSourceModel(modelIds.ToList());
+            return FromModels(models.ToArray());
+        }
+
+        private List<TExpectedRootLinkedSourceModel> LoadRootLinkedSourceModel<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds){
             var lookupIdContext = new LookupIdContext();
-            lookupIdContext.AddSingle<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelId);
+            lookupIdContext.AddMulti<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
 
             var loadedRootLinkedSourceModel = new LoadedReferenceContext();
             _referenceLoader.LoadReferences(lookupIdContext, loadedRootLinkedSourceModel);
 
             return loadedRootLinkedSourceModel
-                .GetOptionalReference<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelId);
+                .GetOptionalReferences<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
         }
 
         private void LoadLinkRootLinkedSource() {

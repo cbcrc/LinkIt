@@ -22,6 +22,7 @@ namespace HeterogeneousDataSources.Tests
             Assert.That(fakeReferenceLoader.IsDisposed, Is.True);
         }
 
+        //stle: id null should return null
         [Test]
         public void LoadLink_ModelIdIsNull_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();

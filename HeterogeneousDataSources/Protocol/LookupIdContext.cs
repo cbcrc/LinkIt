@@ -26,6 +26,12 @@ namespace HeterogeneousDataSources
             currentLookupIds.Add(lookupId);
         }
 
+        public void AddMulti<TReference, TId>(List<TId> lookupIds) {
+            foreach (var lookupId in lookupIds) {
+                AddSingle<TReference, TId>(lookupId);
+            }
+        }
+
         public List<Type> GetReferenceTypes() {
             return _lookupIdsByReferenceType
                 .Keys

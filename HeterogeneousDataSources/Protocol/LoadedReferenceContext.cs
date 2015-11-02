@@ -78,6 +78,12 @@ namespace HeterogeneousDataSources {
             return referenceDictionnary[lookupId];
         }
 
+        public List<TReference> GetOptionalReferences<TReference, TId>(List<TId> lookupIds) {
+            return lookupIds
+                .Select(GetOptionalReference<TReference, TId>)
+                .ToList();
+        }
+
         //stle: TLinkedSourceModel not required, check this pattern everywhere
         public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
