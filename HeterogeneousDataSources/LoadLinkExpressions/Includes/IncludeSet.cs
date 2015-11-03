@@ -5,7 +5,7 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
-    public class IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> 
+    public class IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : IIncludeSet
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includes;
         private readonly Func<TLink, TDiscriminant> _getDiscriminantFunc;
@@ -67,8 +67,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             return include as TInclude;
         }
 
-        private List<TInclude> GetIncludes<TInclude>() 
-            where TInclude:class
+        public List<TInclude> GetIncludes<TInclude>() 
+            where TInclude:class,IInclude
         {
             return _includes.Values
                 .Where(include => include is TInclude)

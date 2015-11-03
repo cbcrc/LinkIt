@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
@@ -30,6 +31,15 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             //stle: dry with other load link expressions
             var lookupId = _getLookupIdFunc(link);
             return loadedReferenceContext.GetOptionalReference<TReference, TId>(lookupId);
+        }
+
+        //stle: review linkTargetId
+        public Tree<ReferenceToLoad> CreateReferenceTree(string linkTargetId, LoadLinkConfig config)
+        {
+            return new Tree<ReferenceToLoad>(
+                new ReferenceToLoad(ReferenceType, linkTargetId), 
+                new List<Tree<ReferenceToLoad>>()
+            );
         }
     }
 }

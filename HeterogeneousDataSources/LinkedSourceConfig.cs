@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources
 {
-    public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:ILinkedSourceConfig<TLinkedSource> 
+    public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource> 
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
     {
         public LinkedSourceConfig(){
@@ -13,7 +14,7 @@ namespace HeterogeneousDataSources
         }
 
         public Type LinkedSourceType { get; private set; }
-        private Type LinkedSourceModelType { get; set; }
+        public Type LinkedSourceModelType { get; set; }
 
         public ILoadLinker<TLinkedSource> CreateLoadLinker(
             IReferenceLoader referenceLoader, 

@@ -12,6 +12,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         Type LinkedSourceType { get; }
         List<Type> ReferenceTypes { get; }
+        //stle: review interface to mimimum required for usage
+        IIncludeSet IncludeSet { get; }
 
         void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
 
@@ -20,5 +22,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         //stle: Is loadedReferenceContext the right place to register sub linked source and nested linked source?
         void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext);
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
+
+        List<Tree<ReferenceToLoad>> CreateReferenceTreeForEachInclude(LoadLinkConfig config);
     }
 }

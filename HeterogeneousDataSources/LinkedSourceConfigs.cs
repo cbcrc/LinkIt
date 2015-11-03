@@ -6,25 +6,25 @@ namespace HeterogeneousDataSources
 {
     public static class LinkedSourceConfigs
     {
-        private static readonly Dictionary<Type, object> LinkedSourceConfigByType = new Dictionary<Type, object>();
+        private static readonly Dictionary<Type, ILinkedSourceConfig> LinkedSourceConfigByType = new Dictionary<Type, ILinkedSourceConfig>();
 
-        public static ILinkedSourceConfig<TLinkedSource> GetConfigFor<TLinkedSource>()
+        public static IGenericLinkedSourceConfig<TLinkedSource> GetConfigFor<TLinkedSource>()
         {
-            var linkedSourceType = typeof(TLinkedSource);
-
-            //Lazy init to minimize required configuration by the client.
-            //stle: dangerous for multithreading
-            if (!LinkedSourceConfigByType.ContainsKey(linkedSourceType)){
-                LinkedSourceConfigByType.Add(linkedSourceType, CreateLinkedSourceConfig<TLinkedSource>());
-            }
-
-            return (ILinkedSourceConfig<TLinkedSource>)LinkedSourceConfigByType[linkedSourceType];
+            return (IGenericLinkedSourceConfig<TLinkedSource>)GetConfigFor(typeof(TLinkedSource));
         }
 
-        private static ILinkedSourceConfig<TLinkedSource> CreateLinkedSourceConfig<TLinkedSource>()
-        {
-            var linkedSourceType = typeof(TLinkedSource);
+        public static ILinkedSourceConfig GetConfigFor(Type linkedSourceType) {
+            //Lazy init to minimize required configuration by the client.
+            //stle: dangerous for multithreading
+            if (!LinkedSourceConfigByType.ContainsKey(linkedSourceType)) {
+                LinkedSourceConfigByType.Add(linkedSourceType, CreateLinkedSourceConfig(linkedSourceType));
+            }
 
+            return LinkedSourceConfigByType[linkedSourceType];
+        }
+
+        private static ILinkedSourceConfig CreateLinkedSourceConfig(Type linkedSourceType)
+        {
             Type[] typeArgs ={
                 linkedSourceType,
                 GetLinkedSourceModelType(linkedSourceType)
@@ -35,7 +35,7 @@ namespace HeterogeneousDataSources
 
             var ctor = ctorSpecificType.GetConstructors().Single();
             var uncasted = ctor.Invoke(new object[0]);
-            return (ILinkedSourceConfig<TLinkedSource>)uncasted;
+            return (ILinkedSourceConfig)uncasted;
         }
 
         private static Type GetLinkedSourceModelType(Type linkedSourceType)

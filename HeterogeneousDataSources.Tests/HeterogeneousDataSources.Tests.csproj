@@ -69,7 +69,10 @@
     <Compile Include="LinkTargetFactoryTests.cs" />
     <Compile Include="LoadLinkConfig_WithCycleTests.cs" />
     <Compile Include="LoadLinkExpressionOverridingTests.cs" />
-    <Compile Include="LoadLinkExpressionTreeFactoryTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_PolymorphicTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_SubLinkedSourceTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_NestedLinkedSourceTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_ReferenceTests.cs" />
     <Compile Include="LoadLinkModelTests.cs" />
     <Compile Include="LoadLinkProtocol_ByIdsTests.cs" />
     <Compile Include="LoadLinkProtocolTests.cs" />
@@ -131,6 +134,7 @@
       <Name>HeterogeneousDataSources</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

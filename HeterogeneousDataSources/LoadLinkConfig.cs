@@ -87,6 +87,25 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
+        public Tree<ReferenceToLoad> CreateRootReferenceTree<TRootLinkedSource>()
+        {
+            var rootLinkedSourceConfig = LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>();
+
+            return new Tree<ReferenceToLoad>(
+                new ReferenceToLoad(
+                    rootLinkedSourceConfig.LinkedSourceModelType,
+                    "root"
+                ),
+                CreateReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType)
+            );
+        }
+
+        public List<Tree<ReferenceToLoad>> CreateReferenceTreeForEachLinkTarget(Type linkedSourceType) {
+            return _allLoadLinkExpressions
+                    .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType == linkedSourceType)
+                    .SelectMany(loadLinkExpression => loadLinkExpression.CreateReferenceTreeForEachInclude(this))
+                    .ToList();
+        }
 
         public ILoadLinker<TRootLinkedSource> CreateLoadLinker<TRootLinkedSource>(IReferenceLoader referenceLoader) 
         {
@@ -115,5 +134,6 @@ namespace HeterogeneousDataSources {
 
             return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
         }
+
     }
 }

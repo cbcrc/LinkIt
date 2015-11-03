@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
@@ -45,6 +44,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             }
 
             return (TChildLinkedSourceModel)link;
+        }
+
+        public List<Tree<ReferenceToLoad>> CreateReferenceTreeForEachLinkTarget(LoadLinkConfig config){
+            return config.CreateReferenceTreeForEachLinkTarget(ChildLinkedSourceType);
         }
     }
 }

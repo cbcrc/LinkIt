@@ -46,6 +46,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         public string LinkTargetId { get { return _linkTarget.Id; } }
         public Type LinkedSourceType { get; private set; }
         public List<Type> ReferenceTypes { get; private set; }
+        public IIncludeSet IncludeSet { get { return _includeSet; } }
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
@@ -176,5 +177,21 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 );
             }
         }
+
+        public List<Tree<ReferenceToLoad>> CreateReferenceTreeForEachInclude(LoadLinkConfig config)
+        {
+            var fromIncludeWithAddLookupId = _includeSet
+                .GetIncludes<IIncludeWithAddLookupId<TLink>>()
+                .Select(include=>include.CreateReferenceTree(LinkTargetId,config));
+
+            var fromIncludeWithCreateSubLinkedSource = _includeSet
+                .GetIncludes<IIncludeWithCreateSubLinkedSource<TIChildLinkedSource, TLink>>()
+                .SelectMany(include => include.CreateReferenceTreeForEachLinkTarget(config));
+
+            return fromIncludeWithAddLookupId
+                .Union(fromIncludeWithCreateSubLinkedSource)
+                .ToList();
+        }
+
     }
 }

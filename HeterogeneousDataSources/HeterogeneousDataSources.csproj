@@ -40,16 +40,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="ILinkedSourceConfig.cs" />
     <Compile Include="LinkTargets\ILinkTarget.cs" />
     <Compile Include="LinkedSourceConfig.cs" />
     <Compile Include="LinkedSourceConfigs.cs" />
     <Compile Include="LinkTargets\MultiValueLinkTarget.cs" />
     <Compile Include="LinkTargets\SingleValueLinkTarget.cs" />
     <Compile Include="LinkTargets\LinkTargetBase.cs" />
+    <Compile Include="LoadLinkExpressionForReferenceType.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IIncludeSet.cs" />
+    <Compile Include="ReferenceToLoadTreeFactory.cs" />
     <Compile Include="Protocol\ILoadLinker.cs" />
     <Compile Include="Config\IncludeBuilder.cs" />
     <Compile Include="Config\IncludeTargetConcreteTypeBuilder.cs" />
-    <Compile Include="ILinkedSourceConfig.cs" />
+    <Compile Include="IGenericLinkedSourceConfig.cs" />
     <Compile Include="LinkTargets\LinkTargetFactory.cs" />
     <Compile Include="Protocol\LoadLinker.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IInclude.cs" />
