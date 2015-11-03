@@ -46,7 +46,6 @@
     <Compile Include="LinkedSourceConfigs.cs" />
     <Compile Include="LinkTargets\MultiValueLinkTarget.cs" />
     <Compile Include="LinkTargets\SingleValueLinkTarget.cs" />
-    <Compile Include="LinkTargets\LinkTargetBase.cs" />
     <Compile Include="ReferenceTrees\ReferenceToLoad.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IIncludeSet.cs" />
     <Compile Include="Protocol\ILoadLinker.cs" />

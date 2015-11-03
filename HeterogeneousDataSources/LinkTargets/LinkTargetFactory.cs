@@ -10,12 +10,12 @@ namespace HeterogeneousDataSources
     public static class LinkTargetFactory {
 
         #region Single Value
-        public static LinkTargetBase<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
+        public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
             Expression<Func<TLinkedSource, TTargetProperty>> linkTargetGetterFunc) {
             PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
 
             return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(
-                property.Name,
+                GetLinkTargetId<TLinkedSource>(property),
                 CreateSingleValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
         }
@@ -30,12 +30,12 @@ namespace HeterogeneousDataSources
         #endregion
 
         #region Multi Value
-        public static LinkTargetBase<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
+        public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
             Expression<Func<TLinkedSource, List<TTargetProperty>>> linkTargetGetterFunc) {
             PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
 
             return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(
-                property.Name,
+                GetLinkTargetId<TLinkedSource>(property),
                 linkTargetGetterFunc.Compile(),
                 CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
@@ -99,7 +99,16 @@ namespace HeterogeneousDataSources
 
         private static ArgumentException OnlyDirectGetterAreSupported() {
             return new ArgumentException("Only direct getter are supported. Ex: p => p.Property");
-        } 
+        }
+
+        private static string GetLinkTargetId<TLinkedSource>(PropertyInfo property)
+        {
+            return string.Format(
+                "{0}/{1}",
+                typeof (TLinkedSource),
+                property.Name
+            );
+        }
         #endregion
     }
 }

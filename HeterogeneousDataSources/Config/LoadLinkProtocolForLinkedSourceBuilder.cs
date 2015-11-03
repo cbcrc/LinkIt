@@ -49,7 +49,7 @@ namespace HeterogeneousDataSources
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TTargetProperty, TId>(
-            LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
+            ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc) 
         {
             return AddNonPolymorphicLoadLinkExpression(
@@ -139,7 +139,7 @@ namespace HeterogeneousDataSources
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TTargetProperty, TId>(
-            LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
+            ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
             Action<TLinkedSource, int, TTargetProperty> initChildLinkedSourceAction)
         {
@@ -199,7 +199,7 @@ namespace HeterogeneousDataSources
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
-            LinkTargetBase<TLinkedSource, TChildLinkedSource> linkTarget,
+            ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
             Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
@@ -245,7 +245,7 @@ namespace HeterogeneousDataSources
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TTargetProperty, TLink, TDiscriminant>(
-            LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
+            ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>> includes) 
@@ -298,7 +298,7 @@ namespace HeterogeneousDataSources
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddNonPolymorphicLoadLinkExpression<TTargetProperty, TId>(
-            LinkTargetBase<TLinkedSource, TTargetProperty> linkTarget,
+            ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
             IInclude include) {
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TId, bool>(

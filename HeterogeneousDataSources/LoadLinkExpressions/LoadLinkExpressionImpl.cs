@@ -9,12 +9,12 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     public class LoadLinkExpressionImpl<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> :
         INestedLoadLinkExpression
     {
-        private readonly LinkTargetBase<TLinkedSource, TIChildLinkedSource> _linkTarget;
+        private readonly ILinkTarget<TLinkedSource, TIChildLinkedSource> _linkTarget;
         private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
         private readonly IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> _includeSet;
 
         public LoadLinkExpressionImpl(
-            LinkTargetBase<TLinkedSource,TIChildLinkedSource> linkTarget,
+            ILinkTarget<TLinkedSource,TIChildLinkedSource> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Dictionary<TDiscriminant, IInclude> includes)

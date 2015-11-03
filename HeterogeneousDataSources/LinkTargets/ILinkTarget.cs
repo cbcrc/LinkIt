@@ -2,9 +2,17 @@ using System;
 
 namespace HeterogeneousDataSources
 {
-    public interface ILinkTarget:IEquatable<ILinkTarget>{
+    public interface ILinkTarget : IEquatable<ILinkTarget> {
         string Id { get; }
-        Type LinkedSourceType { get; }
-        string PropertyName { get; }
+    }
+
+    public interface ILinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget {
+        void SetLinkTargetValue(
+            TLinkedSource linkedSource,
+            TTargetProperty linkTargetValue,
+            int linkTargetValueIndex
+        );
+
+        void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues);
     }
 }
