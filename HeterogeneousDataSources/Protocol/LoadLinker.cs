@@ -28,22 +28,24 @@ namespace HeterogeneousDataSources
         }
 
         public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(params TRootLinkedSourceModel[] models){
-            //stle: support model that are not class? if not, used null instead of default(T)
-            if (models == null){
-                models = new TRootLinkedSourceModel[] { default(TRootLinkedSourceModel) };
+            using (_referenceLoader){
+                //stle: support model that are not class? if not, used null instead of default(T)
+                if (models == null) {
+                    models = new TRootLinkedSourceModel[] { default(TRootLinkedSourceModel) };
+                }
+
+                EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
+
+                _loadedReferenceContext = new LoadedReferenceContext();
+
+                var linkedSources = models
+                    .Cast<TExpectedRootLinkedSourceModel>()
+                    .Select(CreateLinkedSource)
+                    .ToList();
+
+                LoadLinkRootLinkedSource();
+                return linkedSources;
             }
-
-            EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
-
-            _loadedReferenceContext = new LoadedReferenceContext();
-
-            var linkedSources = models
-                .Cast<TExpectedRootLinkedSourceModel>()
-                .Select(CreateLinkedSource)
-                .ToList();
-
-            LoadLinkRootLinkedSource();
-            return linkedSources;
         }
 
         private void EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>()
@@ -71,10 +73,12 @@ namespace HeterogeneousDataSources
 
         public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(params TRootLinkedSourceModelId[] modelIds)
         {
-            EnsureModelIdIsNotNull(modelIds);
+            using (_referenceLoader){
+                EnsureModelIdIsNotNull(modelIds);
 
-            var models = LoadRootLinkedSourceModel(modelIds.ToList());
-            return FromModels(models.ToArray());
+                var models = LoadRootLinkedSourceModel(modelIds.ToList());
+                return FromModels(models.ToArray());
+            }
         }
 
         private void EnsureModelIdIsNotNull<TRootLinkedSourceModelId>(TRootLinkedSourceModelId[] modelIds)
