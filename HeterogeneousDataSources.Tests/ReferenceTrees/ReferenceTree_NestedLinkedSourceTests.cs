@@ -8,8 +8,10 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class ReferenceTree_NestedLinkedSourceTests
     {
-        [Test]
-        public void CreateRootReferenceTree()
+        private LoadLinkConfig _sut;
+
+        [SetUp]
+        public void SetUp()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
@@ -30,9 +32,22 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            var sut = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            _sut = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+        }
 
-            var actual = sut.CreateRootReferenceTree<LinkedSource>();
+        [Test]
+        public void CreateRootReferenceTree() {
+            var actual = _sut.CreateRootReferenceTree<LinkedSource>();
+
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        //stle: dont test twice, resolve this tests and other loading levels tests
+        [Test]
+        public void ParseLoadingLevels() {
+            var rootReferenceTree = _sut.CreateRootReferenceTree<LinkedSource>();
+
+            var actual = rootReferenceTree.ParseLoadLevels();
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

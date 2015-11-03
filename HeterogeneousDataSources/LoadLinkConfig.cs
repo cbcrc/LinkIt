@@ -17,8 +17,6 @@ namespace HeterogeneousDataSources {
             var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
             _loadingLevelParser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
             
-            //EnsureNoCyclesInRootLoadLinkExpressions(loadLinkExpressions, linkExpressionTreeFactory);
-
             _allLoadLinkExpressions = loadLinkExpressions;
         }
 
@@ -33,32 +31,6 @@ namespace HeterogeneousDataSources {
                     )
                 );
             }
-        }
-
-        private void EnsureNoCyclesInRootLoadLinkExpressions(List<ILoadLinkExpression> loadLinkExpressions, LoadLinkExpressionTreeFactory loadLinkExpressionTreeFactory) {
-            //var cycles = GetRootLoadLinkExpressions(loadLinkExpressions)
-            //    .Select(
-            //        rootLoadLinkExpression =>
-            //            new {
-            //                RootLoadLinkExpression = rootLoadLinkExpression,
-            //                ReferenceTypeThatCreatesACycle = loadLinkExpressionTreeFactory.GetReferenceTypeThatCreatesACycleFromTree(rootLoadLinkExpression)
-            //            })
-            //    .Where(potentialCycle => potentialCycle.ReferenceTypeThatCreatesACycle != null)
-            //    .ToList();
-
-            //if (cycles.Any()) {
-            //    var cycleAsString = cycles
-            //        .Select(cycle => string.Format("{0} creates a cycle in {1}", cycle.ReferenceTypeThatCreatesACycle, cycle.RootLoadLinkExpression.ChildLinkedSourceTypes))
-            //        .ToList();
-
-            //    throw new ArgumentException(
-            //        string.Format(
-            //            "Some root load link expressions contain a cycle: {0}.",
-            //            String.Join(",", cycleAsString)
-            //        ),
-            //        "loadLinkExpressions"
-            //    );
-            //}
         }
         #endregion
 

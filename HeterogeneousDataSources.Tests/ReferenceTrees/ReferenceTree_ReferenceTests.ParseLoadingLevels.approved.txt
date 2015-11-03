@@ -1,0 +1,8 @@
+﻿[
+  [
+    "HeterogeneousDataSources.Tests.ReferenceTree_ReferenceTests+Model, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ],
+  [
+    "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
+]
