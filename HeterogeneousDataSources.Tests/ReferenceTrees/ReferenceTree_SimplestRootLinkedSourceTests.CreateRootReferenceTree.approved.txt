@@ -1,0 +1,7 @@
+﻿{
+  "node": {
+    "referenceType": "HeterogeneousDataSources.Tests.ReferenceTree_SimplestRootLinkedSourceTests+Model, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "linkTargetId": "root"
+  },
+  "children": []
+}

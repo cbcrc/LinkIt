@@ -6,7 +6,7 @@ using RC.Testing;
 namespace HeterogeneousDataSources.Tests {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class ReferenceTree_ReferenceTests
+    public class ReferenceTree_SimplestRootLinkedSourceTests
     {
         private LoadLinkConfig _sut;
 
@@ -14,15 +14,7 @@ namespace HeterogeneousDataSources.Tests {
         public void SetUp()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<LinkedSource>()
-                .LoadLinkReference(
-                    linkedSource => linkedSource.Model.PersonOneId,
-                    linkedSource => linkedSource.PersonOne
-                )
-                .LoadLinkReference(
-                    linkedSource => linkedSource.Model.PersonTwoId,
-                    linkedSource => linkedSource.PersonTwo
-                );
+            loadLinkProtocolBuilder.For<LinkedSource>();
             _sut = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
         }
 
@@ -44,14 +36,10 @@ namespace HeterogeneousDataSources.Tests {
 
         public class LinkedSource : ILinkedSource<Model> {
             public Model Model { get; set; }
-            public Person PersonOne { get; set; }
-            public Person PersonTwo { get; set; }
         }
 
         public class Model {
             public int Id { get; set; }
-            public string PersonOneId { get; set; }
-            public string PersonTwoId { get; set; }
         }
     }
 }

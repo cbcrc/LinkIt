@@ -70,6 +70,7 @@
     <Compile Include="LoadLinkConfig_WithCycleTests.cs" />
     <Compile Include="LoadLinkExpressionOverridingTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_PolymorphicTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_SimplestRootLinkedSourceTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_SubLinkedSourceTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_NestedLinkedSourceTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_ReferenceTests.cs" />
@@ -94,11 +95,6 @@
     <Compile Include="Polymorphic\PolymorphicReferencesTests.cs" />
     <Compile Include="Polymorphic\PolymorphicReferenceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicSubLinkedSourceTests.cs" />
-    <Compile Include="ReferenceTypeByLoadingLevelParser_ManyLevelsTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ReferenceTypeByLoadingLevelParser_PolymorphicTests.cs" />
-    <Compile Include="ReferenceTypeByLoadingLevelParser_OneLevelTests.cs" />
     <Compile Include="Shared\Media.cs" />
     <Compile Include="Shared\MediaRepository.cs" />
     <Compile Include="Shared\IPolymorphicSource.cs" />

@@ -6,17 +6,11 @@ using HeterogeneousDataSources.LoadLinkExpressions;
 namespace HeterogeneousDataSources {
     public class LoadLinkConfig {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
-//stle: term: rename by LoadingLevelParser
-        private readonly ReferenceTypeByLoadingLevelParser _loadingLevelParser;
 
         #region Initialization
         public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions)
         {
             EnsureLoadLinkExpressionLinkTargetIdsAreUnique(loadLinkExpressions);
-
-            var linkExpressionTreeFactory = new LoadLinkExpressionTreeFactory(loadLinkExpressions);
-            _loadingLevelParser = new ReferenceTypeByLoadingLevelParser(linkExpressionTreeFactory);
-            
             _allLoadLinkExpressions = loadLinkExpressions;
         }
 
@@ -62,15 +56,13 @@ namespace HeterogeneousDataSources {
         public ReferenceTree CreateRootReferenceTree<TRootLinkedSource>()
         {
             var rootLinkedSourceConfig = LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>();
-
             var rootReferenceTree = new ReferenceTree(
                 rootLinkedSourceConfig.LinkedSourceModelType,
                 "root",
                 null
             );
 
-            try
-            {
+            try{
                 AddReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType, rootReferenceTree);
             }
             catch (NotSupportedException ex){
@@ -100,8 +92,6 @@ namespace HeterogeneousDataSources {
 
         public ILoadLinker<TRootLinkedSource> CreateLoadLinker<TRootLinkedSource>(IReferenceLoader referenceLoader) 
         {
-            var rootLinkedSourceType = typeof(TRootLinkedSource);
-            
             return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
                 referenceLoader,
                 GetLoadingLevelsFor<TRootLinkedSource>(),
@@ -119,7 +109,8 @@ namespace HeterogeneousDataSources {
             //Lazy init to minimize required configuration by the client.
             //stle: dangerous for multithreading
             if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType)){
-                var loadingLevels = _loadingLevelParser.ParseLoadingLevels(rootLinkedSourceType);
+                var rootReferenceTree = CreateRootReferenceTree<TRootLinkedSource>();
+                var loadingLevels = rootReferenceTree.ParseLoadLevels();
                 _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
             }
 

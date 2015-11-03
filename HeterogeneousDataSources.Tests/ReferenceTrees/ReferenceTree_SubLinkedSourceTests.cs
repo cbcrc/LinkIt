@@ -43,7 +43,6 @@ namespace HeterogeneousDataSources.Tests {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        //stle: dont test twice, resolve this tests and other loading levels tests
         [Test]
         public void ParseLoadingLevels() {
             var rootReferenceTree = _sut.CreateRootReferenceTree<LinkedSource>();
