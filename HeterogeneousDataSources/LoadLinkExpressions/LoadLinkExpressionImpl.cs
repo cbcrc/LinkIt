@@ -182,11 +182,13 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         {
             var fromIncludeWithAddLookupId = _includeSet
                 .GetIncludes<IIncludeWithAddLookupId<TLink>>()
-                .Select(include=>include.CreateReferenceTree(LinkTargetId, parent, config));
+                .Select(include=>include.CreateReferenceTree(LinkTargetId, parent, config))
+                .ToList();
 
             var fromIncludeWithCreateSubLinkedSource = _includeSet
                 .GetIncludes<IIncludeWithCreateSubLinkedSource<TIChildLinkedSource, TLink>>()
-                .SelectMany(include => include.CreateReferenceTreeForEachLinkTarget(parent, config));
+                .SelectMany(include => include.CreateReferenceTreeForEachLinkTarget(parent, config))
+                .ToList();
 
             return fromIncludeWithAddLookupId
                 .Union(fromIncludeWithCreateSubLinkedSource)

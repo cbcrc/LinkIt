@@ -11,84 +11,70 @@ namespace HeterogeneousDataSources.Tests {
     [TestFixture]
     public class LoadLinkConfig_WithCycleTests
     {
-        //[Test]
-        //public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldThrow()
-        //{
-        //    var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-        //    loadLinkProtocolBuilder.For<CycleInReferenceLinkedSource>()
-        //        .IsRoot<string>()
-        //        .LoadLinkReference(
-        //            linkedSource => linkedSource.Model.ParentId,
-        //            linkedSource => linkedSource.Parent
-        //        );
+        [Test]
+        public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldThrow() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<CycleInReferenceLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.ParentId,
+                    linkedSource => linkedSource.Parent
+                );
+            var config = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
-        //    TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            TestDelegate act = () => config.CreateRootReferenceTree<CycleInReferenceLinkedSource>();
 
-        //    Assert.That(
-        //        act,
-        //        Throws.ArgumentException.With
-        //            .Message.ContainsSubstring("cycle").And
-        //            .Message.ContainsSubstring("DirectCycle")
-        //        );
-        //}
+            Assert.That(
+                act,
+                Throws.ArgumentException.With
+                    .Message.ContainsSubstring("cycle")//stle: .And
+                    //.Message.ContainsSubstring("DirectCycle")
+                );
+        }
 
-        //[Test]
-        //public void CreateLoadLinkConfig_WithCycleCausedByDirectNestedLinkedSource_ShouldThrow() {
-        //    var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-        //    loadLinkProtocolBuilder.For<DirectCycleInNestedLinkedSource>()
-        //        .LoadLinkNestedLinkedSource(
-        //            linkedSource => linkedSource.Model.ParentId,
-        //            linkedSource => linkedSource.Parent
-        //        );
+        [Test]
+        public void CreateLoadLinkConfig_WithCycleCausedByDirectNestedLinkedSource_ShouldThrow() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<DirectCycleInNestedLinkedSource>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.ParentId,
+                    linkedSource => linkedSource.Parent
+                );
+            var config = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
-        //    var fakeReferenceLoader =
-        //        new FakeReferenceLoader<DirectCycle, string>(reference => reference.Id);
-        //    var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
+            TestDelegate act = () => config.CreateRootReferenceTree<DirectCycleInNestedLinkedSource>();
 
-        //    fakeReferenceLoader.FixValue(
-        //        new DirectCycle{
-        //            Id = "1",
-        //            ParentId = "2"
-        //        }
-        //    );
+            Assert.That(
+                act,
+                Throws.ArgumentException.With
+                    .Message.ContainsSubstring("cycle")//stle: .And
+                //.Message.ContainsSubstring("DirectCycle")
+                );
+        }
 
-        //    try
-        //    {
-        //        var actual = sut.LoadLink<DirectCycleInNestedLinkedSource>().ById("1");
-        //        ApprovalsExt.VerifyPublicProperties(actual);
-        //    }
-        //    catch (Exception ex)
-        //    {
-                
-        //    }
+        [Test]
+        public void CreateLoadLinkConfig_WithCycleCausedByIndirectNestedLinkedSource_ShouldThrow() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            loadLinkProtocolBuilder.For<IndirectCycleLevel0LinkedSource>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.Level1Id,
+                    linkedSource => linkedSource.Level1
+                );
+            loadLinkProtocolBuilder.For<IndirectCycleLevel1LinkedSource>()
+                .LoadLinkNestedLinkedSource(
+                    linkedSource => linkedSource.Model.Level0Id,
+                    linkedSource => linkedSource.Level0
+                );
+            var config = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
-            
-        //}
+            TestDelegate act = () => config.CreateRootReferenceTree<IndirectCycleLevel0LinkedSource>();
 
-        //[Test]
-        //public void CreateLoadLinkConfig_WithCycleCausedByIndirectNestedLinkedSource_ShouldThrow() {
-        //    var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-        //    loadLinkProtocolBuilder.For<IndirectCycleLevel0LinkedSource>()
-        //        .IsRoot<string>()
-        //        .LoadLinkNestedLinkedSource(
-        //            linkedSource => linkedSource.Model.Level1Id,
-        //            linkedSource => linkedSource.Level1
-        //        );
-        //    loadLinkProtocolBuilder.For<IndirectCycleLevel1LinkedSource>()
-        //        .LoadLinkNestedLinkedSource(
-        //            linkedSource => linkedSource.Model.Level0Id,
-        //            linkedSource => linkedSource.Level0
-        //        );
-
-        //    TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
-
-        //    Assert.That(
-        //        act,
-        //        Throws.ArgumentException.With
-        //            .Message.ContainsSubstring("cycle").And
-        //            .Message.ContainsSubstring("IndirectCycleLevel0")
-        //        );
-        //}
+            Assert.That(
+                act,
+                Throws.ArgumentException.With
+                    .Message.ContainsSubstring("cycle")//stle: .And
+                    //.Message.ContainsSubstring("IndirectCycleLevel0")
+                );
+        }
 
         public class CycleInReferenceLinkedSource: ILinkedSource<DirectCycle>
         {
