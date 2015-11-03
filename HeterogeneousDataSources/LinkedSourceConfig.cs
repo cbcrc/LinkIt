@@ -29,7 +29,7 @@ namespace HeterogeneousDataSources
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction)
         {
-            EnsureClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
+            AssumeClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
             return new NestedLinkedSourceInclude<TLinkTargetOwner, TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
                 getLookupIdFunc,
@@ -40,7 +40,7 @@ namespace HeterogeneousDataSources
         public IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
         {
-            EnsureClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
+            AssumeClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
             return new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
                 WrapGetSubLinkedSourceModel(getSubLinkedSourceModel)
@@ -56,13 +56,12 @@ namespace HeterogeneousDataSources
             return link => (TLinkedSourceModel) (object) getSubLinkedSourceModel(link);
         }
 
-        //stle: error identification
-        private void EnsureClassIsAssignableFrom<TAbstract,TConcrete>(){
+        private void AssumeClassIsAssignableFrom<TAbstract,TConcrete>(){
             var abstractType = typeof (TAbstract);
             var concreteType = typeof(TConcrete);
 
             if (!abstractType.IsAssignableFrom(concreteType)){
-                throw new ArgumentException(
+                throw new NotImplementedException(
                     string.Format(
                         "{0} is not assignable from {1}.",
                         abstractType,
