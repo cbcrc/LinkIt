@@ -68,13 +68,10 @@
     <Compile Include="LoadLinkExpressions\Includes\SubLinkedSourceInclude.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LoadLinkExpressionTreeFactory.cs" />
     <Compile Include="Config\LoadLinkProtocolBuilder.cs" />
     <Compile Include="Config\LoadLinkProtocolForLinkedSourceBuilder.cs" />
-    <Compile Include="ReferenceTrees\LoadingLevelParser.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTypeByLoadingLevelParser.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTreeExtensions.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree.cs" />
-    <Compile Include="ReferenceTrees\Tree.cs" />
     <Compile Include="LoadLinkConfig.cs" />
     <Compile Include="ILinkedSource.cs" />
     <Compile Include="IReferenceLoader.cs" />

@@ -113,7 +113,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
-    <Compile Include="Shared\TestSetupHelper.cs" />
     <Compile Include="OptionalReferenceTests.cs" />
     <Compile Include="SingleReferenceTests.cs">
       <SubType>Code</SubType>
