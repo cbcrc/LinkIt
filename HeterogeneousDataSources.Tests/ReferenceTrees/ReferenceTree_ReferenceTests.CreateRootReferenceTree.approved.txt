@@ -1,0 +1,22 @@
+﻿{
+  "node": {
+    "referenceType": "HeterogeneousDataSources.Tests.ReferenceTree_ReferenceTests+Model, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "linkTargetId": "root"
+  },
+  "children": [
+    {
+      "node": {
+        "referenceType": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "linkTargetId": "HeterogeneousDataSources.Tests.ReferenceTree_ReferenceTests+LinkedSource/PersonOne"
+      },
+      "children": []
+    },
+    {
+      "node": {
+        "referenceType": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "linkTargetId": "HeterogeneousDataSources.Tests.ReferenceTree_ReferenceTests+LinkedSource/PersonTwo"
+      },
+      "children": []
+    }
+  ]
+}
