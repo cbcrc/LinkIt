@@ -6,14 +6,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
     //stle: may go away or be simplified to a strict minimum
     public interface ILoadLinkExpression
     {
-        bool IsInDifferentLoadingLevel(ILoadLinkExpression child);
-
         string LinkTargetId { get; }
 
         Type LinkedSourceType { get; }
         List<Type> ReferenceTypes { get; }
-        //stle: review interface to mimimum required for usage
-        IIncludeSet IncludeSet { get; }
 
         void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
 

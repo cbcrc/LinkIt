@@ -36,17 +36,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
                 .ToList();
         }
 
-        public bool IsInDifferentLoadingLevel(ILoadLinkExpression child)
-        {
-            return _includeSet.GetIncludesWithChildLinkedSource()
-                .Where(include => include.ChildLinkedSourceType == child.LinkedSourceType)
-                .Any(include => include is IIncludeWithAddLookupId<TLink>);
-        }
-
         public string LinkTargetId { get { return _linkTarget.Id; } }
         public Type LinkedSourceType { get; private set; }
         public List<Type> ReferenceTypes { get; private set; }
-        public IIncludeSet IncludeSet { get { return _includeSet; } }
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
