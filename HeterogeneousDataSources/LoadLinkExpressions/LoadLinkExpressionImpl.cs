@@ -178,21 +178,22 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             }
         }
 
-        public List<ReferenceTree> CreateReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config)
+        public void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config)
         {
-            var fromIncludeWithAddLookupId = _includeSet
+            //stle: split in two
+            _includeSet
                 .GetIncludes<IIncludeWithAddLookupId<TLink>>()
-                .Select(include=>include.CreateReferenceTree(LinkTargetId, parent, config))
-                .ToList();
+                .ToList()
+                .ForEach(include => 
+                    include.AddReferenceTree(LinkTargetId, parent, config)
+                );
 
-            var fromIncludeWithCreateSubLinkedSource = _includeSet
+            _includeSet
                 .GetIncludes<IIncludeWithCreateSubLinkedSource<TIChildLinkedSource, TLink>>()
-                .SelectMany(include => include.CreateReferenceTreeForEachLinkTarget(parent, config))
-                .ToList();
-
-            return fromIncludeWithAddLookupId
-                .Union(fromIncludeWithCreateSubLinkedSource)
-                .ToList();
+                .ToList()
+                .ForEach(include => 
+                    include.AddReferenceTreeForEachLinkTarget(parent, config)
+                );
         }
 
     }

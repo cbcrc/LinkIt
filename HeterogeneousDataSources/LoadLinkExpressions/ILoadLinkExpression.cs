@@ -23,6 +23,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext);
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
 
-        List<ReferenceTree> CreateReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config);
+        void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config);
     }
 }

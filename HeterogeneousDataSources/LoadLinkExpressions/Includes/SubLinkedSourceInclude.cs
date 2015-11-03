@@ -46,8 +46,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             return (TChildLinkedSourceModel)link;
         }
 
-        public List<ReferenceTree> CreateReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkConfig config) {
-            return config.CreateReferenceTreeForEachLinkTarget(ChildLinkedSourceType, parent);
+        public void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkConfig config) {
+            config.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, parent);
         }
     }
 }

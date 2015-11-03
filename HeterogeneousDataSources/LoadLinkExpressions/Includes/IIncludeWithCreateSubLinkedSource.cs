@@ -7,6 +7,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         TIChildLinkedSource CreateSubLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext);
 
         //stle: interface segregation
-        List<ReferenceTree> CreateReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkConfig config);
+        void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkConfig config);
     }
 }

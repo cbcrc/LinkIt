@@ -4,34 +4,33 @@ using System.Linq;
 
 namespace HeterogeneousDataSources {
     public class ReferenceTree{
-        private ReferenceTree _parent;
+        private readonly ReferenceTree _parent;
 
         //stle: review linkTargetId
         public ReferenceTree(Type referenceType, string linkTargetId, ReferenceTree parent){
             Node = new ReferenceToLoad(referenceType, linkTargetId);
             Children = new List<ReferenceTree>();
+
+            if (parent != null){
+                EnsureDoesNotCreateCycle(parent);
+
+                _parent = parent;
+                _parent.AddChild(this);
+            }
         }
 
         public ReferenceToLoad Node { get; private set; }
         public List<ReferenceTree> Children { get; private set; }
 
-        public void AddChildren(List<ReferenceTree> children) {
-            foreach (var child in children){
-                EnsureChildDoesNotCreateCycle(child);
-                child.SetParent(this);
-                Children.Add(child);
-            }
+        private void AddChild(ReferenceTree child){
+            Children.Add(child);
         }
 
-        private void SetParent(ReferenceTree parent){
-            _parent = parent;
-        }
-
-        private void EnsureChildDoesNotCreateCycle(ReferenceTree child)
+        private void EnsureDoesNotCreateCycle(ReferenceTree parent)
         {
-            var referenceThatCreatesCycle = GetReferenceThatCreatesCycle(child);
+            var nodeThatCreatesCycle = GetNodeThatCreatesCycle(parent);
             //stle: better error msg
-            if (referenceThatCreatesCycle != null){
+            if (nodeThatCreatesCycle != null){
                 throw new ArgumentException(
                     "cycle"
                     //string.Format(
@@ -42,11 +41,13 @@ namespace HeterogeneousDataSources {
             }
         }
 
-        private ReferenceToLoad GetReferenceThatCreatesCycle(ReferenceTree child)
+        private ReferenceToLoad GetNodeThatCreatesCycle(ReferenceTree parent)
         {
-            return GetAncestorOrSelf()
+            if (parent == null) { return null; }
+
+            return parent.GetAncestorOrSelf()
                 .Select(item=>item.Node)
-                .FirstOrDefault(reference => reference.ReferenceType == child.Node.ReferenceType);
+                .FirstOrDefault(reference => reference.ReferenceType == Node.ReferenceType);
         }
 
         private List<ReferenceTree> GetAncestorOrSelf()

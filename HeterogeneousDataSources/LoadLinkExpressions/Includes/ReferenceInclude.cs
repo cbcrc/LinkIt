@@ -33,10 +33,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         }
 
 
-        public ReferenceTree CreateReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config)
+        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config)
         {
             //stle: dry
-            return new ReferenceTree(
+            new ReferenceTree(
                 ReferenceType, 
                 linkTargetId, 
                 parent

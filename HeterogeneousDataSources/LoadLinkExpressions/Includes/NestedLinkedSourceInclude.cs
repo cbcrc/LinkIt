@@ -54,7 +54,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public Type ChildLinkedSourceType { get; private set; }
 
-        public ReferenceTree CreateReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config)
+        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config)
         {
             //stle: dry
             var referenceTree = new ReferenceTree(
@@ -63,11 +63,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
                 parent
             );
 
-            referenceTree.AddChildren(
-                config.CreateReferenceTreeForEachLinkTarget(ChildLinkedSourceType, referenceTree)
-            );
-
-            return referenceTree;
+            config.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, referenceTree);
         }
     }
 }
