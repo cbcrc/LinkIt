@@ -97,7 +97,19 @@ namespace HeterogeneousDataSources {
                 null
             );
 
-            AddReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType, rootReferenceTree);
+            try
+            {
+                AddReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType, rootReferenceTree);
+            }
+            catch (NotSupportedException ex){
+                throw new NotSupportedException(
+                    string.Format(
+                        "Unable to create root reference tree for {0}. For more details, see inner exception.",
+                        rootLinkedSourceConfig.LinkedSourceType
+                    ),
+                    ex
+                );
+            }
 
             return rootReferenceTree;
         }

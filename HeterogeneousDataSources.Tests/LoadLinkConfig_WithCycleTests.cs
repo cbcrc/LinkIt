@@ -20,9 +20,13 @@ namespace HeterogeneousDataSources.Tests {
 
             Assert.That(
                 act,
-                Throws.ArgumentException.With
-                    .Message.ContainsSubstring("cycle")//stle: .And
-                    //.Message.ContainsSubstring("DirectCycle")
+                Throws.Exception
+                    .With.Message.ContainsSubstring("CycleInReferenceLinkedSource").And
+                    .With.InnerException
+                        .With.Message.ContainsSubstring("Recursive load link").And
+                        .With.Message.ContainsSubstring("root").And
+                        .With.Message.ContainsSubstring("Parent").And
+                        .With.Message.ContainsSubstring("DirectCycle")
                 );
         }
 
@@ -40,9 +44,13 @@ namespace HeterogeneousDataSources.Tests {
 
             Assert.That(
                 act,
-                Throws.ArgumentException.With
-                    .Message.ContainsSubstring("cycle")//stle: .And
-                //.Message.ContainsSubstring("DirectCycle")
+                Throws.Exception
+                    .With.Message.ContainsSubstring("DirectCycleInNestedLinkedSource").And
+                    .With.InnerException
+                        .With.Message.ContainsSubstring("Recursive load link").And
+                        .With.Message.ContainsSubstring("root").And
+                        .With.Message.ContainsSubstring("Parent").And
+                        .With.Message.ContainsSubstring("DirectCycle")
                 );
         }
 
@@ -64,11 +72,15 @@ namespace HeterogeneousDataSources.Tests {
             TestDelegate act = () => config.CreateRootReferenceTree<IndirectCycleLevel0LinkedSource>();
 
             Assert.That(
-                act,
-                Throws.ArgumentException.With
-                    .Message.ContainsSubstring("cycle")//stle: .And
-                    //.Message.ContainsSubstring("IndirectCycleLevel0")
-                );
+               act,
+               Throws.Exception
+                   .With.Message.ContainsSubstring("IndirectCycleLevel0LinkedSource").And
+                   .With.InnerException
+                       .With.Message.ContainsSubstring("Recursive load link").And
+                       .With.Message.ContainsSubstring("root").And
+                       .With.Message.ContainsSubstring("Level0").And
+                       .With.Message.ContainsSubstring("IndirectCycleLevel0")
+               );
         }
 
         public class CycleInReferenceLinkedSource: ILinkedSource<DirectCycle>

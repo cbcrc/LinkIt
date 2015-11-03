@@ -29,14 +29,14 @@ namespace HeterogeneousDataSources {
         private void EnsureDoesNotCreateCycle(ReferenceTree parent)
         {
             var nodeThatCreatesCycle = GetNodeThatCreatesCycle(parent);
-            //stle: better error msg
             if (nodeThatCreatesCycle != null){
-                throw new ArgumentException(
-                    "cycle"
-                    //string.Format(
-                    //    "Some root load link expressions contain a cycle: {0}.",
-                    //    String.Join(",", cycleAsString)
-                    //)
+                throw new NotSupportedException(
+                    string.Format(
+                        "Recursive load link is not supported. The cycle occurs between {0} and {1} for the reference of type {2}.",
+                        nodeThatCreatesCycle.LinkTargetId,
+                        Node.LinkTargetId,
+                        Node.ReferenceType
+                    )
                 );
             }
         }
