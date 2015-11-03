@@ -47,9 +47,8 @@
     <Compile Include="LinkTargets\MultiValueLinkTarget.cs" />
     <Compile Include="LinkTargets\SingleValueLinkTarget.cs" />
     <Compile Include="LinkTargets\LinkTargetBase.cs" />
-    <Compile Include="LoadLinkExpressionForReferenceType.cs" />
+    <Compile Include="ReferenceTrees\ReferenceToLoad.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IIncludeSet.cs" />
-    <Compile Include="ReferenceToLoadTreeFactory.cs" />
     <Compile Include="Protocol\ILoadLinker.cs" />
     <Compile Include="Config\IncludeBuilder.cs" />
     <Compile Include="Config\IncludeTargetConcreteTypeBuilder.cs" />
@@ -72,8 +71,9 @@
     <Compile Include="LoadLinkExpressionTreeFactory.cs" />
     <Compile Include="Config\LoadLinkProtocolBuilder.cs" />
     <Compile Include="Config\LoadLinkProtocolForLinkedSourceBuilder.cs" />
-    <Compile Include="ReferenceTypeByLoadingLevelParser.cs" />
-    <Compile Include="Tree.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTypeByLoadingLevelParser.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree.cs" />
+    <Compile Include="ReferenceTrees\Tree.cs" />
     <Compile Include="LoadLinkConfig.cs" />
     <Compile Include="ILinkedSource.cs" />
     <Compile Include="IReferenceLoader.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Protocol\LookupIdContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
