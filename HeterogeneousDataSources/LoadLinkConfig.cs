@@ -97,7 +97,9 @@ namespace HeterogeneousDataSources {
                 null
             );
 
-            CreateReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType, referenceTree);
+            referenceTree.AddChildren(
+                CreateReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType, referenceTree)
+            );
 
             return referenceTree;
         }

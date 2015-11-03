@@ -63,7 +63,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
                 parent
             );
 
-            config.CreateReferenceTreeForEachLinkTarget(ChildLinkedSourceType, referenceTree);
+            referenceTree.AddChildren(
+                config.CreateReferenceTreeForEachLinkTarget(ChildLinkedSourceType, referenceTree)
+            );
 
             return referenceTree;
         }
