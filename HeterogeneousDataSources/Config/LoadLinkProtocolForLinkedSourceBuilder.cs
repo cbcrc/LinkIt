@@ -208,7 +208,7 @@ namespace HeterogeneousDataSources
                 linkTarget,
                 getSubLinkedSourceModelsFunc,
                 new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
-                    null
+                    CreateIdentityFunc<TChildLinkedSourceModel>()
                 )
             );
         }

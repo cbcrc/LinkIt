@@ -20,19 +20,12 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public TIChildLinkedSource CreateSubLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext)
         {
-            var childLinkSourceModel = _getSubLinkedSourceModel!=null
-                ? _getSubLinkedSourceModel(link)
-                : UseLinkAsSubLinkedSourceModel(link);
+            var childLinkSourceModel = _getSubLinkedSourceModel(link);
 
             //stle: move double cast to loadedReferenceContext
             //stle: dry with nested linked source
             return (TIChildLinkedSource) (object) loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel);
-        }
-
-        private TChildLinkedSourceModel UseLinkAsSubLinkedSourceModel(object link)
-        {
-            return (TChildLinkedSourceModel)link;
         }
 
         public void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkConfig config) {
