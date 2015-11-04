@@ -90,7 +90,7 @@ namespace HeterogeneousDataSources.Tests {
         }
 
         [Test]
-        public void LoadLink_ModelsWithWrontModelType_ShouldThrow() {
+        public void LoadLink_ModelsWithWrongModelType_ShouldThrow() {
             TestDelegate act = () => _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModels(
                     "The model of SingleReferenceLinkedSource is not a string"
