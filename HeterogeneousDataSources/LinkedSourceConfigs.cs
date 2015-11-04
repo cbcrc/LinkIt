@@ -13,6 +13,10 @@ namespace HeterogeneousDataSources
             return (IGenericLinkedSourceConfig<TLinkedSource>)GetConfigFor(typeof(TLinkedSource));
         }
 
+        public static bool DoesImplementILinkedSourceOnceAndOnlyOnce(Type linkedSourceType) {
+            return GetILinkedSourceTypes(linkedSourceType).Count == 1;
+        }
+
         public static ILinkedSourceConfig GetConfigFor(Type linkedSourceType) {
             //Lazy init to minimize required configuration by the client.
             //stle: dangerous for multithreading
@@ -40,41 +44,33 @@ namespace HeterogeneousDataSources
 
         private static Type GetLinkedSourceModelType(Type linkedSourceType)
         {
+            EnsureImplementsILinkedSourceOnceAndOnlyOnce(linkedSourceType);
+
+            var iLinkedSourceTypes = GetILinkedSourceTypes(linkedSourceType);
+            var iLinkedSourceType = iLinkedSourceTypes.Single();
+            return iLinkedSourceType.GenericTypeArguments.Single();
+        }
+
+        private static void EnsureImplementsILinkedSourceOnceAndOnlyOnce(Type linkedSourceType)
+        {
+            if (!DoesImplementILinkedSourceOnceAndOnlyOnce(linkedSourceType)) {
+                throw new ArgumentException(
+                    string.Format(
+                        "{0} must implement ILinkedSource<> once and only once.",
+                        linkedSourceType
+                    ),
+                    "TLinkedSource"
+                );
+            }
+        }
+
+        private static List<Type> GetILinkedSourceTypes(Type linkedSourceType) {
             var iLinkedSourceTypes = linkedSourceType.GetInterfaces()
                 .Where(interfaceType =>
                     interfaceType.IsGenericType &&
                     interfaceType.GetGenericTypeDefinition() == typeof(ILinkedSource<>))
                 .ToList();
-
-            EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(linkedSourceType, iLinkedSourceTypes);
-
-            var iLinkedSourceType = iLinkedSourceTypes.Single();
-            return iLinkedSourceType.GenericTypeArguments.Single();
-        }
-
-        private static void EnsureILinkedSourceIsImplementedOnceAndOnlyOnce(Type linkedSourceType, List<Type> iLinkedSourceTypes)
-        {
-            if (!iLinkedSourceTypes.Any())
-            {
-                throw new ArgumentException(
-                    string.Format(
-                        "{0} must implement ILinkedSource<>.",
-                        linkedSourceType
-                    ),
-                    "TLinkedSource"
-                );
-            }
-
-            if (iLinkedSourceTypes.Count > 1)
-            {
-                throw new ArgumentException(
-                    string.Format(
-                        "{0} must implement ILinkedSource<> only once.",
-                        linkedSourceType
-                    ),
-                    "TLinkedSource"
-                );
-            }
+            return iLinkedSourceTypes;
         }
     }
 }

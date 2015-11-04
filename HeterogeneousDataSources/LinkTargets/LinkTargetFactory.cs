@@ -69,10 +69,7 @@ namespace HeterogeneousDataSources
         }
 
         private static void EnsureNoReadOnlyProperty<TLinkedSource>(PropertyInfo property) {
-            
-            if (!property.CanWrite || 
-                !property.GetSetMethod(true).IsPublic) 
-            {
+            if (!property.IsPublicReadWrite()) {
                 throw new ArgumentException(
                     string.Format(
                         "{0}: Only read-write property are supported",
