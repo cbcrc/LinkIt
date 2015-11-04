@@ -8,6 +8,13 @@ namespace HeterogeneousDataSources
         private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue = 
             new Dictionary<TDiscriminant, IInclude>();
 
+        public IncludeTargetConcreteTypeBuilder(ILinkTarget linkTarget)
+        {
+            LinkTarget = linkTarget;
+        }
+
+        public ILinkTarget LinkTarget { get; private set; }
+
         //stle: fix terminology: TTargetConcreteType
         public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant, TTargetConcreteType> Include<TTargetConcreteType>()
             where TTargetConcreteType : TIChildLinkedSource

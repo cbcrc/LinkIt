@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources.Tests {
         [Test]
         public void CreateLoadLinkConfig_ManyLoadLinkExpressionWithSameLinkTargetId_ShouldThrow()
         {
-            var duplicate = new SingleValueLinkTarget<object, object>("the-duplicate", null);
+            var duplicate = new SingleValueLinkTarget<object, object>("the-duplicate-id", null);
 
             TestDelegate act = () => new LoadLinkConfig(
                 new List<ILoadLinkExpression>{
@@ -30,7 +30,7 @@ namespace HeterogeneousDataSources.Tests {
                 act, 
                 Throws.ArgumentException
                     .With.Message.ContainsSubstring("link target id").And
-                    .With.Message.ContainsSubstring("the-duplicate")
+                    .With.Message.ContainsSubstring("the-duplicate-id")
             );
         }
 

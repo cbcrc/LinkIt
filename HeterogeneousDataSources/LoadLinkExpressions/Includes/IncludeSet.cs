@@ -47,24 +47,41 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         private TInclude GetInclude<TInclude>(TLink link) 
             where TInclude:class
         {
-            if (link == null){
-                throw new ArgumentNullException("link","Cannot invoke GetInclude with a null link."); 
-            }
+            AssumeNotNullLink<TInclude>(link);
 
             var discriminant = _getDiscriminantFunc(link);
-            if (!_includes.ContainsKey(discriminant)) {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "There is no include for discriminant={0} in {1}.",
-                        discriminant,
-                        typeof(TLinkedSource)
-                    )
-                );
-            }
+            AssumeIncludeExistsForDiscriminant<TInclude>(discriminant);
 
             var include = _includes[discriminant];
 
             return include as TInclude;
+        }
+
+        private void AssumeIncludeExistsForDiscriminant<TInclude>(TDiscriminant discriminant) where TInclude : class
+        {
+            if (!_includes.ContainsKey(discriminant))
+            {
+                throw new NotImplementedException(
+                    string.Format(
+                        "{0}: Cannot invoke GetInclude for discriminant={1}",
+                        typeof (TLinkedSource),
+                        discriminant
+                        )
+                    );
+            }
+        }
+
+        private static void AssumeNotNullLink<TInclude>(TLink link) where TInclude : class
+        {
+            if (link == null)
+            {
+                throw new NotImplementedException(
+                    string.Format(
+                        "{0}: Cannot invoke GetInclude with a null link",
+                        typeof (TLinkedSource)
+                        )
+                    );
+            }
         }
 
         public List<TInclude> GetIncludes<TInclude>() 

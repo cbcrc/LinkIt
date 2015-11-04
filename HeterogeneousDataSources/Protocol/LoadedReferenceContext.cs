@@ -14,7 +14,8 @@ namespace HeterogeneousDataSources {
                 throw new InvalidOperationException(
                     string.Format(
                         "All references of the same type ({0}) must be loaded at the same time.",
-                        tReference.Name)
+                        tReference.Name
+                    )
                 );
             }
 

@@ -32,17 +32,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         private TChildLinkedSourceModel UseLinkAsSubLinkedSourceModel(object link)
         {
-            if (!(link is TChildLinkedSourceModel)){
-                //stle: identifiy expression with id
-                throw new Exception(
-                    string.Format(
-                        "Please provide a getSubLinkedSourceModel function in order to create a sub linked source model of type {0} from a link of type {1}.",
-                        typeof(TChildLinkedSource),
-                        typeof(TLink)
-                    )
-                );
-            }
-
             return (TChildLinkedSourceModel)link;
         }
 

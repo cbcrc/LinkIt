@@ -42,9 +42,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
-            //stle: dry
-            EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
-            EnsureIsOfReferenceType(this, referenceTypeToBeLoaded);
+            AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            AssumeIsOfReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource)linkedSource)
                 .Where(link => link != null)
@@ -99,7 +98,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             Func<TLink, TInclude> getInclude,
             Func<TLink, TInclude, int, TIChildLinkedSource> getLinkTargetValue)
         {
-            EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
             SetLinkTargetValues(
                 (TLinkedSource)linkedSource,
@@ -143,9 +142,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public List<Type> ChildLinkedSourceTypes { get; private set; }
 
-        private static void EnsureLinkedSourceIsOfTLinkedSource<TLinkedSource>(object linkedSource) {
+        private static void AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(object linkedSource) {
             if (!(linkedSource is TLinkedSource)) {
-                throw new InvalidOperationException(
+                throw new NotImplementedException(
                     string.Format(
                         "Cannot invoke load-link expression for {0} with linked source of type {1}",
                         typeof(TLinkedSource),
@@ -157,9 +156,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             }
         }
 
-        private static void EnsureIsOfReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType) {
+        private static void AssumeIsOfReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType) {
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType)) {
-                throw new InvalidOperationException(
+                throw new NotImplementedException(
                     string.Format(
                         "Cannot invoke this load link expression for reference type {0}. Supported reference types are {1}. This load link expression is for {2}.",
                         referenceType,

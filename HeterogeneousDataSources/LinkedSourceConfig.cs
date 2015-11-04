@@ -37,9 +37,9 @@ namespace HeterogeneousDataSources
             );
         }
 
-        public IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
+        public IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel, ILinkTarget linkTarget)
         {
+            EnsureGetSubLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
             AssumeClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
             return new SubLinkedSourceInclude<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
@@ -70,5 +70,19 @@ namespace HeterogeneousDataSources
                 );
             }
         }
+
+        private void EnsureGetSubLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(ILinkTarget linkTarget) {
+            if (!LinkedSourceModelType.IsAssignableFrom(typeof(TChildLinkedSourceModel))) {
+                throw new ArgumentException(
+                    string.Format(
+                        "{0}: getSubLinkedSourceModel returns an invalid type. {1} is not assignable from {2}.",
+                        linkTarget.Id,
+                        LinkedSourceModelType,
+                        typeof(TChildLinkedSourceModel)
+                    )
+                );
+            }
+        }
+
     }
 }

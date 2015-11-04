@@ -34,13 +34,6 @@ namespace HeterogeneousDataSources
             return _includeTargetConcreteTypeBuilder;
         }
 
-        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsSubLinkedSource(
-            TDiscriminant discriminantValue)
-        {
-            return AsSubLinkedSource<TLink>(discriminantValue, null);
-        }
-
-        //stle:dry
         public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsSubLinkedSource<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel) 
@@ -48,7 +41,8 @@ namespace HeterogeneousDataSources
             //stle: term TTargetConcreteType is incoherent with the rest
             var include = LinkedSourceConfigs.GetConfigFor<TTargetConcreteType>()
                 .CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
-                    getSubLinkedSourceModel
+                    getSubLinkedSourceModel,
+                    _includeTargetConcreteTypeBuilder.LinkTarget
                 );
 
             _includeTargetConcreteTypeBuilder.AddInclude(

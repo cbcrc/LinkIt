@@ -17,8 +17,6 @@ namespace HeterogeneousDataSources
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction = null
         );
 
-        IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel
-        );
+        IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel, ILinkTarget linkTarget);
     }
 }

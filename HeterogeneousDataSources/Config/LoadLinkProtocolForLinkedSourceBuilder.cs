@@ -250,7 +250,7 @@ namespace HeterogeneousDataSources
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>> includes) 
         {
-            var includeBuilder = new IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>();
+            var includeBuilder = new IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>(linkTarget);
             includes(includeBuilder);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TLink, TDiscriminant>(

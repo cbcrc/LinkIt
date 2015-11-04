@@ -26,7 +26,8 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                             link => (SubContentWithImage)link
                         )
                         .Include<SubContentWithoutReferencesLinkedSource>().AsSubLinkedSource(
-                            typeof(SubContentWithoutReferences)
+                            typeof(SubContentWithoutReferences),
+                            link => (SubContentWithoutReferences)link
                         )
                 );
 
