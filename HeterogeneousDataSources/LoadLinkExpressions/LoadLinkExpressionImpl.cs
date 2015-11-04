@@ -144,7 +144,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         private static void AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(object linkedSource) {
             if (!(linkedSource is TLinkedSource)) {
-                throw new NotImplementedException(
+                throw new AssumptionFailed(
                     string.Format(
                         "Cannot invoke load-link expression for {0} with linked source of type {1}",
                         typeof(TLinkedSource),
@@ -158,7 +158,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         private static void AssumeIsOfReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType) {
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType)) {
-                throw new NotImplementedException(
+                throw new AssumptionFailed(
                     string.Format(
                         "Cannot invoke this load link expression for reference type {0}. Supported reference types are {1}. This load link expression is for {2}.",
                         referenceType,

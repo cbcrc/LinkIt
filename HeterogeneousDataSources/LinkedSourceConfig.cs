@@ -61,7 +61,7 @@ namespace HeterogeneousDataSources
             var concreteType = typeof(TConcrete);
 
             if (!abstractType.IsAssignableFrom(concreteType)){
-                throw new NotImplementedException(
+                throw new AssumptionFailed(
                     string.Format(
                         "{0} is not assignable from {1}.",
                         abstractType,

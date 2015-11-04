@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssumptionFailed.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ILinkedSourceConfig.cs" />
     <Compile Include="LinkTargets\ILinkTarget.cs" />

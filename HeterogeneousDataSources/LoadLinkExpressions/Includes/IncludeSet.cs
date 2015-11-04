@@ -61,7 +61,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         {
             if (!_includes.ContainsKey(discriminant))
             {
-                throw new NotImplementedException(
+                throw new AssumptionFailed(
                     string.Format(
                         "{0}: Cannot invoke GetInclude for discriminant={1}",
                         typeof (TLinkedSource),
@@ -75,7 +75,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         {
             if (link == null)
             {
-                throw new NotImplementedException(
+                throw new AssumptionFailed(
                     string.Format(
                         "{0}: Cannot invoke GetInclude with a null link",
                         typeof (TLinkedSource)
