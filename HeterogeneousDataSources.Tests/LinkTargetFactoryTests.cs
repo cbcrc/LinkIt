@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using HeterogeneousDataSources.Tests.Shared;
+﻿using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests {
@@ -31,6 +29,7 @@ namespace HeterogeneousDataSources.Tests {
             );
 
             Assert.That(act, Throws.ArgumentException
+                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource").And
                 .With.Message.ContainsSubstring("direct getter")
             );
         }
@@ -42,6 +41,7 @@ namespace HeterogeneousDataSources.Tests {
             );
 
             Assert.That(act, Throws.ArgumentException
+                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource").And
                 .With.Message.ContainsSubstring("direct getter")
             );
         }
@@ -53,6 +53,7 @@ namespace HeterogeneousDataSources.Tests {
             );
 
             Assert.That(act, Throws.ArgumentException
+                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource").And
                 .With.Message.ContainsSubstring("direct getter")
             );
         }
@@ -64,11 +65,22 @@ namespace HeterogeneousDataSources.Tests {
             );
 
             Assert.That(act, Throws.ArgumentException
+                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource/AReadOnlyImage").And
                 .With.Message.ContainsSubstring("read-write")
             );
         }
 
+        [Test]
+        public void Test_WithPrivateSetter_ShouldThrow() {
+            TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
+                linkedSource => linkedSource.APrivateSetterImage
+            );
 
+            Assert.That(act, Throws.ArgumentException
+                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource/APrivateSetterImage").And
+                .With.Message.ContainsSubstring("read-write")
+            );
+        }
 
         public class ForLinkedTargetLinkedSource : ILinkedSource<Person> {
             public Person Model { get; set; }
@@ -76,7 +88,8 @@ namespace HeterogeneousDataSources.Tests {
             public Image AnotherImage { get; set; }
             
             public Image AnImageFunc(){ return null; }
-            public Image AReadOnlyImage { get { return null; } } 
+            public Image AReadOnlyImage { get { return null; } }
+            public Image APrivateSetterImage { get; private set; }
         }
     }
 }

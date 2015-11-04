@@ -56,49 +56,58 @@ namespace HeterogeneousDataSources
             EnsureNoFunctionOrAction(getter);
 
             var getterBody = (MemberExpression)getter.Body;
-            EnsureNoNestedProperty(getterBody);
-            EnsureNoMemberAccess(getterBody);
+            EnsureNoNestedProperty<TLinkedSource>(getterBody);
+            EnsureNoMemberAccess<TLinkedSource>(getterBody);
 
             var property = (PropertyInfo)getterBody.Member;
 
-            EnsureNoWriteOnlyProperty(property);
-            EnsureNoReadOnlyProperty(property);
+            EnsureNoReadOnlyProperty<TLinkedSource>(property);
+            
+            //Impossible to have a write only property, since the setter is inferred from the getter
+            
             return property;
         }
 
-        private static void EnsureNoReadOnlyProperty(PropertyInfo property) {
-            if (property.CanRead == false) {
-                throw new ArgumentException("Only read-write property are supported");
+        private static void EnsureNoReadOnlyProperty<TLinkedSource>(PropertyInfo property) {
+            
+            if (!property.CanWrite || 
+                !property.GetSetMethod(true).IsPublic) 
+            {
+                throw new ArgumentException(
+                    string.Format(
+                        "{0}: Only read-write property are supported",
+                        GetLinkTargetId<TLinkedSource>(property)
+                    )
+                );
             }
         }
 
-        private static void EnsureNoWriteOnlyProperty(PropertyInfo property) {
-            if (property.CanWrite == false) {
-                throw new ArgumentException("Only read-write property are supported");
-            }
-        }
-
-        private static void EnsureNoMemberAccess(MemberExpression getterBody) {
+        private static void EnsureNoMemberAccess<TLinkedSource>(MemberExpression getterBody) {
             if (getterBody.Member.MemberType != MemberTypes.Property) {
-                throw OnlyDirectGetterAreSupported();
+                throw OnlyDirectGetterAreSupported<TLinkedSource>();
             }
         }
 
-        private static void EnsureNoNestedProperty(MemberExpression getterBody) {
+        private static void EnsureNoNestedProperty<TLinkedSource>(MemberExpression getterBody) {
             var getterBodyExpression = getterBody.Expression;
             if (getterBodyExpression.NodeType != ExpressionType.Parameter) {
-                throw OnlyDirectGetterAreSupported();
+                throw OnlyDirectGetterAreSupported<TLinkedSource>();
             }
         }
 
         private static void EnsureNoFunctionOrAction<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter) {
             if (getter.Body.NodeType != ExpressionType.MemberAccess) {
-                throw OnlyDirectGetterAreSupported();
+                throw OnlyDirectGetterAreSupported<TLinkedSource>();
             }
         }
 
-        private static ArgumentException OnlyDirectGetterAreSupported() {
-            return new ArgumentException("Only direct getter are supported. Ex: p => p.Property");
+        private static ArgumentException OnlyDirectGetterAreSupported<TLinkedSource>() {
+            return new ArgumentException(
+                string.Format(
+                    "{0}: Only direct getter are supported. Ex: p => p.Property",
+                    typeof(TLinkedSource)
+                )
+            );
         }
 
         private static string GetLinkTargetId<TLinkedSource>(PropertyInfo property)
