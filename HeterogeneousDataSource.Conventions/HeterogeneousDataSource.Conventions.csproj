@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplyLoadLinkConventionCommand.cs" />
+    <Compile Include="ILoadLinkExpressionConvention.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

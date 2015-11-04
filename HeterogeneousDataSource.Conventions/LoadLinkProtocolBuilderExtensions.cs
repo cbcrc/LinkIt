@@ -8,34 +8,36 @@ namespace HeterogeneousDataSource.Conventions
 {
     public static class LoadLinkProtocolBuilderExtensions
     {
-        //stle: should not be public
-        public static List<Type> GetLinkedSourceTypes(
-            this LoadLinkProtocolBuilder loadLinkProtocolBuilder, 
-            IEnumerable<Assembly> assemblies)
+        public static void ApplyConventions(
+            this LoadLinkProtocolBuilder loadLinkProtocolBuilder,
+            IEnumerable<Assembly> assemblies,
+            List<ILoadLinkExpressionConvention> conventions)
         {
-            return assemblies
+            var types = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
-                .Where(LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce)
                 .ToList();
+
+            ApplyConventions(
+                loadLinkProtocolBuilder,
+                types,
+                conventions
+            );
         }
 
-        public static List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
+        public static void ApplyConventions(
+            this LoadLinkProtocolBuilder loadLinkProtocolBuilder,
+            List<Type> types,
+            List<ILoadLinkExpressionConvention> conventions)
         {
-            return linkedSourceType
-                .GetProperties()
-                .Where(PropertyInfoExtensions.IsPublicReadWrite)
-                .ToList();
+            var applyLoadLinkConvention = new ApplyLoadLinkConventionCommand(loadLinkProtocolBuilder, types, conventions);
+            applyLoadLinkConvention.Execute();
         }
 
-        public static List<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType)
-        {
-            var linkedSourceModelType = linkedSourceType
-                .GetProperty("Model")
-                .PropertyType;
-
-            return linkedSourceModelType
-                .GetProperties()
-                .ToList();
+        public static List<ILoadLinkExpressionConvention> GetDefaultConventions(this LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
+            return new List<ILoadLinkExpressionConvention>{
+                //stle: todo
+            };
         }
+
     }
 }
