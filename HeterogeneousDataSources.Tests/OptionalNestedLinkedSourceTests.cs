@@ -16,7 +16,7 @@ namespace HeterogeneousDataSources.Tests
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
-                .LoadLinkOptionalNestedLinkedSource(
+                .LoadLinkNestedLinkedSource(
                     linkedSource => linkedSource.Model.MediaId,
                     linkedSource => linkedSource.Media
                 );

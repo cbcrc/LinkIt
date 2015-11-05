@@ -20,7 +20,7 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.PostThread
                 );
             loadLinkProtocolBuilder.For<PostThreadLinkedSource>()
-                .LoadLinkSubLinkedSources(
+                .LoadLinkSubLinkedSource(
                     linkedSource => linkedSource.Model.Posts,
                     linkedSource => linkedSource.Posts
                 )

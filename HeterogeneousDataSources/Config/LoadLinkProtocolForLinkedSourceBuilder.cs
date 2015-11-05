@@ -20,35 +20,35 @@ namespace HeterogeneousDataSources
            Func<TLinkedSource, TId> getLookupIdFunc,
            Expression<Func<TLinkedSource, TReference>> linkTargetFunc)
         {
-            return LoadLinkReferences(
+            return LoadLinkReference(
                 LinkTargetFactory.Create(linkTargetFunc),
                 ToGetLookupIdsFuncForSingleValue(getLookupIdFunc)
             );
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkOptionalReference<TReference, TId>(
-           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
-           Expression<Func<TLinkedSource, TReference>> linkTargetFunc
-        )
-            where TId : struct 
-        {
-            return LoadLinkReferences(
-                LinkTargetFactory.Create(linkTargetFunc),
-                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc)
-            );
-        }
-
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferences<TReference, TId>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
             Expression<Func<TLinkedSource, List<TReference>>> linkTargetFunc)
         {
-            return LoadLinkReferences(
+            return LoadLinkReference(
                 LinkTargetFactory.Create(linkTargetFunc),
                 getLookupIdsFunc 
             );
         }
 
-        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferences<TTargetProperty, TId>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TReference, TId>(
+           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Expression<Func<TLinkedSource, TReference>> linkTargetFunc
+        )
+            where TId:struct 
+        {
+            return LoadLinkReference(
+                LinkTargetFactory.Create(linkTargetFunc),
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc)
+            );
+        }
+
+        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReference<TTargetProperty, TId>(
             ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc) 
         {
@@ -65,14 +65,21 @@ namespace HeterogeneousDataSources
         #region NestedLinkedSource
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
            Func<TLinkedSource, TId> getLookupIdFunc,
-           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc,
-           Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction=null) 
+           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc) 
         {
-            if (initChildLinkedSourceAction == null){
-                initChildLinkedSourceAction = NullInitChildLinkedSourceActionForSingleValue;
-            }
+            return LoadLinkNestedLinkedSource(
+                getLookupIdFunc,
+                linkTargetFunc,
+                NullInitChildLinkedSourceActionForSingleValue
+            );
+        }
 
-            return LoadLinkNestedLinkedSources(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+           Func<TLinkedSource, TId> getLookupIdFunc,
+           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc,
+           Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction) 
+        {
+            return LoadLinkNestedLinkedSource(
                 LinkTargetFactory.Create(linkTargetFunc),
                 ToGetLookupIdsFuncForSingleValue(getLookupIdFunc),
                 (linkedSource, referenceIndex, childLinkedSource) =>
@@ -80,18 +87,27 @@ namespace HeterogeneousDataSources
             );
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkOptionalNestedLinkedSource<TChildLinkedSource, TId>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc
+        )
+            where TId : struct
+        {
+            return LoadLinkNestedLinkedSource(
+                LinkTargetFactory.Create(linkTargetFunc),
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc),
+                NullInitChildLinkedSourceAction
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
            Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
            Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc,
-           Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction=null
+           Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction
         )
             where TId : struct 
         {
-            if (initChildLinkedSourceAction == null) {
-                initChildLinkedSourceAction = NullInitChildLinkedSourceActionForSingleValue;
-            }
-
-            return LoadLinkNestedLinkedSources(
+            return LoadLinkNestedLinkedSource(
                 LinkTargetFactory.Create(linkTargetFunc),
                 ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc),
                 (linkedSource, referenceIndex, childLinkedSource) =>
@@ -99,23 +115,30 @@ namespace HeterogeneousDataSources
             );
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSources<TChildLinkedSource, TId>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
+            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc)
+        {
+            return LoadLinkNestedLinkedSource(
+                getLookupIdsFunc, 
+                linkTargetFunc, 
+                NullInitChildLinkedSourceAction
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TChildLinkedSource, TId>(
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc,
-            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction=null)
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction)
         {
-            if (initChildLinkedSourceAction == null) {
-                initChildLinkedSourceAction = NullInitChildLinkedSourceAction;
-            }
-
-            return LoadLinkNestedLinkedSources(
+            return LoadLinkNestedLinkedSource(
                 LinkTargetFactory.Create(linkTargetFunc),
                 getLookupIdsFunc,
                 initChildLinkedSourceAction
             );
         }
 
-        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSources<TTargetProperty, TId>(
+        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSource<TTargetProperty, TId>(
             ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TId>> getLookupIdsFunc,
             Action<TLinkedSource, int, TTargetProperty> initChildLinkedSourceAction)
@@ -157,25 +180,25 @@ namespace HeterogeneousDataSources
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
-            return LoadLinkSubLinkedSources(
+            return LoadLinkSubLinkedSource(
                 LinkTargetFactory.Create(linkTargetFunc),
                 ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc)
             );
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
             Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
-            return LoadLinkSubLinkedSources(
+            return LoadLinkSubLinkedSource(
                 LinkTargetFactory.Create(linkTargetFunc),
                 getSubLinkedSourceModelsFunc
             );
         }
 
-        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSources<TChildLinkedSource, TChildLinkedSourceModel>(
+        private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkSubLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(
             ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
             Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc
         )

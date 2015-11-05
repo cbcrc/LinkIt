@@ -26,7 +26,7 @@ namespace HeterogeneousDataSources.Tests
                     linkedSource => linkedSource.Model.AuthorImageId,
                     linkedSource => linkedSource.AuthorImage
                 )
-                .LoadLinkReferences(
+                .LoadLinkReference(
                     linkedSource => linkedSource.Model.FavoriteImageIds,
                     linkedSource => linkedSource.FavoriteImages
                 );
