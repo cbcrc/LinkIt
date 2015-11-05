@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSource.Conventions.DefaultConventions;
 using HeterogeneousDataSources;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
@@ -29,9 +30,7 @@ namespace HeterogeneousDataSource.Conventions.Tests
             var actual = sut.LoadLink<LinkedSource>().FromModel(
                 new Model{
                     Id="One",
-                    MandatoryMediaId = 1,
-                    OptionMediaId = 2,
-                    BestMediaIds = new List<int>{3,4}
+                    MediaId = 1
                 }
             );
 
@@ -40,16 +39,12 @@ namespace HeterogeneousDataSource.Conventions.Tests
 
         public class LinkedSource : ILinkedSource<Model> {
             public Model Model { get; set; }
-            public Media MandatoryMedia { get; set; }
-            public Media OptionMedia { get; set; }
-            //public List<Media> BestMedias { get; set; }
+            public Media Media { get; set; }
         }
 
         public class Model{
             public string Id { get; set; }
-            public int MandatoryMediaId { get; set; }
-            public int? OptionMediaId { get; set; }
-            public List<int> BestMediaIds { get; set; }
+            public int MediaId { get; set; }
         }
     }
 }

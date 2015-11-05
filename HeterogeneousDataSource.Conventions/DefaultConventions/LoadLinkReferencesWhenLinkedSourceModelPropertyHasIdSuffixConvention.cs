@@ -3,14 +3,15 @@ using System.Linq.Expressions;
 using System.Reflection;
 using HeterogeneousDataSources;
 
-namespace HeterogeneousDataSource.Conventions {
-    public class LoadLinkReferenceWhenLinkedSourceModelPropertyHasIdSuffixConvention : ILoadLinkExpressionConvention {
+namespace HeterogeneousDataSource.Conventions.DefaultConventions {
+    public class LoadLinkReferencesWhenLinkedSourceModelPropertyHasIdSuffixConvention : ILoadLinkExpressionConvention {
         public bool DoesApply(
             PropertyInfo linkTargetProperty,
             PropertyInfo linkedSourceModelProperty) 
         {
-            var matchingName = linkTargetProperty.Name + "Id";
-            return matchingName == linkedSourceModelProperty.Name;
+            return
+                linkTargetProperty.GetLinkTargetKind() == LinkTargetKind.MultiValue &&
+                linkTargetProperty.MatchLinkedSourceModelPropertyName(linkedSourceModelProperty, "Id", "s");
         }
 
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
@@ -20,10 +21,12 @@ namespace HeterogeneousDataSource.Conventions {
             PropertyInfo linkTargetProperty, 
             PropertyInfo linkedSourceModelProperty)
         {
-            loadLinkProtocolForLinkedSourceBuilder.LoadLinkReference(
-                getLinkedSourceModelProperty,
-                getLinkTargetProperty
-            );
+//stle: oups: must have tree type of convention
+
+            //loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferences(
+            //    getLinkedSourceModelProperty,
+            //    getLinkTargetProperty
+            //);
         }
     }
 }
