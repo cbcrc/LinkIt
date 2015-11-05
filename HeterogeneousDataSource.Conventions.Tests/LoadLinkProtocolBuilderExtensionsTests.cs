@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSources;
@@ -58,11 +59,9 @@ namespace HeterogeneousDataSource.Conventions.Tests
                 return matchingName == linkedSourceModelProperty.Name;
             }
 
-            public void Apply(
-                LoadLinkProtocolBuilder loadLinkProtocolBuilder, 
-                Type linkedSourceType, 
-                PropertyInfo linkTargetProperty, 
-                PropertyInfo linkedSourceModelProperty)
+            public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
+                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
+                Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty)
             {
                 LinkTargetPropertyNamesWhereConventionApplies.Add(linkTargetProperty.Name);
             }
