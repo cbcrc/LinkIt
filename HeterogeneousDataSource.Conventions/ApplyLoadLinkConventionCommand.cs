@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
 
@@ -24,11 +25,22 @@ namespace HeterogeneousDataSource.Conventions
         }
 
         private void ApplyConvention(ConventionMatch match) {
-            if (match.Convention is ISingleValueConvention) { ApplySingleValueConvention(match); }
-            if (match.Convention is IMultiValueConvention) { ApplyMultiValueConvention(match); }
-            if (match.Convention is IByNullableValueTypeIdConvention) { ApplyNullableValueTypeIdConvention(match); }
-
-            //stle: better error handling
+            try { 
+                if (match.Convention is ISingleValueConvention) { ApplySingleValueConvention(match); }
+                if (match.Convention is IMultiValueConvention) { ApplyMultiValueConvention(match); }
+                if (match.Convention is IByNullableValueTypeIdConvention) { ApplyNullableValueTypeIdConvention(match); }
+            }
+            catch (TargetInvocationException ex) {
+                throw new Exception(
+                    string.Format(
+                        "The convention \"{0}\" failed for Apply. Link target id: {1}, linked source model property: {2}",
+                        match.Convention.Name,
+                        match.LinkTargetProperty.GetLinkTargetId(),
+                        match.LinkedSourceModelProperty.Name
+                    ),
+                    ex.InnerException
+                );
+            }
         }
 
         #region ApplySingleValueConvention

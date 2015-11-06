@@ -7,8 +7,8 @@ using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions {
     public class FindAllConventionMatchesQuery{
-        private List<Type> _types;
-        private List<ILoadLinkExpressionConvention> _conventions;
+        private readonly List<Type> _types;
+        private readonly List<ILoadLinkExpressionConvention> _conventions;
 
         public FindAllConventionMatchesQuery(List<Type> types, List<ILoadLinkExpressionConvention> conventions)
         {
@@ -71,7 +71,7 @@ namespace HeterogeneousDataSource.Conventions {
             catch (Exception ex){
                 throw new Exception(
                     string.Format(
-                        "The convention \"{0}\" failed for DoesApply({1},Model.{2})",
+                        "The convention \"{0}\" failed for DoesApply. Link target id: {1}, linked source model property: {2}",
                         match.Convention.Name,
                         match.LinkTargetProperty.GetLinkTargetId(),
                         match.LinkedSourceModelProperty.Name
