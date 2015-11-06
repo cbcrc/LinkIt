@@ -5,7 +5,7 @@ using System.Reflection;
 using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
-    public class LoadLinkMultiValueReferencesWhenIdSuffixMatchesConvention : IMultiValueConvention {
+    public class LoadLinkMultiValueReferencesWhenIdSuffixMatches : IMultiValueConvention {
         public bool DoesApply(
             PropertyInfo linkTargetProperty,
             PropertyInfo linkedSourceModelProperty) 
@@ -16,7 +16,9 @@ namespace HeterogeneousDataSource.Conventions.DefaultConventions {
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, 
             Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
-            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty)
+            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
+            PropertyInfo linkTargetProperty, 
+            PropertyInfo linkedSourceModelProperty)
         {
             loadLinkProtocolForLinkedSourceBuilder.LoadLinkReference(
                 getLinkedSourceModelProperty,

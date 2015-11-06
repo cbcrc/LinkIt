@@ -13,14 +13,14 @@ namespace HeterogeneousDataSource.Conventions.Tests
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class LoadLinkSingleValueReferenceWhenIdSuffixMatchesConventionTests {
+    public class LoadLinkSingleValueReferenceWhenIdSuffixMatchesTests {
         [Test]
         public void GetLinkedSourceTypes(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkSingleValueReferenceWhenIdSuffixMatchesConvention() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkSingleValueReferenceWhenIdSuffixMatches() }
             );
 
             var fakeReferenceLoader =

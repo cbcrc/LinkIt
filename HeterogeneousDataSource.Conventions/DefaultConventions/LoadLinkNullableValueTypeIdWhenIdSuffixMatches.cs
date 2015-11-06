@@ -15,7 +15,9 @@ namespace HeterogeneousDataSource.Conventions.DefaultConventions {
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, 
             Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
-            Func<TLinkedSource, TLinkedSourceModelProperty?> getLinkedSourceModelProperty
+            Func<TLinkedSource, TLinkedSourceModelProperty?> getLinkedSourceModelProperty,
+            PropertyInfo linkTargetProperty, 
+            PropertyInfo linkedSourceModelProperty
         ) 
             where TLinkedSourceModelProperty : struct
         {

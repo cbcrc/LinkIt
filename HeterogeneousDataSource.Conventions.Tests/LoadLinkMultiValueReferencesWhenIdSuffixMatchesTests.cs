@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSource.Conventions.DefaultConventions;
 using HeterogeneousDataSources;
@@ -13,14 +11,14 @@ namespace HeterogeneousDataSource.Conventions.Tests
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class LoadLinkMultiValueReferencesWhenIdSuffixMatchesConventionTests {
+    public class LoadLinkMultiValueReferencesWhenIdSuffixMatchesTests {
         [Test]
         public void GetLinkedSourceTypes(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkMultiValueReferencesWhenIdSuffixMatchesConvention() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkMultiValueReferencesWhenIdSuffixMatches() }
             );
 
             var fakeReferenceLoader =

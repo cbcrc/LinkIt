@@ -46,7 +46,7 @@ namespace HeterogeneousDataSource.Conventions.Tests
             public string PersonId { get; set; }
         }
 
-        public class ConventionStub:ILoadLinkExpressionConvention
+        public class ConventionStub:ISingleValueConvention
         {
             public readonly List<string> LinkTargetPropertyNamesWhereConventionApplies = new List<string>();
 

@@ -153,7 +153,9 @@ namespace HeterogeneousDataSource.Conventions
             convention.Apply(
                 loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,
-                getLinkedSourceModelProperty
+                getLinkedSourceModelProperty,
+                linkTargetProperty,
+                linkedSourceModelProperty
             );
         } 
         #endregion
@@ -193,7 +195,9 @@ namespace HeterogeneousDataSource.Conventions
             convention.Apply(
                 loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,
-                getLinkedSourceModelProperty
+                getLinkedSourceModelProperty,
+                linkTargetProperty,
+                linkedSourceModelProperty
             );
         } 
         #endregion
@@ -240,7 +244,9 @@ namespace HeterogeneousDataSource.Conventions
             nullableValueTypeIdConvention.Apply(
                 loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,
-                getLinkedSourceModelProperty
+                getLinkedSourceModelProperty,
+                linkTargetProperty,
+                linkedSourceModelProperty
             );
         }
     }
