@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using HeterogeneousDataSource.Conventions.Interfaces;
 
 namespace HeterogeneousDataSource.Conventions
 {

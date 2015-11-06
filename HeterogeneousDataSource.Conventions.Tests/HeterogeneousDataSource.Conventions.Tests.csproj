@@ -60,9 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoadLinkNullableValueTypeIdWhenIdSuffixMatchesTests.cs" />
-    <Compile Include="LoadLinkMultiValueReferencesWhenIdSuffixMatchesTests.cs" />
-    <Compile Include="LoadLinkSingleValueReferenceWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="DefaultConventions\LoadLinkNullableValueTypeIdWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="DefaultConventions\LoadLinkMultiValueReferencesWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="DefaultConventions\LoadLinkSingleValueReferenceWhenIdSuffixMatchesTests.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

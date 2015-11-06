@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;

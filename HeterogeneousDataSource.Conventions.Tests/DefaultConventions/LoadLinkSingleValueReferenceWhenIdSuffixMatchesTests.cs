@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSource.Conventions.DefaultConventions;
+using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace HeterogeneousDataSource.Conventions.Tests
+namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class LoadLinkNullableValueTypeIdWhenIdSuffixMatchesTests {
+    public class LoadLinkSingleValueReferenceWhenIdSuffixMatchesTests {
         [Test]
         public void GetLinkedSourceTypes(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkNullableValueTypeIdWhenIdSuffixMatches() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkSingleValueReferenceWhenIdSuffixMatches() }
             );
-            
+
             var fakeReferenceLoader =
                 new FakeReferenceLoader<Model, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
@@ -30,7 +29,7 @@ namespace HeterogeneousDataSource.Conventions.Tests
             var actual = sut.LoadLink<LinkedSource>().FromModel(
                 new Model{
                     Id="One",
-                    MediaId = 3
+                    MediaId = 1
                 }
             );
 
@@ -44,7 +43,7 @@ namespace HeterogeneousDataSource.Conventions.Tests
 
         public class Model{
             public string Id { get; set; }
-            public int? MediaId { get; set; }
+            public int MediaId { get; set; }
         }
     }
 }

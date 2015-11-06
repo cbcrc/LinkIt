@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions
