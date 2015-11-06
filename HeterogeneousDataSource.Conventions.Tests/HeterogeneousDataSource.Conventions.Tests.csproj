@@ -60,7 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoadLinkReferenceWhenLinkedSourceModelPropertyHasIdSuffixConventionTests.cs" />
+    <Compile Include="LoadLinkMultiValueReferencesWhenIdSuffixMatchesConventionTests.cs" />
+    <Compile Include="LoadLinkSingleValueReferenceWhenIdSuffixMatchesConventionTests.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

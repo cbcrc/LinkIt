@@ -29,12 +29,63 @@ namespace HeterogeneousDataSource.Conventions
             foreach (var linkTargetProperty in GetLinkTargetProperties(linkedSourceType)){
                 foreach (var linkedSourceModelProperty in GetLinkedSourceModelProperties(linkedSourceType)) {
                     foreach (var convention in _conventions) {
-                        if (convention.DoesApply(linkTargetProperty, linkedSourceModelProperty)){
-                            ApplyConvention(convention,_loadLinkProtocolBuilder,linkedSourceType, linkTargetProperty, linkedSourceModelProperty);
-                        }
+                        ApplyConvention(
+                            linkedSourceType, 
+                            linkTargetProperty, 
+                            linkedSourceModelProperty, 
+                            convention
+                        );
                     }
                 }
             }
+        }
+
+        private void ApplyConvention(Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, ILoadLinkExpressionConvention convention)
+        {
+            var possibleConventionType = GetPossibleConventionType(linkTargetProperty, linkedSourceModelProperty);
+            if (!possibleConventionType.IsInstanceOfType(convention)){
+                return;
+            }
+
+            if (!convention.DoesApply(linkTargetProperty, linkedSourceModelProperty)){
+                return;
+            }
+
+            if (convention is ISingleValueConvention){
+                //stle: have a type for params?
+                ApplySingleValueConvention(
+                    (ISingleValueConvention)convention, 
+                    _loadLinkProtocolBuilder, 
+                    linkedSourceType, 
+                    linkTargetProperty, 
+                    linkedSourceModelProperty
+                );
+            }
+            if (convention is IMultiValueConvention) {
+                //stle: have a type for params?
+                ApplyMultiValueConvention(
+                    (IMultiValueConvention)convention,
+                    _loadLinkProtocolBuilder,
+                    linkedSourceType,
+                    linkTargetProperty,
+                    linkedSourceModelProperty
+                );
+            }
+        }
+
+        public static Type GetPossibleConventionType(PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {
+            if (Nullable.GetUnderlyingType(linkedSourceModelProperty.PropertyType) != null)
+            {
+                throw new NotImplementedException("STLE: todo");
+            }
+
+            if (linkTargetProperty.PropertyType.IsGenericType &&
+                linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) 
+            {
+                return typeof(IMultiValueConvention);
+            }
+
+            return typeof(ISingleValueConvention);
         }
 
         private List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
@@ -56,9 +107,9 @@ namespace HeterogeneousDataSource.Conventions
                 .ToList();
         }
 
-        private void ApplyConvention(ILoadLinkExpressionConvention convention, LoadLinkProtocolBuilder loadLinkProtocolBuilder, Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) 
-        {
-            var method = GetType().GetMethod("ApplyConventionGeneric");
+        #region ApplySingleValueConvention
+        private void ApplySingleValueConvention(ISingleValueConvention singleValueConvention, LoadLinkProtocolBuilder loadLinkProtocolBuilder, Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {
+            var method = GetType().GetMethod("ApplySingleValueConventionGeneric");
             var genericMethod = method.MakeGenericMethod(
                 linkedSourceType,
                 linkTargetProperty.PropertyType,
@@ -66,19 +117,18 @@ namespace HeterogeneousDataSource.Conventions
             );
 
             genericMethod.Invoke(null, new object[]{
-                convention,
+                singleValueConvention,
                 loadLinkProtocolBuilder,
                 linkTargetProperty,
                 linkedSourceModelProperty
             });
         }
 
-        public static void ApplyConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            ILoadLinkExpressionConvention convention,
+        public static void ApplySingleValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
+            ISingleValueConvention convention,
             LoadLinkProtocolBuilder loadLinkProtocolBuilder,
             PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty)
-        {
+            PropertyInfo linkedSourceModelProperty) {
             var getLinkTargetProperty = FuncGenerator.
                 GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
                     linkTargetProperty.Name
@@ -91,38 +141,51 @@ namespace HeterogeneousDataSource.Conventions
             convention.Apply(
                 loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,
-                getLinkedSourceModelProperty,
+                getLinkedSourceModelProperty
+            );
+        } 
+        #endregion
+
+        #region ApplyMultiValueConvention
+        private void ApplyMultiValueConvention(IMultiValueConvention multiValueConvention, LoadLinkProtocolBuilder loadLinkProtocolBuilder, Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {
+            var method = GetType().GetMethod("ApplyMultiValueConventionGeneric");
+
+            var genericMethod = method.MakeGenericMethod(
+                linkedSourceType,
+                linkTargetProperty.PropertyType.GenericTypeArguments.Single(),
+                linkedSourceModelProperty.PropertyType.GenericTypeArguments.Single()
+            );
+
+            genericMethod.Invoke(null, new object[]{
+                multiValueConvention,
+                loadLinkProtocolBuilder,
                 linkTargetProperty,
                 linkedSourceModelProperty
-            );
+            });
         }
 
+        public static void ApplyMultiValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
+            IMultiValueConvention convention,
+            LoadLinkProtocolBuilder loadLinkProtocolBuilder,
+            PropertyInfo linkTargetProperty,
+            PropertyInfo linkedSourceModelProperty) {
+            var getLinkTargetProperty = FuncGenerator.
+                GenerateFromGetterAsExpression<TLinkedSource, List<TLinkTargetProperty>>(
+                    linkTargetProperty.Name
+                );
+            var getLinkedSourceModelProperty = FuncGenerator
+                .GenerateFromGetter<TLinkedSource, List<TLinkedSourceModelProperty>>(
+                    string.Format("Model.{0}", linkedSourceModelProperty.Name)
+                );
 
-        //public void Apply(
-        //    LoadLinkProtocolBuilder loadLinkProtocolBuilder,
-        //    Type linkedSourceType,
-        //    PropertyInfo linkTargetProperty,
-        //    PropertyInfo linkedSourceModelProperty) 
-        //{
-        //}
+            convention.Apply(
+                loadLinkProtocolBuilder.For<TLinkedSource>(),
+                getLinkTargetProperty,
+                getLinkedSourceModelProperty
+            );
+        } 
+        #endregion
 
-        //private static Func<TLinkedSource, TProperty> GenerateGetFunc<TLinkedSource, TProperty>(
-        //    string sourcePropertiesPrefix,
-        //    IEnumerable<PropertyInfo> nestedProperties,
-        //    IMappingExpression<TLinkedSource, TDestination> expression) 
-        //{
-        //    foreach (var property in nestedProperties) {
-        //        var sourcePropertyInDotNotation = string.Format("{0}.{1}", sourcePropertiesPrefix, property.Name);
-        //        var method = ThisType.GetMethod("MapProperty");
-        //        var genericMethod = method.MakeGenericMethod(property.PropertyType);
-
-        //        genericMethod.Invoke(null, new object[]
-        //        {
-        //            sourcePropertyInDotNotation,
-        //            property.Name,
-        //            expression
-        //        });
-        //    }
-        //}
+        
     }
 }
