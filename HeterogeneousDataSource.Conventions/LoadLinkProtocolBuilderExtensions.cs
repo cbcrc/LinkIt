@@ -29,8 +29,9 @@ namespace HeterogeneousDataSource.Conventions
             List<Type> types,
             List<ILoadLinkExpressionConvention> conventions)
         {
-            var applyLoadLinkConvention = new ApplyLoadLinkConventionCommand(loadLinkProtocolBuilder, types, conventions);
-            applyLoadLinkConvention.Execute();
+            var matches = new FindAllConventionMatchesQuery(types, conventions).Execute();
+            var command = new ApplyLoadLinkConventionCommand(loadLinkProtocolBuilder, matches);
+            command.Execute();
         }
 
         public static List<ILoadLinkExpressionConvention> GetDefaultConventions(this LoadLinkProtocolBuilder loadLinkProtocolBuilder) {

@@ -1,253 +1,136 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions
 {
     public class ApplyLoadLinkConventionCommand
     {
-        private readonly List<Type> _linkedSourceTypes;
         private readonly LoadLinkProtocolBuilder _loadLinkProtocolBuilder;
-        private readonly List<ILoadLinkExpressionConvention> _conventions;
+        private readonly List<ConventionMatch> _matches;
 
-        public ApplyLoadLinkConventionCommand(LoadLinkProtocolBuilder loadLinkProtocolBuilder, List<Type> types, List<ILoadLinkExpressionConvention> conventions)
+        public ApplyLoadLinkConventionCommand(LoadLinkProtocolBuilder loadLinkProtocolBuilder, List<ConventionMatch> matches)
         {
-            _linkedSourceTypes = types
-                .Where(LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce)
-                .ToList();
             _loadLinkProtocolBuilder = loadLinkProtocolBuilder;
-            _conventions = conventions;
+            _matches = matches;
         }
 
         public void Execute(){
-            _linkedSourceTypes.ForEach(ApplyConventions);
-        }
-
-        private void ApplyConventions(Type linkedSourceType) {
-            foreach (var linkTargetProperty in GetLinkTargetProperties(linkedSourceType)){
-                foreach (var linkedSourceModelProperty in GetLinkedSourceModelProperties(linkedSourceType)) {
-                    foreach (var convention in _conventions) {
-                        ApplyConvention(
-                            linkedSourceType, 
-                            linkTargetProperty, 
-                            linkedSourceModelProperty, 
-                            convention
-                        );
-                    }
-                }
+            foreach (var match in _matches) {
+                ApplyConvention(match);
             }
         }
 
-        private void ApplyConvention(Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, ILoadLinkExpressionConvention convention)
-        {
-            var possibleConventionType = GetPossibleConventionType(linkTargetProperty, linkedSourceModelProperty);
-            if (!possibleConventionType.IsInstanceOfType(convention)){
-                return;
-            }
+        private void ApplyConvention(ConventionMatch match) {
+            if (match.Convention is ISingleValueConvention) { ApplySingleValueConvention(match); }
+            if (match.Convention is IMultiValueConvention) { ApplyMultiValueConvention(match); }
+            if (match.Convention is INullableValueTypeIdConvention) { ApplyNullableValueTypeIdConvention(match); }
 
-            if (!convention.DoesApply(linkTargetProperty, linkedSourceModelProperty)){
-                return;
-            }
-
-            if (convention is ISingleValueConvention){
-                //stle: have a type for params?
-                ApplySingleValueConvention(
-                    (ISingleValueConvention)convention, 
-                    _loadLinkProtocolBuilder, 
-                    linkedSourceType, 
-                    linkTargetProperty, 
-                    linkedSourceModelProperty
-                );
-            }
-
-            if (convention is IMultiValueConvention) {
-                //stle: have a type for params?
-                ApplyMultiValueConvention(
-                    (IMultiValueConvention)convention,
-                    _loadLinkProtocolBuilder,
-                    linkedSourceType,
-                    linkTargetProperty,
-                    linkedSourceModelProperty
-                );
-            }
-
-            if (convention is INullableValueTypeIdConvention) {
-                //stle: have a type for params?
-                ApplyIdIsNullableValueTypeConvention(
-                    (INullableValueTypeIdConvention)convention,
-                    _loadLinkProtocolBuilder,
-                    linkedSourceType,
-                    linkTargetProperty,
-                    linkedSourceModelProperty
-                );
-            }
-        }
-
-        public static Type GetPossibleConventionType(PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {
-            if (Nullable.GetUnderlyingType(linkedSourceModelProperty.PropertyType) != null)
-            {
-                return typeof(INullableValueTypeIdConvention);
-            }
-
-            if (linkTargetProperty.PropertyType.IsGenericType &&
-                linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) 
-            {
-                return typeof(IMultiValueConvention);
-            }
-
-            return typeof(ISingleValueConvention);
-        }
-
-        private List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
-        {
-            return linkedSourceType
-                .GetProperties()
-                .Where(PropertyInfoExtensions.IsPublicReadWrite)
-                .ToList();
-        }
-
-        private List<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType)
-        {
-            var linkedSourceModelType = linkedSourceType
-                .GetProperty("Model")
-                .PropertyType;
-
-            return linkedSourceModelType
-                .GetProperties()
-                .ToList();
+            //stle: better error handling
         }
 
         #region ApplySingleValueConvention
-        private void ApplySingleValueConvention(ISingleValueConvention singleValueConvention, LoadLinkProtocolBuilder loadLinkProtocolBuilder, Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {
+        private void ApplySingleValueConvention(ConventionMatch match) {
             var method = GetType().GetMethod("ApplySingleValueConventionGeneric");
             var genericMethod = method.MakeGenericMethod(
-                linkedSourceType,
-                linkTargetProperty.PropertyType,
-                linkedSourceModelProperty.PropertyType
+                match.LinkedSourceType,
+                match.LinkTargetProperty.PropertyType,
+                match.LinkedSourceModelProperty.PropertyType
             );
 
-            genericMethod.Invoke(null, new object[]{
-                singleValueConvention,
-                loadLinkProtocolBuilder,
-                linkTargetProperty,
-                linkedSourceModelProperty
-            });
+            genericMethod.Invoke(this, new object[] { match });
         }
 
-        public static void ApplySingleValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            ISingleValueConvention convention,
-            LoadLinkProtocolBuilder loadLinkProtocolBuilder,
-            PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty) {
+        public void ApplySingleValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match)
+        {
             var getLinkTargetProperty = FuncGenerator.
                 GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
-                    linkTargetProperty.Name
+                    match.LinkTargetProperty.Name
                 );
             var getLinkedSourceModelProperty = FuncGenerator
                 .GenerateFromGetter<TLinkedSource, TLinkedSourceModelProperty>(
-                    string.Format("Model.{0}", linkedSourceModelProperty.Name)
+                    string.Format("Model.{0}", match.LinkedSourceModelProperty.Name)
                 );
 
-            convention.Apply(
-                loadLinkProtocolBuilder.For<TLinkedSource>(),
+            var casted = (ISingleValueConvention) match.Convention;
+            casted.Apply(
+                _loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,
                 getLinkedSourceModelProperty,
-                linkTargetProperty,
-                linkedSourceModelProperty
+                match.LinkTargetProperty,
+                match.LinkedSourceModelProperty
             );
         } 
         #endregion
 
         #region ApplyMultiValueConvention
-        private void ApplyMultiValueConvention(IMultiValueConvention multiValueConvention, LoadLinkProtocolBuilder loadLinkProtocolBuilder, Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {
+        private void ApplyMultiValueConvention(ConventionMatch match) {
             var method = GetType().GetMethod("ApplyMultiValueConventionGeneric");
 
             var genericMethod = method.MakeGenericMethod(
-                linkedSourceType,
-                linkTargetProperty.PropertyType.GenericTypeArguments.Single(),
-                linkedSourceModelProperty.PropertyType.GenericTypeArguments.Single()
+                match.LinkedSourceType,
+                match.LinkTargetProperty.PropertyType.GenericTypeArguments.Single(),
+                match.LinkedSourceModelProperty.PropertyType.GenericTypeArguments.Single()
             );
 
-            genericMethod.Invoke(null, new object[]{
-                multiValueConvention,
-                loadLinkProtocolBuilder,
-                linkTargetProperty,
-                linkedSourceModelProperty
-            });
+            genericMethod.Invoke(this, new object[] { match });
         }
 
-        public static void ApplyMultiValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            IMultiValueConvention convention,
-            LoadLinkProtocolBuilder loadLinkProtocolBuilder,
-            PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty) {
+        public void ApplyMultiValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match)
+         {
             var getLinkTargetProperty = FuncGenerator.
                 GenerateFromGetterAsExpression<TLinkedSource, List<TLinkTargetProperty>>(
-                    linkTargetProperty.Name
+                    match.LinkTargetProperty.Name
                 );
             var getLinkedSourceModelProperty = FuncGenerator
                 .GenerateFromGetter<TLinkedSource, List<TLinkedSourceModelProperty>>(
-                    string.Format("Model.{0}", linkedSourceModelProperty.Name)
+                    string.Format("Model.{0}", match.LinkedSourceModelProperty.Name)
                 );
 
-            convention.Apply(
-                loadLinkProtocolBuilder.For<TLinkedSource>(),
+            var casted = (IMultiValueConvention)match.Convention;
+            casted.Apply(
+                _loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,
                 getLinkedSourceModelProperty,
-                linkTargetProperty,
-                linkedSourceModelProperty
+                match.LinkTargetProperty,
+                match.LinkedSourceModelProperty
             );
         } 
         #endregion
 
-        private void ApplyIdIsNullableValueTypeConvention(
-            INullableValueTypeIdConvention nullableValueTypeIdConvention, 
-            LoadLinkProtocolBuilder loadLinkProtocolBuilder, 
-            Type linkedSourceType, 
-            PropertyInfo linkTargetProperty, 
-            PropertyInfo linkedSourceModelProperty) 
-        {
-            var method = GetType().GetMethod("ApplyIdIsNullableValueTypeConventionGeneric");
+        #region ApplyNullableValueTypeIdConvention
+        private void ApplyNullableValueTypeIdConvention(ConventionMatch match) {
+            var method = GetType().GetMethod("ApplyNullableValueTypeIdConventionGeneric");
             var genericMethod = method.MakeGenericMethod(
-                linkedSourceType,
-                linkTargetProperty.PropertyType,
-                Nullable.GetUnderlyingType(linkedSourceModelProperty.PropertyType)
+                match.LinkedSourceType,
+                match.LinkTargetProperty.PropertyType,
+                Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType)
             );
 
-            genericMethod.Invoke(null, new object[]{
-                nullableValueTypeIdConvention,
-                loadLinkProtocolBuilder,
-                linkTargetProperty,
-                linkedSourceModelProperty
-            });
+            genericMethod.Invoke(this, new object[] { match });
         }
 
-        public static void ApplyIdIsNullableValueTypeConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            INullableValueTypeIdConvention nullableValueTypeIdConvention, 
-            LoadLinkProtocolBuilder loadLinkProtocolBuilder,
-            PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty
-        ) 
-            where TLinkedSourceModelProperty:struct
-        {
+        public void ApplyNullableValueTypeIdConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match)
+            where TLinkedSourceModelProperty : struct {
             var getLinkTargetProperty = FuncGenerator.
                 GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
-                    linkTargetProperty.Name
+                    match.LinkTargetProperty.Name
                 );
             var getLinkedSourceModelProperty = FuncGenerator
                 .GenerateFromGetter<TLinkedSource, TLinkedSourceModelProperty?>(
-                    string.Format("Model.{0}", linkedSourceModelProperty.Name)
+                    string.Format("Model.{0}", match.LinkedSourceModelProperty.Name)
                 );
 
-            nullableValueTypeIdConvention.Apply(
-                loadLinkProtocolBuilder.For<TLinkedSource>(),
+            var casted = (INullableValueTypeIdConvention)match.Convention;
+            casted.Apply(
+                _loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,
                 getLinkedSourceModelProperty,
-                linkTargetProperty,
-                linkedSourceModelProperty
+                match.LinkTargetProperty,
+                match.LinkedSourceModelProperty
             );
-        }
+        } 
+        #endregion
     }
 }

@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FindAllConventionMatchesQuery.cs" />
     <Compile Include="ApplyLoadLinkConventionCommand.cs" />
+    <Compile Include="ConventionMatch.cs" />
     <Compile Include="DefaultConventions\LoadLinkMultiValueReferencesWhenIdSuffixMatches.cs" />
     <Compile Include="DefaultConventions\LoadLinkNullableValueTypeIdWhenIdSuffixMatches.cs" />
     <Compile Include="FuncGenerator.cs" />
