@@ -65,7 +65,20 @@ namespace HeterogeneousDataSource.Conventions {
                 return false;
             }
 
-            return match.Convention.DoesApply(match.LinkTargetProperty, match.LinkedSourceModelProperty);
+            try{
+                return match.Convention.DoesApply(match.LinkTargetProperty, match.LinkedSourceModelProperty);
+            }
+            catch (Exception ex){
+                throw new Exception(
+                    string.Format(
+                        "The convention \"{0}\" failed for DoesApply({1},Model.{2})",
+                        match.Convention.Name,
+                        match.LinkTargetProperty.GetLinkTargetId(),
+                        match.LinkedSourceModelProperty.Name
+                    ),
+                    ex
+                ); 
+            }
         }
 
         private Type GetPossibleConventionType(ConventionMatch match) {

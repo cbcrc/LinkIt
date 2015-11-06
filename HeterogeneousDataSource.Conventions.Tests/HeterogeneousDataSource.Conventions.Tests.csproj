@@ -65,6 +65,7 @@
     <Compile Include="DefaultConventions\LoadLinkMultiValueSubLinkedSourceWhenNameMatchesTests.cs" />
     <Compile Include="DefaultConventions\LoadLinkSingleValueSubLinkedSourceWhenNameMatchesTests.cs" />
     <Compile Include="DefaultConventions\LoadLinkSingleValueWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="LoadLinkProtocolBuilderExtensions_ConventionErrorHandlingTests.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -15,7 +15,7 @@ namespace HeterogeneousDataSources
             PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
 
             return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(
-                GetLinkTargetId<TLinkedSource>(property),
+                property.GetLinkTargetId(),
                 CreateSingleValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
         }
@@ -35,7 +35,7 @@ namespace HeterogeneousDataSources
             PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
 
             return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(
-                GetLinkTargetId<TLinkedSource>(property),
+                property.GetLinkTargetId(),
                 linkTargetGetterFunc.Compile(),
                 CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
@@ -73,7 +73,7 @@ namespace HeterogeneousDataSources
                 throw new ArgumentException(
                     string.Format(
                         "{0}: Only read-write property are supported",
-                        GetLinkTargetId<TLinkedSource>(property)
+                        property.GetLinkTargetId()
                     )
                 );
             }
@@ -104,15 +104,6 @@ namespace HeterogeneousDataSources
                     "{0}: Only direct getter are supported. Ex: p => p.Property",
                     typeof(TLinkedSource)
                 )
-            );
-        }
-
-        private static string GetLinkTargetId<TLinkedSource>(PropertyInfo property)
-        {
-            return string.Format(
-                "{0}/{1}",
-                typeof (TLinkedSource),
-                property.Name
             );
         }
         #endregion
