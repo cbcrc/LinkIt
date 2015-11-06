@@ -61,10 +61,22 @@ namespace HeterogeneousDataSource.Conventions
                     linkedSourceModelProperty
                 );
             }
+
             if (convention is IMultiValueConvention) {
                 //stle: have a type for params?
                 ApplyMultiValueConvention(
                     (IMultiValueConvention)convention,
+                    _loadLinkProtocolBuilder,
+                    linkedSourceType,
+                    linkTargetProperty,
+                    linkedSourceModelProperty
+                );
+            }
+
+            if (convention is INullableValueTypeIdConvention) {
+                //stle: have a type for params?
+                ApplyIdIsNullableValueTypeConvention(
+                    (INullableValueTypeIdConvention)convention,
                     _loadLinkProtocolBuilder,
                     linkedSourceType,
                     linkTargetProperty,
@@ -76,7 +88,7 @@ namespace HeterogeneousDataSource.Conventions
         public static Type GetPossibleConventionType(PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {
             if (Nullable.GetUnderlyingType(linkedSourceModelProperty.PropertyType) != null)
             {
-                throw new NotImplementedException("STLE: todo");
+                return typeof(INullableValueTypeIdConvention);
             }
 
             if (linkTargetProperty.PropertyType.IsGenericType &&
@@ -186,6 +198,50 @@ namespace HeterogeneousDataSource.Conventions
         } 
         #endregion
 
-        
+        private void ApplyIdIsNullableValueTypeConvention(
+            INullableValueTypeIdConvention nullableValueTypeIdConvention, 
+            LoadLinkProtocolBuilder loadLinkProtocolBuilder, 
+            Type linkedSourceType, 
+            PropertyInfo linkTargetProperty, 
+            PropertyInfo linkedSourceModelProperty) 
+        {
+            var method = GetType().GetMethod("ApplyIdIsNullableValueTypeConventionGeneric");
+            var genericMethod = method.MakeGenericMethod(
+                linkedSourceType,
+                linkTargetProperty.PropertyType,
+                Nullable.GetUnderlyingType(linkedSourceModelProperty.PropertyType)
+            );
+
+            genericMethod.Invoke(null, new object[]{
+                nullableValueTypeIdConvention,
+                loadLinkProtocolBuilder,
+                linkTargetProperty,
+                linkedSourceModelProperty
+            });
+        }
+
+        public static void ApplyIdIsNullableValueTypeConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
+            INullableValueTypeIdConvention nullableValueTypeIdConvention, 
+            LoadLinkProtocolBuilder loadLinkProtocolBuilder,
+            PropertyInfo linkTargetProperty,
+            PropertyInfo linkedSourceModelProperty
+        ) 
+            where TLinkedSourceModelProperty:struct
+        {
+            var getLinkTargetProperty = FuncGenerator.
+                GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
+                    linkTargetProperty.Name
+                );
+            var getLinkedSourceModelProperty = FuncGenerator
+                .GenerateFromGetter<TLinkedSource, TLinkedSourceModelProperty?>(
+                    string.Format("Model.{0}", linkedSourceModelProperty.Name)
+                );
+
+            nullableValueTypeIdConvention.Apply(
+                loadLinkProtocolBuilder.For<TLinkedSource>(),
+                getLinkTargetProperty,
+                getLinkedSourceModelProperty
+            );
+        }
     }
 }
