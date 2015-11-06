@@ -7,7 +7,6 @@ namespace HeterogeneousDataSources
     public class LoadLinker<TRootLinkedSource, TExpectedRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
         where TRootLinkedSource : class, ILinkedSource<TExpectedRootLinkedSourceModel>, new() 
     {
-        //stle: handle dispose in using!
         private readonly IReferenceLoader _referenceLoader;
         private readonly List<List<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
         private readonly LoadLinkConfig _config;

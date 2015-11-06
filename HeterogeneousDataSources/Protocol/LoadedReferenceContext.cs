@@ -9,25 +9,11 @@ namespace HeterogeneousDataSources {
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
         public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
-            var tReference = typeof (TReference);
-            if (_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "All references of the same type ({0}) must be loaded at the same time.",
-                        tReference.Name
-                    )
-                );
+            foreach (var reference in references){
+                AddReference(reference, getReferenceIdFunc(reference));
             }
-
-            var referenceDictionnary = references.ToDictionary(
-                keySelector: getReferenceIdFunc,
-                elementSelector: reference => reference 
-            );
-
-            _referenceDictionaryByReferenceType[tReference] = referenceDictionnary;
         }
 
-        //stle: temporary work around for image, fix the root cause by solving the query vs id problem
         public void AddReference<TReference, TId>(TReference reference, TId id) {
             var tReference = typeof(TReference);
             if (!_referenceDictionaryByReferenceType.ContainsKey(tReference)) {

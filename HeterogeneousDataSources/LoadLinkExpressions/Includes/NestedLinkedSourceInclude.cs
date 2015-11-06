@@ -33,7 +33,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         }
 
         public TIChildLinkedSource CreateNestedLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
-            //stle: dry with other load link expressions
             var lookupId = _getLookupIdFunc(link);
             var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
             var childLinkedSource = loadedReferenceContext
@@ -56,7 +55,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config)
         {
-            //stle: dry
             var referenceTree = new ReferenceTree(
                 ReferenceType,
                 linkTargetId,

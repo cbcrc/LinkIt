@@ -72,7 +72,6 @@ namespace HeterogeneousDataSources.Tests {
 
     public class SingleReferenceLinkedSource: ILinkedSource<SingleReferenceContent>
     {
-        //stle: two steps loading sucks!
         public SingleReferenceContent Model { get; set; }
         public Image SummaryImage{ get; set; }
     }

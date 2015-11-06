@@ -15,29 +15,6 @@ namespace HeterogeneousDataSources
                 property.GetSetMethod(false)!=null;
         }
 
-        //stle: move in convention?
-        public static bool MatchLinkedSourceModelPropertyName(this PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, string suffix)
-        {
-            return MatchLinkedSourceModelPropertyName(
-                linkTargetProperty.Name, 
-                linkedSourceModelProperty.Name, 
-                suffix
-            );
-        }
-
-        public static bool MatchLinkedSourceModelPropertyName(this PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, string suffix, string lastCharacterToIgnore) {
-            if (!linkTargetProperty.Name.EndsWith(lastCharacterToIgnore) ||
-                !linkedSourceModelProperty.Name.EndsWith(lastCharacterToIgnore)) {
-                return false;
-            }
-
-            return MatchLinkedSourceModelPropertyName(
-                RemoveLastCharacter(linkTargetProperty, lastCharacterToIgnore),
-                RemoveLastCharacter(linkedSourceModelProperty, lastCharacterToIgnore),
-                suffix
-            );
-        }
-
         private static bool MatchLinkedSourceModelPropertyName(string linkTargetPropertyName, string linkedSourceModelPropertyName, string suffix) {
             return linkTargetPropertyName + suffix == linkedSourceModelPropertyName;
         }
@@ -53,7 +30,5 @@ namespace HeterogeneousDataSources
                 property.Name
             );
         }
-
-
     }
 }

@@ -4,11 +4,9 @@ using System.Linq;
 
 namespace HeterogeneousDataSources
 {
-    //stle: this may become a builder
     public class LookupIdContext
     {
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
-
 
         public void AddSingle<TReference, TId>(TId lookupId) {
             if (lookupId == null) { return; }

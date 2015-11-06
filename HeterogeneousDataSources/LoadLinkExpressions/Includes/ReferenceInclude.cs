@@ -16,10 +16,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public Type ReferenceType { get; private set; }
 
-        //stle: really, does not make sense for reference
-        public Type ChildLinkedSourceType { get { return null; } }
-
-        //stle: dry with linked source
         public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
         {
             var lookupId = _getLookupIdFunc(link);
@@ -27,15 +23,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         }
 
         public TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext) {
-            //stle: dry with other load link expressions
             var lookupId = _getLookupIdFunc(link);
             return loadedReferenceContext.GetOptionalReference<TReference, TId>(lookupId);
         }
 
-
-        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config)
-        {
-            //stle: dry
+        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config){
             new ReferenceTree(
                 ReferenceType, 
                 linkTargetId, 

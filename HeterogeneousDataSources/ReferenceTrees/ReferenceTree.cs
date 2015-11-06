@@ -6,7 +6,6 @@ namespace HeterogeneousDataSources {
     public class ReferenceTree{
         private readonly ReferenceTree _parent;
 
-        //stle: review linkTargetId
         public ReferenceTree(Type referenceType, string linkTargetId, ReferenceTree parent){
             Node = new ReferenceToLoad(referenceType, linkTargetId);
             Children = new List<ReferenceTree>();
