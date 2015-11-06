@@ -40,7 +40,9 @@ namespace HeterogeneousDataSource.Conventions
             return new List<ILoadLinkExpressionConvention>{
                 new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches(),
                 new LoadLinkMultiValueWhenIdSuffixMatches(),
-                new LoadLinkSingleValueWhenIdSuffixMatches()
+                new LoadLinkSingleValueWhenIdSuffixMatches(),
+                new LoadLinkMultiValueSubLinkedSourceWhenNameMatches(),
+                new LoadLinkSingleValueSubLinkedSourceWhenNameMatches(),
             };
         }
 

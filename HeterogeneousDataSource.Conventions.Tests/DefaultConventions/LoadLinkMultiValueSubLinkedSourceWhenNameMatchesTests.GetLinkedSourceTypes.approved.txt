@@ -1,0 +1,35 @@
+﻿{
+  "model": {
+    "id": "One",
+    "listOfMedia": [
+      {
+        "id": 1,
+        "title": null,
+        "summaryImageId": null
+      },
+      {
+        "id": 2,
+        "title": null,
+        "summaryImageId": null
+      }
+    ]
+  },
+  "listOfMedia": [
+    {
+      "model": {
+        "id": 1,
+        "title": null,
+        "summaryImageId": null
+      },
+      "summaryImage": null
+    },
+    {
+      "model": {
+        "id": 2,
+        "title": null,
+        "summaryImageId": null
+      },
+      "summaryImage": null
+    }
+  ]
+}
