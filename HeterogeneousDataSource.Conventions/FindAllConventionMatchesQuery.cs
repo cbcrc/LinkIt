@@ -44,6 +44,7 @@ namespace HeterogeneousDataSource.Conventions {
         private List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType) {
             return linkedSourceType
                 .GetProperties()
+                .Where(property=>property.Name != "Model")
                 .Where(PropertyInfoExtensions.IsPublicReadWrite)
                 .ToList();
         }

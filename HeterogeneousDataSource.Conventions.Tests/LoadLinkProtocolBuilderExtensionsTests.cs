@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
@@ -14,7 +15,7 @@ namespace HeterogeneousDataSource.Conventions.Tests
     [TestFixture]
     public class LoadLinkProtocolBuilderExtensionsTests {
         [Test]
-        public void GetLinkedSourceTypes(){
+        public void ApplyConventions_ShouldMatchExpectedLinkTargets(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             var conventionStub = new ConventionStub();
             
@@ -28,6 +29,23 @@ namespace HeterogeneousDataSource.Conventions.Tests
                 Is.EquivalentTo(new[] { "Image", "Person" })
             );
         }
+
+        [Test]
+        public void ApplyConventions_ShouldFilterModelOutWhenMatchingLinkTarget() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            var conventionStub = new ConventionStub();
+
+            loadLinkProtocolBuilder.ApplyConventions(
+                new List<Type> { typeof(LinkedSourceWithImage)},
+                new List<ILoadLinkExpressionConvention> { conventionStub }
+            );
+
+            Assert.That(
+                conventionStub.DidAttemptToMatchModelAsLinkTarget,
+                Is.False
+            );
+        }
+
 
         public class LinkedSourceWithImage : ILinkedSource<Model>{
             public Model Model { get; set; }
@@ -56,6 +74,10 @@ namespace HeterogeneousDataSource.Conventions.Tests
                 PropertyInfo linkTargetProperty, 
                 PropertyInfo linkedSourceModelProperty)
             {
+                if (linkTargetProperty.Name == "Model"){
+                    DidAttemptToMatchModelAsLinkTarget = true;
+                }
+
                 var matchingName = linkTargetProperty.Name + "Id";
                 return matchingName == linkedSourceModelProperty.Name;
             }
@@ -66,6 +88,8 @@ namespace HeterogeneousDataSource.Conventions.Tests
             {
                 LinkTargetPropertyNamesWhereConventionApplies.Add(linkTargetProperty.Name);
             }
+
+            public bool DidAttemptToMatchModelAsLinkTarget { get; private set; }
         }
     }
 }
