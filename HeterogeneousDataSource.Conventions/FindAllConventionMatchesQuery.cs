@@ -69,14 +69,11 @@ namespace HeterogeneousDataSource.Conventions {
 
         private Type GetPossibleConventionType(ConventionMatch match) {
             if (Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType) != null) {
-                return typeof(INullableValueTypeIdConvention);
+                return typeof(IByNullableValueTypeIdConvention);
             }
-
-            if (match.LinkTargetProperty.PropertyType.IsGenericType &&
-                match.LinkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) {
+            if (match.LinkTargetProperty.IsGenericList()) {
                 return typeof(IMultiValueConvention);
             }
-
             return typeof(ISingleValueConvention);
         }
     }

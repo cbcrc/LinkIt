@@ -1,0 +1,14 @@
+﻿{
+  "model": {
+    "id": "One",
+    "mediaId": 1
+  },
+  "media": {
+    "model": {
+      "id": 1,
+      "title": "title-1",
+      "summaryImageId": "img1"
+    },
+    "summaryImage": null
+  }
+}

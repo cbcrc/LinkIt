@@ -65,11 +65,6 @@ namespace HeterogeneousDataSources.Tests
             public MediaLinkedSource Media { get; set; }
         }
 
-        public class MediaLinkedSource : ILinkedSource<Media> {
-            public Media Model { get; set; }
-            public Image SummaryImage { get; set; }
-        }
-
         public class Model {
             public string Id { get; set; }
             public int? MediaId { get; set; }

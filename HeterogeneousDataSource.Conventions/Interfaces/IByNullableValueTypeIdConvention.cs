@@ -5,7 +5,7 @@ using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions.Interfaces
 {
-    public interface INullableValueTypeIdConvention : ILoadLinkExpressionConvention
+    public interface IByNullableValueTypeIdConvention : ILoadLinkExpressionConvention
     {
         void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,

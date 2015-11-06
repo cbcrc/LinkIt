@@ -39,15 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultConventions\LoadLinkMultiValueNestedLinkedSourceWhenIdSuffixMatches.cs" />
+    <Compile Include="DefaultConventions\LoadLinkNestedLinkedSourceByNullableValueTypeIdWhenIdSuffixMatches.cs" />
+    <Compile Include="DefaultConventions\LoadLinkSingleValueNestedLinkedSourceWhenIdSuffixMatches.cs" />
     <Compile Include="FindAllConventionMatchesQuery.cs" />
     <Compile Include="ApplyLoadLinkConventionCommand.cs" />
     <Compile Include="ConventionMatch.cs" />
     <Compile Include="DefaultConventions\LoadLinkMultiValueReferencesWhenIdSuffixMatches.cs" />
-    <Compile Include="DefaultConventions\LoadLinkNullableValueTypeIdWhenIdSuffixMatches.cs" />
+    <Compile Include="DefaultConventions\LoadLinkReferenceByNullableValueTypeIdWhenIdSuffixMatches.cs" />
     <Compile Include="FuncGenerator.cs" />
     <Compile Include="DefaultConventions\LoadLinkSingleValueReferenceWhenIdSuffixMatches.cs" />
     <Compile Include="Interfaces\IMultiValueConvention.cs" />
-    <Compile Include="Interfaces\INullableValueTypeIdConvention.cs" />
+    <Compile Include="Interfaces\IByNullableValueTypeIdConvention.cs" />
     <Compile Include="Interfaces\ISingleValueConvention.cs" />
     <Compile Include="Interfaces\ILoadLinkExpressionConvention.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensions.cs" />

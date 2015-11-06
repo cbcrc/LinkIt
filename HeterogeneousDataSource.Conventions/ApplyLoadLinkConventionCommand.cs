@@ -26,7 +26,7 @@ namespace HeterogeneousDataSource.Conventions
         private void ApplyConvention(ConventionMatch match) {
             if (match.Convention is ISingleValueConvention) { ApplySingleValueConvention(match); }
             if (match.Convention is IMultiValueConvention) { ApplyMultiValueConvention(match); }
-            if (match.Convention is INullableValueTypeIdConvention) { ApplyNullableValueTypeIdConvention(match); }
+            if (match.Convention is IByNullableValueTypeIdConvention) { ApplyNullableValueTypeIdConvention(match); }
 
             //stle: better error handling
         }
@@ -123,7 +123,7 @@ namespace HeterogeneousDataSource.Conventions
                     string.Format("Model.{0}", match.LinkedSourceModelProperty.Name)
                 );
 
-            var casted = (INullableValueTypeIdConvention)match.Convention;
+            var casted = (IByNullableValueTypeIdConvention)match.Convention;
             casted.Apply(
                 _loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkTargetProperty,

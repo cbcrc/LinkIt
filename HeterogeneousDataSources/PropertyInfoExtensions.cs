@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using HeterogeneousDataSource.Conventions;
 
@@ -59,5 +60,25 @@ namespace HeterogeneousDataSources
         private static string RemoveLastCharacter(PropertyInfo property, string lastCharacterToIgnore){
             return property.Name.Remove(property.Name.Length - lastCharacterToIgnore.Length);
         }
+
+        public static bool IsLinkedSource(this PropertyInfo linkTargetProperty){
+            return LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(linkTargetProperty.PropertyType);
+        }
+
+        public static bool IsListOfLinkedSource(this PropertyInfo linkTargetProperty)
+        {
+            if (!linkTargetProperty.IsGenericList()) { return false; }
+
+            return LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(
+                linkTargetProperty.PropertyType.GetGenericArguments().Single()
+            );
+        }
+
+        public static bool IsGenericList(this PropertyInfo linkTargetProperty) {
+            if (!linkTargetProperty.PropertyType.IsGenericType) { return false; }
+
+            return linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>);
+        }
+
     }
 }

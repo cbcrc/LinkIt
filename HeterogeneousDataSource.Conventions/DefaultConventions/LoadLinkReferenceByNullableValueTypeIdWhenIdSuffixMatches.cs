@@ -5,11 +5,13 @@ using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
-    public class LoadLinkNullableValueTypeIdWhenIdSuffixMatches : INullableValueTypeIdConvention {
+    public class LoadLinkReferenceByNullableValueTypeIdWhenIdSuffixMatches : IByNullableValueTypeIdConvention {
         public bool DoesApply(
             PropertyInfo linkTargetProperty,
             PropertyInfo linkedSourceModelProperty) 
         {
+            if (linkTargetProperty.IsLinkedSource()) { return false; }
+
             return linkTargetProperty.MatchLinkedSourceModelPropertyName(linkedSourceModelProperty, "Id");
         }
 
