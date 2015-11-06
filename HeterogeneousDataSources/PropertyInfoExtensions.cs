@@ -61,19 +61,7 @@ namespace HeterogeneousDataSources
             return property.Name.Remove(property.Name.Length - lastCharacterToIgnore.Length);
         }
 
-        public static bool IsLinkedSource(this PropertyInfo linkTargetProperty){
-            return LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(linkTargetProperty.PropertyType);
-        }
-
-        public static bool IsListOfLinkedSource(this PropertyInfo linkTargetProperty)
-        {
-            if (!linkTargetProperty.IsGenericList()) { return false; }
-
-            return LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(
-                linkTargetProperty.PropertyType.GetGenericArguments().Single()
-            );
-        }
-
+        //stle: move out
         public static bool IsGenericList(this PropertyInfo linkTargetProperty) {
             if (!linkTargetProperty.PropertyType.IsGenericType) { return false; }
 

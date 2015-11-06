@@ -13,16 +13,16 @@ namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class LoadLinkNestedLinkedSourceByNullableValueTypeIdWhenIdSuffixMatchesTests {
+    public class LoadLinkSingleValueWhenIdSuffixMatchesTests {
         [Test]
         public void GetLinkedSourceTypes(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkNestedLinkedSourceByNullableValueTypeIdWhenIdSuffixMatches() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkSingleValueWhenIdSuffixMatches() }
             );
-            
+
             var fakeReferenceLoader =
                 new FakeReferenceLoader<Model, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
@@ -30,7 +30,8 @@ namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
             var actual = sut.LoadLink<LinkedSource>().FromModel(
                 new Model{
                     Id="One",
-                    MediaId = 3
+                    MediaReferenceId = 1,
+                    MediaNestedLinkedSourceId = 2
                 }
             );
 
@@ -39,12 +40,14 @@ namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
 
         public class LinkedSource : ILinkedSource<Model> {
             public Model Model { get; set; }
-            public MediaLinkedSource Media { get; set; }
+            public Media MediaReference { get; set; }
+            public MediaLinkedSource MediaNestedLinkedSource { get; set; }
         }
 
         public class Model{
             public string Id { get; set; }
-            public int? MediaId { get; set; }
+            public int MediaReferenceId { get; set; }
+            public int MediaNestedLinkedSourceId { get; set; }
         }
     }
 }

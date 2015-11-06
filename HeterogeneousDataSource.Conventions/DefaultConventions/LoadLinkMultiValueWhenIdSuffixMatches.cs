@@ -6,13 +6,11 @@ using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
-    public class LoadLinkMultiValueReferencesWhenIdSuffixMatches : IMultiValueConvention {
+    public class LoadLinkMultiValueWhenIdSuffixMatches : IMultiValueConvention {
         public bool DoesApply(
             PropertyInfo linkTargetProperty,
             PropertyInfo linkedSourceModelProperty) 
         {
-            if (linkTargetProperty.IsListOfLinkedSource()) { return false; }
-
             return linkTargetProperty.MatchLinkedSourceModelPropertyName(linkedSourceModelProperty, "Id", "s");
         }
 
@@ -23,10 +21,18 @@ namespace HeterogeneousDataSource.Conventions.DefaultConventions {
             PropertyInfo linkTargetProperty, 
             PropertyInfo linkedSourceModelProperty)
         {
-            loadLinkProtocolForLinkedSourceBuilder.LoadLinkReference(
-                getLinkedSourceModelProperty,
-                getLinkTargetProperty
-            );
+            if (LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(typeof(TLinkTargetProperty))) {
+                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSource(
+                    getLinkedSourceModelProperty,
+                    getLinkTargetProperty
+                );
+            }
+            else {
+                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReference(
+                    getLinkedSourceModelProperty,
+                    getLinkTargetProperty
+                );
+            }
         }
     }
 }

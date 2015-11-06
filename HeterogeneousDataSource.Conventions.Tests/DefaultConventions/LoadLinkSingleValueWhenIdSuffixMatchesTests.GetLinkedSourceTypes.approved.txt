@@ -1,0 +1,20 @@
+﻿{
+  "model": {
+    "id": "One",
+    "mediaReferenceId": 1,
+    "mediaNestedLinkedSourceId": 2
+  },
+  "mediaReference": {
+    "id": 1,
+    "title": "title-1",
+    "summaryImageId": "img1"
+  },
+  "mediaNestedLinkedSource": {
+    "model": {
+      "id": 2,
+      "title": "title-2",
+      "summaryImageId": "img2"
+    },
+    "summaryImage": null
+  }
+}

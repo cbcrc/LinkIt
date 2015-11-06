@@ -60,12 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultConventions\LoadLinkMultiValueNestedLinkedSourceWhenIdSuffixMatchesTests.cs" />
-    <Compile Include="DefaultConventions\LoadLinkNestedLinkedSourceByNullableValueTypeIdWhenIdSuffixMatchesTests.cs" />
-    <Compile Include="DefaultConventions\LoadLinkReferenceByNullableValueTypeIdWhenIdSuffixMatchesTests.cs" />
-    <Compile Include="DefaultConventions\LoadLinkMultiValueReferencesWhenIdSuffixMatchesTests.cs" />
-    <Compile Include="DefaultConventions\LoadLinkSingleValueNestedLinkedSourceWhenIdSuffixMatchesTests.cs" />
-    <Compile Include="DefaultConventions\LoadLinkSingleValueReferenceWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="DefaultConventions\LoadLinkByNullableValueTypeIdWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="DefaultConventions\LoadLinkMultiValueWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="DefaultConventions\LoadLinkSingleValueWhenIdSuffixMatchesTests.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

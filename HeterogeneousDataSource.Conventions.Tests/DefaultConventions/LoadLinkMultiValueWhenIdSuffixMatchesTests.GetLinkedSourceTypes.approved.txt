@@ -1,0 +1,43 @@
+﻿{
+  "model": {
+    "id": "One",
+    "mediaReferenceIds": [
+      1,
+      11
+    ],
+    "mediaNestedLinkedSourceIds": [
+      2,
+      22
+    ]
+  },
+  "mediaReferences": [
+    {
+      "id": 1,
+      "title": "title-1",
+      "summaryImageId": "img1"
+    },
+    {
+      "id": 11,
+      "title": "title-11",
+      "summaryImageId": "img11"
+    }
+  ],
+  "mediaNestedLinkedSources": [
+    {
+      "model": {
+        "id": 2,
+        "title": "title-2",
+        "summaryImageId": "img2"
+      },
+      "summaryImage": null
+    },
+    {
+      "model": {
+        "id": 22,
+        "title": "title-22",
+        "summaryImageId": "img22"
+      },
+      "summaryImage": null
+    }
+  ]
+}

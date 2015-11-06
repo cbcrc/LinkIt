@@ -4,7 +4,6 @@ using ApprovalTests.Reporters;
 using HeterogeneousDataSource.Conventions.DefaultConventions;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
-using HeterogeneousDataSources.Tests;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -13,16 +12,16 @@ namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class LoadLinkMultiValueNestedLinkedSourceWhenIdSuffixMatchesTests {
+    public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatchesTests {
         [Test]
         public void GetLinkedSourceTypes(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkMultiValueNestedLinkedSourceWhenIdSuffixMatches() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches() }
             );
-
+            
             var fakeReferenceLoader =
                 new FakeReferenceLoader<Model, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
@@ -30,7 +29,8 @@ namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
             var actual = sut.LoadLink<LinkedSource>().FromModel(
                 new Model{
                     Id="One",
-                    MediaIds = new List<int>{1,2}
+                    MediaReferenceId = 1,
+                    MediaNestedLinkedSourceId = 2
                 }
             );
 
@@ -39,12 +39,14 @@ namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
 
         public class LinkedSource : ILinkedSource<Model> {
             public Model Model { get; set; }
-            public List<MediaLinkedSource> Medias { get; set; }
+            public Media MediaReference { get; set; }
+            public Media MediaNestedLinkedSource { get; set; }
         }
 
         public class Model{
             public string Id { get; set; }
-            public List<int> MediaIds { get; set; }
+            public int? MediaReferenceId { get; set; }
+            public int? MediaNestedLinkedSourceId { get; set; }
         }
     }
 }
