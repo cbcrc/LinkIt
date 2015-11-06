@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="DefaultConventions\LoadLinkByNullableValueTypeIdWhenIdSuffixMatchesTests.cs" />
     <Compile Include="DefaultConventions\LoadLinkMultiValueWhenIdSuffixMatchesTests.cs" />
+    <Compile Include="DefaultConventions\LoadLinkSingleValueSubLinkedSourceWhenNameMatchesTests.cs" />
     <Compile Include="DefaultConventions\LoadLinkSingleValueWhenIdSuffixMatchesTests.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

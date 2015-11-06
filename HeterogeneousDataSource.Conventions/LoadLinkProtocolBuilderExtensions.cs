@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HeterogeneousDataSource.Conventions.DefaultConventions;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
 
@@ -37,7 +38,9 @@ namespace HeterogeneousDataSource.Conventions
 
         public static List<ILoadLinkExpressionConvention> GetDefaultConventions(this LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
             return new List<ILoadLinkExpressionConvention>{
-                //stle: todo
+                new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches(),
+                new LoadLinkMultiValueWhenIdSuffixMatches(),
+                new LoadLinkSingleValueWhenIdSuffixMatches()
             };
         }
 

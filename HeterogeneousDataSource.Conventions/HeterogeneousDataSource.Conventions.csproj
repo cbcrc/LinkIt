@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultConventions\LoadLinkSingleValueSubLinkedSourceWhenNameMatches.cs" />
     <Compile Include="FindAllConventionMatchesQuery.cs" />
     <Compile Include="ApplyLoadLinkConventionCommand.cs" />
     <Compile Include="ConventionMatch.cs" />
