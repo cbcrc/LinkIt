@@ -46,6 +46,37 @@ namespace HeterogeneousDataSource.Conventions.Tests
             );
         }
 
+        [Test]
+        public void ApplyConventions_DuplicateConventions_ShouldThrow() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+
+            TestDelegate act = () => loadLinkProtocolBuilder.ApplyConventions(
+                new List<Type> { typeof(LinkedSourceWithImage) },
+                new List<ILoadLinkExpressionConvention>{
+                    new ConventionStub("same-name"),
+                    new ConventionStub("same-name")
+                }
+            );
+
+            Assert.That(act, Throws.ArgumentException
+                .With.Message.ContainsSubstring("with the same name")
+                .With.Message.ContainsSubstring("same-name")
+            );
+        }
+
+        [Test]
+        public void ApplyConventions_ParameterizableConventions_ShouldNotThrow() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+
+            loadLinkProtocolBuilder.ApplyConventions(
+                new List<Type> { typeof(LinkedSourceWithImage) },
+                new List<ILoadLinkExpressionConvention>{
+                    new ConventionStub("same-name"),
+                    new ConventionStub("different-name")
+                }
+            );
+        }
+
 
         public class LinkedSourceWithImage : ILinkedSource<Model>{
             public Model Model { get; set; }
@@ -67,9 +98,18 @@ namespace HeterogeneousDataSource.Conventions.Tests
 
         public class ConventionStub:ISingleValueConvention
         {
+            public ConventionStub(string name=null)
+            {
+                Name = name??"Convention stub";
+            }
+
+            public string Name { get; private set; }
+
             public readonly List<string> LinkTargetPropertyNamesWhereConventionApplies = new List<string>();
 
             public string Id { get { return "Stub"; } }
+            
+
             public bool DoesApply(
                 PropertyInfo linkTargetProperty, 
                 PropertyInfo linkedSourceModelProperty)

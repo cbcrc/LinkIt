@@ -6,6 +6,10 @@ using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
     public class LoadLinkSingleValueSubLinkedSourceWhenNameMatches : ISingleValueConvention {
+        public string Name {
+            get { return "Load link single value sub linked source when name matches"; }
+        }
+
         public bool DoesApply(
             PropertyInfo linkTargetProperty,
             PropertyInfo linkedSourceModelProperty) 

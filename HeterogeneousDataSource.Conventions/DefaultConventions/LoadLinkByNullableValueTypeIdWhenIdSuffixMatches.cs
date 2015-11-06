@@ -6,6 +6,10 @@ using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
     public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatches : IByNullableValueTypeIdConvention {
+        public string Name{
+            get { return "Load link by nullable value type id when id suffix matches"; } 
+        }
+
         public bool DoesApply(
             PropertyInfo linkTargetProperty,
             PropertyInfo linkedSourceModelProperty) 

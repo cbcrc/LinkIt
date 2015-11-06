@@ -7,6 +7,10 @@ using HeterogeneousDataSources;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
     public class LoadLinkMultiValueWhenIdSuffixMatches : IMultiValueConvention {
+        public string Name {
+            get { return "Load link multi value when id suffix matches"; }
+        }
+
         public bool DoesApply(
             PropertyInfo linkTargetProperty,
             PropertyInfo linkedSourceModelProperty) 
