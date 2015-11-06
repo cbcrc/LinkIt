@@ -85,10 +85,16 @@ namespace HeterogeneousDataSource.Conventions {
             if (Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType) != null) {
                 return typeof(IByNullableValueTypeIdConvention);
             }
-            if (match.LinkTargetProperty.IsGenericList()) {
+            if (IsGenericList(match.LinkTargetProperty)) {
                 return typeof(IMultiValueConvention);
             }
             return typeof(ISingleValueConvention);
+        }
+
+        private static bool IsGenericList(PropertyInfo linkTargetProperty) {
+            if (!linkTargetProperty.PropertyType.IsGenericType) { return false; }
+
+            return linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>);
         }
     }
 }
