@@ -36,8 +36,11 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource) {
-            var linkedSourceType = linkedSource.GetType();
+        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource){
+            return GetLoadLinkExpressions(linkedSource.GetType());
+        }
+
+        private List<ILoadLinkExpression> GetLoadLinkExpressions(Type linkedSourceType) {
             return _allLoadLinkExpressions
                 .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType == linkedSourceType)
                 .ToList();
@@ -88,15 +91,9 @@ namespace HeterogeneousDataSources {
 
         #region Reference Trees
         public void AddReferenceTreeForEachLinkTarget(Type linkedSourceType, ReferenceTree parent) {
-            //stle: split in two
-            _allLoadLinkExpressions
-                .Where(loadLinkExpression =>
-                    loadLinkExpression.LinkedSourceType == linkedSourceType
-                )
-                .ToList()
-                .ForEach(loadLinkExpression =>
-                    loadLinkExpression.AddReferenceTreeForEachInclude(parent, this)
-                );
+            foreach (var loadLinkExpression in GetLoadLinkExpressions(linkedSourceType)){
+                loadLinkExpression.AddReferenceTreeForEachInclude(parent, this);
+            }
         }
 
         public ReferenceTree CreateRootReferenceTree(Type rootLinkedSourceType) {

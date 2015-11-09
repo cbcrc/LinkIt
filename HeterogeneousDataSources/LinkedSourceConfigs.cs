@@ -18,8 +18,6 @@ namespace HeterogeneousDataSources
         }
 
         public static ILinkedSourceConfig GetConfigFor(Type linkedSourceType) {
-            //Lazy init to minimize required configuration by the client.
-            //stle: dangerous for multithreading
             if (!LinkedSourceConfigByType.ContainsKey(linkedSourceType)) {
                 LinkedSourceConfigByType.Add(linkedSourceType, CreateLinkedSourceConfig(linkedSourceType));
             }
