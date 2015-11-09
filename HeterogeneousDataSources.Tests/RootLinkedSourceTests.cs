@@ -17,7 +17,11 @@ namespace HeterogeneousDataSources.Tests {
         [SetUp]
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<RootLinkedSource>();
+            loadLinkProtocolBuilder.For<RootLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.ImageId,
+                    linkedSource => linkedSource.Image
+                );
 
             _fakeReferenceLoader = new FakeReferenceLoader<RootContent, string>(
                 reference => reference.Id,
@@ -34,7 +38,7 @@ namespace HeterogeneousDataSources.Tests {
         public void LoadLink_WithReferenceId_ShouldLinkModel() {
             var actual = _sut.LoadLink<RootLinkedSource>().ById("can-be-resolved");
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.That(actual, Is.Not.Null);
         }
 
         [Test]
@@ -48,11 +52,12 @@ namespace HeterogeneousDataSources.Tests {
     public class RootLinkedSource: ILinkedSource<RootContent>
     {
         public RootContent Model { get; set; }
+        public Image Image { get; set; }
     }
 
     public class RootContent {
         public string Id { get; set; }
-        public string Name { get; set; }
+        public string ImageId { get; set; }
     }
 
     public class RootContentRepository {
@@ -61,7 +66,7 @@ namespace HeterogeneousDataSources.Tests {
                 .Where(id => id != "cannot-be-resolved")
                 .Select(id => new RootContent {
                     Id = id,
-                    Name = "name-"+id
+                    ImageId = "name-"+id
                 })
                 .ToList();
         }

@@ -152,7 +152,7 @@ namespace HeterogeneousDataSources
         private void LinkSubLinkedSources() {
             while (_loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink().Any()) {
                 foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink()) {
-                    var loadLinkExpressions = _config.GetLoadExpressions(linkedSource);
+                    var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource);
                     foreach (var loadLinkExpression in loadLinkExpressions) {
                         loadLinkExpression.LinkSubLinkedSource(
                             linkedSource,
@@ -166,7 +166,7 @@ namespace HeterogeneousDataSources
 
         private void LinkReferences() {
             foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
-                var loadLinkExpressions = _config.GetLoadExpressions(linkedSource);
+                var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource);
                 foreach (var loadLinkExpression in loadLinkExpressions) {
                     loadLinkExpression.LinkReference(
                         linkedSource,

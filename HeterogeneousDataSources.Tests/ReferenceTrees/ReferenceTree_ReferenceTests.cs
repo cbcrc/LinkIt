@@ -28,14 +28,14 @@ namespace HeterogeneousDataSources.Tests {
 
         [Test]
         public void CreateRootReferenceTree() {
-            var actual = _sut.CreateRootReferenceTree<LinkedSource>();
+            var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void ParseLoadingLevels() {
-            var rootReferenceTree = _sut.CreateRootReferenceTree<LinkedSource>();
+            var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
             var actual = rootReferenceTree.ParseLoadLevels();
 

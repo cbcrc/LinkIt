@@ -22,7 +22,11 @@ namespace HeterogeneousDataSources.Tests.Exploratory.Generics
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            loadLinkProtocolBuilder.For<IntPieLinkedSource>();
+            loadLinkProtocolBuilder.For<IntPieLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.PieContent,
+                    linkedSource => linkedSource.SummaryImage
+                );
 
             _fakeReferenceLoader = 
                 new FakeReferenceLoader<object, string>(
@@ -63,5 +67,6 @@ namespace HeterogeneousDataSources.Tests.Exploratory.Generics
 
     public class IntPieLinkedSource : ILinkedSource<Pie<int>> {
         public Pie<int> Model { get; set; }
+        public Image SummaryImage { get; set; }
     }
 }

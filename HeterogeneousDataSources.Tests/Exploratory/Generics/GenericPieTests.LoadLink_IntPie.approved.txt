@@ -2,5 +2,9 @@
   "model": {
     "id": "2",
     "pieContent": "Int32"
+  },
+  "summaryImage": {
+    "id": "Int32",
+    "alt": "alt-Int32"
   }
 }

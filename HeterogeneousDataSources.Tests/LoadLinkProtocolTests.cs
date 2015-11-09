@@ -13,29 +13,17 @@ namespace HeterogeneousDataSources.Tests
         public void LoadLink_ShouldDisposeLoader()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
-            var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
+            loadLinkProtocolBuilder.For<PersonLinkedSource>()
+                .LoadLinkReference(
+                    linkedSource => linkedSource.Model.SummaryImageId,
+                    linkedSource => linkedSource.SummaryImage
+                );
+            var fakeReferenceLoader = new FakeReferenceLoader<Person, string>(reference => reference.Id);
             var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
 
-            var actual = sut.LoadLink<WithoutReferenceLinkedSource>().ById("dont-care");
+            var actual = sut.LoadLink<PersonLinkedSource>().ById("dont-care");
 
             Assert.That(fakeReferenceLoader.IsDisposed, Is.True);
         }
-
-        [Test]
-        public void LoadLink_ModelIdIsNull_ShouldLinkNull() {
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<WithoutReferenceLinkedSource>();
-            var fakeReferenceLoader = new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
-            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
-
-            var actual = sut.LoadLink<WithoutReferenceLinkedSource>().ById<string>(null);
-
-            Assert.That(actual, Is.Null);
-        }
-    }
-
-    public class WithoutReferenceLinkedSource : ILinkedSource<Image> {
-        public Image Model { get; set; }
     }
 }

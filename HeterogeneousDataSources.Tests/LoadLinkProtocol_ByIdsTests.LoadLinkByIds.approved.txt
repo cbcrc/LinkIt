@@ -2,13 +2,23 @@
   {
     "model": {
       "id": "one",
-      "alt": "alt-one"
+      "name": "name-one",
+      "summaryImageId": "person-img-one"
+    },
+    "summaryImage": {
+      "id": "person-img-one",
+      "alt": "alt-person-img-one"
     }
   },
   {
     "model": {
       "id": "two",
-      "alt": "alt-two"
+      "name": "name-two",
+      "summaryImageId": "person-img-two"
+    },
+    "summaryImage": {
+      "id": "person-img-two",
+      "alt": "alt-person-img-two"
     }
   }
 ]

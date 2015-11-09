@@ -12,6 +12,7 @@ namespace HeterogeneousDataSources {
         {
             EnsureLoadLinkExpressionLinkTargetIdsAreUnique(loadLinkExpressions);
             _allLoadLinkExpressions = loadLinkExpressions;
+            InitLoadingLevelsForEachPossibleRootLinkedSourceType();
         }
 
         private void EnsureLoadLinkExpressionLinkTargetIdsAreUnique(List<ILoadLinkExpression> loadLinkExpressions) {
@@ -42,19 +43,74 @@ namespace HeterogeneousDataSources {
                 .ToList();
         }
 
-        public ReferenceTree CreateRootReferenceTree<TRootLinkedSource>()
+        public ILoadLinker<TRootLinkedSource> CreateLoadLinker<TRootLinkedSource>(IReferenceLoader referenceLoader) 
         {
-            var rootLinkedSourceConfig = LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>();
+            return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
+                referenceLoader,
+                GetLoadingLevelsFor<TRootLinkedSource>(),
+                this
+            );
+        }
+
+        #region Loading Levels
+        private Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType;
+
+        private List<List<Type>> GetLoadingLevelsFor<TRootLinkedSource>(){
+            var rootLinkedSourceType = typeof (TRootLinkedSource);
+            if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType)) {
+                throw new InvalidOperationException(
+                    String.Format(
+                        "The type {0} cannot be used as root linked source because there are no load link expression associated with this linked source.",
+                        rootLinkedSourceType
+                    )
+                );
+            }
+
+            return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
+        }
+
+        private void InitLoadingLevelsForEachPossibleRootLinkedSourceType() {
+            _loadingLevelsByRootLinkedSourceType = new Dictionary<Type, List<List<Type>>>();
+            foreach (var rootLinkedSourceType in GetAllPossibleRootLinkedSourceTypes()) {
+                var rootReferenceTree = CreateRootReferenceTree(rootLinkedSourceType);
+                var loadingLevels = rootReferenceTree.ParseLoadLevels();
+                _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
+            }
+        }
+
+        private List<Type> GetAllPossibleRootLinkedSourceTypes() {
+            return _allLoadLinkExpressions
+                .Select(loadLinkExpression => loadLinkExpression.LinkedSourceType)
+                .Distinct()
+                .ToList();
+        }
+        #endregion
+
+        #region Reference Trees
+        public void AddReferenceTreeForEachLinkTarget(Type linkedSourceType, ReferenceTree parent) {
+            //stle: split in two
+            _allLoadLinkExpressions
+                .Where(loadLinkExpression =>
+                    loadLinkExpression.LinkedSourceType == linkedSourceType
+                )
+                .ToList()
+                .ForEach(loadLinkExpression =>
+                    loadLinkExpression.AddReferenceTreeForEachInclude(parent, this)
+                );
+        }
+
+        public ReferenceTree CreateRootReferenceTree(Type rootLinkedSourceType) {
+            var rootLinkedSourceConfig = LinkedSourceConfigs.GetConfigFor(rootLinkedSourceType);
             var rootReferenceTree = new ReferenceTree(
                 rootLinkedSourceConfig.LinkedSourceModelType,
                 "root",
                 null
             );
 
-            try{
+            try {
                 AddReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType, rootReferenceTree);
             }
-            catch (NotSupportedException ex){
+            catch (NotSupportedException ex) {
                 throw new NotSupportedException(
                     string.Format(
                         "Unable to create root reference tree for {0}. For more details, see inner exception.",
@@ -67,44 +123,6 @@ namespace HeterogeneousDataSources {
             return rootReferenceTree;
         }
 
-        public void AddReferenceTreeForEachLinkTarget(Type linkedSourceType, ReferenceTree parent){
-            //stle: split in two
-            _allLoadLinkExpressions
-                .Where(loadLinkExpression => 
-                    loadLinkExpression.LinkedSourceType == linkedSourceType
-                )
-                .ToList()
-                .ForEach(loadLinkExpression => 
-                    loadLinkExpression.AddReferenceTreeForEachInclude(parent, this)
-                );
-        }
-
-        public ILoadLinker<TRootLinkedSource> CreateLoadLinker<TRootLinkedSource>(IReferenceLoader referenceLoader) 
-        {
-            return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
-                referenceLoader,
-                GetLoadingLevelsFor<TRootLinkedSource>(),
-                this
-            );
-        }
-
-        private readonly Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType
-            = new Dictionary<Type, List<List<Type>>>();
-
-        private List<List<Type>> GetLoadingLevelsFor<TRootLinkedSource>()
-        {
-            var rootLinkedSourceType = typeof(TRootLinkedSource);
-
-            //Lazy init to minimize required configuration by the client.
-            //stle: dangerous for multithreading
-            if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType)){
-                var rootReferenceTree = CreateRootReferenceTree<TRootLinkedSource>();
-                var loadingLevels = rootReferenceTree.ParseLoadLevels();
-                _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
-            }
-
-            return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
-        }
-
+        #endregion
     }
 }

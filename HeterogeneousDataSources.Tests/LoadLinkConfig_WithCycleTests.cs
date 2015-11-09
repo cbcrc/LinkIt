@@ -14,9 +14,8 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Model.ParentId,
                     linkedSource => linkedSource.Parent
                 );
-            var config = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
-            TestDelegate act = () => config.CreateRootReferenceTree<CycleInReferenceLinkedSource>();
+            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
             Assert.That(
                 act,
@@ -38,9 +37,8 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Model.ParentId,
                     linkedSource => linkedSource.Parent
                 );
-            var config = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
-            TestDelegate act = () => config.CreateRootReferenceTree<DirectCycleInNestedLinkedSource>();
+            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
             Assert.That(
                 act,
@@ -67,9 +65,8 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Model.Level0Id,
                     linkedSource => linkedSource.Level0
                 );
-            var config = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
-            TestDelegate act = () => config.CreateRootReferenceTree<IndirectCycleLevel0LinkedSource>();
+            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
 
             Assert.That(
                act,
