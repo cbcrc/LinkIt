@@ -50,9 +50,6 @@ namespace HeterogeneousDataSources
         private Func<TLink, TLinkedSourceModel> WrapGetSubLinkedSourceModel<TLink, TChildLinkedSourceModel>(
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
         {
-            if(getSubLinkedSourceModel==null){ return null; }
-
-            //stle: error identification: if wrong model type
             return link => (TLinkedSourceModel) (object) getSubLinkedSourceModel(link);
         }
 

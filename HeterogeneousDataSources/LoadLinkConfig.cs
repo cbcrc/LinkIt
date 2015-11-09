@@ -28,28 +28,17 @@ namespace HeterogeneousDataSources {
         }
         #endregion
 
-        //stle: should go in protocol
-        public List<ILoadLinkExpression> GetLoadExpressions(object linkedSource) {
-            return GetLoadLinkExpressions(linkedSource, _allLoadLinkExpressions);
-        }
-
-        //stle: should go in protocol
         public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
-            return GetLoadLinkExpressions(linkedSource, _allLoadLinkExpressions, referenceType);
-        }
-
-        private List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions, Type referenceType)
-        {
-            return GetLoadLinkExpressions(linkedSource, loadLinkExpressions)
+            return GetLoadLinkExpressions(linkedSource)
                 .Where(loadLinkExpression => loadLinkExpression.ReferenceTypes.Contains(referenceType))
                 .ToList();
         }
 
-        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, List<ILoadLinkExpression> loadLinkExpressions) {
+        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource) {
             var linkedSourceType = linkedSource.GetType();
-            return loadLinkExpressions
-                .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType.Equals(linkedSourceType))
+            return _allLoadLinkExpressions
+                .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType == linkedSourceType)
                 .ToList();
         }
 
