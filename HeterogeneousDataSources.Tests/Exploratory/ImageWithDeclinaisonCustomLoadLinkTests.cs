@@ -46,13 +46,41 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
+
+        [Test]
+        public void LoadLink_ImagesFromDeclinaisonUrlWithoutReferenceId_ShouldLinkNull() {
+            _fakeReferenceLoader.FixValue(
+                new WithImage {
+                    Id = "1",
+                    ImageUrl = null
+                }
+            );
+
+            var actual = _sut.LoadLink<WithImageLinkedSource>().ById("1");
+
+            Assert.That(actual.Image, Is.Null);
+        }
+
+        [Test]
+        public void LoadLink_ImagesFromDeclinaisonUrlCannotBeResolved_ShouldLinkNull() {
+            _fakeReferenceLoader.FixValue(
+                new WithImage {
+                    Id = "1",
+                    ImageUrl = "cannot-be-resolved"
+                }
+            );
+
+            var actual = _sut.LoadLink<WithImageLinkedSource>().ById("1");
+
+            Assert.That(actual.Image, Is.Null);
+        }
+
     }
 
     public class WithImageLinkedSource : ILinkedSource<WithImage>
     {
         public WithImage Model { get; set; }
         public ImageWithDeclinaison Image { get; set; }
-        public Declinaison SelectedDeclinaison { get; set; }
     }
 
     public class WithImage{
@@ -119,14 +147,23 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
         public void Load(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext)
         {
             var lookupIds = lookupIdContext.GetReferenceIds<ImageWithDeclinaison, string>();
-            var references = new ImageWithDeclinaisonRepository();
-            var images = references.GetByDeclinaisonUrl(lookupIds);
+            var repository = new ImageWithDeclinaisonRepository();
+            var images = repository.GetByDeclinaisonUrl(lookupIds);
 
-            foreach (var image in images){
-                foreach (var declinaison in image.Declinaisons){
-                    loadedReferenceContext.AddReference(image, declinaison.Url);    
-                }
-            }
+            var imagesByDeclinaisonUrl = images
+                .SelectMany(
+                    image => image.Declinaisons
+                        .Select(declinaison => new {
+                            DeclinaisonUrl = declinaison.Url,
+                            Image = image
+                        })
+                )
+                .ToDictionary(
+                    imageByDeclinaisonUrl => imageByDeclinaisonUrl.DeclinaisonUrl,
+                    imageByDeclinaisonUrl => imageByDeclinaisonUrl.Image
+                );
+
+            loadedReferenceContext.AddReferences(imagesByDeclinaisonUrl);    
         }
 
         public string RequiredConnection

@@ -15,6 +15,5 @@
         "ratio": "1x1"
       }
     ]
-  },
-  "selectedDeclinaison": null
+  }
 }

@@ -9,21 +9,31 @@ namespace HeterogeneousDataSources {
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
         public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
-            foreach (var reference in references){
-                AddReference(reference, getReferenceIdFunc(reference));
-            }
+            var referenceDictionary = references.ToDictionary(
+                getReferenceIdFunc,
+                reference => reference
+            );
+
+            AddReferences(referenceDictionary);
         }
 
-        public void AddReference<TReference, TId>(TReference reference, TId id) {
+        public void AddReferences<TReference, TId>(IDictionary<TId,TReference> referencesById) {
             var tReference = typeof(TReference);
-            if (!_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
-                _referenceDictionaryByReferenceType.Add(tReference, new Dictionary<TId, TReference>());
+            if (_referenceDictionaryByReferenceType.ContainsKey(tReference)){
+                throw new InvalidOperationException(
+                    string.Format(
+                        "All references of the same type ({0}) must be loaded at the same time.",
+                        tReference.Name)
+                );
             }
 
-            var referenceDictionnary = (Dictionary<TId, TReference>)
-                _referenceDictionaryByReferenceType[tReference];
+            var referenceDictionary = referencesById.ToDictionary(
+                referenceById => referenceById.Key,
+                referenceById => referenceById.Value
+            );
 
-            referenceDictionnary.Add(id,reference);
+            _referenceDictionaryByReferenceType.Add(tReference, referenceDictionary);
+
         }
 
         public List<object> LinkedSourcesToBeBuilt{
