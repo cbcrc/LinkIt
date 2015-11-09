@@ -57,7 +57,7 @@ namespace HeterogeneousDataSources {
             if (!_referenceDictionaryByReferenceType.ContainsKey(tReference)) {
                 throw new InvalidOperationException(
                     string.Format(
-                        "References of type {0} were not loaded.",
+                        "References of type {0} were not loaded. Note that the implementation of IReferenceLoader must invoke LoadedReferenceContext.AddReferences with an empty set if none of the ids provided in the LookupIdContext for a specific reference type can be loaded.",
                         tReference.Name)
                 );
             }
