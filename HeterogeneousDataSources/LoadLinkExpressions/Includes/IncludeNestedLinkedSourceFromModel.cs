@@ -1,19 +1,18 @@
 using System;
-using System.Collections.Generic;
 using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Protocols;
 using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class SubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
+    public class IncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
         IIncludeWithCreateSubLinkedSource<TIChildLinkedSource,TLink>, 
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TChildLinkedSourceModel> _getSubLinkedSourceModel;
 
-        public SubLinkedSourceInclude(Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
+        public IncludeNestedLinkedSourceFromModel(Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
         {
             _getSubLinkedSourceModel = getSubLinkedSourceModel;
             ChildLinkedSourceType = typeof(TChildLinkedSource);

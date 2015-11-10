@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Protocols;
 using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class NestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
+    public class IncludeNestedLinkedSourceById<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
         IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>, 
         IIncludeWithAddLookupId<TLink>, 
         IIncludeWithChildLinkedSource 
@@ -16,7 +14,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         private readonly Func<TLink, TId> _getLookupIdFunc;
         private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
 
-        public NestedLinkedSourceInclude(
+        public IncludeNestedLinkedSourceById(
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction
         )

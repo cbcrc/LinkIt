@@ -63,10 +63,10 @@
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateSubLinkedSource.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithGetReference.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeSet.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\ReferenceInclude.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\NestedLinkedSourceInclude.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IncludeReferenceById.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceById.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionImpl.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\SubLinkedSourceInclude.cs">
+    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceFromModel.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConfigBuilders\LoadLinkProtocolBuilder.cs" />

@@ -4,14 +4,14 @@ using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class ReferenceInclude<TIReference, TLink, TReference, TId>: 
+    public class IncludeReferenceById<TIReference, TLink, TReference, TId>: 
         IIncludeWithGetReference<TIReference, TLink>, 
         IIncludeWithAddLookupId<TLink>
         where TReference: TIReference
     {
         private readonly Func<TLink, TId> _getLookupIdFunc;
 
-        public ReferenceInclude(Func<TLink, TId> getLookupIdFunc){
+        public IncludeReferenceById(Func<TLink, TId> getLookupIdFunc){
             _getLookupIdFunc = getLookupIdFunc;
             ReferenceType = typeof(TReference);
         }

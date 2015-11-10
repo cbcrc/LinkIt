@@ -57,7 +57,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
             return AddNonPolymorphicLoadLinkExpression(
                 linkTarget,
                 getLookupIdsFunc,
-                new ReferenceInclude<TTargetProperty, TId, TTargetProperty, TId>(
+                new IncludeReferenceById<TTargetProperty, TId, TTargetProperty, TId>(
                     CreateIdentityFunc<TId>()
                 )
             );
@@ -209,7 +209,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
             return AddNonPolymorphicLoadLinkExpression(
                 linkTarget,
                 getSubLinkedSourceModelsFunc,
-                new SubLinkedSourceInclude<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
+                new IncludeNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
                     CreateIdentityFunc<TChildLinkedSourceModel>()
                 )
             );

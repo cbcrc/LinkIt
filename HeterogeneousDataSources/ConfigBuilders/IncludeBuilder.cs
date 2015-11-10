@@ -60,7 +60,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
         {
             _includeTargetConcreteTypeBuilder.AddInclude(
                 discriminantValue,
-                new ReferenceInclude<TIChildLinkedSource, TLink, TTargetConcreteType, TId>(
+                new IncludeReferenceById<TIChildLinkedSource, TLink, TTargetConcreteType, TId>(
                     getLookupIdFunc
                 )
             );
