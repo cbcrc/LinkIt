@@ -4,12 +4,12 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources.ConfigBuilders
 {
-    public class IncludeTargetConcreteTypeBuilder<TLinkedSource, TILinkTarget, TLink, TDiscriminant>
+    public class IncludeBuilder<TLinkedSource, TILinkTarget, TLink, TDiscriminant>
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue = 
             new Dictionary<TDiscriminant, IInclude>();
 
-        public IncludeTargetConcreteTypeBuilder(ILinkTarget linkTarget)
+        public IncludeBuilder(ILinkTarget linkTarget)
         {
             LinkTarget = linkTarget;
         }

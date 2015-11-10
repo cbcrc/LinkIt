@@ -222,7 +222,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
            Func<TLinkedSource, TLink> getLinkFunc,
            Expression<Func<TLinkedSource, TIChildLinkedSource>> linkTargetFunc,
            Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
+           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes) 
         {
             return PolymorphicLoadLink(
                 LinkTargetFactory.Create(linkTargetFunc),
@@ -236,7 +236,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
            Func<TLinkedSource, List<TLink>> getLinksFunc,
            Expression<Func<TLinkedSource, List<TIChildLinkedSource>>> linkTargetFunc,
            Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes)
+           Action<IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>> includes)
         {
             return PolymorphicLoadLink(
                 LinkTargetFactory.Create(linkTargetFunc),
@@ -250,9 +250,9 @@ namespace HeterogeneousDataSources.ConfigBuilders
             ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
-            Action<IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>> includes) 
+            Action<IncludeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>> includes) 
         {
-            var includeBuilder = new IncludeTargetConcreteTypeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>(linkTarget);
+            var includeBuilder = new IncludeBuilder<TLinkedSource, TTargetProperty, TLink, TDiscriminant>(linkTarget);
             includes(includeBuilder);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TLink, TDiscriminant>(
