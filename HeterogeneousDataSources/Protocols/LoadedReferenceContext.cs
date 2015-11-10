@@ -6,7 +6,7 @@ using HeterogeneousDataSources.LinkedSources;
 namespace HeterogeneousDataSources.Protocols {
     public class LoadedReferenceContext {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
-        private readonly List<object> _linkedSourcesWhereSubLinkedSourceAreLinked = new List<object>();
+        private readonly List<object> _linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
         public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
@@ -41,15 +41,14 @@ namespace HeterogeneousDataSources.Protocols {
             get { return _linkedSourcesToBeBuilt.ToList(); }
         }
 
-        public void AddLinkedSourceWhereSubLinkedSourceAreLinked(object linkedSource){
-            //assume linkedSource cannot be null
-            _linkedSourcesWhereSubLinkedSourceAreLinked.Add(linkedSource);
+        public void AddLinkedSourceWhereNestedLinkedSourcesFromModelAreLinked(object linkedSource){
+            _linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked.Add(linkedSource);
         }
 
-        public List<object> GetLinkedSourceWithSubLinkedSourceToLink()
+        public List<object> GetLinkedSourceWhereNestedLinkedSourcesFromModelAreNotLinked()
         {
             return _linkedSourcesToBeBuilt
-                .Except(_linkedSourcesWhereSubLinkedSourceAreLinked)
+                .Except(_linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked)
                 .ToList();
         }
 

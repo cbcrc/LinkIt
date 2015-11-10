@@ -101,7 +101,7 @@ namespace HeterogeneousDataSources.Protocols
 
         private void LoadLinkRootLinkedSource() {
             //stle: do it at creation???? by linkedSource expression
-            LinkSubLinkedSources();
+            LinkNestedLinkedSourcesFromModel();
 
             Load(1);
 
@@ -115,7 +115,7 @@ namespace HeterogeneousDataSources.Protocols
 
                     LoadNestingLevel(referenceTypeToBeLoaded);
                     LinkNestedLinkedSources(referenceTypeToBeLoaded);
-                    LinkSubLinkedSources();
+                    LinkNestedLinkedSourcesFromModel();
                 }
             }
         }
@@ -144,23 +144,23 @@ namespace HeterogeneousDataSources.Protocols
                 foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
                     var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                     foreach (var loadLinkExpression in loadLinkExpressions) {
-                        loadLinkExpression.LinkNestedLinkedSource(linkedSource, _loadedReferenceContext, referenceTypeToBeLoaded);
+                        loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, _loadedReferenceContext, referenceTypeToBeLoaded);
                     }
                 }
             }
         }
 
-        private void LinkSubLinkedSources() {
-            while (_loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink().Any()) {
-                foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourceWithSubLinkedSourceToLink()) {
+        private void LinkNestedLinkedSourcesFromModel() {
+            while (_loadedReferenceContext.GetLinkedSourceWhereNestedLinkedSourcesFromModelAreNotLinked().Any()) {
+                foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourceWhereNestedLinkedSourcesFromModelAreNotLinked()) {
                     var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource);
                     foreach (var loadLinkExpression in loadLinkExpressions) {
-                        loadLinkExpression.LinkSubLinkedSource(
+                        loadLinkExpression.LinkNestedLinkedSourceFromModel(
                             linkedSource,
                             _loadedReferenceContext
                         );
                     }
-                    _loadedReferenceContext.AddLinkedSourceWhereSubLinkedSourceAreLinked(linkedSource);
+                    _loadedReferenceContext.AddLinkedSourceWhereNestedLinkedSourcesFromModelAreLinked(linkedSource);
                 }
             }
         }

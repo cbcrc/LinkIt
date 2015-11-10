@@ -21,7 +21,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
             )
         {
             var include = LinkedSourceConfigs.GetConfigFor<TTargetConcreteType>()
-                .CreateNestedLinkedSourceInclude<TLinkedSource, TIChildLinkedSource, TLink, TId>(
+                .CreateIncludeNestedLinkedSourceById<TLinkedSource, TIChildLinkedSource, TLink, TId>(
                     getLookupIdFunc,
                     initChildLinkedSourceAction
                 );
@@ -36,12 +36,12 @@ namespace HeterogeneousDataSources.ConfigBuilders
 
         public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
-            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel) 
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel) 
         {
             //stle: term TTargetConcreteType is incoherent with the rest
             var include = LinkedSourceConfigs.GetConfigFor<TTargetConcreteType>()
-                .CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
-                    getSubLinkedSourceModel,
+                .CreateIncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(
+                    getNestedLinkedSourceModel,
                     _includeTargetConcreteTypeBuilder.LinkTarget
                 );
 

@@ -24,8 +24,8 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             return include;
         }
 
-        public IIncludeWithCreateSubLinkedSource<TIChildLinkedSource,TLink> GetIncludeWithCreateSubLinkedSource(TLink link) {
-            return GetInclude<IIncludeWithCreateSubLinkedSource<TIChildLinkedSource,TLink>>(link);
+        public IIncludeWithCreateNestedLinkedSourceFromModel<TIChildLinkedSource,TLink> GetIncludeWithCreateNestedLinkedSourceFromModel(TLink link) {
+            return GetInclude<IIncludeWithCreateNestedLinkedSourceFromModel<TIChildLinkedSource,TLink>>(link);
         }
 
         public IIncludeWithAddLookupId<TLink> GetIncludeWithAddLookupId(TLink linkForReferenceType) {

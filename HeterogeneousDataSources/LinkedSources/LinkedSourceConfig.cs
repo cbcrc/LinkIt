@@ -27,7 +27,7 @@ namespace HeterogeneousDataSources.LinkedSources
         }
 
 
-        public IInclude CreateNestedLinkedSourceInclude<TLinkTargetOwner, TIChildLinkedSource, TLink, TId>(
+        public IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TIChildLinkedSource, TLink, TId>(
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction)
         {
@@ -39,20 +39,20 @@ namespace HeterogeneousDataSources.LinkedSources
             );
         }
 
-        public IInclude CreateSubLinkedSourceInclude<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel, ILinkTarget linkTarget)
+        public IInclude CreateIncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget)
         {
-            EnsureGetSubLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
+            EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
             AssumeClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
             return new IncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
-                WrapGetSubLinkedSourceModel(getSubLinkedSourceModel)
+                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel)
             );
         }
 
-        private Func<TLink, TLinkedSourceModel> WrapGetSubLinkedSourceModel<TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
+        private Func<TLink, TLinkedSourceModel> WrapGetNestedLinkedSourceModel<TLink, TChildLinkedSourceModel>(
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel)
         {
-            return link => (TLinkedSourceModel) (object) getSubLinkedSourceModel(link);
+            return link => (TLinkedSourceModel) (object) getNestedLinkedSourceModel(link);
         }
 
         private void AssumeClassIsAssignableFrom<TAbstract,TConcrete>(){
@@ -70,11 +70,11 @@ namespace HeterogeneousDataSources.LinkedSources
             }
         }
 
-        private void EnsureGetSubLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(ILinkTarget linkTarget) {
+        private void EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(ILinkTarget linkTarget) {
             if (!LinkedSourceModelType.IsAssignableFrom(typeof(TChildLinkedSourceModel))) {
                 throw new ArgumentException(
                     string.Format(
-                        "{0}: getSubLinkedSourceModel returns an invalid type. {1} is not assignable from {2}.",
+                        "{0}: getNestedLinkedSourceModel returns an invalid type. {1} is not assignable from {2}.",
                         linkTarget.Id,
                         LinkedSourceModelType,
                         typeof(TChildLinkedSourceModel)

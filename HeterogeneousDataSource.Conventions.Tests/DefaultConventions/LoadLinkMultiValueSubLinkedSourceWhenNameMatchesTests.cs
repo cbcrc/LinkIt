@@ -22,7 +22,7 @@ namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
             
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkMultiValueSubLinkedSourceWhenNameMatches() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches() }
             );
 
             var fakeReferenceLoader =

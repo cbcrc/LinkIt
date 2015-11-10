@@ -17,8 +17,8 @@ namespace HeterogeneousDataSource.Conventions
                 new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches(),
                 new LoadLinkMultiValueWhenIdSuffixMatches(),
                 new LoadLinkSingleValueWhenIdSuffixMatches(),
-                new LoadLinkMultiValueSubLinkedSourceWhenNameMatches(),
-                new LoadLinkSingleValueSubLinkedSourceWhenNameMatches(),
+                new LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches(),
+                new LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches(),
             };
         }
 

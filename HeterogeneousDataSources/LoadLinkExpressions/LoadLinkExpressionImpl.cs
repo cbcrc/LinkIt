@@ -63,11 +63,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             }
         }
 
-        public void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext){
+        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext){
             SetLinkTargetValues(
                 linkedSource,
-                _includeSet.GetIncludeWithCreateSubLinkedSource,
-                (link, include, linkIndex) => include.CreateSubLinkedSource(link, loadedReferenceContext)
+                _includeSet.GetIncludeWithCreateNestedLinkedSourceFromModel,
+                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext)
             );
         }
 
@@ -79,7 +79,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
             );
         }
 
-        public void LinkNestedLinkedSource(
+        public void LinkNestedLinkedSourceById(
             object linkedSource, 
             LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked)
@@ -176,13 +176,13 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         public void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config)
         {
             AddReferenceTreeForEachIncludeWithAddLookupId(parent, config);
-            AddReferenceTreeForEachIncludeWithCreateSubLinkedSource(parent, config);
+            AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(parent, config);
         }
 
-        private void AddReferenceTreeForEachIncludeWithCreateSubLinkedSource(ReferenceTree parent, LoadLinkConfig config)
+        private void AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(ReferenceTree parent, LoadLinkConfig config)
         {
             _includeSet
-                .GetIncludes<IIncludeWithCreateSubLinkedSource<TIChildLinkedSource, TLink>>()
+                .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TIChildLinkedSource, TLink>>()
                 .ToList()
                 .ForEach(include =>
                     include.AddReferenceTreeForEachLinkTarget(parent, config)

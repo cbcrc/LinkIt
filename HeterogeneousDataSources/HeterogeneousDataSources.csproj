@@ -60,7 +60,7 @@
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithChildLinkedSource.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateNestedLinkedSource.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithAddLookupId.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateSubLinkedSource.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceFromModel.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithGetReference.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeSet.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeReferenceById.cs" />

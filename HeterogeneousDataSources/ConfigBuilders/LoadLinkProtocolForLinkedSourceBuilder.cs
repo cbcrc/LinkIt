@@ -64,7 +64,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
         }
         #endregion
 
-        #region NestedLinkedSource
+        #region NestedLinkedSourceById
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TChildLinkedSource, TId>(
            Func<TLinkedSource, TId> getLookupIdFunc,
            Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc) 
@@ -146,7 +146,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
             Action<TLinkedSource, int, TTargetProperty> initChildLinkedSourceAction)
         {
             var include = LinkedSourceConfigs.GetConfigFor<TTargetProperty>()
-                .CreateNestedLinkedSourceInclude<TLinkedSource, TTargetProperty, TId, TId>(
+                .CreateIncludeNestedLinkedSourceById<TLinkedSource, TTargetProperty, TId, TId>(
                     CreateIdentityFunc<TId>(),
                     initChildLinkedSourceAction
                 );
@@ -175,40 +175,40 @@ namespace HeterogeneousDataSources.ConfigBuilders
         }
         #endregion
 
-        #region SubLinkedSource
+        #region NestedLinkedSourceFromModel
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel>(
-            Func<TLinkedSource, TChildLinkedSourceModel> getSubLinkedSourceModelsFunc,
+            Func<TLinkedSource, TChildLinkedSourceModel> getNestedLinkedSourceModel,
             Expression<Func<TLinkedSource, TChildLinkedSource>> linkTargetFunc
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
             return LoadLinkNestedLinkedSourceFromModel(
                 LinkTargetFactory.Create(linkTargetFunc),
-                ToGetLookupIdsFuncForSingleValue(getSubLinkedSourceModelsFunc)
+                ToGetLookupIdsFuncForSingleValue(getNestedLinkedSourceModel)
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel>(
-            Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc,
+            Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> linkTargetFunc
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
             return LoadLinkNestedLinkedSourceFromModel(
                 LinkTargetFactory.Create(linkTargetFunc),
-                getSubLinkedSourceModelsFunc
+                getNestedLinkedSourceModel
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel>(
             ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
-            Func<TLinkedSource, List<TChildLinkedSourceModel>> getSubLinkedSourceModelsFunc
+            Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModel
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
             return AddNonPolymorphicLoadLinkExpression(
                 linkTarget,
-                getSubLinkedSourceModelsFunc,
+                getNestedLinkedSourceModel,
                 new IncludeNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
                     CreateIdentityFunc<TChildLinkedSourceModel>()
                 )

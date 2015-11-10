@@ -6,23 +6,23 @@ using HeterogeneousDataSources.ReferenceTrees;
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
     public class IncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
-        IIncludeWithCreateSubLinkedSource<TIChildLinkedSource,TLink>, 
+        IIncludeWithCreateNestedLinkedSourceFromModel<TIChildLinkedSource,TLink>, 
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
-        private readonly Func<TLink, TChildLinkedSourceModel> _getSubLinkedSourceModel;
+        private readonly Func<TLink, TChildLinkedSourceModel> _getNestedLinkedSourceModel;
 
-        public IncludeNestedLinkedSourceFromModel(Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel)
+        public IncludeNestedLinkedSourceFromModel(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel)
         {
-            _getSubLinkedSourceModel = getSubLinkedSourceModel;
+            _getNestedLinkedSourceModel = getNestedLinkedSourceModel;
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
         public Type ChildLinkedSourceType { get; private set; }
 
-        public TIChildLinkedSource CreateSubLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext)
+        public TIChildLinkedSource CreateNestedLinkedSourceFromModel(TLink link, LoadedReferenceContext loadedReferenceContext)
         {
-            var childLinkSourceModel = _getSubLinkedSourceModel(link);
+            var childLinkSourceModel = _getNestedLinkedSourceModel(link);
 
             return (TIChildLinkedSource) (object) loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel);

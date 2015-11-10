@@ -15,10 +15,10 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
 
-        void LinkNestedLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked);
+        void LinkNestedLinkedSourceById(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked);
 
         //stle: Is loadedReferenceContext the right place to register sub linked source and nested linked source?
-        void LinkSubLinkedSource(object linkedSource, LoadedReferenceContext loadedReferenceContext);
+        void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext);
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
 
         void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config);
