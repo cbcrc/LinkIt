@@ -171,21 +171,28 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
 
         public void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config)
         {
-            //stle: split in two
-            _includeSet
-                .GetIncludes<IIncludeWithAddLookupId<TLink>>()
-                .ToList()
-                .ForEach(include => 
-                    include.AddReferenceTree(LinkTargetId, parent, config)
-                );
+            AddReferenceTreeForEachIncludeWithAddLookupId(parent, config);
+            AddReferenceTreeForEachIncludeWithCreateSubLinkedSource(parent, config);
+        }
 
+        private void AddReferenceTreeForEachIncludeWithCreateSubLinkedSource(ReferenceTree parent, LoadLinkConfig config)
+        {
             _includeSet
                 .GetIncludes<IIncludeWithCreateSubLinkedSource<TIChildLinkedSource, TLink>>()
                 .ToList()
-                .ForEach(include => 
+                .ForEach(include =>
                     include.AddReferenceTreeForEachLinkTarget(parent, config)
                 );
         }
 
+        private void AddReferenceTreeForEachIncludeWithAddLookupId(ReferenceTree parent, LoadLinkConfig config)
+        {
+            _includeSet
+                .GetIncludes<IIncludeWithAddLookupId<TLink>>()
+                .ToList()
+                .ForEach(include =>
+                    include.AddReferenceTree(LinkTargetId, parent, config)
+                );
+        }
     }
 }
