@@ -18,15 +18,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         public LoadLinkExpressionImpl(
             ILinkTarget<TLinkedSource,TAbstractLinkTarget> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
-            Func<TLink, TDiscriminant> getDiscriminantFunc,
-            Dictionary<TDiscriminant, IInclude> includes)
+            IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeset)
         {
             _linkTarget = linkTarget;
             _getLinksFunc = getLinksFunc;
-            _includeSet = new IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
-                includes,
-                getDiscriminantFunc
-                );
+            _includeSet = includeset;
             LinkedSourceType = typeof (TLinkedSource);
 
             ReferenceTypes = _includeSet.GetIncludesWithAddLookupId()

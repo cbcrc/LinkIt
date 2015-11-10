@@ -222,7 +222,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
            Func<TLinkedSource, TLink> getLinkFunc,
            Expression<Func<TLinkedSource, TAbstractLinkTarget>> linkTargetFunc,
            Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes) 
+           Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes) 
         {
             return PolymorphicLoadLink(
                 LinkTargetFactory.Create(linkTargetFunc),
@@ -236,7 +236,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
            Func<TLinkedSource, List<TLink>> getLinksFunc,
            Expression<Func<TLinkedSource, List<TAbstractLinkTarget>>> linkTargetFunc,
            Func<TLink, TDiscriminant> getDiscriminantFunc,
-           Action<IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
+           Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
         {
             return PolymorphicLoadLink(
                 LinkTargetFactory.Create(linkTargetFunc),
@@ -250,16 +250,15 @@ namespace HeterogeneousDataSources.ConfigBuilders
             ILinkTarget<TLinkedSource, TAbstractLinkTarget> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
-            Action<IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes) 
+            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes) 
         {
-            var includeBuilder = new IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(linkTarget);
+            var includeBuilder = new IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(linkTarget);
             includes(includeBuilder);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
                 linkTarget,
                 getLinksFunc,
-                getDiscriminantFunc,
-                includeBuilder.Build()
+                includeBuilder.Build(getDiscriminantFunc)
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -306,14 +305,16 @@ namespace HeterogeneousDataSources.ConfigBuilders
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TId, bool>(
                 linkTarget,
                 getLookupIdsFunc,
-                link => true,
-                new Dictionary<bool, IInclude>
-                {
+                new IncludeSet<TLinkedSource, TTargetProperty, TId, bool>(
+                    new Dictionary<bool, IInclude>
                     {
-                        true, //always one include when not polymorphic
-                        include
-                    }
-                }
+                        {
+                            true, //always one include when not polymorphic
+                            include
+                        }
+                    },
+                    link => true
+                )
             );
 
             return AddLoadLinkExpression(loadLinkExpression);

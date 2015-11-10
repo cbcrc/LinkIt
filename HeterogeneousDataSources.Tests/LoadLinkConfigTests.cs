@@ -20,10 +20,12 @@ namespace HeterogeneousDataSources.Tests {
             TestDelegate act = () => new LoadLinkConfig(
                 new List<ILoadLinkExpression>{
                     new LoadLinkExpressionImpl<object, object, object, object>(
-                        duplicate, null, null, new Dictionary<object, IInclude>()
+                        duplicate, null, 
+                        new IncludeSet<object, object, object, object>(new Dictionary<object, IInclude>(),null)
                     ),
                     new LoadLinkExpressionImpl<object, object, object, object>(
-                        duplicate, null, null, new Dictionary<object, IInclude>()
+                        duplicate, null,
+                        new IncludeSet<object, object, object, object>(new Dictionary<object, IInclude>(),null)
                     )
                 }
             );

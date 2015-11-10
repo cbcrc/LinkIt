@@ -51,7 +51,7 @@
     <Compile Include="ReferenceTrees\ReferenceToLoad.cs" />
     <Compile Include="Protocols\Interfaces\ILoadLinker.cs" />
     <Compile Include="ConfigBuilders\IncludeAsBuilder.cs" />
-    <Compile Include="ConfigBuilders\IncludeBuilder.cs" />
+    <Compile Include="ConfigBuilders\IncludeSetBuilder.cs" />
     <Compile Include="LinkedSources\Interfaces\IGenericLinkedSourceConfig.cs" />
     <Compile Include="LinkTargets\LinkTargetFactory.cs" />
     <Compile Include="Protocols\LoadLinker.cs" />

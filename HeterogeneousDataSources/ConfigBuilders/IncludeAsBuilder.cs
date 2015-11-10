@@ -7,14 +7,14 @@ namespace HeterogeneousDataSources.ConfigBuilders
     public class IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget>
         where TLinkTarget : TAbstractLinkTarget
     {
-        private readonly IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeBuilder;
+        private readonly IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeSetBuilder;
 
-        public IncludeAsBuilder(IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeBuilder)
+        public IncludeAsBuilder(IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeSetBuilder)
         {
-            _includeBuilder = includeBuilder;
+            _includeSetBuilder = includeSetBuilder;
         }
 
-        public IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
+        public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSourceAction = null
@@ -26,45 +26,45 @@ namespace HeterogeneousDataSources.ConfigBuilders
                     initChildLinkedSourceAction
                 );
 
-            _includeBuilder.AddInclude(
+            _includeSetBuilder.AddToIncludeSet(
                 discriminantValue,
                 include
             );
 
-            return _includeBuilder;
+            return _includeSetBuilder;
         }
 
-        public IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
+        public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel) 
         {
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceFromModel<TAbstractLinkTarget, TLink, TChildLinkedSourceModel>(
                     getNestedLinkedSourceModel,
-                    _includeBuilder.LinkTarget
+                    _includeSetBuilder.LinkTarget
                 );
 
-            _includeBuilder.AddInclude(
+            _includeSetBuilder.AddToIncludeSet(
                 discriminantValue,
                 include
             );
 
-            return _includeBuilder;
+            return _includeSetBuilder;
         }
 
-        public IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsReferenceById<TId>(
+        public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsReferenceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc
         )
         {
-            _includeBuilder.AddInclude(
+            _includeSetBuilder.AddToIncludeSet(
                 discriminantValue,
                 new IncludeReferenceById<TAbstractLinkTarget, TLink, TLinkTarget, TId>(
                     getLookupIdFunc
                 )
             );
 
-            return _includeBuilder;
+            return _includeSetBuilder;
         }
     }
 }
