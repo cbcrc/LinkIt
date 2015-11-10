@@ -22,8 +22,6 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         {
             var childLinkSourceModel = _getSubLinkedSourceModel(link);
 
-            //stle: move double cast to loadedReferenceContext
-            //stle: dry with nested linked source
             return (TIChildLinkedSource) (object) loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel);
         }
