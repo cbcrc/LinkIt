@@ -5,7 +5,7 @@ using HeterogeneousDataSources.Shared;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>
+    public class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includes;
         private readonly Func<TLink, TDiscriminant> _getDiscriminantFunc;
@@ -16,24 +16,24 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             _getDiscriminantFunc = getDiscriminantFunc;
         }
 
-        public IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TIChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceByIdForReferenceType(TLink link, Type referenceType) {
-            var include = GetInclude<IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TIChildLinkedSource, TLink>>(link);
+        public IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceByIdForReferenceType(TLink link, Type referenceType) {
+            var include = GetInclude<IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>>(link);
             
             if (include == null || include.ReferenceType != referenceType){ return null; }
 
             return include;
         }
 
-        public IIncludeWithCreateNestedLinkedSourceFromModel<TIChildLinkedSource,TLink> GetIncludeWithCreateNestedLinkedSourceFromModel(TLink link) {
-            return GetInclude<IIncludeWithCreateNestedLinkedSourceFromModel<TIChildLinkedSource,TLink>>(link);
+        public IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink> GetIncludeWithCreateNestedLinkedSourceFromModel(TLink link) {
+            return GetInclude<IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink>>(link);
         }
 
         public IIncludeWithAddLookupId<TLink> GetIncludeWithAddLookupId(TLink linkForReferenceType) {
             return GetInclude<IIncludeWithAddLookupId<TLink>>(linkForReferenceType);
         }
 
-        public IIncludeWithGetReference<TIChildLinkedSource, TLink> GetIncludeWithGetReference(TLink link) {
-            return GetInclude<IIncludeWithGetReference<TIChildLinkedSource, TLink>>(link);
+        public IIncludeWithGetReference<TAbstractChildLinkedSource, TLink> GetIncludeWithGetReference(TLink link) {
+            return GetInclude<IIncludeWithGetReference<TAbstractChildLinkedSource, TLink>>(link);
         }
 
         public List<IIncludeWithAddLookupId<TLink>> GetIncludesWithAddLookupId(){

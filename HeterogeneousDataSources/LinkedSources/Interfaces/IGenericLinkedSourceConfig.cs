@@ -14,11 +14,11 @@ namespace HeterogeneousDataSources.LinkedSources
             LoadLinkConfig config
         );
 
-        IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TIChildLinkedSource, TLink, TId>(
+        IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction = null
         );
 
-        IInclude CreateIncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget);
+        IInclude CreateIncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget);
     }
 }

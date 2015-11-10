@@ -9,21 +9,21 @@ using HeterogeneousDataSources.Shared;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
-    public class LoadLinkExpressionImpl<TLinkedSource, TILinkTarget, TLink, TDiscriminant>:ILoadLinkExpression
+    public class LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>:ILoadLinkExpression
     {
-        private readonly ILinkTarget<TLinkedSource, TILinkTarget> _linkTarget;
+        private readonly ILinkTarget<TLinkedSource, TAbstractLinkTarget> _linkTarget;
         private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
-        private readonly IncludeSet<TLinkedSource, TILinkTarget, TLink, TDiscriminant> _includeSet;
+        private readonly IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeSet;
 
         public LoadLinkExpressionImpl(
-            ILinkTarget<TLinkedSource,TILinkTarget> linkTarget,
+            ILinkTarget<TLinkedSource,TAbstractLinkTarget> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinksFunc,
             Func<TLink, TDiscriminant> getDiscriminantFunc,
             Dictionary<TDiscriminant, IInclude> includes)
         {
             _linkTarget = linkTarget;
             _getLinksFunc = getLinksFunc;
-            _includeSet = new IncludeSet<TLinkedSource, TILinkTarget, TLink, TDiscriminant>(
+            _includeSet = new IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
                 includes,
                 getDiscriminantFunc
                 );
@@ -98,7 +98,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         private void SetLinkTargetValues<TInclude>(
             object linkedSource,
             Func<TLink, TInclude> getInclude,
-            Func<TLink, TInclude, int, TILinkTarget> getLinkTargetValue)
+            Func<TLink, TInclude, int, TAbstractLinkTarget> getLinkTargetValue)
         {
             AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
 
@@ -113,7 +113,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         private void SetLinkTargetValues<TInclude>(
             TLinkedSource linkedSource,
             Func<TLink, TInclude> getInclude,
-            Func<TLink, TInclude, int, TILinkTarget> getLinkTargetValue) 
+            Func<TLink, TInclude, int, TAbstractLinkTarget> getLinkTargetValue) 
         {
             var links = GetLinks(linkedSource);
             _linkTarget.LazyInit(linkedSource, links.Count);
@@ -180,7 +180,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         private void AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(ReferenceTree parent, LoadLinkConfig config)
         {
             _includeSet
-                .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TILinkTarget, TLink>>()
+                .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractLinkTarget, TLink>>()
                 .ToList()
                 .ForEach(include =>
                     include.AddReferenceTreeForEachLinkTarget(parent, config)

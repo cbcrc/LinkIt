@@ -27,24 +27,24 @@ namespace HeterogeneousDataSources.LinkedSources
         }
 
 
-        public IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TIChildLinkedSource, TLink, TId>(
+        public IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction)
         {
-            AssumeClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
+            AssumeClassIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
 
-            return new IncludeNestedLinkedSourceById<TLinkTargetOwner, TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
+            return new IncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
                 getLookupIdFunc,
                 initChildLinkedSourceAction
             );
         }
 
-        public IInclude CreateIncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget)
+        public IInclude CreateIncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget)
         {
             EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
-            AssumeClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
+            AssumeClassIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
 
-            return new IncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
+            return new IncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
                 WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel)
             );
         }

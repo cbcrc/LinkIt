@@ -5,8 +5,8 @@ using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class IncludeNestedLinkedSourceFromModel<TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
-        IIncludeWithCreateNestedLinkedSourceFromModel<TIChildLinkedSource,TLink>, 
+    public class IncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
+        IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink>, 
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
@@ -20,11 +20,11 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 
         public Type ChildLinkedSourceType { get; private set; }
 
-        public TIChildLinkedSource CreateNestedLinkedSourceFromModel(TLink link, LoadedReferenceContext loadedReferenceContext)
+        public TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(TLink link, LoadedReferenceContext loadedReferenceContext)
         {
             var childLinkSourceModel = _getNestedLinkedSourceModel(link);
 
-            return (TIChildLinkedSource) (object) loadedReferenceContext
+            return (TAbstractChildLinkedSource) (object) loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel);
         }
 
