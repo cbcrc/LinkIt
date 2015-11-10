@@ -4,24 +4,24 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources.ConfigBuilders
 {
-    public class IncludeAsBuilder<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant, TTargetConcreteType>
-        where TTargetConcreteType : TAbstractChildLinkedSource
+    public class IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget>
+        where TLinkTarget : TAbstractLinkTarget
     {
-        private readonly IncludeBuilder<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant> _includeBuilder;
+        private readonly IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeBuilder;
 
-        public IncludeAsBuilder(IncludeBuilder<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant> includeBuilder)
+        public IncludeAsBuilder(IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeBuilder)
         {
             _includeBuilder = includeBuilder;
         }
 
-        public IncludeBuilder<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
+        public IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc,
-            Action<TLinkedSource, int, TTargetConcreteType> initChildLinkedSourceAction = null
+            Action<TLinkedSource, int, TLinkTarget> initChildLinkedSourceAction = null
             )
         {
-            var include = LinkedSourceConfigs.GetConfigFor<TTargetConcreteType>()
-                .CreateIncludeNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink, TId>(
+            var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
+                .CreateIncludeNestedLinkedSourceById<TLinkedSource, TAbstractLinkTarget, TLink, TId>(
                     getLookupIdFunc,
                     initChildLinkedSourceAction
                 );
@@ -34,13 +34,12 @@ namespace HeterogeneousDataSources.ConfigBuilders
             return _includeBuilder;
         }
 
-        public IncludeBuilder<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
+        public IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel) 
         {
-            //stle: term TTargetConcreteType is incoherent with the rest
-            var include = LinkedSourceConfigs.GetConfigFor<TTargetConcreteType>()
-                .CreateIncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
+            var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
+                .CreateIncludeNestedLinkedSourceFromModel<TAbstractLinkTarget, TLink, TChildLinkedSourceModel>(
                     getNestedLinkedSourceModel,
                     _includeBuilder.LinkTarget
                 );
@@ -53,14 +52,14 @@ namespace HeterogeneousDataSources.ConfigBuilders
             return _includeBuilder;
         }
 
-        public IncludeBuilder<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant> AsReferenceById<TId>(
+        public IncludeBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsReferenceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc
         )
         {
             _includeBuilder.AddInclude(
                 discriminantValue,
-                new IncludeReferenceById<TAbstractChildLinkedSource, TLink, TTargetConcreteType, TId>(
+                new IncludeReferenceById<TAbstractLinkTarget, TLink, TLinkTarget, TId>(
                     getLookupIdFunc
                 )
             );

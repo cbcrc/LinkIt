@@ -5,7 +5,6 @@ using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {
-    //stle: may go away or be simplified to a strict minimum
     public interface ILoadLinkExpression
     {
         string LinkTargetId { get; }

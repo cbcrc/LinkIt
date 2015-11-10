@@ -20,7 +20,6 @@ namespace HeterogeneousDataSources.Protocols
             _config = config;
         }
 
-        //stle: fix naming: TRootLinkedSourceModel
         public TRootLinkedSource FromModel<TRootLinkedSourceModel>(TRootLinkedSourceModel model)
         {
             return FromModels(model)
