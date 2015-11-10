@@ -11,14 +11,6 @@ namespace HeterogeneousDataSources
                 property.GetSetMethod(false)!=null;
         }
 
-        private static bool MatchLinkedSourceModelPropertyName(string linkTargetPropertyName, string linkedSourceModelPropertyName, string suffix) {
-            return linkTargetPropertyName + suffix == linkedSourceModelPropertyName;
-        }
-
-        private static string RemoveLastCharacter(PropertyInfo property, string lastCharacterToIgnore){
-            return property.Name.Remove(property.Name.Length - lastCharacterToIgnore.Length);
-        }
-
         public static string GetLinkTargetId(this PropertyInfo property) {
             return string.Format(
                 "{0}/{1}",
