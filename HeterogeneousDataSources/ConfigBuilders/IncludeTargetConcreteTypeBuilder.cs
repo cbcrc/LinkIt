@@ -4,7 +4,7 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources.ConfigBuilders
 {
-    public class IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>
+    public class IncludeTargetConcreteTypeBuilder<TLinkedSource, TILinkTarget, TLink, TDiscriminant>
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue = 
             new Dictionary<TDiscriminant, IInclude>();
@@ -16,11 +16,10 @@ namespace HeterogeneousDataSources.ConfigBuilders
 
         public ILinkTarget LinkTarget { get; private set; }
 
-        //stle: fix terminology: TTargetConcreteType
-        public IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant, TTargetConcreteType> Include<TTargetConcreteType>()
-            where TTargetConcreteType : TIChildLinkedSource
+        public IncludeAsBuilder<TLinkedSource, TILinkTarget, TLink, TDiscriminant, TLinkTarget> Include<TLinkTarget>()
+            where TLinkTarget : TILinkTarget
         {
-            return new IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant, TTargetConcreteType>(this);
+            return new IncludeAsBuilder<TLinkedSource, TILinkTarget, TLink, TDiscriminant, TLinkTarget>(this);
         }
 
         //stle: fix namiing Include vs AddInclude is confusing

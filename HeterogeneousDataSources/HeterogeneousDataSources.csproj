@@ -49,9 +49,8 @@
     <Compile Include="LinkTargets\MultiValueLinkTarget.cs" />
     <Compile Include="LinkTargets\SingleValueLinkTarget.cs" />
     <Compile Include="ReferenceTrees\ReferenceToLoad.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeSet.cs" />
     <Compile Include="Protocols\Interfaces\ILoadLinker.cs" />
-    <Compile Include="ConfigBuilders\IncludeBuilder.cs" />
+    <Compile Include="ConfigBuilders\IncludeAsBuilder.cs" />
     <Compile Include="ConfigBuilders\IncludeTargetConcreteTypeBuilder.cs" />
     <Compile Include="LinkedSources\Interfaces\IGenericLinkedSourceConfig.cs" />
     <Compile Include="LinkTargets\LinkTargetFactory.cs" />
@@ -64,7 +63,7 @@
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithGetReference.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeSet.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeReferenceById.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceByIdById.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceById.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionImpl.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceFromModel.cs">
       <SubType>Code</SubType>
@@ -78,7 +77,6 @@
     <Compile Include="Protocols\Interfaces\IReferenceLoader.cs" />
     <Compile Include="Protocols\LoadedReferenceContext.cs" />
     <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
-    <Compile Include="LoadLinkExpressions\INestedLoadLinkExpression.cs" />
     <Compile Include="Protocols\LoadLinkProtocol.cs" />
     <Compile Include="Protocols\LookupIdContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

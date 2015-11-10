@@ -5,7 +5,7 @@ using HeterogeneousDataSources.Shared;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : IIncludeSet
+    public class IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant>
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includes;
         private readonly Func<TLink, TDiscriminant> _getDiscriminantFunc;

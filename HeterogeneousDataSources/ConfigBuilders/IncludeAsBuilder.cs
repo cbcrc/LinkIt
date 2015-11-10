@@ -4,12 +4,12 @@ using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
 namespace HeterogeneousDataSources.ConfigBuilders
 {
-    public class IncludeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant, TTargetConcreteType>
+    public class IncludeAsBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant, TTargetConcreteType>
         where TTargetConcreteType : TIChildLinkedSource
     {
         private readonly IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> _includeTargetConcreteTypeBuilder;
 
-        public IncludeBuilder(IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> includeTargetConcreteTypeBuilder)
+        public IncludeAsBuilder(IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> includeTargetConcreteTypeBuilder)
         {
             _includeTargetConcreteTypeBuilder = includeTargetConcreteTypeBuilder;
         }
