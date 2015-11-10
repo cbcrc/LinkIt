@@ -15,7 +15,7 @@ namespace HeterogeneousDataSources.Tests
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );

@@ -20,12 +20,12 @@ namespace HeterogeneousDataSources.Tests {
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<NestedLinkedSources>()
-                .LoadLinkNestedLinkedSource(
+                .LoadLinkNestedLinkedSourceById(
                     linkedSource => linkedSource.Model.AuthorIds,
                     linkedSource => linkedSource.Authors
                 );
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );

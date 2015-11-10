@@ -29,13 +29,13 @@ namespace HeterogeneousDataSource.Conventions.DefaultConventions {
             where TLinkedSourceModelProperty : struct
         {
             if (LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(typeof(TLinkTargetProperty))) {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSource(
+                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty
                 );
             }
             else {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReference(
+                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferenceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty
                 );

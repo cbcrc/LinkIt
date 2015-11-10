@@ -22,7 +22,7 @@ namespace HeterogeneousDataSources.Tests.Exploratory {
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithImageLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.ImageUrl,
                     linkedSource => linkedSource.Image
                 );

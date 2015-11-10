@@ -20,13 +20,13 @@ namespace HeterogeneousDataSources.Tests.Exploratory.Generics
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<StringPieLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.PieContent,
                     linkedSource => linkedSource.SummaryImage
                 );
 
             loadLinkProtocolBuilder.For<IntPieLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.PieContent,
                     linkedSource => linkedSource.SummaryImage
                 );

@@ -19,11 +19,11 @@ namespace HeterogeneousDataSources.Tests {
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<MultipleReferencesTypeLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 )
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.AuthorId,
                     linkedSource => linkedSource.Author
                 );

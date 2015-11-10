@@ -35,7 +35,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 );
 
             loadLinkProtocolBuilder.For<SubContentWithImageLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.ImageId,
                     linkedSource => linkedSource.Image
                 );

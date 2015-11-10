@@ -21,7 +21,7 @@ namespace HeterogeneousDataSources.Tests
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource =>
                     {
                         throw new Exception("Not overridden!");
@@ -32,7 +32,7 @@ namespace HeterogeneousDataSources.Tests
 
             //override
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId+"-overridden",
                     linkedSource => linkedSource.SummaryImage
                 );

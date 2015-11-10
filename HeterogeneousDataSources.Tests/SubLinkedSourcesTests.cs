@@ -22,21 +22,21 @@ namespace HeterogeneousDataSources.Tests
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SubContentsOwnerLinkedSource>()
-                .LoadLinkSubLinkedSource(
+                .LoadLinkNestedLinkedSourceFromModel(
                     linkedSource => linkedSource.Model.SubContents,
                     linkedSource => linkedSource.SubContents
                 )
-                .LoadLinkSubLinkedSource(
+                .LoadLinkNestedLinkedSourceFromModel(
                     linkedSource => linkedSource.Model.SubSubContents,
                     linkedSource => linkedSource.SubSubContents
                 );
             loadLinkProtocolBuilder.For<SubContentWithManySubSubContentsLinkedSource>()
-                .LoadLinkSubLinkedSource(
+                .LoadLinkNestedLinkedSourceFromModel(
                     linkedSource => linkedSource.Model.SubSubContents,
                     linkedSource => linkedSource.SubSubContents
                 );
             loadLinkProtocolBuilder.For<SubSubContentLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );

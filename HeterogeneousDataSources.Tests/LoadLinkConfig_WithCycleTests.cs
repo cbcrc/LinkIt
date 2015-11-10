@@ -13,7 +13,7 @@ namespace HeterogeneousDataSources.Tests {
         public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<CycleInReferenceLinkedSource>()
-                .LoadLinkReference(
+                .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.ParentId,
                     linkedSource => linkedSource.Parent
                 );
@@ -36,7 +36,7 @@ namespace HeterogeneousDataSources.Tests {
         public void CreateLoadLinkConfig_WithCycleCausedByDirectNestedLinkedSource_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<DirectCycleInNestedLinkedSource>()
-                .LoadLinkNestedLinkedSource(
+                .LoadLinkNestedLinkedSourceById(
                     linkedSource => linkedSource.Model.ParentId,
                     linkedSource => linkedSource.Parent
                 );
@@ -59,12 +59,12 @@ namespace HeterogeneousDataSources.Tests {
         public void CreateLoadLinkConfig_WithCycleCausedByIndirectNestedLinkedSource_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<IndirectCycleLevel0LinkedSource>()
-                .LoadLinkNestedLinkedSource(
+                .LoadLinkNestedLinkedSourceById(
                     linkedSource => linkedSource.Model.Level1Id,
                     linkedSource => linkedSource.Level1
                 );
             loadLinkProtocolBuilder.For<IndirectCycleLevel1LinkedSource>()
-                .LoadLinkNestedLinkedSource(
+                .LoadLinkNestedLinkedSourceById(
                     linkedSource => linkedSource.Model.Level0Id,
                     linkedSource => linkedSource.Level0
                 );
