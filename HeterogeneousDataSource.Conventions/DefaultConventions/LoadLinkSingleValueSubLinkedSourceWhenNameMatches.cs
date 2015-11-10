@@ -30,7 +30,7 @@ namespace HeterogeneousDataSource.Conventions.DefaultConventions {
                 getLinkTargetProperty,
                 link => true, 
                 includes => includes
-                    .Include<TLinkTargetProperty>().AsSubLinkedSource(
+                    .Include<TLinkTargetProperty>().AsNestedLinkedSourceFromModel(
                         true,
                         link=>link                        
                     )

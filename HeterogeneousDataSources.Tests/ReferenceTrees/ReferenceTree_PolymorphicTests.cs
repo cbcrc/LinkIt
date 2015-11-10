@@ -24,15 +24,15 @@ namespace HeterogeneousDataSources.Tests {
                     linkedSource => linkedSource.Poly,
                     link => link.Kind,
                     includes => includes
-                        .Include<PersonLinkedSource>().AsNestedLinkedSource(
+                        .Include<PersonLinkedSource>().AsNestedLinkedSourceById(
                             "person-nested",
                             link => (string)link.Value
                         )
-                        .Include<PersonLinkedSource>().AsSubLinkedSource(
+                        .Include<PersonLinkedSource>().AsNestedLinkedSourceFromModel(
                             "person-sub",
                             link => (Person)link.Value
                         )
-                        .Include<Image>().AsReference(
+                        .Include<Image>().AsReferenceById(
                             "img",
                             link=>(string)link.Value
                         )

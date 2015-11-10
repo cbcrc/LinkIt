@@ -14,7 +14,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
             _includeTargetConcreteTypeBuilder = includeTargetConcreteTypeBuilder;
         }
 
-        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsNestedLinkedSource<TId>(
+        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkedSource, int, TTargetConcreteType> initChildLinkedSourceAction = null
@@ -34,7 +34,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
             return _includeTargetConcreteTypeBuilder;
         }
 
-        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsSubLinkedSource<TChildLinkedSourceModel>(
+        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getSubLinkedSourceModel) 
         {
@@ -53,7 +53,7 @@ namespace HeterogeneousDataSources.ConfigBuilders
             return _includeTargetConcreteTypeBuilder;
         }
 
-        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsReference<TId>(
+        public IncludeTargetConcreteTypeBuilder<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> AsReferenceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupIdFunc
         )

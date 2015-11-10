@@ -24,11 +24,11 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Target,
                     link => link.Type,
                     includes => includes
-                        .Include<Image>().AsReference(
+                        .Include<Image>().AsReferenceById(
                             "image",
                             link=>link.Id
                         )
-                        .Include<Person>().AsReference(
+                        .Include<Person>().AsReferenceById(
                             "person",
                             link => link.Id
                         )

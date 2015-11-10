@@ -16,7 +16,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Target,
                     link => link.Type,
                     includes => includes
-                        .Include<PolymorphicSubLinkedSourceTests.WebPageReferenceLinkedSource>().AsSubLinkedSource(
+                        .Include<PolymorphicSubLinkedSourceTests.WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "web-page",
                             link => "a string is not a WebPageReference"
                         )

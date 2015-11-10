@@ -25,11 +25,11 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                     linkedSource => linkedSource.Target,
                     link => link.Type,
                     includes => includes
-                        .Include<PdfReferenceLinkedSource>().AsSubLinkedSource(
+                        .Include<PdfReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "pdf",
                             link=>link
                         )
-                        .Include<WebPageReferenceLinkedSource>().AsSubLinkedSource(
+                        .Include<WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "web-page",
                             link=>link.GetAsBlogPostReference()
                         )
