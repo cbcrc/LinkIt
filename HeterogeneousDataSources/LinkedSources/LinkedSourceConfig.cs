@@ -33,7 +33,7 @@ namespace HeterogeneousDataSources.LinkedSources
         {
             AssumeClassIsAssignableFrom<TIChildLinkedSource, TLinkedSource>();
 
-            return new IncludeNestedLinkedSourceById<TLinkTargetOwner, TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
+            return new IncludeNestedLinkedSourceByIdById<TLinkTargetOwner, TIChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
                 getLookupIdFunc,
                 initChildLinkedSourceAction
             );

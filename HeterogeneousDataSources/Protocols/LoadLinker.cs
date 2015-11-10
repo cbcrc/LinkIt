@@ -114,7 +114,7 @@ namespace HeterogeneousDataSources.Protocols
                     var referenceTypeToBeLoaded = _referenceTypeToBeLoadedForEachLoadingLevel[loadingLevel];
 
                     LoadNestingLevel(referenceTypeToBeLoaded);
-                    LinkNestedLinkedSources(referenceTypeToBeLoaded);
+                    LinkNestedLinkedSourcesById(referenceTypeToBeLoaded);
                     LinkNestedLinkedSourcesFromModel();
                 }
             }
@@ -139,7 +139,7 @@ namespace HeterogeneousDataSources.Protocols
             return lookupIdContext;
         }
 
-        private void LinkNestedLinkedSources(List<Type> referenceTypesToBeLoaded) {
+        private void LinkNestedLinkedSourcesById(List<Type> referenceTypesToBeLoaded) {
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded) {
                 foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
                     var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);

@@ -5,8 +5,8 @@ using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
-    public class IncludeNestedLinkedSourceById<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
-        IIncludeWithCreateNestedLinkedSource<TLinkedSource, TIChildLinkedSource, TLink>, 
+    public class IncludeNestedLinkedSourceByIdById<TLinkedSource, TIChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
+        IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TIChildLinkedSource, TLink>, 
         IIncludeWithAddLookupId<TLink>, 
         IIncludeWithChildLinkedSource 
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
@@ -14,7 +14,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
         private readonly Func<TLink, TId> _getLookupIdFunc;
         private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
 
-        public IncludeNestedLinkedSourceById(
+        public IncludeNestedLinkedSourceByIdById(
             Func<TLink, TId> getLookupIdFunc,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction
         )
@@ -33,7 +33,7 @@ namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
             lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
-        public TIChildLinkedSource CreateNestedLinkedSource(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
+        public TIChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
             var lookupId = _getLookupIdFunc(link);
             var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
             var childLinkedSource = loadedReferenceContext

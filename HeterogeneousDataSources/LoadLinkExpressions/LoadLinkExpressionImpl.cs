@@ -86,9 +86,9 @@ namespace HeterogeneousDataSources.LoadLinkExpressions
         {
             SetLinkTargetValues(
                 linkedSource,
-                link => _includeSet.GetIncludeWithCreateNestedLinkedSourceForReferenceType(link, referenceTypeToBeLinked),
+                link => _includeSet.GetIncludeWithCreateNestedLinkedSourceByIdForReferenceType(link, referenceTypeToBeLinked),
                 (link, include, linkIndex) => 
-                    include.CreateNestedLinkedSource(
+                    include.CreateNestedLinkedSourceById(
                         link,
                         loadedReferenceContext,
                         (TLinkedSource)linkedSource,

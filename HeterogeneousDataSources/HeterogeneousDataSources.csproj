@@ -58,13 +58,13 @@
     <Compile Include="Protocols\LoadLinker.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IInclude.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithChildLinkedSource.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateNestedLinkedSource.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceById.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithAddLookupId.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceFromModel.cs" />
     <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithGetReference.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeSet.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeReferenceById.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceById.cs" />
+    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceByIdById.cs" />
     <Compile Include="LoadLinkExpressions\LoadLinkExpressionImpl.cs" />
     <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceFromModel.cs">
       <SubType>Code</SubType>

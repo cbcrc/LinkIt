@@ -27,7 +27,7 @@ namespace HeterogeneousDataSources.Tests.Polymorphic {
                 Throws.ArgumentException
                     .With.Message.Contains("LinkedSource/Target").And
                     .With.Message.Contains("WebPageReference").And
-                    .With.Message.Contains("getSubLinkedSourceModel")
+                    .With.Message.Contains("getNestedLinkedSourceModel")
             );
         }
     }
