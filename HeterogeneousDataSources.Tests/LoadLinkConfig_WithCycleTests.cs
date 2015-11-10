@@ -1,4 +1,7 @@
 ﻿using ApprovalTests.Reporters;
+using HeterogeneousDataSources.ConfigBuilders;
+using HeterogeneousDataSources.LinkedSources;
+using HeterogeneousDataSources.Protocols;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests {

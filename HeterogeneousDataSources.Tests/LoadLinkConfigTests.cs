@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.LinkTargets;
 using HeterogeneousDataSources.LoadLinkExpressions;
 using HeterogeneousDataSources.LoadLinkExpressions.Includes;
+using HeterogeneousDataSources.Protocols;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 

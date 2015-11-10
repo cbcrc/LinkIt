@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
+using HeterogeneousDataSources.Shared;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions
+namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
     public class IncludeSet<TLinkedSource, TIChildLinkedSource, TLink, TDiscriminant> : IIncludeSet
     {

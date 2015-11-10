@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources {
+namespace HeterogeneousDataSources.ReferenceTrees {
     public class ReferenceTree{
         private readonly ReferenceTree _parent;
 

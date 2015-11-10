@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.Protocols
 {
     public class LookupIdContext
     {

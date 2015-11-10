@@ -1,3 +1,5 @@
+using HeterogeneousDataSources.Protocols;
+
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
     public interface IIncludeWithGetReference<TIReference, TLink>

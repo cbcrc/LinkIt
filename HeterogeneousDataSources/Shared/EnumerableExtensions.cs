@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.Shared
 {
     public static class EnumerableExtensions
     {

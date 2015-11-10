@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSources.LinkedSources;
 
-namespace HeterogeneousDataSources {
+namespace HeterogeneousDataSources.Protocols {
     public class LoadedReferenceContext {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly List<object> _linkedSourcesWhereSubLinkedSourceAreLinked = new List<object>();

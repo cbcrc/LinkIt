@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.ConfigBuilders;
+using HeterogeneousDataSources.Protocols;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;

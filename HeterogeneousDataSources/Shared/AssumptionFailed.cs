@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HeterogeneousDataSources {
+namespace HeterogeneousDataSources.Shared {
     public class AssumptionFailed:Exception {
         public AssumptionFailed(string message) 
             :base(message)

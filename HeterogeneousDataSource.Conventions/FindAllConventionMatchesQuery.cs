@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
+using HeterogeneousDataSources.LinkedSources;
+using HeterogeneousDataSources.LinkTargets;
 
 namespace HeterogeneousDataSource.Conventions {
     public class FindAllConventionMatchesQuery{

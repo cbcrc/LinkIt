@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSources.LinkedSources;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.Protocols
 {
     public class LoadLinker<TRootLinkedSource, TExpectedRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
         where TRootLinkedSource : class, ILinkedSource<TExpectedRootLinkedSourceModel>, new() 

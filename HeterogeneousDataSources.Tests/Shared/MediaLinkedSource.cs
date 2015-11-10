@@ -1,3 +1,4 @@
+using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Tests.Shared;
 
 namespace HeterogeneousDataSources.Tests

@@ -1,6 +1,6 @@
 using System;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LinkTargets
 {
     public interface ILinkTarget : IEquatable<ILinkTarget> {
         string Id { get; }

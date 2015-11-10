@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
+using HeterogeneousDataSources.ConfigBuilders;
+using HeterogeneousDataSources.LinkedSources;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
     public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatches : IByNullableValueTypeIdConvention {

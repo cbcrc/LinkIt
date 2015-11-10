@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.Protocols
 {
     public interface ILoadLinker<TRootLinkedSource>
     {

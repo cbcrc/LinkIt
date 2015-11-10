@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using HeterogeneousDataSources.Protocols;
+using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {

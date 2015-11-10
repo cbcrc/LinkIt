@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using HeterogeneousDataSources.LinkTargets;
 using HeterogeneousDataSources.LoadLinkExpressions.Includes;
+using HeterogeneousDataSources.Protocols;
+using HeterogeneousDataSources.Shared;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LinkedSources
 {
     public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource> 
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()

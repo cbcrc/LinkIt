@@ -6,6 +6,8 @@ using System.Reflection.Emit;
 using ApprovalTests.Reporters;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
+using HeterogeneousDataSources.ConfigBuilders;
+using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 

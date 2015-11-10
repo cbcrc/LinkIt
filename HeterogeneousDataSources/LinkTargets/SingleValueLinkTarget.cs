@@ -1,6 +1,6 @@
 using System;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LinkTargets
 {
     public class SingleValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
     {

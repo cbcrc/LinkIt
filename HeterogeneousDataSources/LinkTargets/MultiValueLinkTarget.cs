@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LinkTargets
 {
     public class MultiValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
     {

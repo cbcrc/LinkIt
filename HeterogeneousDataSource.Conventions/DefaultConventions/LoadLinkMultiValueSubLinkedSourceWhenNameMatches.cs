@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
+using HeterogeneousDataSources.ConfigBuilders;
 
 namespace HeterogeneousDataSource.Conventions.DefaultConventions {
     public class LoadLinkMultiValueSubLinkedSourceWhenNameMatches : IMultiValueConvention {

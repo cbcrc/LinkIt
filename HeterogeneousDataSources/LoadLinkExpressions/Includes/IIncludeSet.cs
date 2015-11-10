@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions
+namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {
     public interface IIncludeSet
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LinkTargets
 {
     //Simplification of the solution shown at:
     //http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette

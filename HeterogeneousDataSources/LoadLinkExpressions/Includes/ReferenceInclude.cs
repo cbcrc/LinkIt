@@ -1,4 +1,6 @@
 using System;
+using HeterogeneousDataSources.Protocols;
+using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {

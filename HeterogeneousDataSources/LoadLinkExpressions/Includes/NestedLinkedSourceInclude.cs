@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSources.LinkedSources;
+using HeterogeneousDataSources.Protocols;
+using HeterogeneousDataSources.ReferenceTrees;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
 {

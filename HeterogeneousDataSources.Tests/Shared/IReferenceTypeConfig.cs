@@ -1,4 +1,5 @@
 ﻿using System;
+using HeterogeneousDataSources.Protocols;
 
 namespace HeterogeneousDataSources.Tests.Shared
 {

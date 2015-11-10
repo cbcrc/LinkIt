@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace HeterogeneousDataSources {
+﻿namespace HeterogeneousDataSources.Protocols {
     public class LoadLinkProtocol {
         private readonly IReferenceLoader _referenceLoader;
         private readonly LoadLinkConfig _config;

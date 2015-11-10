@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSources.LinkTargets;
 using HeterogeneousDataSources.LoadLinkExpressions.Includes;
+using HeterogeneousDataSources.Protocols;
+using HeterogeneousDataSources.ReferenceTrees;
+using HeterogeneousDataSources.Shared;
 
 namespace HeterogeneousDataSources.LoadLinkExpressions
 {

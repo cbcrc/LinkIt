@@ -4,6 +4,8 @@ using ApprovalTests.Reporters;
 using HeterogeneousDataSource.Conventions.DefaultConventions;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
+using HeterogeneousDataSources.ConfigBuilders;
+using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;

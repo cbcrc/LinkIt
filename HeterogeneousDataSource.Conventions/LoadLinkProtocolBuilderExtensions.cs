@@ -5,6 +5,8 @@ using System.Reflection;
 using HeterogeneousDataSource.Conventions.DefaultConventions;
 using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources;
+using HeterogeneousDataSources.ConfigBuilders;
+using HeterogeneousDataSources.Shared;
 
 namespace HeterogeneousDataSource.Conventions
 {

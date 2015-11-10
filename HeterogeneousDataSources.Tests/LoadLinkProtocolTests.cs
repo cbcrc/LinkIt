@@ -1,5 +1,6 @@
 using System;
 using ApprovalTests.Reporters;
+using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.Tests.Shared;
 using NUnit.Framework;
 

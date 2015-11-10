@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.LoadLinkExpressions;
+using HeterogeneousDataSources.ReferenceTrees;
+using HeterogeneousDataSources.Shared;
 
-namespace HeterogeneousDataSources {
+namespace HeterogeneousDataSources.Protocols {
     public class LoadLinkConfig {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.LinkedSources
 {
     public interface ILinkedSourceConfig {
         Type LinkedSourceType { get; }

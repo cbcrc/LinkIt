@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HeterogeneousDataSources
+namespace HeterogeneousDataSources.Protocols
 {
     public interface IReferenceLoader: IDisposable
     {
