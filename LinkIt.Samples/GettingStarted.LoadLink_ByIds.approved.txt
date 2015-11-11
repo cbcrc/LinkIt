@@ -1,0 +1,62 @@
+﻿[
+  {
+    "model": {
+      "id": "one",
+      "title": "title-one",
+      "tagIds": [
+        "tag-one-a",
+        "tag-one-b"
+      ]
+    },
+    "tags": [
+      {
+        "id": "tag-one-a",
+        "name": "tag-one-a-name"
+      },
+      {
+        "id": "tag-one-b",
+        "name": "tag-one-b-name"
+      }
+    ]
+  },
+  {
+    "model": {
+      "id": "two",
+      "title": "title-two",
+      "tagIds": [
+        "tag-two-a",
+        "tag-two-b"
+      ]
+    },
+    "tags": [
+      {
+        "id": "tag-two-a",
+        "name": "tag-two-a-name"
+      },
+      {
+        "id": "tag-two-b",
+        "name": "tag-two-b-name"
+      }
+    ]
+  },
+  {
+    "model": {
+      "id": "three",
+      "title": "title-three",
+      "tagIds": [
+        "tag-three-a",
+        "tag-three-b"
+      ]
+    },
+    "tags": [
+      {
+        "id": "tag-three-a",
+        "name": "tag-three-a-name"
+      },
+      {
+        "id": "tag-three-b",
+        "name": "tag-three-b-name"
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+﻿{
+  "model": {
+    "id": "one",
+    "title": "title-one",
+    "tagIds": [
+      "tag-one-a",
+      "tag-one-b"
+    ]
+  },
+  "tags": [
+    {
+      "id": "tag-one-a",
+      "name": "tag-one-a-name"
+    },
+    {
+      "id": "tag-one-b",
+      "name": "tag-one-b-name"
+    }
+  ]
+}
