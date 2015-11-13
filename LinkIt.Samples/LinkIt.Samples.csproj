@@ -69,13 +69,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HeterogeneousDataSources\LinkIt.csproj">
-      <Project>{5630ADF5-F7D6-4257-B5E3-30DFE715AF39}</Project>
-      <Name>LinkIt</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LinkIt.Conventions\LinkIt.Conventions.csproj">
       <Project>{03d5bdbc-e219-49c1-88c0-f790411c7a35}</Project>
       <Name>LinkIt.Conventions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LinkIt\LinkIt.csproj">
+      <Project>{5630adf5-f7d6-4257-b5e3-30dfe715af39}</Project>
+      <Name>LinkIt</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

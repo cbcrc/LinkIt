@@ -57,7 +57,7 @@
     <Compile Include="PropertyInfoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HeterogeneousDataSources\LinkIt.csproj">
+    <ProjectReference Include="..\LinkIt\LinkIt.csproj">
       <Project>{5630adf5-f7d6-4257-b5e3-30dfe715af39}</Project>
       <Name>LinkIt</Name>
     </ProjectReference>

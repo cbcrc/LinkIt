@@ -77,12 +77,12 @@
       <Project>{03d5bdbc-e219-49c1-88c0-f790411c7a35}</Project>
       <Name>LinkIt.Conventions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HeterogeneousDataSources.Tests\LinkIt.Tests.csproj">
+    <ProjectReference Include="..\LinkIt.Tests\LinkIt.Tests.csproj">
       <Project>{9882ee6a-e815-4ac0-85ed-cfcb35ac6109}</Project>
       <Name>LinkIt.Tests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HeterogeneousDataSources\LinkIt.csproj">
-      <Project>{5630ADF5-F7D6-4257-B5E3-30DFE715AF39}</Project>
+    <ProjectReference Include="..\LinkIt\LinkIt.csproj">
+      <Project>{5630adf5-f7d6-4257-b5e3-30dfe715af39}</Project>
       <Name>LinkIt</Name>
     </ProjectReference>
   </ItemGroup>
