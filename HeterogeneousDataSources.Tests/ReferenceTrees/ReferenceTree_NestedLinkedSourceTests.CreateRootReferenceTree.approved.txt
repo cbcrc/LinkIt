@@ -1,26 +1,26 @@
 ﻿{
   "node": {
-    "referenceType": "HeterogeneousDataSources.Tests.ReferenceTree_NestedLinkedSourceTests+Model, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "referenceType": "LinkIt.Tests.ReferenceTrees.ReferenceTree_NestedLinkedSourceTests+Model, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "linkTargetId": "root"
   },
   "children": [
     {
       "node": {
-        "referenceType": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "linkTargetId": "HeterogeneousDataSources.Tests.ReferenceTree_NestedLinkedSourceTests+LinkedSource/PreImage"
+        "referenceType": "LinkIt.Tests.Shared.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "linkTargetId": "LinkIt.Tests.ReferenceTrees.ReferenceTree_NestedLinkedSourceTests+LinkedSource/PreImage"
       },
       "children": []
     },
     {
       "node": {
-        "referenceType": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "linkTargetId": "HeterogeneousDataSources.Tests.ReferenceTree_NestedLinkedSourceTests+LinkedSource/Person"
+        "referenceType": "LinkIt.Tests.Shared.Person, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "linkTargetId": "LinkIt.Tests.ReferenceTrees.ReferenceTree_NestedLinkedSourceTests+LinkedSource/Person"
       },
       "children": [
         {
           "node": {
-            "referenceType": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "linkTargetId": "HeterogeneousDataSources.Tests.PersonLinkedSource/SummaryImage"
+            "referenceType": "LinkIt.Tests.Shared.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "linkTargetId": "LinkIt.Tests.PersonLinkedSource/SummaryImage"
           },
           "children": []
         }
@@ -28,8 +28,8 @@
     },
     {
       "node": {
-        "referenceType": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "linkTargetId": "HeterogeneousDataSources.Tests.ReferenceTree_NestedLinkedSourceTests+LinkedSource/PostImage"
+        "referenceType": "LinkIt.Tests.Shared.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "linkTargetId": "LinkIt.Tests.ReferenceTrees.ReferenceTree_NestedLinkedSourceTests+LinkedSource/PostImage"
       },
       "children": []
     }

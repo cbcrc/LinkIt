@@ -4,7 +4,7 @@
     "targetReference": "nested"
   },
   "target": {
-    "$type": "HeterogeneousDataSources.Tests.PersonLinkedSource, HeterogeneousDataSources.Tests",
+    "$type": "LinkIt.Tests.PersonLinkedSource, LinkIt.Tests",
     "model": {
       "id": "nested",
       "name": "name-nested",

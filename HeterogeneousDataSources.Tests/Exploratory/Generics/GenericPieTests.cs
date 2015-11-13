@@ -1,12 +1,12 @@
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.ConfigBuilders;
 using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Protocols;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace HeterogeneousDataSources.Tests.Exploratory.Generics
+namespace LinkIt.Tests.Exploratory.Generics
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]

@@ -1,4 +1,4 @@
-namespace HeterogeneousDataSources.Tests.Exploratory.Generics
+namespace LinkIt.Tests.Exploratory.Generics
 {
     public class Pie<T>
     {

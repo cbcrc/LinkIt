@@ -4,7 +4,7 @@ using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Protocols;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSources.Tests {
+namespace LinkIt.Tests {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class LoadLinkConfig_WithCycleTests

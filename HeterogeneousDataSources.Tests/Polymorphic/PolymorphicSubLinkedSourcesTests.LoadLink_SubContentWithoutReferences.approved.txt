@@ -3,12 +3,12 @@
     "id": "1",
     "subs": [
       {
-        "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImage, HeterogeneousDataSources.Tests",
+        "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImage, LinkIt.Tests",
         "id": "a",
         "imageId": "i-a"
       },
       {
-        "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferences, HeterogeneousDataSources.Tests",
+        "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferences, LinkIt.Tests",
         "id": "b",
         "title": "sub-b"
       }
@@ -16,7 +16,7 @@
   },
   "subs": [
     {
-      "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImageLinkedSource, HeterogeneousDataSources.Tests",
+      "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImageLinkedSource, LinkIt.Tests",
       "model": {
         "id": "a",
         "imageId": "i-a"
@@ -27,7 +27,7 @@
       }
     },
     {
-      "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferencesLinkedSource, HeterogeneousDataSources.Tests",
+      "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferencesLinkedSource, LinkIt.Tests",
       "model": {
         "id": "b",
         "title": "sub-b"

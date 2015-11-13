@@ -4,7 +4,7 @@ using System.Linq;
 using LinkIt.Protocols;
 using LinkIt.Protocols.Interfaces;
 
-namespace HeterogeneousDataSources.Tests.Shared {
+namespace LinkIt.Tests.Shared {
     
     public class FakeReferenceLoader<TReference, TId>:IReferenceLoader
     {

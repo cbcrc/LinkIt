@@ -1,4 +1,4 @@
-﻿namespace HeterogeneousDataSources.Tests.Shared
+﻿namespace LinkIt.Tests.Shared
 {
     public class Media:IPolymorphicModel {
         public int Id { get; set; }

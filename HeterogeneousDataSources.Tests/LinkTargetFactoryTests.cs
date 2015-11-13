@@ -1,9 +1,9 @@
-﻿using HeterogeneousDataSources.Tests.Shared;
-using LinkIt.LinkedSources.Interfaces;
+﻿using LinkIt.LinkedSources.Interfaces;
 using LinkIt.LinkTargets;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSources.Tests {
+namespace LinkIt.Tests {
     [TestFixture]
     public class LinkTargetFactoryTests {
         [Test]

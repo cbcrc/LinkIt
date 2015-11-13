@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace HeterogeneousDataSources.Tests.Shared
+﻿namespace LinkIt.Tests.Shared
 {
     public interface IPolymorphicModel
     {}

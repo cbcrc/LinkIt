@@ -14,13 +14,13 @@
   },
   "target": [
     {
-      "$type": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests",
+      "$type": "LinkIt.Tests.Shared.Person, LinkIt.Tests",
       "id": "a",
       "name": "name-a",
       "summaryImageId": "person-img-a"
     },
     {
-      "$type": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests",
+      "$type": "LinkIt.Tests.Shared.Image, LinkIt.Tests",
       "id": "a",
       "alt": "alt-a"
     }

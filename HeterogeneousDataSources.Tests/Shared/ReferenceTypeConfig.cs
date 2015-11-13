@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LinkIt.Protocols;
 
-namespace HeterogeneousDataSources.Tests.Shared
+namespace LinkIt.Tests.Shared
 {
     public class ReferenceTypeConfig<TReference, TId> : IReferenceTypeConfig {
         private readonly Func<List<TId>, List<TReference>> _loadReferencesFunc;

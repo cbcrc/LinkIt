@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.ConfigBuilders;
 using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Protocols;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace HeterogeneousDataSources.Tests.Exploratory {
+namespace LinkIt.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests

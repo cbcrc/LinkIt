@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.ConfigBuilders;
 using LinkIt.Protocols;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSources.Tests {
+namespace LinkIt.Tests {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class LoadLinkModelTests

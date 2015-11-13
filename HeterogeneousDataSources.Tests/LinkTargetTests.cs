@@ -1,7 +1,4 @@
-﻿using HeterogeneousDataSources.Tests.Shared;
-using NUnit.Framework;
-
-namespace HeterogeneousDataSources.Tests {
+﻿namespace LinkIt.Tests {
 //stle: put back
 
     //[TestFixture]

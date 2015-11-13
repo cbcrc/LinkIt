@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.LinkTargets;
 using LinkIt.LoadLinkExpressions;
 using LinkIt.LoadLinkExpressions.Includes;
@@ -8,7 +7,7 @@ using LinkIt.LoadLinkExpressions.Includes.Interfaces;
 using LinkIt.Protocols;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSources.Tests {
+namespace LinkIt.Tests {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class LoadLinkConfigTests

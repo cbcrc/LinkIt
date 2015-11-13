@@ -1,5 +1,4 @@
 ﻿using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.ConfigBuilders;
 using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Protocols;
@@ -7,7 +6,7 @@ using LinkIt.ReferenceTrees;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace HeterogeneousDataSources.Tests {
+namespace LinkIt.Tests.ReferenceTrees {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class ReferenceTree_SimplestRootLinkedSourceTests

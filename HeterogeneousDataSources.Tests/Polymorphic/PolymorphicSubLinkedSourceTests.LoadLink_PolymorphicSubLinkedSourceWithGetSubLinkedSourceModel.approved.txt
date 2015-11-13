@@ -7,7 +7,7 @@
     }
   },
   "target": {
-    "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicSubLinkedSourceTests+WebPageReferenceLinkedSource, HeterogeneousDataSources.Tests",
+    "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourceTests+WebPageReferenceLinkedSource, LinkIt.Tests",
     "model": {
       "title": "title-a",
       "imageId": "computed-image-ida"

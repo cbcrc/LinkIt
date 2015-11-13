@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.LinkedSources.Interfaces;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 

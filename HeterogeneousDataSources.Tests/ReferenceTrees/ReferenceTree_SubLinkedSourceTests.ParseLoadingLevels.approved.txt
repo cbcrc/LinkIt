@@ -1,9 +1,9 @@
 ﻿[
   [
-    "HeterogeneousDataSources.Tests.ReferenceTree_SubLinkedSourceTests+Model, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    "LinkIt.Tests.ReferenceTrees.ReferenceTree_SubLinkedSourceTests+Model, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ],
   [
-    "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    "LinkIt.Tests.Shared.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "LinkIt.Tests.Shared.Person, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ]
 ]

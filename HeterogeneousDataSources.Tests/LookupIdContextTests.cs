@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HeterogeneousDataSources.Tests.Shared;
-using LinkIt.Protocols;
+﻿using LinkIt.Protocols;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSources.Tests {
+namespace LinkIt.Tests {
     [TestFixture]
     public class LookupIdContextTests {
         private LookupIdContext _sut;

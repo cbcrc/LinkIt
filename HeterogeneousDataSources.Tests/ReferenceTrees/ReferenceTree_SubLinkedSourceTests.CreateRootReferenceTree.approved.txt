@@ -1,20 +1,20 @@
 ﻿{
   "node": {
-    "referenceType": "HeterogeneousDataSources.Tests.ReferenceTree_SubLinkedSourceTests+Model, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "referenceType": "LinkIt.Tests.ReferenceTrees.ReferenceTree_SubLinkedSourceTests+Model, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
     "linkTargetId": "root"
   },
   "children": [
     {
       "node": {
-        "referenceType": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "linkTargetId": "HeterogeneousDataSources.Tests.ReferenceTree_SubLinkedSourceTests+PostLinkedSource/SummaryImage"
+        "referenceType": "LinkIt.Tests.Shared.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "linkTargetId": "LinkIt.Tests.ReferenceTrees.ReferenceTree_SubLinkedSourceTests+PostLinkedSource/SummaryImage"
       },
       "children": []
     },
     {
       "node": {
-        "referenceType": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-        "linkTargetId": "HeterogeneousDataSources.Tests.ReferenceTree_SubLinkedSourceTests+PostThreadLinkedSource/Author"
+        "referenceType": "LinkIt.Tests.Shared.Person, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "linkTargetId": "LinkIt.Tests.ReferenceTrees.ReferenceTree_SubLinkedSourceTests+PostThreadLinkedSource/Author"
       },
       "children": []
     }

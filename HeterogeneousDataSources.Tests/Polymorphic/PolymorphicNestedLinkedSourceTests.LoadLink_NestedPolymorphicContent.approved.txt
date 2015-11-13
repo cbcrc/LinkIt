@@ -8,7 +8,7 @@
     }
   },
   "content": {
-    "$type": "HeterogeneousDataSources.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests+PersonWithoutContextualizationLinkedSource, HeterogeneousDataSources.Tests",
+    "$type": "LinkIt.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests+PersonWithoutContextualizationLinkedSource, LinkIt.Tests",
     "model": {
       "id": "p1",
       "name": "name-p1",

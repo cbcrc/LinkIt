@@ -7,7 +7,7 @@
     }
   },
   "target": {
-    "$type": "HeterogeneousDataSources.Tests.Shared.Image, HeterogeneousDataSources.Tests",
+    "$type": "LinkIt.Tests.Shared.Image, LinkIt.Tests",
     "id": "a",
     "alt": "alt-a"
   }

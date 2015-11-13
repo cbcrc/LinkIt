@@ -1,7 +1,6 @@
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.LinkedSources.Interfaces;
 
-namespace HeterogeneousDataSources.Tests
+namespace LinkIt.Tests.Shared
 {
     public class MediaLinkedSource : ILinkedSource<Media> {
         public Media Model { get; set; }

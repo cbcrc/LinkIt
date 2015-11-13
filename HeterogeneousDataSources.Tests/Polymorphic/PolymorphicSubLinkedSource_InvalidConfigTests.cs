@@ -2,7 +2,7 @@
 using LinkIt.ConfigBuilders;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSources.Tests.Polymorphic {
+namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicSubLinkedSource_InvalidConfigTests {

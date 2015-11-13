@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
+﻿using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Protocols;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace HeterogeneousDataSources.Tests.Polymorphic {
+namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicSubLinkedSourceTests {

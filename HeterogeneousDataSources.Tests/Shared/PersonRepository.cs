@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources.Tests.Shared
+namespace LinkIt.Tests.Shared
 {
     public class PersonRepository
     {

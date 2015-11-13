@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources.Tests.Exploratory.Generics
+namespace LinkIt.Tests.Exploratory.Generics
 {
     public class PieRepository<T>
     {

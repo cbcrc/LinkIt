@@ -7,7 +7,7 @@
     }
   },
   "target": {
-    "$type": "HeterogeneousDataSources.Tests.Shared.Person, HeterogeneousDataSources.Tests",
+    "$type": "LinkIt.Tests.Shared.Person, LinkIt.Tests",
     "id": "a",
     "name": "name-a",
     "summaryImageId": "person-img-a"

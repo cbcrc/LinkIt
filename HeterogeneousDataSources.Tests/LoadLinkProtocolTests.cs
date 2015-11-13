@@ -1,10 +1,9 @@
-using System;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.Tests.Shared;
 using LinkIt.ConfigBuilders;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSources.Tests
+namespace LinkIt.Tests
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
