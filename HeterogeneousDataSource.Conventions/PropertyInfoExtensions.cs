@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace HeterogeneousDataSource.Conventions
+namespace LinkIt.Conventions
 {
     public static class PropertyInfoExtensionsForLoadLinkExpressionConventions
     {

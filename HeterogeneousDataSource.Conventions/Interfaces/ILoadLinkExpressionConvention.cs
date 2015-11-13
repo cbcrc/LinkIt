@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace HeterogeneousDataSource.Conventions.Interfaces
+namespace LinkIt.Conventions.Interfaces
 {
     public interface ILoadLinkExpressionConvention{
         string Name { get; }

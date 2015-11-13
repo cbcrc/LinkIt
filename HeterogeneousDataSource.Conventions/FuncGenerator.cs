@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace HeterogeneousDataSource.Conventions {
+namespace LinkIt.Conventions {
     //stle: dry with RC.AutoMapper
     public static class FuncGenerator {
         public static Func<TPropertyOwner, TProperty> GenerateFromGetter<TPropertyOwner, TProperty>(string propertyInDotNotation) {

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.DefaultConventions;
-using HeterogeneousDataSource.Conventions.Interfaces;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.Shared;
+using LinkIt.Conventions.DefaultConventions;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions
+namespace LinkIt.Conventions
 {
     public static class LoadLinkProtocolBuilderExtensions
     {

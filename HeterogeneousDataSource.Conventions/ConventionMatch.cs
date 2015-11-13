@@ -1,8 +1,8 @@
 using System;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.Interfaces;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions
+namespace LinkIt.Conventions
 {
     public class ConventionMatch {
         public ConventionMatch(ILoadLinkExpressionConvention convention, Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty) {

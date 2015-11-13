@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources.ConfigBuilders;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions.DefaultConventions {
+namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches : ISingleValueConvention {
         public string Name {
             get { return "Load link single value nested linked source from model source when name matches"; }

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.Interfaces;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.LinkedSources;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions.DefaultConventions {
+namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkMultiValueWhenIdSuffixMatches : IMultiValueConvention {
         public string Name {
             get { return "Load link multi value when id suffix matches"; }

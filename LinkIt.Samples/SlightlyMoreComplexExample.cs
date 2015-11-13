@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSource.Conventions;
 using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Protocols;
-using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.Conventions;
 using NUnit.Framework;
 using RC.Testing;
 

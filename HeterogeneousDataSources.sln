@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeterogeneousDataSources", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeterogeneousDataSources.Tests", "HeterogeneousDataSources.Tests\HeterogeneousDataSources.Tests.csproj", "{9882EE6A-E815-4AC0-85ED-CFCB35AC6109}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeterogeneousDataSource.Conventions", "HeterogeneousDataSource.Conventions\HeterogeneousDataSource.Conventions.csproj", "{03D5BDBC-E219-49C1-88C0-F790411C7A35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkIt.Conventions", "HeterogeneousDataSource.Conventions\LinkIt.Conventions.csproj", "{03D5BDBC-E219-49C1-88C0-F790411C7A35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeterogeneousDataSource.Conventions.Tests", "HeterogeneousDataSource.Conventions.Tests\HeterogeneousDataSource.Conventions.Tests.csproj", "{AEFD87A2-F28A-494A-8866-38EA36DB5898}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkIt.Conventions.Tests", "HeterogeneousDataSource.Conventions.Tests\LinkIt.Conventions.Tests.csproj", "{AEFD87A2-F28A-494A-8866-38EA36DB5898}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkIt.Samples", "LinkIt.Samples\LinkIt.Samples.csproj", "{A5ACF232-1C5A-4AC5-89EE-9C0E7923648E}"
 EndProject

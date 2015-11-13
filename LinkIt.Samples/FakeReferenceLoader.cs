@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using HeterogeneousDataSources.Protocols;
-using LinkIt.Samples;
 
-namespace HeterogeneousDataSources.Tests.Shared {
+namespace LinkIt.Samples {
     
     //stle: rename the other FakeReferenceLoader to ReferenceLoaderStub
     public class FakeReferenceLoader:IReferenceLoader

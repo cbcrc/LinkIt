@@ -7,8 +7,8 @@
     <ProjectGuid>{AEFD87A2-F28A-494A-8866-38EA36DB5898}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HeterogeneousDataSource.Conventions.Tests</RootNamespace>
-    <AssemblyName>HeterogeneousDataSource.Conventions.Tests</AssemblyName>
+    <RootNamespace>LinkIt.Conventions.Tests</RootNamespace>
+    <AssemblyName>LinkIt.Conventions.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -73,9 +73,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HeterogeneousDataSource.Conventions\HeterogeneousDataSource.Conventions.csproj">
+    <ProjectReference Include="..\HeterogeneousDataSource.Conventions\LinkIt.Conventions.csproj">
       <Project>{03d5bdbc-e219-49c1-88c0-f790411c7a35}</Project>
-      <Name>HeterogeneousDataSource.Conventions</Name>
+      <Name>LinkIt.Conventions</Name>
     </ProjectReference>
     <ProjectReference Include="..\HeterogeneousDataSources.Tests\HeterogeneousDataSources.Tests.csproj">
       <Project>{9882ee6a-e815-4ac0-85ed-cfcb35ac6109}</Project>

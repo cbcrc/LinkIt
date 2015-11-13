@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.Interfaces;
 using HeterogeneousDataSources.ConfigBuilders;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions.DefaultConventions {
+namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches : IMultiValueConvention {
         public string Name {
             get { return "Load link multi value nested linked source from model when name matches"; }

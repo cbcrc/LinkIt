@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.Interfaces;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.LinkTargets;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions {
+namespace LinkIt.Conventions {
     public class FindAllConventionMatchesQuery{
         private readonly List<Type> _types;
         private readonly List<ILoadLinkExpressionConvention> _conventions;

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.Interfaces;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.LinkedSources;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions.DefaultConventions {
+namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatches : IByNullableValueTypeIdConvention {
         public string Name{
             get { return "Load link by nullable value type id when id suffix matches"; } 

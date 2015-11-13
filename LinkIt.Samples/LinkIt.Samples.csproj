@@ -69,9 +69,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HeterogeneousDataSource.Conventions\HeterogeneousDataSource.Conventions.csproj">
+    <ProjectReference Include="..\HeterogeneousDataSource.Conventions\LinkIt.Conventions.csproj">
       <Project>{03d5bdbc-e219-49c1-88c0-f790411c7a35}</Project>
-      <Name>HeterogeneousDataSource.Conventions</Name>
+      <Name>LinkIt.Conventions</Name>
     </ProjectReference>
     <ProjectReference Include="..\HeterogeneousDataSources\HeterogeneousDataSources.csproj">
       <Project>{5630ADF5-F7D6-4257-B5E3-30DFE715AF39}</Project>

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HeterogeneousDataSource.Conventions.Interfaces;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.LinkTargets;
+using LinkIt.Conventions.Interfaces;
 
-namespace HeterogeneousDataSource.Conventions
+namespace LinkIt.Conventions
 {
     public class ApplyLoadLinkConventionCommand
     {

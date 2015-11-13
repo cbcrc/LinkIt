@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSource.Conventions.Interfaces;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.Conventions.Interfaces;
 using NUnit.Framework;
 
-namespace HeterogeneousDataSource.Conventions.Tests
+namespace LinkIt.Conventions.Tests
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]

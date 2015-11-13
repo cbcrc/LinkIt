@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.ConfigBuilders;
 
-namespace HeterogeneousDataSource.Conventions.Interfaces
+namespace LinkIt.Conventions.Interfaces
 {
     public interface IMultiValueConvention:ILoadLinkExpressionConvention
     {

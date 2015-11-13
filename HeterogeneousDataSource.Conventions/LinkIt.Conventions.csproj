@@ -7,8 +7,8 @@
     <ProjectGuid>{03D5BDBC-E219-49C1-88C0-F790411C7A35}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HeterogeneousDataSource.Conventions</RootNamespace>
-    <AssemblyName>HeterogeneousDataSource.Conventions</AssemblyName>
+    <RootNamespace>LinkIt.Conventions</RootNamespace>
+    <AssemblyName>LinkIt.Conventions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

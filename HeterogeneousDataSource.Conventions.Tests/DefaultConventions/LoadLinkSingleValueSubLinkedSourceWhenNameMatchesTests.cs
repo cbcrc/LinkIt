@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSource.Conventions.DefaultConventions;
-using HeterogeneousDataSource.Conventions.Interfaces;
-using HeterogeneousDataSources;
 using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Tests;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.Conventions.DefaultConventions;
+using LinkIt.Conventions.Interfaces;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace HeterogeneousDataSource.Conventions.Tests.DefaultConventions
+namespace LinkIt.Conventions.Tests.DefaultConventions
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
