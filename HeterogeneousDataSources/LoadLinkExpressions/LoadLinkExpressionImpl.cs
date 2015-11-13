@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LinkTargets;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
-using HeterogeneousDataSources.Protocols;
-using HeterogeneousDataSources.ReferenceTrees;
-using HeterogeneousDataSources.Shared;
+using LinkIt.LinkTargets.Interfaces;
+using LinkIt.LoadLinkExpressions.Includes;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Protocols;
+using LinkIt.ReferenceTrees;
+using LinkIt.Shared;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions
+namespace LinkIt.LoadLinkExpressions
 {
     public class LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>:ILoadLinkExpression
     {

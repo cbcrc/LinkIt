@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.Protocols;
+using LinkIt.LoadLinkExpressions;
+using LinkIt.Protocols;
+using LinkIt.Protocols.Interfaces;
 
-namespace HeterogeneousDataSources.ConfigBuilders {
+namespace LinkIt.ConfigBuilders {
     public class LoadLinkProtocolBuilder
     {
         private readonly Dictionary<string, ILoadLinkExpression> _loadLinkExpressionsById = 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources.ReferenceTrees {
+namespace LinkIt.ReferenceTrees {
     public static class ReferenceTreeExtensions {
         public static List<List<Type>> ParseLoadLevels(this ReferenceTree rootReferenceTree) {
             var loadingLevelByReferenceType = new Dictionary<Type, int>();

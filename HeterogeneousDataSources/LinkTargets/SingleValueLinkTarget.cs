@@ -1,6 +1,7 @@
 using System;
+using LinkIt.LinkTargets.Interfaces;
 
-namespace HeterogeneousDataSources.LinkTargets
+namespace LinkIt.LinkTargets
 {
     public class SingleValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
     {

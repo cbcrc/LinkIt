@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using HeterogeneousDataSources.ConfigBuilders;
-using HeterogeneousDataSources.LinkedSources;
+using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
+using LinkIt.LinkedSources;
 
 namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkMultiValueWhenIdSuffixMatches : IMultiValueConvention {

@@ -1,4 +1,6 @@
-﻿namespace HeterogeneousDataSources.Protocols {
+﻿using LinkIt.Protocols.Interfaces;
+
+namespace LinkIt.Protocols {
     public class LoadLinkProtocol {
         private readonly IReferenceLoader _referenceLoader;
         private readonly LoadLinkConfig _config;

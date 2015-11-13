@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using LinkIt.LinkTargets.Interfaces;
 
-namespace HeterogeneousDataSources.LinkTargets
+namespace LinkIt.LinkTargets
 {
     //Simplification of the solution shown at:
     //http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette

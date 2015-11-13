@@ -1,5 +1,5 @@
 ﻿using ApprovalTests.Reporters;
-using HeterogeneousDataSources.ConfigBuilders;
+using LinkIt.ConfigBuilders;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests.Polymorphic {

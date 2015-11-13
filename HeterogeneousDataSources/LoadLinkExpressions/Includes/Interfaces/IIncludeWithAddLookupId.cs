@@ -1,8 +1,8 @@
 ﻿using System;
-using HeterogeneousDataSources.Protocols;
-using HeterogeneousDataSources.ReferenceTrees;
+using LinkIt.Protocols;
+using LinkIt.ReferenceTrees;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Includes {
+namespace LinkIt.LoadLinkExpressions.Includes.Interfaces {
 
     public interface IIncludeWithAddLookupId<TLink>:IInclude {
         Type ReferenceType { get; }

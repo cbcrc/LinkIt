@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.ConfigBuilders;
-using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
+using LinkIt.LinkedSources.Interfaces;
 using NUnit.Framework;
 
 namespace LinkIt.Conventions.Tests

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.Shared;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Shared;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
+namespace LinkIt.LoadLinkExpressions.Includes
 {
     public class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {

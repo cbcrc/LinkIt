@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HeterogeneousDataSources.ConfigBuilders;
-using HeterogeneousDataSources.LinkTargets;
+using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
+using LinkIt.LinkTargets;
 
 namespace LinkIt.Conventions
 {

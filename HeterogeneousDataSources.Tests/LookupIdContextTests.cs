@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.Protocols;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.Protocols;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests {

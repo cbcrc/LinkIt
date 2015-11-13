@@ -1,6 +1,4 @@
-using System;
-
-namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
+namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
 {
     public interface IInclude{}
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LinkedSources;
-using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.ReferenceTrees;
-using HeterogeneousDataSources.Shared;
+using LinkIt.LinkedSources;
+using LinkIt.LoadLinkExpressions;
+using LinkIt.Protocols.Interfaces;
+using LinkIt.ReferenceTrees;
+using LinkIt.Shared;
 
-namespace HeterogeneousDataSources.Protocols {
+namespace LinkIt.Protocols {
     public class LoadLinkConfig {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
 

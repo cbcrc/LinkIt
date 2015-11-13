@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace HeterogeneousDataSources.LinkTargets
+namespace LinkIt.LinkTargets
 {
     public static class PropertyInfoExtensions
     {

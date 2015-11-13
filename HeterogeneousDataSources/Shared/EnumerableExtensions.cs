@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HeterogeneousDataSources.Shared
+namespace LinkIt.Shared
 {
     public static class EnumerableExtensions
     {

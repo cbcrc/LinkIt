@@ -1,6 +1,6 @@
-﻿using HeterogeneousDataSources.LinkedSources;
-using HeterogeneousDataSources.LinkTargets;
-using HeterogeneousDataSources.Tests.Shared;
+﻿using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.LinkedSources.Interfaces;
+using LinkIt.LinkTargets;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests {

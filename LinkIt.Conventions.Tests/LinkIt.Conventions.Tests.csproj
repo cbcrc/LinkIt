@@ -81,9 +81,9 @@
       <Project>{9882ee6a-e815-4ac0-85ed-cfcb35ac6109}</Project>
       <Name>HeterogeneousDataSources.Tests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HeterogeneousDataSources\HeterogeneousDataSources.csproj">
+    <ProjectReference Include="..\HeterogeneousDataSources\LinkIt.csproj">
       <Project>{5630ADF5-F7D6-4257-B5E3-30DFE715AF39}</Project>
-      <Name>HeterogeneousDataSources</Name>
+      <Name>LinkIt</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,8 +1,8 @@
 using System;
-using HeterogeneousDataSources.LinkedSources;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
+using LinkIt.LinkedSources;
+using LinkIt.LoadLinkExpressions.Includes;
 
-namespace HeterogeneousDataSources.ConfigBuilders
+namespace LinkIt.ConfigBuilders
 {
     public class IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget>
         where TLinkTarget : TAbstractLinkTarget

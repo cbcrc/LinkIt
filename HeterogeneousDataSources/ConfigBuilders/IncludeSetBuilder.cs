@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using HeterogeneousDataSources.LinkTargets;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
+using LinkIt.LinkTargets.Interfaces;
+using LinkIt.LoadLinkExpressions.Includes;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
 
-namespace HeterogeneousDataSources.ConfigBuilders
+namespace LinkIt.ConfigBuilders
 {
     public class IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>
     {

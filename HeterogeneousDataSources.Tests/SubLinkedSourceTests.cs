@@ -1,8 +1,8 @@
 ﻿using ApprovalTests.Reporters;
-using HeterogeneousDataSources.ConfigBuilders;
-using HeterogeneousDataSources.LinkedSources;
-using HeterogeneousDataSources.Protocols;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.ConfigBuilders;
+using LinkIt.LinkedSources.Interfaces;
+using LinkIt.Protocols;
 using NUnit.Framework;
 using RC.Testing;
 

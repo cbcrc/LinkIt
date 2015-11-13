@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HeterogeneousDataSources.Protocols
+namespace LinkIt.Protocols.Interfaces
 {
     public interface IReferenceLoader: IDisposable
     {

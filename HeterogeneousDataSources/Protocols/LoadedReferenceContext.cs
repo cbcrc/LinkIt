@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HeterogeneousDataSources.LinkedSources;
+using LinkIt.LinkedSources.Interfaces;
 
-namespace HeterogeneousDataSources.Protocols {
+namespace LinkIt.Protocols {
     public class LoadedReferenceContext {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly List<object> _linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked = new List<object>();

@@ -1,5 +1,5 @@
-using HeterogeneousDataSources.LinkedSources;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.LinkedSources.Interfaces;
 
 namespace HeterogeneousDataSources.Tests
 {

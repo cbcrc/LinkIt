@@ -1,9 +1,10 @@
 using System;
-using HeterogeneousDataSources.LinkedSources;
-using HeterogeneousDataSources.Protocols;
-using HeterogeneousDataSources.ReferenceTrees;
+using LinkIt.LinkedSources.Interfaces;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Protocols;
+using LinkIt.ReferenceTrees;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
+namespace LinkIt.LoadLinkExpressions.Includes
 {
     public class IncludeNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
         IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>, 

@@ -1,8 +1,9 @@
 using System;
-using HeterogeneousDataSources.Protocols;
-using HeterogeneousDataSources.ReferenceTrees;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Protocols;
+using LinkIt.ReferenceTrees;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
+namespace LinkIt.LoadLinkExpressions.Includes
 {
     public class IncludeReferenceById<TIReference, TLink, TReference, TId>: 
         IIncludeWithGetReference<TIReference, TLink>, 

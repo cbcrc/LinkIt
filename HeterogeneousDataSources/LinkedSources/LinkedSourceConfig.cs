@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
-using HeterogeneousDataSources.LinkTargets;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
-using HeterogeneousDataSources.Protocols;
-using HeterogeneousDataSources.Shared;
+using LinkIt.LinkedSources.Interfaces;
+using LinkIt.LinkTargets.Interfaces;
+using LinkIt.LoadLinkExpressions.Includes;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Protocols;
+using LinkIt.Protocols.Interfaces;
+using LinkIt.Shared;
 
-namespace HeterogeneousDataSources.LinkedSources
+namespace LinkIt.LinkedSources
 {
     public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource> 
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()

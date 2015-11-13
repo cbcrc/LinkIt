@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinkIt.LinkedSources.Interfaces;
 
-namespace HeterogeneousDataSources.LinkedSources
+namespace LinkIt.LinkedSources
 {
     public static class LinkedSourceConfigs
     {

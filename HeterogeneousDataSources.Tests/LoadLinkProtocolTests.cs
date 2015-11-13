@@ -1,7 +1,7 @@
 using System;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.ConfigBuilders;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.ConfigBuilders;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests

@@ -1,7 +1,7 @@
 using System;
-using HeterogeneousDataSources.Protocols;
+using LinkIt.Protocols;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions.Includes
+namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
 {
     public interface IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>:IInclude
     {

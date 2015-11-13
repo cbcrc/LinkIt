@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using HeterogeneousDataSources.LinkTargets;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
-using HeterogeneousDataSources.Protocols;
+using LinkIt.LinkTargets.Interfaces;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Protocols;
+using LinkIt.Protocols.Interfaces;
 
-namespace HeterogeneousDataSources.LinkedSources
+namespace LinkIt.LinkedSources.Interfaces
 {
     public interface IGenericLinkedSourceConfig<TLinkedSource> : ILinkedSourceConfig
     {

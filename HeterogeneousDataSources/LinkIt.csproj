@@ -7,8 +7,8 @@
     <ProjectGuid>{5630ADF5-F7D6-4257-B5E3-30DFE715AF39}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HeterogeneousDataSources</RootNamespace>
-    <AssemblyName>HeterogeneousDataSources</AssemblyName>
+    <RootNamespace>LinkIt</RootNamespace>
+    <AssemblyName>LinkIt</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

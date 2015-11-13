@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
-using HeterogeneousDataSources.LinkTargets;
-using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
-using HeterogeneousDataSources.Protocols;
 using HeterogeneousDataSources.Tests.Shared;
+using LinkIt.LinkTargets;
+using LinkIt.LoadLinkExpressions;
+using LinkIt.LoadLinkExpressions.Includes;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Protocols;
 using NUnit.Framework;
 
 namespace HeterogeneousDataSources.Tests {

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinkIt.LinkTargets.Interfaces;
 
-namespace HeterogeneousDataSources.LinkTargets
+namespace LinkIt.LinkTargets
 {
     public class MultiValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
     {

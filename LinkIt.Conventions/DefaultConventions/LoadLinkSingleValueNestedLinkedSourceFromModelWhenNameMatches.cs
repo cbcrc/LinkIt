@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using HeterogeneousDataSources.ConfigBuilders;
+using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
 
 namespace LinkIt.Conventions.DefaultConventions {

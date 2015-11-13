@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using HeterogeneousDataSources.LinkedSources;
-using HeterogeneousDataSources.LinkTargets;
-using HeterogeneousDataSources.LoadLinkExpressions;
-using HeterogeneousDataSources.LoadLinkExpressions.Includes;
+using LinkIt.LinkedSources;
+using LinkIt.LinkedSources.Interfaces;
+using LinkIt.LinkTargets;
+using LinkIt.LinkTargets.Interfaces;
+using LinkIt.LoadLinkExpressions;
+using LinkIt.LoadLinkExpressions.Includes;
+using LinkIt.LoadLinkExpressions.Includes.Interfaces;
 
-namespace HeterogeneousDataSources.ConfigBuilders
+namespace LinkIt.ConfigBuilders
 {
     public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>
     {

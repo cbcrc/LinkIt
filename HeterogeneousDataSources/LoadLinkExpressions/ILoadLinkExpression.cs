@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using HeterogeneousDataSources.Protocols;
-using HeterogeneousDataSources.ReferenceTrees;
+using LinkIt.Protocols;
+using LinkIt.ReferenceTrees;
 
-namespace HeterogeneousDataSources.LoadLinkExpressions
+namespace LinkIt.LoadLinkExpressions
 {
     public interface ILoadLinkExpression
     {

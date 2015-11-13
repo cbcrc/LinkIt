@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using HeterogeneousDataSources.Protocols;
+using LinkIt.Protocols;
 
 namespace HeterogeneousDataSources.Tests.Shared
 {

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HeterogeneousDataSources.ConfigBuilders;
-using HeterogeneousDataSources.Shared;
+using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.Conventions.Interfaces;
+using LinkIt.Shared;
 
 namespace LinkIt.Conventions
 {

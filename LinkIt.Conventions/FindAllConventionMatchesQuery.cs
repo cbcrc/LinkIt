@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HeterogeneousDataSources.LinkedSources;
-using HeterogeneousDataSources.LinkTargets;
 using LinkIt.Conventions.Interfaces;
+using LinkIt.LinkedSources;
+using LinkIt.LinkTargets;
 
 namespace LinkIt.Conventions {
     public class FindAllConventionMatchesQuery{

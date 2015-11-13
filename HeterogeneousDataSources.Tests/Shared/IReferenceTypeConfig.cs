@@ -1,5 +1,5 @@
 ﻿using System;
-using HeterogeneousDataSources.Protocols;
+using LinkIt.Protocols;
 
 namespace HeterogeneousDataSources.Tests.Shared
 {

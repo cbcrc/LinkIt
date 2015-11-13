@@ -1,6 +1,6 @@
 using System;
 
-namespace HeterogeneousDataSources.ReferenceTrees
+namespace LinkIt.ReferenceTrees
 {
     public class ReferenceToLoad{
         public ReferenceToLoad(Type referenceType, string linkTargetId)
