@@ -17,13 +17,13 @@ namespace LinkIt.ConfigBuilders
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupId,
-            Action<TLinkedSource, int, TLinkTarget> initChildLinkedSourceAction = null
+            Action<TLinkedSource, int, TLinkTarget> initChildLinkedSource = null
             )
         {
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceById<TLinkedSource, TAbstractLinkTarget, TLink, TId>(
                     getLookupId,
-                    initChildLinkedSourceAction
+                    initChildLinkedSource
                 );
 
             _includeSetBuilder.AddToIncludeSet(

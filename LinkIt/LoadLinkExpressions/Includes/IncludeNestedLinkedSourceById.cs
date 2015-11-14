@@ -13,15 +13,15 @@ namespace LinkIt.LoadLinkExpressions.Includes
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupId;
-        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
+        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSource;
 
         public IncludeNestedLinkedSourceById(
             Func<TLink, TId> getLookupId,
-            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource
         )
         {
             _getLookupId = getLookupId;
-            _initChildLinkedSourceAction = initChildLinkedSourceAction;
+            _initChildLinkedSource = initChildLinkedSource;
             ReferenceType = typeof(TChildLinkedSourceModel);
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
@@ -48,8 +48,8 @@ namespace LinkIt.LoadLinkExpressions.Includes
         private void InitChildLinkedSource(TLinkedSource linkedSource, int referenceIndex, TChildLinkedSource childLinkedSource) {
         if (childLinkedSource == null) { return; }
 
-            if (_initChildLinkedSourceAction != null) {
-                _initChildLinkedSourceAction(linkedSource, referenceIndex, childLinkedSource);
+            if (_initChildLinkedSource != null) {
+                _initChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
             }
         }
 

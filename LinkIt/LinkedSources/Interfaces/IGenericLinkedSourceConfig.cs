@@ -17,7 +17,7 @@ namespace LinkIt.LinkedSources.Interfaces
 
         IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
             Func<TLink, TId> getLookupId,
-            Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction = null
+            Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource = null
         );
 
         IInclude CreateIncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget);
