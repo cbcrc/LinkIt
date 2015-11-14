@@ -31,13 +31,13 @@ namespace LinkIt.LinkedSources
 
 
         public IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
-            Func<TLink, TId> getLookupIdFunc,
+            Func<TLink, TId> getLookupId,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSourceAction)
         {
             AssumeClassIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
 
             return new IncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
-                getLookupIdFunc,
+                getLookupId,
                 initChildLinkedSourceAction
             );
         }

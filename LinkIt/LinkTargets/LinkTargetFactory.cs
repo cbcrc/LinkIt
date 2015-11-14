@@ -12,8 +12,8 @@ namespace LinkIt.LinkTargets
 
         #region Single Value
         public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
-            Expression<Func<TLinkedSource, TTargetProperty>> linkTargetGetterFunc) {
-            PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
+            Expression<Func<TLinkedSource, TTargetProperty>> getLinkTarget) {
+            PropertyInfo property = GetPropertyFromGetter(getLinkTarget);
 
             return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(
                 property.GetLinkTargetId(),
@@ -32,12 +32,12 @@ namespace LinkIt.LinkTargets
 
         #region Multi Value
         public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
-            Expression<Func<TLinkedSource, List<TTargetProperty>>> linkTargetGetterFunc) {
-            PropertyInfo property = GetPropertyFromGetter(linkTargetGetterFunc);
+            Expression<Func<TLinkedSource, List<TTargetProperty>>> getLinkTarget) {
+            PropertyInfo property = GetPropertyFromGetter(getLinkTarget);
 
             return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(
                 property.GetLinkTargetId(),
-                linkTargetGetterFunc.Compile(),
+                getLinkTarget.Compile(),
                 CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
         }

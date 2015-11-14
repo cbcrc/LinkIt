@@ -12,15 +12,15 @@ namespace LinkIt.LoadLinkExpressions.Includes
         IIncludeWithChildLinkedSource 
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
-        private readonly Func<TLink, TId> _getLookupIdFunc;
+        private readonly Func<TLink, TId> _getLookupId;
         private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceAction;
 
         public IncludeNestedLinkedSourceById(
-            Func<TLink, TId> getLookupIdFunc,
+            Func<TLink, TId> getLookupId,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction
         )
         {
-            _getLookupIdFunc = getLookupIdFunc;
+            _getLookupId = getLookupId;
             _initChildLinkedSourceAction = initChildLinkedSourceAction;
             ReferenceType = typeof(TChildLinkedSourceModel);
             ChildLinkedSourceType = typeof(TChildLinkedSource);
@@ -30,12 +30,12 @@ namespace LinkIt.LoadLinkExpressions.Includes
 
         public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
         {
-            var lookupId = _getLookupIdFunc(link);
+            var lookupId = _getLookupId(link);
             lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
         public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
-            var lookupId = _getLookupIdFunc(link);
+            var lookupId = _getLookupId(link);
             var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
             var childLinkedSource = loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(reference);

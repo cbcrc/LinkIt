@@ -16,13 +16,13 @@ namespace LinkIt.ConfigBuilders
 
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
             TDiscriminant discriminantValue,
-            Func<TLink, TId> getLookupIdFunc,
+            Func<TLink, TId> getLookupId,
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSourceAction = null
             )
         {
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceById<TLinkedSource, TAbstractLinkTarget, TLink, TId>(
-                    getLookupIdFunc,
+                    getLookupId,
                     initChildLinkedSourceAction
                 );
 
@@ -54,13 +54,13 @@ namespace LinkIt.ConfigBuilders
 
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsReferenceById<TId>(
             TDiscriminant discriminantValue,
-            Func<TLink, TId> getLookupIdFunc
+            Func<TLink, TId> getLookupId
         )
         {
             _includeSetBuilder.AddToIncludeSet(
                 discriminantValue,
                 new IncludeReferenceById<TAbstractLinkTarget, TLink, TLinkTarget, TId>(
-                    getLookupIdFunc
+                    getLookupId
                 )
             );
 
