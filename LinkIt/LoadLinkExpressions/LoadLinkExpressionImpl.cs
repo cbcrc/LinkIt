@@ -58,11 +58,11 @@ namespace LinkIt.LoadLinkExpressions
             }
         }
 
-        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext){
+        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkConfig config){
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithCreateNestedLinkedSourceFromModel,
-                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext)
+                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext, config)
             );
         }
 
@@ -77,7 +77,9 @@ namespace LinkIt.LoadLinkExpressions
         public void LinkNestedLinkedSourceById(
             object linkedSource, 
             LoadedReferenceContext loadedReferenceContext,
-            Type referenceTypeToBeLinked)
+            Type referenceTypeToBeLinked,
+            LoadLinkConfig config
+            )
         {
             SetLinkTargetValues(
                 linkedSource,
@@ -87,7 +89,8 @@ namespace LinkIt.LoadLinkExpressions
                         link,
                         loadedReferenceContext,
                         (TLinkedSource)linkedSource,
-                        linkIndex
+                        linkIndex,
+                        config
                     )
             );
         }

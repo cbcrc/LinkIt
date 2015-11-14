@@ -34,23 +34,21 @@ namespace LinkIt.LoadLinkExpressions.Includes
             lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
-        public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex){
+        public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex, LoadLinkConfig config){
             var lookupId = _getLookupId(link);
             var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
             var childLinkedSource = loadedReferenceContext
-                .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(reference);
-
-            InitChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
+                .CreatePartiallyBuiltLinkedSource(
+                    reference,
+                    config, CreateInitChildLinkedSourceAction(linkedSource, referenceIndex));
 
             return (TAbstractChildLinkedSource)(object)childLinkedSource;
         }
 
-        private void InitChildLinkedSource(TLinkedSource linkedSource, int referenceIndex, TChildLinkedSource childLinkedSource) {
-        if (childLinkedSource == null) { return; }
+        private Action<TChildLinkedSource> CreateInitChildLinkedSourceAction(TLinkedSource linkedSource, int referenceIndex) {
+            if (_initChildLinkedSource == null) { return null; }
 
-            if (_initChildLinkedSource != null) {
-                _initChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
-            }
+            return childLinkedSource => _initChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
         }
 
         public Type ChildLinkedSourceType { get; private set; }

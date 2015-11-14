@@ -65,6 +65,12 @@ namespace LinkIt.Protocols
             }
         }
 
+        private TRootLinkedSource CreateLinkedSource(TExpectedRootLinkedSourceModel model)
+        {
+            return _loadedReferenceContext
+                .CreatePartiallyBuiltLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(model, _config, null);
+        }
+ 
         public TRootLinkedSource ById<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
         {
             return ByIds(modelId)
@@ -100,9 +106,6 @@ namespace LinkIt.Protocols
         }
 
         private void LoadLinkRootLinkedSource() {
-            //stle: do it at creation???? by linkedSource expression
-            LinkNestedLinkedSourcesFromModel();
-
             Load(1);
 
             LinkReferences();
@@ -115,7 +118,6 @@ namespace LinkIt.Protocols
 
                     LoadNestingLevel(referenceTypeToBeLoaded);
                     LinkNestedLinkedSourcesById(referenceTypeToBeLoaded);
-                    LinkNestedLinkedSourcesFromModel();
                 }
             }
         }
@@ -144,23 +146,8 @@ namespace LinkIt.Protocols
                 foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
                     var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                     foreach (var loadLinkExpression in loadLinkExpressions) {
-                        loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, _loadedReferenceContext, referenceTypeToBeLoaded);
+                        loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, _loadedReferenceContext, referenceTypeToBeLoaded, _config);
                     }
-                }
-            }
-        }
-
-        private void LinkNestedLinkedSourcesFromModel() {
-            while (_loadedReferenceContext.GetLinkedSourceWhereNestedLinkedSourcesFromModelAreNotLinked().Any()) {
-                foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourceWhereNestedLinkedSourcesFromModelAreNotLinked()) {
-                    var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource);
-                    foreach (var loadLinkExpression in loadLinkExpressions) {
-                        loadLinkExpression.LinkNestedLinkedSourceFromModel(
-                            linkedSource,
-                            _loadedReferenceContext
-                        );
-                    }
-                    _loadedReferenceContext.AddLinkedSourceWhereNestedLinkedSourcesFromModelAreLinked(linkedSource);
                 }
             }
         }
@@ -175,11 +162,6 @@ namespace LinkIt.Protocols
                     );
                 }
             }
-        }
-
-        public TRootLinkedSource CreateLinkedSource(TExpectedRootLinkedSourceModel model) {
-            return _loadedReferenceContext
-                .CreatePartiallyBuiltLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(model);
         }
     }
 }
