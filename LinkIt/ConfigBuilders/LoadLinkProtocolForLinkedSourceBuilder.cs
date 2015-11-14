@@ -49,7 +49,7 @@ namespace LinkIt.ConfigBuilders
         {
             return LoadLinkReferenceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupId)
+                ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId)
             );
         }
 
@@ -100,7 +100,7 @@ namespace LinkIt.ConfigBuilders
         {
             return LoadLinkNestedLinkedSourceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupId),
+                ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
                 NullInitChildLinkedSourceAction
             );
         }
@@ -114,7 +114,7 @@ namespace LinkIt.ConfigBuilders
         {
             return LoadLinkNestedLinkedSourceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupId),
+                ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
                 (linkedSource, referenceIndex, childLinkedSource) =>
                     initChildLinkedSourceAction(linkedSource, childLinkedSource)
             );
@@ -275,7 +275,7 @@ namespace LinkIt.ConfigBuilders
             return linkedSource => new List<TId> { getLookupId(linkedSource) };
         }
 
-        private static Func<TLinkedSource, List<TId>> ToGetLookupIdsFuncForOptionalSingleValue<TId>(
+        private static Func<TLinkedSource, List<TId>> ToGetLookupIdsForOptionalSingleValue<TId>(
             Func<TLinkedSource, TId?> getOptionalLookupId
         ) 
             where TId:struct
