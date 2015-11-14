@@ -27,39 +27,39 @@ namespace LinkIt.ConfigBuilders
         {
             return LoadLinkReferenceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForSingleValue(getLookupId)
+                ToGetLookupIdsForSingleValue(getLookupId)
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferenceById<TReference, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Func<TLinkedSource, List<TId>> getLookupIds,
             Expression<Func<TLinkedSource, List<TReference>>> getLinkTarget)
         {
             return LoadLinkReferenceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                getLookupIdsFunc 
+                getLookupIds 
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferenceById<TReference, TId>(
-           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Func<TLinkedSource, TId?> getOptionalLookupId,
            Expression<Func<TLinkedSource, TReference>> getLinkTarget
         )
             where TId:struct 
         {
             return LoadLinkReferenceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc)
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupId)
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferenceById<TReference, TId>(
             ILinkTarget<TLinkedSource, TReference> linkTarget,
-            Func<TLinkedSource, List<TId>> getLookupIdsFunc) 
+            Func<TLinkedSource, List<TId>> getLookupIds) 
         {
             return AddNonPolymorphicLoadLinkExpression(
                 linkTarget,
-                getLookupIdsFunc,
+                getLookupIds,
                 new IncludeReferenceById<TReference, TId, TReference, TId>(
                     CreateIdentityFunc<TId>()
                 )
@@ -86,27 +86,27 @@ namespace LinkIt.ConfigBuilders
         {
             return LoadLinkNestedLinkedSourceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForSingleValue(getLookupId),
+                ToGetLookupIdsForSingleValue(getLookupId),
                 (linkedSource, referenceIndex, childLinkedSource) =>
                     initChildLinkedSourceAction(linkedSource, childLinkedSource)
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TChildLinkedSource, TId>(
-           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Func<TLinkedSource, TId?> getOptionalLookupId,
            Expression<Func<TLinkedSource, TChildLinkedSource>> getLinkTarget
         )
             where TId : struct
         {
             return LoadLinkNestedLinkedSourceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc),
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupId),
                 NullInitChildLinkedSourceAction
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TChildLinkedSource, TId>(
-           Func<TLinkedSource, TId?> getOptionalLookupIdFunc,
+           Func<TLinkedSource, TId?> getOptionalLookupId,
            Expression<Func<TLinkedSource, TChildLinkedSource>> getLinkTarget,
            Action<TLinkedSource, TChildLinkedSource> initChildLinkedSourceAction
         )
@@ -114,38 +114,38 @@ namespace LinkIt.ConfigBuilders
         {
             return LoadLinkNestedLinkedSourceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupIdFunc),
+                ToGetLookupIdsFuncForOptionalSingleValue(getOptionalLookupId),
                 (linkedSource, referenceIndex, childLinkedSource) =>
                     initChildLinkedSourceAction(linkedSource, childLinkedSource)
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TChildLinkedSource, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Func<TLinkedSource, List<TId>> getLookupIds,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget)
         {
             return LoadLinkNestedLinkedSourceById(
-                getLookupIdsFunc, 
+                getLookupIds, 
                 getLinkTarget, 
                 NullInitChildLinkedSourceAction
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TChildLinkedSource, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Func<TLinkedSource, List<TId>> getLookupIds,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction)
         {
             return LoadLinkNestedLinkedSourceById(
                 LinkTargetFactory.Create(getLinkTarget),
-                getLookupIdsFunc,
+                getLookupIds,
                 initChildLinkedSourceAction
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TChildLinkedSource, TId>(
             ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
-            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Func<TLinkedSource, List<TId>> getLookupIds,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSourceAction)
         {
             var include = LinkedSourceConfigs.GetConfigFor<TChildLinkedSource>()
@@ -156,7 +156,7 @@ namespace LinkIt.ConfigBuilders
 
             return AddNonPolymorphicLoadLinkExpression(
                 linkTarget,
-                getLookupIdsFunc,
+                getLookupIds,
                 include
             );
         }
@@ -187,7 +187,7 @@ namespace LinkIt.ConfigBuilders
         {
             return LoadLinkNestedLinkedSourceFromModel(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForSingleValue(getNestedLinkedSourceModel)
+                ToGetLookupIdsForSingleValue(getNestedLinkedSourceModel)
             );
         }
 
@@ -222,37 +222,37 @@ namespace LinkIt.ConfigBuilders
 
         #region Polymorphic
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TAbstractLinkTarget, TLink, TDiscriminant>(
-           Func<TLinkedSource, TLink> getLinkFunc,
+           Func<TLinkedSource, TLink> getLink,
            Expression<Func<TLinkedSource, TAbstractLinkTarget>> getLinkTarget,
-           Func<TLink, TDiscriminant> getDiscriminantFunc,
+           Func<TLink, TDiscriminant> getDiscriminant,
            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes) 
         {
             return PolymorphicLoadLink(
                 LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsFuncForSingleValue(getLinkFunc),
-                getDiscriminantFunc,
+                ToGetLookupIdsForSingleValue(getLink),
+                getDiscriminant,
                 includes
             );
         }
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLinkForList<TAbstractLinkTarget, TLink, TDiscriminant>(
-           Func<TLinkedSource, List<TLink>> getLinksFunc,
+           Func<TLinkedSource, List<TLink>> getLinks,
            Expression<Func<TLinkedSource, List<TAbstractLinkTarget>>> getLinkTarget,
-           Func<TLink, TDiscriminant> getDiscriminantFunc,
+           Func<TLink, TDiscriminant> getDiscriminant,
            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
         {
             return PolymorphicLoadLink(
                 LinkTargetFactory.Create(getLinkTarget),
-                getLinksFunc,
-                getDiscriminantFunc,
+                getLinks,
+                getDiscriminant,
                 includes
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TAbstractLinkTarget, TLink, TDiscriminant>(
             ILinkTarget<TLinkedSource, TAbstractLinkTarget> linkTarget,
-            Func<TLinkedSource, List<TLink>> getLinksFunc,
-            Func<TLink, TDiscriminant> getDiscriminantFunc,
+            Func<TLinkedSource, List<TLink>> getLinks,
+            Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes) 
         {
             var includeBuilder = new IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(linkTarget);
@@ -260,8 +260,8 @@ namespace LinkIt.ConfigBuilders
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
                 linkTarget,
-                getLinksFunc,
-                includeBuilder.Build(getDiscriminantFunc)
+                getLinks,
+                includeBuilder.Build(getDiscriminant)
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -269,18 +269,18 @@ namespace LinkIt.ConfigBuilders
         #endregion
 
         #region Shared
-        private static Func<TLinkedSource, List<TId>> ToGetLookupIdsFuncForSingleValue<TId>(
+        private static Func<TLinkedSource, List<TId>> ToGetLookupIdsForSingleValue<TId>(
             Func<TLinkedSource, TId> getLookupId) 
         {
             return linkedSource => new List<TId> { getLookupId(linkedSource) };
         }
 
         private static Func<TLinkedSource, List<TId>> ToGetLookupIdsFuncForOptionalSingleValue<TId>(
-            Func<TLinkedSource, TId?> getOptionalLookupIdFunc
+            Func<TLinkedSource, TId?> getOptionalLookupId
         ) 
             where TId:struct
         {
-            return linkedSource => OptionalIdToList(getOptionalLookupIdFunc(linkedSource));
+            return linkedSource => OptionalIdToList(getOptionalLookupId(linkedSource));
         }
 
         private static List<TId> OptionalIdToList<TId>(TId? optionalId)
@@ -303,11 +303,11 @@ namespace LinkIt.ConfigBuilders
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddNonPolymorphicLoadLinkExpression<TTargetProperty, TId>(
             ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
-            Func<TLinkedSource, List<TId>> getLookupIdsFunc,
+            Func<TLinkedSource, List<TId>> getLookupIds,
             IInclude include) {
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TId, bool>(
                 linkTarget,
-                getLookupIdsFunc,
+                getLookupIds,
                 new IncludeSet<TLinkedSource, TTargetProperty, TId, bool>(
                     new Dictionary<bool, IInclude>
                     {

@@ -9,9 +9,9 @@ namespace LinkIt.Protocols {
         private readonly List<object> _linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
-        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
+        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceId){
             var referenceDictionary = references.ToDictionary(
-                getReferenceIdFunc,
+                getReferenceId,
                 reference => reference
             );
 

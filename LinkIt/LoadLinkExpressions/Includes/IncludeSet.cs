@@ -9,12 +9,12 @@ namespace LinkIt.LoadLinkExpressions.Includes
     public class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includes;
-        private readonly Func<TLink, TDiscriminant> _getDiscriminantFunc;
+        private readonly Func<TLink, TDiscriminant> _getDiscriminant;
 
-        public IncludeSet(Dictionary<TDiscriminant, IInclude> includes, Func<TLink, TDiscriminant> getDiscriminantFunc)
+        public IncludeSet(Dictionary<TDiscriminant, IInclude> includes, Func<TLink, TDiscriminant> getDiscriminant)
         {
             _includes = includes;
-            _getDiscriminantFunc = getDiscriminantFunc;
+            _getDiscriminant = getDiscriminant;
         }
 
         public IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceByIdForReferenceType(TLink link, Type referenceType) {
@@ -50,7 +50,7 @@ namespace LinkIt.LoadLinkExpressions.Includes
         {
             AssumeNotNullLink<TInclude>(link);
 
-            var discriminant = _getDiscriminantFunc(link);
+            var discriminant = _getDiscriminant(link);
             AssumeIncludeExistsForDiscriminant<TInclude>(discriminant);
 
             var include = _includes[discriminant];

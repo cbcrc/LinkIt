@@ -28,10 +28,10 @@ namespace LinkIt.ConfigBuilders
             _includeByDiscriminantValue.Add(discriminant,include);
         }
 
-        internal IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> Build(Func<TLink, TDiscriminant> getDiscriminantFunc) {
+        internal IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> Build(Func<TLink, TDiscriminant> getDiscriminant) {
             return new IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
                 _includeByDiscriminantValue,
-                getDiscriminantFunc
+                getDiscriminant
             );
         }
     }
