@@ -26,6 +26,10 @@ namespace LinkIt.Conventions
             IEnumerable<Assembly> assemblies,
             List<ILoadLinkExpressionConvention> conventions)
         {
+            if (loadLinkProtocolBuilder == null) { throw new ArgumentNullException("loadLinkProtocolBuilder"); }
+            if (assemblies == null) { throw new ArgumentNullException("assemblies"); }
+            if (conventions == null) { throw new ArgumentNullException("conventions"); }
+
             var types = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
                 .ToList();
@@ -42,6 +46,9 @@ namespace LinkIt.Conventions
             List<Type> types,
             List<ILoadLinkExpressionConvention> conventions)
         {
+            if (loadLinkProtocolBuilder == null) { throw new ArgumentNullException("loadLinkProtocolBuilder"); }
+            if (types == null) { throw new ArgumentNullException("types"); }
+            if (conventions == null) { throw new ArgumentNullException("conventions"); }
             EnsureConventionNamesAreUnique(conventions);
 
             var matches = new FindAllConventionMatchesQuery(types, conventions).Execute();

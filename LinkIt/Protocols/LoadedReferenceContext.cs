@@ -8,7 +8,11 @@ namespace LinkIt.Protocols {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
-        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceId){
+        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceId)
+        {
+            if (references == null) { throw new ArgumentNullException("references"); }
+            if (getReferenceId == null) { throw new ArgumentNullException("getReferenceId"); }
+
             var referenceDictionary = references.ToDictionary(
                 getReferenceId,
                 reference => reference
@@ -18,6 +22,8 @@ namespace LinkIt.Protocols {
         }
 
         public void AddReferences<TReference, TId>(IDictionary<TId,TReference> referencesById) {
+            if (referencesById == null) { throw new ArgumentNullException("referencesById"); }
+
             var tReference = typeof(TReference);
             if (_referenceDictionaryByReferenceType.ContainsKey(tReference)){
                 throw new InvalidOperationException(

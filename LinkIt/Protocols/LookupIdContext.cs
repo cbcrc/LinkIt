@@ -21,6 +21,8 @@ namespace LinkIt.Protocols
         }
 
         public void AddMulti<TReference, TId>(List<TId> lookupIds) {
+            if (lookupIds == null) { throw new ArgumentNullException("lookupIds"); }
+
             foreach (var lookupId in lookupIds) {
                 AddSingle<TReference, TId>(lookupId);
             }
