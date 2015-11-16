@@ -11,7 +11,7 @@ namespace LinkIt.Tests.Exploratory.Generics
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class GenericPieTests{
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp()

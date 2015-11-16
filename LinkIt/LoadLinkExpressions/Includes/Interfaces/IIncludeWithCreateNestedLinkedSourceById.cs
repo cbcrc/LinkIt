@@ -12,7 +12,7 @@ namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
             LoadedReferenceContext loadedReferenceContext, 
             TLinkedSource linkedSource, 
             int referenceIndex,
-            LoadLinkConfig config
+            LoadLinkProtocol loadLinkProtocol
         );
         
     }

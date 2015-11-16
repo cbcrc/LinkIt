@@ -13,7 +13,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class NestedLinkedSourcesTests
     {
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

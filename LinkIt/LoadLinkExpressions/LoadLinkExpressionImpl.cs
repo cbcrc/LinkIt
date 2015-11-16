@@ -58,11 +58,11 @@ namespace LinkIt.LoadLinkExpressions
             }
         }
 
-        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkConfig config){
+        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol){
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithCreateNestedLinkedSourceFromModel,
-                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext, config)
+                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext, loadLinkProtocol)
             );
         }
 
@@ -78,7 +78,7 @@ namespace LinkIt.LoadLinkExpressions
             object linkedSource, 
             LoadedReferenceContext loadedReferenceContext,
             Type referenceTypeToBeLinked,
-            LoadLinkConfig config
+            LoadLinkProtocol loadLinkProtocol
             )
         {
             SetLinkTargetValues(
@@ -90,7 +90,7 @@ namespace LinkIt.LoadLinkExpressions
                         loadedReferenceContext,
                         (TLinkedSource)linkedSource,
                         linkIndex,
-                        config
+                        loadLinkProtocol
                     )
             );
         }
@@ -171,29 +171,29 @@ namespace LinkIt.LoadLinkExpressions
             }
         }
 
-        public void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config)
+        public void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
         {
-            AddReferenceTreeForEachIncludeWithAddLookupId(parent, config);
-            AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(parent, config);
+            AddReferenceTreeForEachIncludeWithAddLookupId(parent, loadLinkProtocol);
+            AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(parent, loadLinkProtocol);
         }
 
-        private void AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(ReferenceTree parent, LoadLinkConfig config)
+        private void AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
         {
             _includeSet
                 .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractLinkTarget, TLink>>()
                 .ToList()
                 .ForEach(include =>
-                    include.AddReferenceTreeForEachLinkTarget(parent, config)
+                    include.AddReferenceTreeForEachLinkTarget(parent, loadLinkProtocol)
                 );
         }
 
-        private void AddReferenceTreeForEachIncludeWithAddLookupId(ReferenceTree parent, LoadLinkConfig config)
+        private void AddReferenceTreeForEachIncludeWithAddLookupId(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
         {
             _includeSet
                 .GetIncludes<IIncludeWithAddLookupId<TLink>>()
                 .ToList()
                 .ForEach(include =>
-                    include.AddReferenceTree(LinkTargetId, parent, config)
+                    include.AddReferenceTree(LinkTargetId, parent, loadLinkProtocol)
                 );
         }
     }

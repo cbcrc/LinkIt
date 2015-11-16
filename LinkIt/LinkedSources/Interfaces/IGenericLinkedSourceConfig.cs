@@ -12,7 +12,7 @@ namespace LinkIt.LinkedSources.Interfaces
         ILoadLinker<TLinkedSource> CreateLoadLinker(
             IReferenceLoader referenceLoader,
             List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel,
-            LoadLinkConfig config
+            LoadLinkProtocol loadLinkProtocol
         );
 
         IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(

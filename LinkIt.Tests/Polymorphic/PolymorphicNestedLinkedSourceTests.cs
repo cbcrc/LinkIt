@@ -10,7 +10,7 @@ namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicNestedLinkedSourceTests {
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

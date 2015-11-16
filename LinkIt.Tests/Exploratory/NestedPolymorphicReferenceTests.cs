@@ -12,7 +12,7 @@ namespace LinkIt.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class NestedPolymorphicReferenceTests {
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

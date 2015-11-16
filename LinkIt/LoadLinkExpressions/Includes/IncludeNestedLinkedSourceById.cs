@@ -34,13 +34,13 @@ namespace LinkIt.LoadLinkExpressions.Includes
             lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
-        public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex, LoadLinkConfig config){
+        public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex, LoadLinkProtocol loadLinkProtocol){
             var lookupId = _getLookupId(link);
             var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
             var childLinkedSource = loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource(
                     reference,
-                    config, CreateInitChildLinkedSourceAction(linkedSource, referenceIndex));
+                    loadLinkProtocol, CreateInitChildLinkedSourceAction(linkedSource, referenceIndex));
 
             return (TAbstractChildLinkedSource)(object)childLinkedSource;
         }
@@ -53,7 +53,7 @@ namespace LinkIt.LoadLinkExpressions.Includes
 
         public Type ChildLinkedSourceType { get; private set; }
 
-        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config)
+        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
         {
             var referenceTree = new ReferenceTree(
                 ReferenceType,
@@ -61,7 +61,7 @@ namespace LinkIt.LoadLinkExpressions.Includes
                 parent
             );
 
-            config.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, referenceTree);
+            loadLinkProtocol.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, referenceTree);
         }
     }
 }

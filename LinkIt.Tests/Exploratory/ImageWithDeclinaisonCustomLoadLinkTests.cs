@@ -14,7 +14,7 @@ namespace LinkIt.Tests.Exploratory {
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests
     {
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

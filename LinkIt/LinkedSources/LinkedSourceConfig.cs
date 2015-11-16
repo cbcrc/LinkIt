@@ -24,9 +24,9 @@ namespace LinkIt.LinkedSources
         public ILoadLinker<TLinkedSource> CreateLoadLinker(
             IReferenceLoader referenceLoader, 
             List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel, 
-            LoadLinkConfig config)
+            LoadLinkProtocol loadLinkProtocol)
         {
-            return new LoadLinker<TLinkedSource, TLinkedSourceModel>(referenceLoader, referenceTypeToBeLoadedForEachLoadingLevel, config);
+            return new LoadLinker<TLinkedSource, TLinkedSourceModel>(referenceLoader, referenceTypeToBeLoadedForEachLoadingLevel, loadLinkProtocol);
         }
 
 

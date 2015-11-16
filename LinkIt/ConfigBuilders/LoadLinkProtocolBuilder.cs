@@ -20,11 +20,11 @@ namespace LinkIt.ConfigBuilders {
             _loadLinkExpressionsById[loadLinkExpression.LinkTargetId] = loadLinkExpression;
         }
 
-        public LoadLinkConfig Build(Func<IReferenceLoader> createReferenceLoader)
+        public LoadLinkProtocol Build(Func<IReferenceLoader> createReferenceLoader)
         {
             if (createReferenceLoader == null) { throw new ArgumentNullException("createReferenceLoader"); }
 
-            return new LoadLinkConfig(
+            return new LoadLinkProtocol(
                 _loadLinkExpressionsById.Values.ToList(), 
                 createReferenceLoader
             );

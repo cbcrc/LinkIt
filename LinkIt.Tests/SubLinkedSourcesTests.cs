@@ -14,7 +14,7 @@ namespace LinkIt.Tests
     [TestFixture]
     public class SubLinkedSourcesTests
     {
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

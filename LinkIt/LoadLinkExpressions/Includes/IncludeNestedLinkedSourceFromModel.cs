@@ -21,16 +21,16 @@ namespace LinkIt.LoadLinkExpressions.Includes
 
         public Type ChildLinkedSourceType { get; private set; }
 
-        public TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(TLink link, LoadedReferenceContext loadedReferenceContext, LoadLinkConfig config)
+        public TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(TLink link, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol)
         {
             var childLinkSourceModel = _getNestedLinkedSourceModel(link);
 
             return (TAbstractChildLinkedSource) (object) loadedReferenceContext
-                .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel, config, null);
+                .CreatePartiallyBuiltLinkedSource<TChildLinkedSource, TChildLinkedSourceModel>(childLinkSourceModel, loadLinkProtocol, null);
         }
 
-        public void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkConfig config) {
-            config.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, parent);
+        public void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol) {
+            loadLinkProtocol.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, parent);
         }
     }
 }

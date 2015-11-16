@@ -30,7 +30,7 @@ namespace LinkIt.LoadLinkExpressions.Includes
             return loadedReferenceContext.GetOptionalReference<TReference, TId>(lookupId);
         }
 
-        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkConfig config){
+        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkProtocol loadLinkProtocol){
             new ReferenceTree(
                 ReferenceType, 
                 linkTargetId, 

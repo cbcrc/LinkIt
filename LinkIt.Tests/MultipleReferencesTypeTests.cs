@@ -11,7 +11,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class MultipleReferencesTypeTests
     {
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp()

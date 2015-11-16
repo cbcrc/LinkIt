@@ -13,10 +13,10 @@ namespace LinkIt.LoadLinkExpressions
         List<Type> ReferenceTypes { get; }
 
         void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
-        void LinkNestedLinkedSourceById(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked, LoadLinkConfig config);
-        void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkConfig config);
+        void LinkNestedLinkedSourceById(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked, LoadLinkProtocol loadLinkProtocol);
+        void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol);
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
 
-        void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config);
+        void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol);
     }
 }

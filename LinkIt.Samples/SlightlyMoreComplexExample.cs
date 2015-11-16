@@ -12,7 +12,7 @@ namespace LinkIt.Samples {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class SlightlyMoreComplexExample {
-        private LoadLinkConfig _loadLinkProtocol;
+        private LoadLinkProtocol _loadLinkProtocol;
 
         [SetUp]
         public void SetUp() {

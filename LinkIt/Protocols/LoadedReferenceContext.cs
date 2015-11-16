@@ -76,7 +76,7 @@ namespace LinkIt.Protocols {
         }
 
         //stle: TLinkedSourceModel not required, check this pattern everywhere
-        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, LoadLinkConfig config, Action<TLinkedSource> init)
+        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, LoadLinkProtocol loadLinkProtocol, Action<TLinkedSource> init)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {
             if (model == null) { return null; }
@@ -85,20 +85,20 @@ namespace LinkIt.Protocols {
             if (init != null){
                 init(linkedSource);
             }
-            LinkNestedLinkedSourcesFromModel(linkedSource, config);
+            LinkNestedLinkedSourcesFromModel(linkedSource, loadLinkProtocol);
 
             _linkedSourcesToBeBuilt.Add(linkedSource);
             return linkedSource;
         }
 
-        private void LinkNestedLinkedSourcesFromModel(object linkedSource, LoadLinkConfig config)
+        private void LinkNestedLinkedSourcesFromModel(object linkedSource, LoadLinkProtocol loadLinkProtocol)
         {
-            var loadLinkExpressions = config.GetLoadLinkExpressions(linkedSource);
+            var loadLinkExpressions = loadLinkProtocol.GetLoadLinkExpressions(linkedSource);
             foreach (var loadLinkExpression in loadLinkExpressions){
                 loadLinkExpression.LinkNestedLinkedSourceFromModel(
                     linkedSource,
                     this,
-                    config
+                    loadLinkProtocol
                 );
             }
         }

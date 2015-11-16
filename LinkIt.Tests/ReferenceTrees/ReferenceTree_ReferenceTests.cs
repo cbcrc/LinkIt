@@ -12,7 +12,7 @@ namespace LinkIt.Tests.ReferenceTrees {
     [TestFixture]
     public class ReferenceTree_ReferenceTests
     {
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp()

@@ -11,14 +11,14 @@ namespace LinkIt.Protocols
     {
         private readonly IReferenceLoader _referenceLoader;
         private readonly List<List<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
-        private readonly LoadLinkConfig _config;
+        private readonly LoadLinkProtocol _loadLinkProtocol;
         private LoadedReferenceContext _loadedReferenceContext;
 
-        public LoadLinker(IReferenceLoader referenceLoader, List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel, LoadLinkConfig config)
+        public LoadLinker(IReferenceLoader referenceLoader, List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
         {
             _referenceLoader = referenceLoader;
             _referenceTypeToBeLoadedForEachLoadingLevel = referenceTypeToBeLoadedForEachLoadingLevel;
-            _config = config;
+            _loadLinkProtocol = loadLinkProtocol;
         }
 
         public TRootLinkedSource FromModel<TRootLinkedSourceModel>(TRootLinkedSourceModel model)
@@ -68,7 +68,7 @@ namespace LinkIt.Protocols
         private TRootLinkedSource CreateLinkedSource(TExpectedRootLinkedSourceModel model)
         {
             return _loadedReferenceContext
-                .CreatePartiallyBuiltLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(model, _config, null);
+                .CreatePartiallyBuiltLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(model, _loadLinkProtocol, null);
         }
  
         public TRootLinkedSource ById<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
@@ -132,7 +132,7 @@ namespace LinkIt.Protocols
 
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded) {
                 foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
-                    var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
+                    var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                     foreach (var loadLinkExpression in loadLinkExpressions) {
                         loadLinkExpression.AddLookupIds(linkedSource, lookupIdContext, referenceTypeToBeLoaded);
                     }
@@ -144,9 +144,9 @@ namespace LinkIt.Protocols
         private void LinkNestedLinkedSourcesById(List<Type> referenceTypesToBeLoaded) {
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded) {
                 foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
-                    var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
+                    var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                     foreach (var loadLinkExpression in loadLinkExpressions) {
-                        loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, _loadedReferenceContext, referenceTypeToBeLoaded, _config);
+                        loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, _loadedReferenceContext, referenceTypeToBeLoaded, _loadLinkProtocol);
                     }
                 }
             }
@@ -154,7 +154,7 @@ namespace LinkIt.Protocols
 
         private void LinkReferences() {
             foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
-                var loadLinkExpressions = _config.GetLoadLinkExpressions(linkedSource);
+                var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource);
                 foreach (var loadLinkExpression in loadLinkExpressions) {
                     loadLinkExpression.LinkReference(
                         linkedSource,

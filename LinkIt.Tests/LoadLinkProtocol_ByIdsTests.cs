@@ -13,7 +13,7 @@ namespace LinkIt.Tests
     public class LoadLinkConfig_ByIdsTests
     {
         private ReferenceLoaderStub _referenceLoaderStub;
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

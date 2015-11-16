@@ -5,15 +5,14 @@ using LinkIt.LinkedSources;
 using LinkIt.LoadLinkExpressions;
 using LinkIt.Protocols.Interfaces;
 using LinkIt.ReferenceTrees;
-using LinkIt.Shared;
 
 namespace LinkIt.Protocols {
-    public class LoadLinkConfig {
+    public class LoadLinkProtocol {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
         private readonly Func<IReferenceLoader> _createReferenceLoader;
 
         #region Initialization
-        internal LoadLinkConfig(
+        internal LoadLinkProtocol(
             List<ILoadLinkExpression> loadLinkExpressions, 
             Func<IReferenceLoader> createReferenceLoader)
         {

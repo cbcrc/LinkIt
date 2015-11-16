@@ -9,7 +9,7 @@ namespace LinkIt.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class ContextualizationTests{
-        private LoadLinkConfig _sut;
+        private LoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
