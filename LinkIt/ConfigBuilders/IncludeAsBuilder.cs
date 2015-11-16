@@ -20,6 +20,8 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSourceAction = null
             )
         {
+            if (getLookupIdFunc == null) { throw new ArgumentNullException("getLookupIdFunc"); }
+
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceById<TLinkedSource, TAbstractLinkTarget, TLink, TId>(
                     getLookupIdFunc,
@@ -38,6 +40,8 @@ namespace LinkIt.ConfigBuilders
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel) 
         {
+            if (getNestedLinkedSourceModel == null) { throw new ArgumentNullException("getNestedLinkedSourceModel"); }
+
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceFromModel<TAbstractLinkTarget, TLink, TChildLinkedSourceModel>(
                     getNestedLinkedSourceModel,
@@ -57,6 +61,8 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TId> getLookupIdFunc
         )
         {
+            if (getLookupIdFunc == null) { throw new ArgumentNullException("getLookupIdFunc"); }
+
             _includeSetBuilder.AddToIncludeSet(
                 discriminantValue,
                 new IncludeReferenceById<TAbstractLinkTarget, TLink, TLinkTarget, TId>(
