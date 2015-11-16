@@ -25,6 +25,16 @@ namespace LinkIt.ConfigBuilders
         }
 
         internal void AddToIncludeSet(TDiscriminant discriminant, IInclude include){
+            if (_includeByDiscriminantValue.ContainsKey(discriminant)){
+                throw new ArgumentException(
+                    string.Format(
+                        "{0}: cannot have many includes for the same discriminant ({1}).",
+                        LinkTarget.Id,
+                        discriminant
+                    )
+                );
+            }
+
             _includeByDiscriminantValue.Add(discriminant,include);
         }
 

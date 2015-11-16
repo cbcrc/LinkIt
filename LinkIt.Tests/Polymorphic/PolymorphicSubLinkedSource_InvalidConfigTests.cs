@@ -30,5 +30,33 @@ namespace LinkIt.Tests.Polymorphic {
                     .With.Message.Contains("getNestedLinkedSourceModel")
             );
         }
+
+        [Test]
+        public void LoadLink_WithDiscriminantDuplicate_ShouldThrow() {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+
+            TestDelegate act = () => loadLinkProtocolBuilder.For<PolymorphicSubLinkedSourceTests.LinkedSource>()
+                .PolymorphicLoadLink(
+                    linkedSource => linkedSource.Model.Target,
+                    linkedSource => linkedSource.Target,
+                    link => link.Type,
+                    includes => includes
+                        .Include<PolymorphicSubLinkedSourceTests.WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
+                            "web-page",
+                            link => new PolymorphicSubLinkedSourceTests.WebPageReference()
+                        )
+                        .Include<PolymorphicSubLinkedSourceTests.WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
+                            "web-page",
+                            link => new PolymorphicSubLinkedSourceTests.WebPageReference()
+                        )
+                );
+
+            Assert.That(
+                act,
+                Throws.ArgumentException
+                    .With.Message.Contains("LinkedSource/Target").And
+                    .With.Message.Contains("web-page")
+            );
+        }
     }
 }
