@@ -29,6 +29,39 @@ namespace LinkIt.Tests
             _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
         }
 
+
+        [Test]
+        public void LoadLinkById() {
+            var actual = _sut.LoadLink<PersonLinkedSource>().ById("one");
+
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        [Test]
+        public void LoadLinkById_WithNullId_ShouldLinkNull() {
+            var actual = _sut.LoadLink<PersonLinkedSource>().ById<string>(null);
+
+            Assert.That(actual, Is.Null);
+        }
+
+        [Test]
+        public void LoadLinkById_WithNullId_ShouldLinkNullWithoutLoading() {
+            var actual = _sut.LoadLink<PersonLinkedSource>().ById<string>(null);
+
+            var loadedReferenceTypes = _fakeReferenceLoader.RecordedLookupIdContexts
+                .First()
+                .GetReferenceTypes();
+
+            Assert.That(loadedReferenceTypes, Is.Empty);
+        }
+
+        [Test]
+        public void LoadLinkById_ManyReferencesCannotBeResolved_ShouldLinkNull() {
+            var actual = _sut.LoadLink<PersonLinkedSource>().ById("cannot-be-resolved");
+
+            Assert.That(actual, Is.Null);
+        }
+
         //stle: test: more efficient way to test all cases
         //stle: test: ensure by models is also covered
         [Test]
