@@ -8,7 +8,7 @@ namespace LinkIt.Tests.Shared {
     
     public class FakeReferenceLoader<TReference, TId>:IReferenceLoader
     {
-        private readonly Func<TReference, TId> _getReferenceIdFunc;
+        private readonly Func<TReference, TId> _getReferenceId;
         private readonly Dictionary<Type, IReferenceTypeConfig> _referenceTypeConfigByReferenceType;
         private bool _isConnectionOpen = false;
 
@@ -32,9 +32,9 @@ namespace LinkIt.Tests.Shared {
             };
         }
 
-        public FakeReferenceLoader(Func<TReference, TId> getReferenceIdFunc, params IReferenceTypeConfig[] customReferenceTypeConfigs)
+        public FakeReferenceLoader(Func<TReference, TId> getReferenceId, params IReferenceTypeConfig[] customReferenceTypeConfigs)
         {
-            _getReferenceIdFunc = getReferenceIdFunc;
+            _getReferenceId = getReferenceId;
             var config = customReferenceTypeConfigs
                 .Concat(GetDefaultReferenceTypeConfigs())
                 .ToList();
@@ -55,7 +55,7 @@ namespace LinkIt.Tests.Shared {
                     .Select(id => fixedValue)
                     .Where(id => id != null)
                     .ToList(),
-                _getReferenceIdFunc
+                _getReferenceId
             );
 
             _referenceTypeConfigByReferenceType[typeof (TReference)] = fixedReferenceTypeConfig;

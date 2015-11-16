@@ -13,16 +13,16 @@ namespace LinkIt.LoadLinkExpressions
     public class LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>:ILoadLinkExpression
     {
         private readonly ILinkTarget<TLinkedSource, TAbstractLinkTarget> _linkTarget;
-        private readonly Func<TLinkedSource, List<TLink>> _getLinksFunc;
+        private readonly Func<TLinkedSource, List<TLink>> _getLinks;
         private readonly IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeSet;
 
         public LoadLinkExpressionImpl(
             ILinkTarget<TLinkedSource,TAbstractLinkTarget> linkTarget,
-            Func<TLinkedSource, List<TLink>> getLinksFunc,
+            Func<TLinkedSource, List<TLink>> getLinks,
             IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeset)
         {
             _linkTarget = linkTarget;
-            _getLinksFunc = getLinksFunc;
+            _getLinks = getLinks;
             _includeSet = includeset;
             LinkedSourceType = typeof (TLinkedSource);
 
@@ -58,11 +58,11 @@ namespace LinkIt.LoadLinkExpressions
             }
         }
 
-        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext){
+        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkConfig config){
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithCreateNestedLinkedSourceFromModel,
-                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext)
+                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext, config)
             );
         }
 
@@ -77,7 +77,9 @@ namespace LinkIt.LoadLinkExpressions
         public void LinkNestedLinkedSourceById(
             object linkedSource, 
             LoadedReferenceContext loadedReferenceContext,
-            Type referenceTypeToBeLinked)
+            Type referenceTypeToBeLinked,
+            LoadLinkConfig config
+            )
         {
             SetLinkTargetValues(
                 linkedSource,
@@ -87,7 +89,8 @@ namespace LinkIt.LoadLinkExpressions
                         link,
                         loadedReferenceContext,
                         (TLinkedSource)linkedSource,
-                        linkIndex
+                        linkIndex,
+                        config
                     )
             );
         }
@@ -132,7 +135,7 @@ namespace LinkIt.LoadLinkExpressions
 
         private List<TLink> GetLinks(TLinkedSource linkedSource)
         {
-            var links = _getLinksFunc(linkedSource);
+            var links = _getLinks(linkedSource);
 
             if (links == null) { return new List<TLink>(); }
 

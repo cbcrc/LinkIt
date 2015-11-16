@@ -7,29 +7,29 @@ namespace LinkIt.LinkTargets
 {
     public class MultiValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
     {
-        private readonly Func<TLinkedSource, List<TTargetProperty>> _getterFunc;
-        private readonly Action<TLinkedSource, List<TTargetProperty>> _setterAction;
+        private readonly Func<TLinkedSource, List<TTargetProperty>> _get;
+        private readonly Action<TLinkedSource, List<TTargetProperty>> _set;
 
         public MultiValueLinkTarget(
             string id,
-            Func<TLinkedSource, List<TTargetProperty>> getterFunc, 
-            Action<TLinkedSource, List<TTargetProperty>> setterAction)
+            Func<TLinkedSource, List<TTargetProperty>> get, 
+            Action<TLinkedSource, List<TTargetProperty>> set)
         {
             Id = id;
-            _getterFunc = getterFunc;
-            _setterAction = setterAction;
+            _get = get;
+            _set = set;
         }
 
         public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
         {
-            _getterFunc(linkedSource)[linkTargetValueIndex] = linkTargetValue;
+            _get(linkedSource)[linkTargetValueIndex] = linkTargetValue;
         }
 
         public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues)
         {
-            if (_getterFunc(linkedSource) == null) {
+            if (_get(linkedSource) == null) {
                 var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValues].ToList();
-                _setterAction(linkedSource, polymorphicListToBeBuilt);
+                _set(linkedSource, polymorphicListToBeBuilt);
             }
         }
 

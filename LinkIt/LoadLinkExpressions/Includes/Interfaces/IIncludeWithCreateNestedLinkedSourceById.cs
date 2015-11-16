@@ -11,7 +11,8 @@ namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
             TLink link, 
             LoadedReferenceContext loadedReferenceContext, 
             TLinkedSource linkedSource, 
-            int referenceIndex
+            int referenceIndex,
+            LoadLinkConfig config
         );
         
     }

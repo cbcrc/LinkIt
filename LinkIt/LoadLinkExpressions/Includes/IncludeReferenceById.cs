@@ -10,10 +10,10 @@ namespace LinkIt.LoadLinkExpressions.Includes
         IIncludeWithAddLookupId<TLink>
         where TReference: TIReference
     {
-        private readonly Func<TLink, TId> _getLookupIdFunc;
+        private readonly Func<TLink, TId> _getLookupId;
 
-        public IncludeReferenceById(Func<TLink, TId> getLookupIdFunc){
-            _getLookupIdFunc = getLookupIdFunc;
+        public IncludeReferenceById(Func<TLink, TId> getLookupId){
+            _getLookupId = getLookupId;
             ReferenceType = typeof(TReference);
         }
 
@@ -21,12 +21,12 @@ namespace LinkIt.LoadLinkExpressions.Includes
 
         public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
         {
-            var lookupId = _getLookupIdFunc(link);
+            var lookupId = _getLookupId(link);
             lookupIdContext.AddSingle<TReference, TId>(lookupId);
         }
 
         public TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext) {
-            var lookupId = _getLookupIdFunc(link);
+            var lookupId = _getLookupId(link);
             return loadedReferenceContext.GetOptionalReference<TReference, TId>(lookupId);
         }
 

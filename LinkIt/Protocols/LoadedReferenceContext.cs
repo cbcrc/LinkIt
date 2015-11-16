@@ -6,12 +6,11 @@ using LinkIt.LinkedSources.Interfaces;
 namespace LinkIt.Protocols {
     public class LoadedReferenceContext {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
-        private readonly List<object> _linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 
-        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceIdFunc){
+        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference,TId> getReferenceId){
             var referenceDictionary = references.ToDictionary(
-                getReferenceIdFunc,
+                getReferenceId,
                 reference => reference
             );
 
@@ -39,17 +38,6 @@ namespace LinkIt.Protocols {
 
         public List<object> LinkedSourcesToBeBuilt{
             get { return _linkedSourcesToBeBuilt.ToList(); }
-        }
-
-        public void AddLinkedSourceWhereNestedLinkedSourcesFromModelAreLinked(object linkedSource){
-            _linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked.Add(linkedSource);
-        }
-
-        public List<object> GetLinkedSourceWhereNestedLinkedSourcesFromModelAreNotLinked()
-        {
-            return _linkedSourcesToBeBuilt
-                .Except(_linkedSourcesWhereNestedLinkedSourcesFromModelAreLinked)
-                .ToList();
         }
 
         private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>() {
@@ -82,15 +70,32 @@ namespace LinkIt.Protocols {
         }
 
         //stle: TLinkedSourceModel not required, check this pattern everywhere
-        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model)
+        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, LoadLinkConfig config, Action<TLinkedSource> init)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {
             if (model == null) { return null; }
 
             var linkedSource = new TLinkedSource { Model = model };
-            _linkedSourcesToBeBuilt.Add(linkedSource);
+            if (init != null){
+                init(linkedSource);
+            }
+            LinkNestedLinkedSourcesFromModel(linkedSource, config);
 
+            _linkedSourcesToBeBuilt.Add(linkedSource);
             return linkedSource;
         }
+
+        private void LinkNestedLinkedSourcesFromModel(object linkedSource, LoadLinkConfig config)
+        {
+            var loadLinkExpressions = config.GetLoadLinkExpressions(linkedSource);
+            foreach (var loadLinkExpression in loadLinkExpressions){
+                loadLinkExpression.LinkNestedLinkedSourceFromModel(
+                    linkedSource,
+                    this,
+                    config
+                );
+            }
+        }
+
     }
 }

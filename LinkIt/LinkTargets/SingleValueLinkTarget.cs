@@ -5,18 +5,18 @@ namespace LinkIt.LinkTargets
 {
     public class SingleValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
     {
-        private readonly Action<TLinkedSource, TTargetProperty> _setterAction;
+        private readonly Action<TLinkedSource, TTargetProperty> _set;
 
         public SingleValueLinkTarget(
             string id,
-            Action<TLinkedSource, TTargetProperty> setterAction)
+            Action<TLinkedSource, TTargetProperty> set)
         {
-            _setterAction = setterAction;
+            _set = set;
             Id = id;
         }
 
         public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex){
-            _setterAction(linkedSource, linkTargetValue);
+            _set(linkedSource, linkTargetValue);
         }
 
         public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues){

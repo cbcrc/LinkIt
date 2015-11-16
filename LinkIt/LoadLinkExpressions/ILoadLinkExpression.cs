@@ -13,9 +13,8 @@ namespace LinkIt.LoadLinkExpressions
         List<Type> ReferenceTypes { get; }
 
         void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
-        void LinkNestedLinkedSourceById(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked);
-        //stle: Is loadedReferenceContext the right place to register sub linked source and nested linked source?
-        void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext);
+        void LinkNestedLinkedSourceById(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked, LoadLinkConfig config);
+        void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkConfig config);
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
 
         void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkConfig config);
