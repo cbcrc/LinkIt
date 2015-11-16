@@ -11,8 +11,7 @@ namespace LinkIt.Tests
     [TestFixture]
     public class LoadLinkExpressionOverridingTests
     {
-        private FakeReferenceLoader<SingleReferenceContent, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp()
@@ -35,22 +34,18 @@ namespace LinkIt.Tests
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader = 
-                new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_WithOverriddenLoadLinkExpression_ShouldUseOverriddenLoadLinkExpression()
         {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = "a"
                 }
-                );
-
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().ById("1");
+            );
 
             Assert.That(actual.SummaryImage.Id, Is.EqualTo("a-overridden"));
         }

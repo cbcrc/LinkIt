@@ -12,8 +12,7 @@ namespace LinkIt.Tests
     [TestFixture]
     public class SubLinkedSourceTests
     {
-        private FakeReferenceLoader<SubContentOwner, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -38,36 +37,32 @@ namespace LinkIt.Tests
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<SubContentOwner, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_SubLinkedSource()
         {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().FromModel(
                 new SubContentOwner {
                     Id = "1",
-                    SubContent = new SubContent{
-                        SubSubContent = new SubSubContent{
+                    SubContent = new SubContent {
+                        SubSubContent = new SubSubContent {
                             SummaryImageId = "a"
                         }
                     },
-                    SubSubContent = new SubSubContent{
+                    SubSubContent = new SubSubContent {
                         SummaryImageId = "b"
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().FromModel(
                 new SubContentOwner {
                     Id = "1",
                     SubContent = new SubContent {
@@ -76,8 +71,6 @@ namespace LinkIt.Tests
                     SubSubContent = null
                 }
             );
-
-            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().ById("1");
 
             Assert.That(actual.SubContent.SubSubContent, Is.Null);
             Assert.That(actual.SubSubContent, Is.Null);

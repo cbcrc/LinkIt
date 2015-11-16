@@ -11,8 +11,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class LoadLinkModelTests
     {
-        private FakeReferenceLoader<SingleReferenceContent, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -22,10 +21,7 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
         }
 
         [Test]

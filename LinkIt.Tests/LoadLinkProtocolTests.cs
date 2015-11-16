@@ -18,19 +18,18 @@ namespace LinkIt.Tests
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            var fakeReferenceLoader = new FakeReferenceLoader<Person, string>(reference => reference.Id);
-            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
+            var sut = new ReferenceLoaderStub();
+            var loadLinkConfig = loadLinkProtocolBuilder.Build(()=>sut);
 
-            var actual = sut.LoadLink<PersonLinkedSource>().ById("dont-care");
+            loadLinkConfig.LoadLink<PersonLinkedSource>().ById("dont-care");
 
-            Assert.That(fakeReferenceLoader.IsDisposed, Is.True);
+            Assert.That(sut.IsDisposed, Is.True);
         }
 
         [Test]
         public void LoadLink_LinkedSourceWithoutLoadLinkExpressionAtRoot_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            var fakeReferenceLoader = new FakeReferenceLoader<Person, string>(reference => reference.Id);
-            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
+            var sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
 
             TestDelegate act = () => sut.LoadLink<PersonLinkedSource>().ById("dont-care");
 

@@ -7,6 +7,7 @@ using LinkIt.Conventions.Interfaces;
 using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using RC.Testing;
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
@@ -23,9 +24,7 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
                 new List<ILoadLinkExpressionConvention> { new LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches() }
             );
 
-            var fakeReferenceLoader =
-                new FakeReferenceLoader<Model, string>(reference => reference.Id);
-            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
+            var sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
 
             var actual = sut.LoadLink<LinkedSource>().FromModel(
                 new Model{

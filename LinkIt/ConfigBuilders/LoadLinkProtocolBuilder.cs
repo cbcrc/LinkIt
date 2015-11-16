@@ -20,18 +20,14 @@ namespace LinkIt.ConfigBuilders {
             _loadLinkExpressionsById[loadLinkExpression.LinkTargetId] = loadLinkExpression;
         }
 
-        public LoadLinkProtocol Build(IReferenceLoader referenceLoader)
+        public LoadLinkConfig Build(Func<IReferenceLoader> createReferenceLoader)
         {
-            if (referenceLoader == null) { throw new ArgumentNullException("referenceLoader"); }
+            if (createReferenceLoader == null) { throw new ArgumentNullException("createReferenceLoader"); }
 
-            return new LoadLinkProtocol(
-                referenceLoader,
-                new LoadLinkConfig(GetLoadLinkExpressions())
+            return new LoadLinkConfig(
+                _loadLinkExpressionsById.Values.ToList(), 
+                createReferenceLoader
             );
-        }
-
-        public List<ILoadLinkExpression> GetLoadLinkExpressions(){
-            return _loadLinkExpressionsById.Values.ToList();
         }
     }
 }

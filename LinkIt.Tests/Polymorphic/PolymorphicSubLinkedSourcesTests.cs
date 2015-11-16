@@ -11,8 +11,7 @@ namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicSubLinkedSourcesTests {
-        private FakeReferenceLoader<WithPolymorphicSubLinkedSourceContent, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -40,14 +39,12 @@ namespace LinkIt.Tests.Polymorphic {
                     linkedSource => linkedSource.Image
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<WithPolymorphicSubLinkedSourceContent, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_SubContentWithoutReferences() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>().FromModel(
                 new WithPolymorphicSubLinkedSourceContent {
                     Id = "1",
                     Subs = new List<IPolymorphicModel>
@@ -65,8 +62,6 @@ namespace LinkIt.Tests.Polymorphic {
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

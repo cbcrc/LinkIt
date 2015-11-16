@@ -3,6 +3,7 @@ using LinkIt.ConfigBuilders;
 using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Protocols;
 using LinkIt.ReferenceTrees;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
@@ -18,7 +19,7 @@ namespace LinkIt.Tests.ReferenceTrees {
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>();
-            _sut = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]

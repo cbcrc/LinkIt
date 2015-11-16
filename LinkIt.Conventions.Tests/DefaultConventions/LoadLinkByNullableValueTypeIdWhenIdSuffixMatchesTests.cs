@@ -23,9 +23,7 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
                 new List<ILoadLinkExpressionConvention> { new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches() }
             );
             
-            var fakeReferenceLoader =
-                new FakeReferenceLoader<Model, string>(reference => reference.Id);
-            var sut = loadLinkProtocolBuilder.Build(fakeReferenceLoader);
+            var sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
 
             var actual = sut.LoadLink<LinkedSource>().FromModel(
                 new Model{

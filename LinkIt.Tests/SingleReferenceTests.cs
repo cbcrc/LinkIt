@@ -11,8 +11,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class SingleReferenceTests
     {
-        private FakeReferenceLoader<SingleReferenceContent, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp()
@@ -24,50 +23,42 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader = 
-                new FakeReferenceLoader<SingleReferenceContent, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_SingleReference()
         {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = "a"
                 }
             );
 
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().ById("1");
-
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = null
                 }
             );
 
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().ById("1");
-
             Assert.That(actual.SummaryImage, Is.Null);
         }
 
         [Test]
         public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
                 new SingleReferenceContent {
                     Id = "1",
                     SummaryImageId = "cannot-be-resolved"
                 }
             );
-
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().ById("1");
 
             Assert.That(actual.SummaryImage, Is.Null);
         }

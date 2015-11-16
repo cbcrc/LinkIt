@@ -10,8 +10,7 @@ namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicReferenceTests {
-        private FakeReferenceLoader<Model, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -33,31 +32,27 @@ namespace LinkIt.Tests.Polymorphic {
                         )
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<Model, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_PolymorphicReferenceWithImage() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
                     Id = "1",
-                    Target = new PolymorphicReference{
+                    Target = new PolymorphicReference {
                         Type = "image",
                         Id = "a"
                     }
                 }
             );
 
-            var actual = _sut.LoadLink<LinkedSource>().ById("1");
-
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_PolymorphicReferenceWithPerson() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
                     Id = "1",
                     Target = new PolymorphicReference {
@@ -66,8 +61,6 @@ namespace LinkIt.Tests.Polymorphic {
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<LinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

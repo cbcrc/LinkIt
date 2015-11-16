@@ -8,10 +8,8 @@ using NUnit.Framework;
 namespace LinkIt.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class ContextualizationTests
-    {
-        private FakeReferenceLoader<WithContextualizedReference, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+    public class ContextualizationTests{
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -31,18 +29,16 @@ namespace LinkIt.Tests.Exploratory {
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<WithContextualizedReference, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
         {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(
                 new WithContextualizedReference {
                     Id = "1",
-                    PersonContextualization = new PersonContextualization{
+                    PersonContextualization = new PersonContextualization {
                         Id = "32",
                         Name = "Altered named",
                         SummaryImageId = null
@@ -50,15 +46,13 @@ namespace LinkIt.Tests.Exploratory {
                 }
             );
 
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().ById("1");
-
             Assert.That(actual.Person.Contextualization.SummaryImageId, Is.Null);
             Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("person-img-32"));
         }
 
         [Test]
         public void LoadLink_WithContextualization_ShouldLinkOverriddenImage() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(
                 new WithContextualizedReference {
                     Id = "1",
                     PersonContextualization = new PersonContextualization {
@@ -68,8 +62,6 @@ namespace LinkIt.Tests.Exploratory {
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().ById("1");
 
             Assert.That(actual.Person.Contextualization.SummaryImageId, Is.EqualTo("overriden-image"));
             Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("overriden-image"));

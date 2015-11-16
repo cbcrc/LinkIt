@@ -10,28 +10,27 @@ using LinkIt.Shared;
 namespace LinkIt.Protocols {
     public class LoadLinkConfig {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
+        private readonly Func<IReferenceLoader> _createReferenceLoader;
 
         #region Initialization
-        public LoadLinkConfig(List<ILoadLinkExpression> loadLinkExpressions)
+        internal LoadLinkConfig(
+            List<ILoadLinkExpression> loadLinkExpressions, 
+            Func<IReferenceLoader> createReferenceLoader)
         {
-            EnsureLoadLinkExpressionLinkTargetIdsAreUnique(loadLinkExpressions);
             _allLoadLinkExpressions = loadLinkExpressions;
+            _createReferenceLoader = createReferenceLoader;
             InitLoadingLevelsForEachPossibleRootLinkedSourceType();
         }
 
-        private void EnsureLoadLinkExpressionLinkTargetIdsAreUnique(List<ILoadLinkExpression> loadLinkExpressions) {
-            var linkTargetIdsWithDuplicates = loadLinkExpressions.GetNotUniqueKey(loadLinkExpression => loadLinkExpression.LinkTargetId);
-
-            if (linkTargetIdsWithDuplicates.Any()) {
-                throw new ArgumentException(
-                    string.Format(
-                        "Can only have one load link expression per link target id, but there are many for : {0}.",
-                        String.Join(",", linkTargetIdsWithDuplicates)
-                    )
-                );
-            }
-        }
         #endregion
+
+        public ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>() {
+            return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
+                _createReferenceLoader(),
+                GetLoadingLevelsFor<TRootLinkedSource>(),
+                this
+            );
+        }
 
         public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
@@ -48,15 +47,6 @@ namespace LinkIt.Protocols {
             return _allLoadLinkExpressions
                 .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType == linkedSourceType)
                 .ToList();
-        }
-
-        public ILoadLinker<TRootLinkedSource> CreateLoadLinker<TRootLinkedSource>(IReferenceLoader referenceLoader) 
-        {
-            return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
-                referenceLoader,
-                GetLoadingLevelsFor<TRootLinkedSource>(),
-                this
-            );
         }
 
         #region Loading Levels

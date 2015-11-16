@@ -13,8 +13,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class NestedLinkedSourcesTests
     {
-        private FakeReferenceLoader<NestedContents, int> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -30,36 +29,30 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<NestedContents, int>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_NestedLinkedSource()
         {
-            _fakeReferenceLoader.FixValue(
-                new NestedContents{
+            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
+                new NestedContents {
                     Id = 1,
-                    AuthorIds = new List<string>{ "a", "b"}
+                    AuthorIds = new List<string> { "a", "b" }
                 }
             );
-
-            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
                 new NestedContents {
                     Id = 1,
                     AuthorIds = new List<string> { "a", null, "b" }
                 }
             );
-
-            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             Assert.That(actual.Authors.Count, Is.EqualTo(3));
             Assert.That(actual.Authors[1], Is.Null);
@@ -67,28 +60,24 @@ namespace LinkIt.Tests {
 
         [Test]
         public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
                 new NestedContents {
                     Id = 1,
                     AuthorIds = null
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
-
             Assert.That(actual.Authors, Is.Empty);
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
                 new NestedContents {
                     Id = 1,
                     AuthorIds = new List<string> { "a", "a" }
                 }
             );
-
-            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             var linkedAuthroIds = actual.Authors.Select(author => author.Model.Id);
             Assert.That(linkedAuthroIds, Is.EquivalentTo(new[] { "a", "a" }));
@@ -98,14 +87,12 @@ namespace LinkIt.Tests {
 
         [Test]
         public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
                 new NestedContents {
                     Id = 1,
                     AuthorIds = new List<string> { "cannot-be-resolved", "cannot-be-resolved" }
                 }
             );
-
-            var actual = _sut.LoadLink<NestedLinkedSources>().ById(1);
 
             Assert.That(actual.Authors, Is.EquivalentTo(new List<PersonLinkedSource>{null,null}));
         }

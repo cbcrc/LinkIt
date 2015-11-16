@@ -11,8 +11,7 @@ namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicMixtedListTests {
-        private FakeReferenceLoader<Model, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -42,15 +41,13 @@ namespace LinkIt.Tests.Polymorphic {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<Model, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_PolymorphicMixteList() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
                     Id = "1",
                     TargetReference = new List<object>{
@@ -64,8 +61,6 @@ namespace LinkIt.Tests.Polymorphic {
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<LinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

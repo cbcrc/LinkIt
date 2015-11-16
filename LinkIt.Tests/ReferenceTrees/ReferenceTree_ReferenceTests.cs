@@ -27,7 +27,7 @@ namespace LinkIt.Tests.ReferenceTrees {
                     linkedSource => linkedSource.Model.PersonTwoId,
                     linkedSource => linkedSource.PersonTwo
                 );
-            _sut = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]

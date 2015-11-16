@@ -12,7 +12,7 @@ namespace LinkIt.Samples {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class GettingStarted {
-        private LoadLinkProtocol _loadLinkProtocol;
+        private LoadLinkConfig _loadLinkProtocol;
 
         [SetUp]
         public void SetUp() {
@@ -22,7 +22,7 @@ namespace LinkIt.Samples {
                 loadLinkProtocolBuilder.GetDefaultConventions()
             );
 
-            _loadLinkProtocol = loadLinkProtocolBuilder.Build(new FakeReferenceLoader());
+            _loadLinkProtocol = loadLinkProtocolBuilder.Build(()=>new FakeReferenceLoader());
         }
 
         [Test]

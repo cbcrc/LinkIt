@@ -2,6 +2,7 @@
 using LinkIt.ConfigBuilders;
 using LinkIt.LinkedSources.Interfaces;
 using LinkIt.Protocols;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
 namespace LinkIt.Tests {
@@ -18,7 +19,7 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.Parent
                 );
 
-            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            TestDelegate act = () => loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
 
             Assert.That(
                 act,
@@ -41,7 +42,7 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.Parent
                 );
 
-            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            TestDelegate act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
             Assert.That(
                 act,
@@ -69,7 +70,7 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.Level0
                 );
 
-            TestDelegate act = () => new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            TestDelegate act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
             Assert.That(
                act,

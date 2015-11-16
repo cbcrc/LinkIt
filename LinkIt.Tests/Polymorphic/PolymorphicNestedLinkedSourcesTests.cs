@@ -12,8 +12,7 @@ namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicNestedLinkedSourcesTests {
-        private FakeReferenceLoader<WithNestedPolymorphicContents, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -38,14 +37,12 @@ namespace LinkIt.Tests.Polymorphic {
                         )
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<WithNestedPolymorphicContents, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContents() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -63,14 +60,12 @@ namespace LinkIt.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().ById("1");
-
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -89,29 +84,25 @@ namespace LinkIt.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().ById("1");
-
             Assert.That(actual.Contents.Count, Is.EqualTo(3));
             Assert.That(actual.Contents[1], Is.Null);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySet() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = null
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().ById("1");
-
             Assert.That(actual.Contents, Is.Empty);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicates() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -128,8 +119,6 @@ namespace LinkIt.Tests.Polymorphic {
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().ById("1");
 
             var asImageIds = actual.Contents
                 .Cast<ImageWithContextualizationLinkedSource>()
@@ -141,7 +130,7 @@ namespace LinkIt.Tests.Polymorphic {
 
         [Test]
         public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
                     Id = "1",
                     ContentContextualizations = new List<ContentContextualization>{
@@ -158,8 +147,6 @@ namespace LinkIt.Tests.Polymorphic {
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().ById("1");
 
             Assert.That(actual.Contents, Is.EquivalentTo(new List<IPolymorphicSource>{null,null}));
         }

@@ -6,9 +6,8 @@ using LinkIt.Protocols.Interfaces;
 
 namespace LinkIt.Tests.Shared {
     
-    public class FakeReferenceLoader<TReference, TId>:IReferenceLoader
+    public class ReferenceLoaderStub:IReferenceLoader
     {
-        private readonly Func<TReference, TId> _getReferenceId;
         private readonly Dictionary<Type, IReferenceTypeConfig> _referenceTypeConfigByReferenceType;
         private bool _isConnectionOpen = false;
 
@@ -32,9 +31,8 @@ namespace LinkIt.Tests.Shared {
             };
         }
 
-        public FakeReferenceLoader(Func<TReference, TId> getReferenceId, params IReferenceTypeConfig[] customReferenceTypeConfigs)
+        public ReferenceLoaderStub(params IReferenceTypeConfig[] customReferenceTypeConfigs)
         {
-            _getReferenceId = getReferenceId;
             var config = customReferenceTypeConfigs
                 .Concat(GetDefaultReferenceTypeConfigs())
                 .ToList();
@@ -43,22 +41,6 @@ namespace LinkIt.Tests.Shared {
                 referenceTypeConfig => referenceTypeConfig.ReferenceType,
                 referenceTypeConfig => referenceTypeConfig
             );
-        }
-
-        public FakeReferenceLoader(params IReferenceTypeConfig[] customReferenceTypeConfigs) 
-            : this(null, customReferenceTypeConfigs)
-        {}
-
-        public void FixValue(TReference fixedValue) {
-            var fixedReferenceTypeConfig = new ReferenceTypeConfig<TReference, TId>(
-                ids => ids
-                    .Select(id => fixedValue)
-                    .Where(id => id != null)
-                    .ToList(),
-                _getReferenceId
-            );
-
-            _referenceTypeConfigByReferenceType[typeof (TReference)] = fixedReferenceTypeConfig;
         }
 
         public readonly List<LookupIdContext> RecordedLookupIdContexts = new List<LookupIdContext>();

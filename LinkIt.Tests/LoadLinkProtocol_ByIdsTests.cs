@@ -10,10 +10,10 @@ namespace LinkIt.Tests
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class LoadLinkProtocol_ByIdsTests
+    public class LoadLinkConfig_ByIdsTests
     {
-        private FakeReferenceLoader<Person, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private ReferenceLoaderStub _referenceLoaderStub;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -24,9 +24,8 @@ namespace LinkIt.Tests
                     linkedSource=>linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<Person, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _referenceLoaderStub = new ReferenceLoaderStub();
+            _sut = loadLinkProtocolBuilder.Build(()=>_referenceLoaderStub);
         }
 
 
@@ -48,7 +47,7 @@ namespace LinkIt.Tests
         public void LoadLinkById_WithNullId_ShouldLinkNullWithoutLoading() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ById<string>(null);
 
-            var loadedReferenceTypes = _fakeReferenceLoader.RecordedLookupIdContexts
+            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
                 .GetReferenceTypes();
 
@@ -85,7 +84,7 @@ namespace LinkIt.Tests
 
             Assert.That(actual, Is.EquivalentTo(new string[]{null,null}));
 
-            var loadedReferenceTypes = _fakeReferenceLoader.RecordedLookupIdContexts
+            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
                 .GetReferenceTypes();
 
@@ -112,7 +111,7 @@ namespace LinkIt.Tests
             var linkedSourceModelIds = actual.Select(linkedSource => linkedSource.Model.Id);
             Assert.That(linkedSourceModelIds, Is.EquivalentTo(new[] { "a", "a" }));
 
-            var loadedPersonIds = _fakeReferenceLoader.RecordedLookupIdContexts
+            var loadedPersonIds = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
                 .GetReferenceIds<Person, string>();
             

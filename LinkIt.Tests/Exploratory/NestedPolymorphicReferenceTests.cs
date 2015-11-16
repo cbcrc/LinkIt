@@ -12,8 +12,7 @@ namespace LinkIt.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class NestedPolymorphicReferenceTests {
-        private FakeReferenceLoader<WithNestedPolymorphicReference, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -31,21 +30,17 @@ namespace LinkIt.Tests.Exploratory {
                             typeof(int),
                             reference => ((int)reference).ToString()));
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<WithNestedPolymorphicReference, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicReference() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>().FromModel(
                 new WithNestedPolymorphicReference {
                     Id = "1",
-                    PolyIds = new List<object>{"p1",32}
+                    PolyIds = new List<object> { "p1", 32 }
                 }
             );
-
-            var actual = _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

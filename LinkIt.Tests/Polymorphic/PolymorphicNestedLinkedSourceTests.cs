@@ -10,8 +10,7 @@ namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicNestedLinkedSourceTests {
-        private FakeReferenceLoader<WithNestedPolymorphicContent, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -32,17 +31,15 @@ namespace LinkIt.Tests.Polymorphic {
                                 childLinkedSource.ContentContextualization = linkedSource.Model.ContentContextualization)
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<WithNestedPolymorphicContent, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContent() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
                 new WithNestedPolymorphicContent {
                     Id = "1",
-                    ContentContextualization = new PolymorphicNestedLinkedSourcesTests.ContentContextualization{
+                    ContentContextualization = new PolymorphicNestedLinkedSourcesTests.ContentContextualization {
                         ContentType = "person",
                         Id = "p1",
                         Title = "altered person title"
@@ -50,14 +47,12 @@ namespace LinkIt.Tests.Polymorphic {
                 }
             );
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().ById("1");
-
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_NestedPolymorphicContentWithContextualization_ShouldInitContextualization() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
                 new WithNestedPolymorphicContent {
                     Id = "1",
                     ContentContextualization = new PolymorphicNestedLinkedSourcesTests.ContentContextualization {
@@ -67,8 +62,6 @@ namespace LinkIt.Tests.Polymorphic {
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().ById("1");
 
             var contentAsImage =
                 actual.Content as PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource;

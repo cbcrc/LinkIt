@@ -36,7 +36,7 @@ namespace LinkIt.Tests.ReferenceTrees {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            _sut = new LoadLinkConfig(loadLinkProtocolBuilder.GetLoadLinkExpressions());
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]

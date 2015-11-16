@@ -14,8 +14,7 @@ namespace LinkIt.Tests
     [TestFixture]
     public class ManyReferencesTests
     {
-        private FakeReferenceLoader<ManyReferencesContent, int> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -34,15 +33,13 @@ namespace LinkIt.Tests
                     linkedSource => linkedSource.FavoriteImages
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<ManyReferencesContent, int>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_ManyReferences()
         {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "summary-image-id",
@@ -50,15 +47,13 @@ namespace LinkIt.Tests
                     FavoriteImageIds = new List<string> { "one", "two" }
                 }
             );
-
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
             
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -67,15 +62,13 @@ namespace LinkIt.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
-
             Assert.That(actual.FavoriteImages.Count, Is.EqualTo(3));
             Assert.That(actual.FavoriteImages[1], Is.Null);
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -84,14 +77,12 @@ namespace LinkIt.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
-
             Assert.That(actual.FavoriteImages, Is.Empty);
         }
 
         [Test]
         public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -100,8 +91,6 @@ namespace LinkIt.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
-
             var linkedImagesIds = actual.FavoriteImages.Select(image => image.Id);
             Assert.That(linkedImagesIds, Is.EquivalentTo(new []{"a", "a"}));
         }
@@ -109,7 +98,7 @@ namespace LinkIt.Tests
 
         [Test]
         public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
                     Id = 1,
                     SummaryImageId = "dont-care",
@@ -117,8 +106,6 @@ namespace LinkIt.Tests
                     FavoriteImageIds = new List<string> { "cannot-be-resolved", "cannot-be-resolved" }
                 }
             );
-
-            var actual = _sut.LoadLink<ManyReferencesLinkedSource>().ById(1);
 
             Assert.That(actual.FavoriteImages, Is.EquivalentTo(new List<Image>{null,null}));
         }

@@ -11,8 +11,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class OptionalReferenceTests
     {
-        private FakeReferenceLoader<Model, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp()
@@ -24,36 +23,29 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.Media
                 );
 
-            _fakeReferenceLoader = 
-                new FakeReferenceLoader<Model, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
-        public void LoadLink_WithValue_ShouldLinkMedia()
-        {
-            _fakeReferenceLoader.FixValue(
+        public void LoadLink_WithValue_ShouldLinkMedia(){
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
                     Id = "1",
                     MediaId = 32
                 }
             );
 
-            var actual = _sut.LoadLink<LinkedSource>().ById("1");
-
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_WithoutValue_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
                     Id = "1",
                     MediaId = null
                 }
             );
-
-            var actual = _sut.LoadLink<LinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

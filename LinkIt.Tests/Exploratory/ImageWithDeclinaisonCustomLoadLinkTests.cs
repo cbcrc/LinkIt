@@ -14,8 +14,7 @@ namespace LinkIt.Tests.Exploratory {
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests
     {
-        private FakeReferenceLoader<WithImage, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -26,53 +25,44 @@ namespace LinkIt.Tests.Exploratory {
                     linkedSource => linkedSource.Image
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<WithImage, string>(
-                    reference=>reference.Id,
-                    new ImageReferenceTypeConfigWorkAround()
-                );
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() =>
+                new ReferenceLoaderStub(new ImageReferenceTypeConfigWorkAround())
+            );
         }
 
         [Test]
         public void LoadLink_ImagesFromDeclinaisonUrl()
         {
-            _fakeReferenceLoader.FixValue(
-                new WithImage{
+            var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
+                new WithImage {
                     Id = "1",
                     ImageUrl = "a-1x1"
                 }
             );
-
-            var actual = _sut.LoadLink<WithImageLinkedSource>().ById("1");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_ImagesFromDeclinaisonUrlWithoutReferenceId_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
                 new WithImage {
                     Id = "1",
                     ImageUrl = null
                 }
             );
 
-            var actual = _sut.LoadLink<WithImageLinkedSource>().ById("1");
-
             Assert.That(actual.Image, Is.Null);
         }
 
         [Test]
         public void LoadLink_ImagesFromDeclinaisonUrlCannotBeResolved_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
                 new WithImage {
                     Id = "1",
                     ImageUrl = "cannot-be-resolved"
                 }
             );
-
-            var actual = _sut.LoadLink<WithImageLinkedSource>().ById("1");
 
             Assert.That(actual.Image, Is.Null);
         }

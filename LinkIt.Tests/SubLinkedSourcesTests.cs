@@ -14,8 +14,7 @@ namespace LinkIt.Tests
     [TestFixture]
     public class SubLinkedSourcesTests
     {
-        private FakeReferenceLoader<SubContentsOwner, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -40,9 +39,7 @@ namespace LinkIt.Tests
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<SubContentsOwner, string>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
         }
 
 
@@ -50,7 +47,7 @@ namespace LinkIt.Tests
         [Test]
         public void LoadLink_SubLinkedSources()
         {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = new List<SubContentWithManySubSubContents>{
@@ -68,14 +65,12 @@ namespace LinkIt.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
-
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_SubLinkedSourcesWithNullInReferenceIds_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = null, //dont-care
@@ -87,23 +82,19 @@ namespace LinkIt.Tests
                 }
             );
 
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
-
             Assert.That(actual.SubSubContents.Count, Is.EqualTo(3));
             Assert.That(actual.SubSubContents[1], Is.Null);
         }
 
         [Test]
         public void LoadLink_SubLinkedSourcesWithoutReferenceIds_ShouldLinkEmptySet() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = null, //dont-care
-                    SubSubContents =null
+                    SubSubContents = null
                 }
             );
-
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
 
             Assert.That(actual.SubSubContents, Is.Empty);
         }
@@ -111,7 +102,7 @@ namespace LinkIt.Tests
 
         [Test]
         public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
                 new SubContentsOwner {
                     Id = "1",
                     SubContents = null, //dont-care
@@ -121,8 +112,6 @@ namespace LinkIt.Tests
                     }
                 }
             );
-
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().ById("1");
 
             var linkedImagesIds = actual.SubSubContents.Select(subSubContent => subSubContent.Model.SummaryImageId);
             Assert.That(linkedImagesIds, Is.EquivalentTo(new[] { "a", "a" }));

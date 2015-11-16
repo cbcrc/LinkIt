@@ -77,7 +77,6 @@
     <Compile Include="Protocols\Interfaces\IReferenceLoader.cs" />
     <Compile Include="Protocols\LoadedReferenceContext.cs" />
     <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
-    <Compile Include="Protocols\LoadLinkProtocol.cs" />
     <Compile Include="Protocols\LookupIdContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

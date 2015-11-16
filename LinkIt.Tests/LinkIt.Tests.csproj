@@ -85,7 +85,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NestedLinkedSourcesTests.cs" />
-    <Compile Include="LoadLinkConfigTests.cs" />
     <Compile Include="NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -102,8 +101,7 @@
     <Compile Include="Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
     <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
-    <Compile Include="RootLinkedSourceTests.cs" />
-    <Compile Include="Shared\FakeReferenceLoader.cs" />
+    <Compile Include="Shared\ReferenceLoaderStub.cs" />
     <Compile Include="Shared\IPolymorphicModel.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />
     <Compile Include="Shared\Person.cs" />

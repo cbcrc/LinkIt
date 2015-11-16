@@ -11,8 +11,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class NestedLinkedSourceTests
     {
-        private FakeReferenceLoader<NestedContent, int> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp() {
@@ -30,15 +29,13 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage);
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<NestedContent, int>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_NestedLinkedSource()
         {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
                     Id = 1,
                     AuthorDetailId = "32",
@@ -46,14 +43,12 @@ namespace LinkIt.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSource>().ById(1);
-
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummary() {
-            _fakeReferenceLoader.FixValue(
+            _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
                     Id = 1,
                     AuthorDetailId = "32",
@@ -61,29 +56,26 @@ namespace LinkIt.Tests {
                 }
             );
 
-            _sut.LoadLink<NestedLinkedSource>().ById(1);
-
             //stle: improve this by allowing test visibility on which image id was resolved
             //assert that does not throw
         }
 
         [Test]
         public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
                     Id = 1,
                     AuthorDetailId = null,
                     ClientSummaryId = "33"
                 }
             );
-            var actual = _sut.LoadLink<NestedLinkedSource>().ById(1);
 
             Assert.That(actual.AuthorDetail, Is.Null);
         }
 
         [Test]
         public void LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNull() {
-            _fakeReferenceLoader.FixValue(
+            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
                     Id = 1,
                     AuthorDetailId = "cannot-be-resolved",
@@ -91,16 +83,14 @@ namespace LinkIt.Tests {
                 }
             );
 
-            var actual = _sut.LoadLink<NestedLinkedSource>().ById(1);
-
             Assert.That(actual.AuthorDetail, Is.Null);
         }
 
         [Test]
         public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot() {
-            _fakeReferenceLoader.FixValue(null);
+            NestedContent model = null;
 
-            var actual = _sut.LoadLink<NestedLinkedSource>().ById(1);
+            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(model);
 
             Assert.That(actual, Is.Null);
         }

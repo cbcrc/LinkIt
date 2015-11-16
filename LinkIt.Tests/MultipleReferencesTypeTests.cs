@@ -11,8 +11,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class MultipleReferencesTypeTests
     {
-        private FakeReferenceLoader<MultipleReferencesTypeContent, int> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp()
@@ -28,24 +27,19 @@ namespace LinkIt.Tests {
                     linkedSource => linkedSource.Author
                 );
 
-            _fakeReferenceLoader =
-                new FakeReferenceLoader<MultipleReferencesTypeContent, int>(reference => reference.Id);
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]
         public void LoadLink_MultipleReferencesTypeTests()
         {
-            _fakeReferenceLoader.FixValue(
-                new MultipleReferencesTypeContent()
-                {
+            var actual = _sut.LoadLink<MultipleReferencesTypeLinkedSource>().FromModel(
+                new MultipleReferencesTypeContent() {
                     Id = 1,
                     SummaryImageId = "a",
                     AuthorId = "32"
                 }
             );
-
-            var actual = _sut.LoadLink<MultipleReferencesTypeLinkedSource>().ById(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

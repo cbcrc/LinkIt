@@ -16,7 +16,7 @@ namespace LinkIt.LoadLinkExpressions
         private readonly Func<TLinkedSource, List<TLink>> _getLinks;
         private readonly IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeSet;
 
-        public LoadLinkExpressionImpl(
+        internal LoadLinkExpressionImpl(
             ILinkTarget<TLinkedSource,TAbstractLinkTarget> linkTarget,
             Func<TLinkedSource, List<TLink>> getLinks,
             IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeset)

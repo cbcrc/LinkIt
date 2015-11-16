@@ -10,10 +10,8 @@ namespace LinkIt.Tests.Exploratory.Generics
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class GenericPieTests
-    {
-        private FakeReferenceLoader<object, string> _fakeReferenceLoader;
-        private LoadLinkProtocol _sut;
+    public class GenericPieTests{
+        private LoadLinkConfig _sut;
 
         [SetUp]
         public void SetUp()
@@ -31,8 +29,8 @@ namespace LinkIt.Tests.Exploratory.Generics
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _fakeReferenceLoader = 
-                new FakeReferenceLoader<object, string>(
+            _sut = loadLinkProtocolBuilder.Build(() => 
+                new ReferenceLoaderStub(
                     new ReferenceTypeConfig<Pie<string>, string>(
                         ids => new PieRepository<string>().GetByPieContentIds(ids),
                         reference => reference.Id
@@ -41,9 +39,8 @@ namespace LinkIt.Tests.Exploratory.Generics
                         ids => new PieRepository<int>().GetByPieContentIds(ids),
                         reference => reference.Id
                     )
-                );
-
-            _sut = loadLinkProtocolBuilder.Build(_fakeReferenceLoader);
+                )
+            );
         }
 
         [Test]
