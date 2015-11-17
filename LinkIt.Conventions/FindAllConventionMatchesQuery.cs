@@ -67,7 +67,7 @@ namespace LinkIt.Conventions {
             }
 
             try{
-                return match.Convention.DoesApply(match.LinkTargetProperty, match.LinkedSourceModelProperty);
+                return match.Convention.DoesApply(match.LinkedSourceModelProperty, match.LinkTargetProperty);
             }
             catch (Exception ex){
                 throw new Exception(

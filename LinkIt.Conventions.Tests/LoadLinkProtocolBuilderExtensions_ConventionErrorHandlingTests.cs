@@ -62,18 +62,12 @@ namespace LinkIt.Conventions.Tests
                 get { return "Does apply failed convention"; } 
             }
 
-            public bool DoesApply(
-                PropertyInfo linkTargetProperty, 
-                PropertyInfo linkedSourceModelProperty)
+            public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
                 throw new Exception("does apply failed");
             }
 
-            public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
-                Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
-                Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, 
-                PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty)
+            public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {}
         }
 
@@ -82,18 +76,12 @@ namespace LinkIt.Conventions.Tests
                 get { return "ApplyFailedConvention"; }
             }
 
-            public bool DoesApply(
-                PropertyInfo linkTargetProperty,
-                PropertyInfo linkedSourceModelProperty)
+            public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
                 return true;
             }
 
-            public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
-                Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
-                Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty,
-                PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty)
+            public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
                 throw new Exception("apply failed");
             }

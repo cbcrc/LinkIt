@@ -8,11 +8,12 @@ namespace LinkIt.Conventions.Interfaces
     public interface IByNullableValueTypeIdConvention : ILoadLinkExpressionConvention
     {
         void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
-            Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
-            Func<TLinkedSource, TLinkedSourceModelProperty?> getLinkedSourceModelProperty,
-            PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty
-        ) where TLinkedSourceModelProperty:struct;
+            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, 
+            Func<TLinkedSource, TLinkedSourceModelProperty?> getLinkedSourceModelProperty, 
+            Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, 
+            PropertyInfo linkedSourceModelProperty, 
+            PropertyInfo linkTargetProperty
+        ) 
+        where TLinkedSourceModelProperty:struct;
     }
 }

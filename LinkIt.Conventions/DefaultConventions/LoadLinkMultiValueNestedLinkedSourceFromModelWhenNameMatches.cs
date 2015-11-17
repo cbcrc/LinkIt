@@ -11,18 +11,17 @@ namespace LinkIt.Conventions.DefaultConventions {
             get { return "Load link multi value nested linked source from model when name matches"; }
         }
         
-        public bool DoesApply(
-            PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty) 
+        public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty) 
         {
             return linkTargetProperty.Name == linkedSourceModelProperty.Name;
         }
 
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, 
-            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
             Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty, 
-            PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty)
+            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty, 
+            PropertyInfo linkedSourceModelProperty, 
+            PropertyInfo linkTargetProperty)
         {
             loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLinkForList(
                 getLinkedSourceModelProperty,

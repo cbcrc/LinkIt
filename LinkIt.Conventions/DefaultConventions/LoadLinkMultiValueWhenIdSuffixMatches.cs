@@ -12,19 +12,17 @@ namespace LinkIt.Conventions.DefaultConventions {
             get { return "Load link multi value when id suffix matches"; }
         }
 
-        public bool DoesApply(
-            PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty) 
+        public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty) 
         {
             return linkTargetProperty.MatchLinkedSourceModelPropertyName(linkedSourceModelProperty, "Id", "s");
         }
 
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, 
-            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
+            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
             Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
-            PropertyInfo linkTargetProperty, 
-            PropertyInfo linkedSourceModelProperty)
+            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty, 
+            PropertyInfo linkedSourceModelProperty, 
+            PropertyInfo linkTargetProperty)
         {
             if (LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(typeof(TLinkTargetProperty))) {
                 loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(

@@ -9,11 +9,11 @@ namespace LinkIt.Conventions.Interfaces
     public interface IMultiValueConvention:ILoadLinkExpressionConvention
     {
         void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
-            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
-            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
-            PropertyInfo linkTargetProperty,
-            PropertyInfo linkedSourceModelProperty
+            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, 
+            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty, 
+            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty, 
+            PropertyInfo linkedSourceModelProperty,
+            PropertyInfo linkTargetProperty
         );
     }
 }

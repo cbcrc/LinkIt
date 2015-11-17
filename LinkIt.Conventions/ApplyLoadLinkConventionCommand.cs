@@ -70,11 +70,9 @@ namespace LinkIt.Conventions
             var casted = (ISingleValueConvention) match.Convention;
             casted.Apply(
                 _loadLinkProtocolBuilder.For<TLinkedSource>(),
-                getLinkTargetProperty,
                 getLinkedSourceModelProperty,
-                match.LinkTargetProperty,
-                match.LinkedSourceModelProperty
-            );
+                getLinkTargetProperty,
+                match.LinkedSourceModelProperty, match.LinkTargetProperty);
         } 
         #endregion
 
@@ -105,11 +103,8 @@ namespace LinkIt.Conventions
             var casted = (IMultiValueConvention)match.Convention;
             casted.Apply(
                 _loadLinkProtocolBuilder.For<TLinkedSource>(),
-                getLinkTargetProperty,
                 getLinkedSourceModelProperty,
-                match.LinkTargetProperty,
-                match.LinkedSourceModelProperty
-            );
+                getLinkTargetProperty, match.LinkedSourceModelProperty, match.LinkTargetProperty);
         } 
         #endregion
 
@@ -139,11 +134,8 @@ namespace LinkIt.Conventions
             var casted = (IByNullableValueTypeIdConvention)match.Convention;
             casted.Apply(
                 _loadLinkProtocolBuilder.For<TLinkedSource>(),
-                getLinkTargetProperty,
                 getLinkedSourceModelProperty,
-                match.LinkTargetProperty,
-                match.LinkedSourceModelProperty
-            );
+                getLinkTargetProperty, match.LinkedSourceModelProperty, match.LinkTargetProperty);
         } 
         #endregion
     }

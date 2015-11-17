@@ -110,9 +110,7 @@ namespace LinkIt.Conventions.Tests
             public string Id { get { return "Stub"; } }
             
 
-            public bool DoesApply(
-                PropertyInfo linkTargetProperty, 
-                PropertyInfo linkedSourceModelProperty)
+            public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
                 if (linkTargetProperty.Name == "Model"){
                     DidAttemptToMatchModelAsLinkTarget = true;
@@ -122,9 +120,7 @@ namespace LinkIt.Conventions.Tests
                 return matchingName == linkedSourceModelProperty.Name;
             }
 
-            public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-                LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
-                Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty)
+            public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
                 LinkTargetPropertyNamesWhereConventionApplies.Add(linkTargetProperty.Name);
             }
