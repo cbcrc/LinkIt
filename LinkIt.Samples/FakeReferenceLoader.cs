@@ -5,8 +5,6 @@ using LinkIt.Protocols;
 using LinkIt.Protocols.Interfaces;
 
 namespace LinkIt.Samples {
-    
-    //stle: rename the other FakeReferenceLoader to ReferenceLoaderStub
     public class FakeReferenceLoader:IReferenceLoader
     {
         public void LoadReferences(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext){

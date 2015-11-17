@@ -30,7 +30,6 @@ namespace LinkIt.Samples {
         {
             var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ById("one");
 
-            //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
@@ -38,7 +37,6 @@ namespace LinkIt.Samples {
         public void LoadLink_ByIds() {
             var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds("one", "two", "three");
 
-            //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
     }
