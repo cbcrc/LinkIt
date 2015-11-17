@@ -81,11 +81,6 @@
   <ItemGroup>
     <Content Include="GettingStarted.LoadLink_ById.approved.txt" />
     <Content Include="GettingStarted.LoadLink_ByIds.approved.txt" />
-    <Content Include="GettingStarted.LoadLink_FromQuery.approved.txt" />
-    <Content Include="GettingStarted.LoadLink_FromQueryWithDependencies.approved.txt" />
-    <Content Include="GettingStarted.LoadLink_FromTransiantModel.approved.txt" />
-    <Content Include="SlightlyMoreComplexExample.LoadLinkById_WithImage.approved.txt" />
-    <Content Include="SlightlyMoreComplexExample.LoadLinkById_WithMedia.approved.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

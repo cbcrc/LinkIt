@@ -125,7 +125,8 @@ namespace LinkIt.Samples {
 
         public object GetOpenedConnection(string connectionName)
         {
-            return connectionName;
+            //in case you need to share opened connection or other ressources.
+            return connectionName; //a real implementation would return an opened connection
         }
     }
 }

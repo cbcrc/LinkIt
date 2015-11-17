@@ -41,7 +41,7 @@ namespace LinkIt.Samples {
         }
 
         [Test]
-        public void LoadLinkById_WithImage()
+        public void LoadLinkById()
         {
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(1);
 
@@ -50,13 +50,104 @@ namespace LinkIt.Samples {
         }
 
         [Test]
-        public void LoadLinkById_WithMedia() {
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(2);
+        public void LoadLinkByIds() {
+            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(2,1);
 
             //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
+        [Test]
+        public void LoadLink_FromQuery() {
+            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromQuery(
+                () => GetBlogPostByKeyword("fish")
+            );
+
+            //stle: what to do?
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        [Test]
+        public void LoadLink_FromQueryWithDependencies() {
+            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromQuery(
+                referenceLoader => {
+                    var referenceLoaderImpl = (FakeReferenceLoader)referenceLoader;
+                    var fakeConnection = referenceLoaderImpl.GetOpenedConnection("MyConnectionName");
+                    return GetBlogPostByKeyword("fish", fakeConnection);
+                }
+            );
+
+            //stle: what to do?
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+
+        [Test]
+        public void LoadLink_FromTransiantModel() {
+            var model = new BlogPost {
+                Id = 77,
+                Author = new Author{
+                    Name = "author-name-77",
+                    Email = "author-email-77",
+                    ImageId = "author-image-77",
+                },
+                MultimediaContentRef = new MultimediaContentReference{
+                    Type = "media",
+                    Id = "multi-77"
+                },
+                TagIds = new List<string>{
+                    "fake-blog-post-tag-"+(177),
+                    "fake-blog-post-tag-"+(178)
+                },
+                Title = "Title-77"
+            };
+
+            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model);
+
+            //stle: what to do?
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        //stle: should support enumerable in from models
+        private List<BlogPost> GetBlogPostByKeyword(string fish, object fakeConnection = null) {
+            //fake result of a database query
+            return new List<BlogPost>{
+                new BlogPost {
+                    Id = 77,
+                    Author = new Author{
+                        Name = "author-name-77",
+                        Email = "author-email-77",
+                        ImageId = "author-image-77",
+                    },
+                    MultimediaContentRef = new MultimediaContentReference{
+                        Type = "media",
+                        Id = "multi-77"
+                    },
+                    TagIds = new List<string>{
+                        "fake-blog-post-tag-"+(177),
+                        "fake-blog-post-tag-"+(178)
+                    },
+                    Title = "Title-77"
+                },
+                new BlogPost {
+                    Id = 101,
+                    Author = new Author{
+                        Name = "author-name-101",
+                        Email = "author-email-101",
+                        ImageId = "author-image-101",
+                    },
+                    MultimediaContentRef = new MultimediaContentReference{
+                        Type = "media",
+                        Id = "multi-101"
+                    },
+                    TagIds = new List<string>{
+                        "fake-blog-post-tag-"+(201),
+                        "fake-blog-post-tag-"+(202)
+                    },
+                    Title = "Title-101"
+                },
+            };
+        }
     }
 
     public class BlogPost {
