@@ -2,7 +2,6 @@
 using System.Linq.Expressions;
 
 namespace LinkIt.Conventions {
-    //stle: dry with RC.AutoMapper
     public static class FuncGenerator {
         public static Func<TPropertyOwner, TProperty> GenerateFromGetter<TPropertyOwner, TProperty>(string propertyInDotNotation) {
             return GenerateFromGetterAsExpression<TPropertyOwner, TProperty>(propertyInDotNotation).Compile();
