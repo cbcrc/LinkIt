@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.LinkedSources;
-using LinkIt.LoadLinkExpressions;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.Core.Interfaces;
+using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
 
-namespace LinkIt.Protocols {
-    public class LoadLinkProtocol {
+namespace LinkIt.Core {
+    public class LoadLinkProtocol : ILoadLinkProtocol
+    {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
         private readonly Func<IReferenceLoader> _createReferenceLoader;
 

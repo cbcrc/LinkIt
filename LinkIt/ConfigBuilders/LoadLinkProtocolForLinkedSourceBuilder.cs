@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using LinkIt.LinkedSources;
-using LinkIt.LinkedSources.Interfaces;
+using LinkIt.Core;
+using LinkIt.Core.Includes;
+using LinkIt.Core.Includes.Interfaces;
+using LinkIt.Core.Interfaces;
 using LinkIt.LinkTargets;
 using LinkIt.LinkTargets.Interfaces;
-using LinkIt.LoadLinkExpressions;
-using LinkIt.LoadLinkExpressions.Includes;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.PublicApi;
 
 namespace LinkIt.ConfigBuilders
 {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.PublicApi;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -14,7 +14,7 @@ namespace LinkIt.Tests.Exploratory {
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests
     {
-        private LoadLinkProtocol _sut;
+        private ILoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {
@@ -136,7 +136,7 @@ namespace LinkIt.Tests.Exploratory {
             get { return typeof (ImageWithDeclinaison); }
         }
 
-        public void Load(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext)
+        public void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             var lookupIds = lookupIdContext.GetReferenceIds<ImageWithDeclinaison, string>();
             var repository = new ImageWithDeclinaisonRepository();

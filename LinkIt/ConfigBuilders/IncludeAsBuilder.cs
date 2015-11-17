@@ -1,6 +1,6 @@
 using System;
-using LinkIt.LinkedSources;
-using LinkIt.LoadLinkExpressions.Includes;
+using LinkIt.Core;
+using LinkIt.Core.Includes;
 
 namespace LinkIt.ConfigBuilders
 {

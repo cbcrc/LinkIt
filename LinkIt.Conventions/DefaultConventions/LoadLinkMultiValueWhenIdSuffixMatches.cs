@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.LinkedSources;
+using LinkIt.Core;
 
 namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkMultiValueWhenIdSuffixMatches : IMultiValueConvention {

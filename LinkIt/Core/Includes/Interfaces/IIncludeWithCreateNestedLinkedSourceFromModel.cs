@@ -1,7 +1,6 @@
-using LinkIt.Protocols;
 using LinkIt.ReferenceTrees;
 
-namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
+namespace LinkIt.Core.Includes.Interfaces
 {
     public interface IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink>:IInclude
     {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using LinkIt.Protocols;
 using LinkIt.ReferenceTrees;
 
-namespace LinkIt.LoadLinkExpressions
+namespace LinkIt.Core.Interfaces
 {
     public interface ILoadLinkExpression
     {

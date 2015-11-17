@@ -4,7 +4,7 @@ using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.LinkedSources.Interfaces;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;

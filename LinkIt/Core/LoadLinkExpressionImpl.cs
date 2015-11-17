@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinkIt.Core.Includes;
+using LinkIt.Core.Includes.Interfaces;
+using LinkIt.Core.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
-using LinkIt.LoadLinkExpressions.Includes;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
-using LinkIt.Protocols;
 using LinkIt.ReferenceTrees;
 using LinkIt.Shared;
 
-namespace LinkIt.LoadLinkExpressions
+namespace LinkIt.Core
 {
     public class LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>:ILoadLinkExpression
     {
@@ -41,7 +41,7 @@ namespace LinkIt.LoadLinkExpressions
 
         public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
         {
-            AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            AssumeLinkedSourceIsOfTLinkedSource(linkedSource);
             AssumeIsOfReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource)linkedSource)
@@ -100,7 +100,7 @@ namespace LinkIt.LoadLinkExpressions
             Func<TLink, TInclude> getInclude,
             Func<TLink, TInclude, int, TAbstractLinkTarget> getLinkTargetValue)
         {
-            AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(linkedSource);
+            AssumeLinkedSourceIsOfTLinkedSource(linkedSource);
 
             SetLinkTargetValues(
                 (TLinkedSource)linkedSource,
@@ -144,7 +144,7 @@ namespace LinkIt.LoadLinkExpressions
 
         public List<Type> ChildLinkedSourceTypes { get; private set; }
 
-        private static void AssumeLinkedSourceIsOfTLinkedSource<TLinkedSource>(object linkedSource) {
+        private static void AssumeLinkedSourceIsOfTLinkedSource(object linkedSource) {
             if (!(linkedSource is TLinkedSource)) {
                 throw new AssumptionFailed(
                     string.Format(

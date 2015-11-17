@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.PublicApi;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Polymorphic;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
@@ -12,7 +12,7 @@ namespace LinkIt.Tests.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class NestedPolymorphicReferenceTests {
-        private LoadLinkProtocol _sut;
+        private ILoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using LinkIt.Core.Includes;
+using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
-using LinkIt.LoadLinkExpressions.Includes;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
 
 namespace LinkIt.ConfigBuilders
 {

@@ -1,12 +1,12 @@
 ﻿using System;
-using LinkIt.Protocols;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Tests.Shared
 {
     public interface IReferenceTypeConfig
     {
         Type ReferenceType { get; }
-        void Load(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext);
+        void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext);
         string RequiredConnection { get; }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.LinkedSources.Interfaces;
+using LinkIt.PublicApi;
 
-namespace LinkIt.Protocols {
-    public class LoadedReferenceContext {
+namespace LinkIt.Core {
+    public class LoadedReferenceContext : ILoadedReferenceContext
+    {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType= new Dictionary<Type, object>();
 

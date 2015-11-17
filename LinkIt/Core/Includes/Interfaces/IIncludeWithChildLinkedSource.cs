@@ -1,6 +1,6 @@
 using System;
 
-namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
+namespace LinkIt.Core.Includes.Interfaces
 {
     public interface IIncludeWithChildLinkedSource:IInclude {
         Type ChildLinkedSourceType { get; }

@@ -1,5 +1,5 @@
-﻿using LinkIt.LinkedSources.Interfaces;
-using LinkIt.LinkTargets;
+﻿using LinkIt.LinkTargets;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 

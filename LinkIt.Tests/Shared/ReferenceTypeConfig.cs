@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using LinkIt.Protocols;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Tests.Shared
 {
@@ -23,7 +23,7 @@ namespace LinkIt.Tests.Shared
             get { return typeof (TReference); }
         }
 
-        public void Load(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext) {
+        public void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext) {
             var lookupIds = lookupIdContext.GetReferenceIds<TReference, TId>();
             var references = _loadReferences(lookupIds);
             loadedReferenceContext.AddReferences(references, reference => _getReferenceId(reference));

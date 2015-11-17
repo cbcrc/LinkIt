@@ -1,8 +1,7 @@
 ﻿using System;
-using LinkIt.Protocols;
 using LinkIt.ReferenceTrees;
 
-namespace LinkIt.LoadLinkExpressions.Includes.Interfaces {
+namespace LinkIt.Core.Includes.Interfaces {
 
     public interface IIncludeWithAddLookupId<TLink>:IInclude {
         Type ReferenceType { get; }

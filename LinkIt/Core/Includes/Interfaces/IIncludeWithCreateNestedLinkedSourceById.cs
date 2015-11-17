@@ -1,7 +1,6 @@
 using System;
-using LinkIt.Protocols;
 
-namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
+namespace LinkIt.Core.Includes.Interfaces
 {
     public interface IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>:IInclude
     {

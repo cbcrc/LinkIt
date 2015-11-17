@@ -39,45 +39,48 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PublicApi\ILoadLinkProtocol.cs" />
+    <Compile Include="PublicApi\ILoadedReferenceContext.cs" />
+    <Compile Include="PublicApi\ILookupIdContext.cs" />
     <Compile Include="Shared\AssumptionFailed.cs" />
     <Compile Include="LinkTargets\PropertyInfoExtensions.cs" />
     <Compile Include="Shared\EnumerableExtensions.cs" />
-    <Compile Include="LinkedSources\Interfaces\ILinkedSourceConfig.cs" />
+    <Compile Include="Core\Interfaces\ILinkedSourceConfig.cs" />
     <Compile Include="LinkTargets\Interfaces\ILinkTarget.cs" />
-    <Compile Include="LinkedSources\LinkedSourceConfig.cs" />
-    <Compile Include="LinkedSources\LinkedSourceConfigs.cs" />
+    <Compile Include="Core\LinkedSourceConfig.cs" />
+    <Compile Include="Core\LinkedSourceConfigs.cs" />
     <Compile Include="LinkTargets\MultiValueLinkTarget.cs" />
     <Compile Include="LinkTargets\SingleValueLinkTarget.cs" />
     <Compile Include="ReferenceTrees\ReferenceToLoad.cs" />
-    <Compile Include="Protocols\Interfaces\ILoadLinker.cs" />
+    <Compile Include="PublicApi\ILoadLinker.cs" />
     <Compile Include="ConfigBuilders\IncludeAsBuilder.cs" />
     <Compile Include="ConfigBuilders\IncludeSetBuilder.cs" />
-    <Compile Include="LinkedSources\Interfaces\IGenericLinkedSourceConfig.cs" />
+    <Compile Include="Core\Interfaces\IGenericLinkedSourceConfig.cs" />
     <Compile Include="LinkTargets\LinkTargetFactory.cs" />
-    <Compile Include="Protocols\LoadLinker.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IInclude.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithChildLinkedSource.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceById.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithAddLookupId.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceFromModel.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\Interfaces\IIncludeWithGetReference.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IncludeSet.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IncludeReferenceById.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceById.cs" />
-    <Compile Include="LoadLinkExpressions\LoadLinkExpressionImpl.cs" />
-    <Compile Include="LoadLinkExpressions\Includes\IncludeNestedLinkedSourceFromModel.cs">
+    <Compile Include="Core\LoadLinker.cs" />
+    <Compile Include="Core\Includes\Interfaces\IInclude.cs" />
+    <Compile Include="Core\Includes\Interfaces\IIncludeWithChildLinkedSource.cs" />
+    <Compile Include="Core\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceById.cs" />
+    <Compile Include="Core\Includes\Interfaces\IIncludeWithAddLookupId.cs" />
+    <Compile Include="Core\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceFromModel.cs" />
+    <Compile Include="Core\Includes\Interfaces\IIncludeWithGetReference.cs" />
+    <Compile Include="Core\Includes\IncludeSet.cs" />
+    <Compile Include="Core\Includes\IncludeReferenceById.cs" />
+    <Compile Include="Core\Includes\IncludeNestedLinkedSourceById.cs" />
+    <Compile Include="Core\LoadLinkExpressionImpl.cs" />
+    <Compile Include="Core\Includes\IncludeNestedLinkedSourceFromModel.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConfigBuilders\LoadLinkProtocolBuilder.cs" />
     <Compile Include="ConfigBuilders\LoadLinkProtocolForLinkedSourceBuilder.cs" />
     <Compile Include="ReferenceTrees\ReferenceTreeExtensions.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree.cs" />
-    <Compile Include="Protocols\LoadLinkProtocol.cs" />
-    <Compile Include="LinkedSources\Interfaces\ILinkedSource.cs" />
-    <Compile Include="Protocols\Interfaces\IReferenceLoader.cs" />
-    <Compile Include="Protocols\LoadedReferenceContext.cs" />
-    <Compile Include="LoadLinkExpressions\ILoadLinkExpression.cs" />
-    <Compile Include="Protocols\LookupIdContext.cs" />
+    <Compile Include="Core\LoadLinkProtocol.cs" />
+    <Compile Include="PublicApi\ILinkedSource.cs" />
+    <Compile Include="PublicApi\IReferenceLoader.cs" />
+    <Compile Include="Core\LoadedReferenceContext.cs" />
+    <Compile Include="Core\Interfaces\ILoadLinkExpression.cs" />
+    <Compile Include="Core\LookupIdContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

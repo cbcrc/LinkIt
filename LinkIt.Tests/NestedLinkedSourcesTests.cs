@@ -2,8 +2,8 @@
 using System.Linq;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.PublicApi;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -13,7 +13,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class NestedLinkedSourcesTests
     {
-        private LoadLinkProtocol _sut;
+        private ILoadLinkProtocol _sut;
 
         [SetUp]
         public void SetUp() {

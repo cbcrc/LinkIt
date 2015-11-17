@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.PublicApi;
 
-namespace LinkIt.Protocols
+namespace LinkIt.Core
 {
     public class LoadLinker<TRootLinkedSource, TExpectedRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
         where TRootLinkedSource : class, ILinkedSource<TExpectedRootLinkedSourceModel>, new() 

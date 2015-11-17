@@ -1,7 +1,8 @@
 ﻿using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.Core;
+using LinkIt.PublicApi;
+using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
@@ -41,7 +42,7 @@ namespace LinkIt.Tests.ReferenceTrees {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
+            _sut = (LoadLinkProtocol)loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Test]

@@ -1,7 +1,7 @@
 ﻿using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.PublicApi;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 

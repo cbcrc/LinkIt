@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.Protocols;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Samples {
     public class FakeReferenceLoader:IReferenceLoader
     {
-        public void LoadReferences(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext){
+        public void LoadReferences(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext){
             foreach (var referenceType in lookupIdContext.GetReferenceTypes()){
                 LoadReference(referenceType, lookupIdContext, loadedReferenceContext);
             }
         }
 
-        private void LoadReference(Type referenceType, LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext)
+        private void LoadReference(Type referenceType, ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             if (referenceType == typeof(Tag)){
                 LoadTags(lookupIdContext, loadedReferenceContext);
@@ -29,7 +28,7 @@ namespace LinkIt.Samples {
             }
         }
 
-        private void LoadMedia(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext) {
+        private void LoadMedia(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext) {
             var lookupIds = lookupIdContext.GetReferenceIds<Media, string>();
             var references = lookupIds
                 .Select(id =>
@@ -50,7 +49,7 @@ namespace LinkIt.Samples {
             );
         }
 
-        private void LoadTags(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext){
+        private void LoadTags(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext){
             var lookupIds = lookupIdContext.GetReferenceIds<Tag, string>();
             var references = lookupIds
                 .Select(id=>
@@ -67,7 +66,7 @@ namespace LinkIt.Samples {
             );
         }
 
-        private void LoadBlogPosts(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext) {
+        private void LoadBlogPosts(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext) {
             var lookupIds = lookupIdContext.GetReferenceIds<BlogPost, int>();
             var references = lookupIds
                 .Select(id =>
@@ -99,7 +98,7 @@ namespace LinkIt.Samples {
             );
         }
 
-        private void LoadImages(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext) {
+        private void LoadImages(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext) {
             var lookupIds = lookupIdContext.GetReferenceIds<Image, string>();
             var references = lookupIds
                 .Select(id =>

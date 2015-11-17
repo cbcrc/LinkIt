@@ -1,9 +1,8 @@
 using System;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.Core.Includes.Interfaces;
 using LinkIt.ReferenceTrees;
 
-namespace LinkIt.LoadLinkExpressions.Includes
+namespace LinkIt.Core.Includes
 {
     public class IncludeReferenceById<TIReference, TLink, TReference, TId>: 
         IIncludeWithGetReference<TIReference, TLink>, 

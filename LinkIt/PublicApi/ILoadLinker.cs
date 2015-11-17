@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LinkIt.Protocols.Interfaces
+namespace LinkIt.PublicApi
 {
     public interface ILoadLinker<TRootLinkedSource>
     {

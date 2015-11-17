@@ -1,6 +1,6 @@
 using System;
 
-namespace LinkIt.LinkedSources.Interfaces
+namespace LinkIt.Core.Interfaces
 {
     public interface ILinkedSourceConfig {
         Type LinkedSourceType { get; }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.Protocols;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Tests.Shared {
     
@@ -43,9 +42,9 @@ namespace LinkIt.Tests.Shared {
             );
         }
 
-        public readonly List<LookupIdContext> RecordedLookupIdContexts = new List<LookupIdContext>();
+        public readonly List<ILookupIdContext> RecordedLookupIdContexts = new List<ILookupIdContext>();
 
-        public void LoadReferences(LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext)
+        public void LoadReferences(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             RecordedLookupIdContexts.Add(lookupIdContext);
             OpenConnectionIfRequired(lookupIdContext);
@@ -56,7 +55,7 @@ namespace LinkIt.Tests.Shared {
             }
         }
 
-        private void LoadReference(Type referenceType, LookupIdContext lookupIdContext, LoadedReferenceContext loadedReferenceContext)
+        private void LoadReference(Type referenceType, ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             if (!_referenceTypeConfigByReferenceType.ContainsKey(referenceType)){
                 throw new NotImplementedException(
@@ -67,7 +66,7 @@ namespace LinkIt.Tests.Shared {
             referenceTypeConfig.Load(lookupIdContext, loadedReferenceContext);
         }
 
-        private void OpenConnectionIfRequired(LookupIdContext lookupIdContext) {
+        private void OpenConnectionIfRequired(ILookupIdContext lookupIdContext) {
             if (GetReferenceTypeThatRequiresOugloConnection()
                 .Any(requiresOuglo =>
                     lookupIdContext.GetReferenceTypes().Contains(requiresOuglo)

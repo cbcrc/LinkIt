@@ -1,10 +1,9 @@
 using System;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.Core.Includes.Interfaces;
+using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
 
-namespace LinkIt.LoadLinkExpressions.Includes
+namespace LinkIt.Core.Includes
 {
     public class IncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
         IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink>, 

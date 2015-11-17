@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinkIt.PublicApi;
 
-namespace LinkIt.Protocols
+namespace LinkIt.Core
 {
-    public class LookupIdContext
+    public class LookupIdContext : ILookupIdContext
     {
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
 

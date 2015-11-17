@@ -1,11 +1,12 @@
-﻿using LinkIt.Protocols;
+﻿using LinkIt.Core;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
 namespace LinkIt.Tests {
     [TestFixture]
     public class LookupIdContextTests {
-        private LookupIdContext _sut;
+        private ILookupIdContext _sut;
 
         [SetUp]
         public void SetUp()

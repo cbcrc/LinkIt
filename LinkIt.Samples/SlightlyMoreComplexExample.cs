@@ -3,8 +3,7 @@ using System.Reflection;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions;
-using LinkIt.LinkedSources.Interfaces;
-using LinkIt.Protocols;
+using LinkIt.PublicApi;
 using NUnit.Framework;
 using RC.Testing;
 
@@ -12,7 +11,7 @@ namespace LinkIt.Samples {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class SlightlyMoreComplexExample {
-        private LoadLinkProtocol _loadLinkProtocol;
+        private ILoadLinkProtocol _loadLinkProtocol;
 
         [SetUp]
         public void SetUp() {

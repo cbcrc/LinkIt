@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
-using LinkIt.Protocols;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.PublicApi;
+using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
@@ -13,7 +13,7 @@ namespace LinkIt.Tests {
     [TestFixture]
     public class LoadLinkFromQueryTests
     {
-        private LoadLinkProtocol _sut;
+        private ILoadLinkProtocol _sut;
         private ReferenceLoaderStub _referenceLoaderStub;
 
         [SetUp]

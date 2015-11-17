@@ -1,6 +1,4 @@
-using LinkIt.Protocols;
-
-namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
+namespace LinkIt.Core.Includes.Interfaces
 {
     public interface IIncludeWithGetReference<TIReference, TLink>
     {

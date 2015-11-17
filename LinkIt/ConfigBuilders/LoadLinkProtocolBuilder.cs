@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.LoadLinkExpressions;
-using LinkIt.Protocols;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.Core;
+using LinkIt.Core.Interfaces;
+using LinkIt.PublicApi;
 
 namespace LinkIt.ConfigBuilders {
     public class LoadLinkProtocolBuilder
@@ -20,7 +20,7 @@ namespace LinkIt.ConfigBuilders {
             _loadLinkExpressionsById[loadLinkExpression.LinkTargetId] = loadLinkExpression;
         }
 
-        public LoadLinkProtocol Build(Func<IReferenceLoader> createReferenceLoader)
+        public ILoadLinkProtocol Build(Func<IReferenceLoader> createReferenceLoader)
         {
             if (createReferenceLoader == null) { throw new ArgumentNullException("createReferenceLoader"); }
 

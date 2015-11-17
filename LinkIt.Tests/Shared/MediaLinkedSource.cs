@@ -1,4 +1,4 @@
-using LinkIt.LinkedSources.Interfaces;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Tests.Shared
 {

@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using LinkIt.LinkedSources.Interfaces;
+using LinkIt.Core.Includes;
+using LinkIt.Core.Includes.Interfaces;
+using LinkIt.Core.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
-using LinkIt.LoadLinkExpressions.Includes;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
-using LinkIt.Protocols;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.PublicApi;
 using LinkIt.Shared;
 
-namespace LinkIt.LinkedSources
+namespace LinkIt.Core
 {
     public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource> 
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()

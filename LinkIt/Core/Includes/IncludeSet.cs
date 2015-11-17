@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
+using LinkIt.Core.Includes.Interfaces;
 using LinkIt.Shared;
 
-namespace LinkIt.LoadLinkExpressions.Includes
+namespace LinkIt.Core.Includes
 {
     public class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {

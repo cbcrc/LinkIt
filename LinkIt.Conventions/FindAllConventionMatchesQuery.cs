@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.LinkedSources;
+using LinkIt.Core;
 using LinkIt.LinkTargets;
 
 namespace LinkIt.Conventions {

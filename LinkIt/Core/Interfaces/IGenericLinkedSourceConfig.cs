@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
+using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
-using LinkIt.LoadLinkExpressions.Includes.Interfaces;
-using LinkIt.Protocols;
-using LinkIt.Protocols.Interfaces;
+using LinkIt.PublicApi;
 
-namespace LinkIt.LinkedSources.Interfaces
+namespace LinkIt.Core.Interfaces
 {
     public interface IGenericLinkedSourceConfig<TLinkedSource> : ILinkedSourceConfig
     {
