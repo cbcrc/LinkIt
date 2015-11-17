@@ -99,7 +99,6 @@ namespace LinkIt.Protocols
                 EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
 
                 var models = executeQuery(_referenceLoader);
-                //stle: list overload to avoid error?
                 return FromModels(models.ToArray());
             }
         }
