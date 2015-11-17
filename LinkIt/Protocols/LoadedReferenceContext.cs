@@ -75,7 +75,6 @@ namespace LinkIt.Protocols {
                 .ToList();
         }
 
-        //stle: TLinkedSourceModel not required, check this pattern everywhere
         public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, LoadLinkProtocol loadLinkProtocol, Action<TLinkedSource> init)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {

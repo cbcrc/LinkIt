@@ -7,7 +7,6 @@ namespace LinkIt.LoadLinkExpressions.Includes.Interfaces
     {
         TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(TLink link, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol);
 
-        //stle: interface segregation
         void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol);
     }
 }
