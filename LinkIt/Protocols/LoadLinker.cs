@@ -29,9 +29,8 @@ namespace LinkIt.Protocols
 
         public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(params TRootLinkedSourceModel[] models){
             using (_referenceLoader){
-                //stle: support model that are not class? if not, used null instead of default(T)
                 if (models == null) {
-                    models = new TRootLinkedSourceModel[] { default(TRootLinkedSourceModel) };
+                    models = new[] { default(TRootLinkedSourceModel) };
                 }
 
                 EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
@@ -80,7 +79,7 @@ namespace LinkIt.Protocols
         public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(params TRootLinkedSourceModelId[] modelIds)
         {
             using (_referenceLoader){
-                EnsureModelIdIsNotNull(modelIds);
+                EnsureModelIdsIsNotNull(modelIds);
 
                 var models = LoadRootLinkedSourceModel(modelIds.ToList());
                 return FromModels(models.ToArray());
@@ -104,7 +103,7 @@ namespace LinkIt.Protocols
         }
 
 
-        private void EnsureModelIdIsNotNull<TRootLinkedSourceModelId>(TRootLinkedSourceModelId[] modelIds)
+        private void EnsureModelIdsIsNotNull<TRootLinkedSourceModelId>(TRootLinkedSourceModelId[] modelIds)
         {
             if (modelIds == null) {
                 throw new ArgumentException("The argument modelIds cannot be a null array.");
