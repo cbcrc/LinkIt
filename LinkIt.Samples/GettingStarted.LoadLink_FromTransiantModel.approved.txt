@@ -1,0 +1,15 @@
+﻿{
+  "model": {
+    "id": "99",
+    "title": "Humpback Whale",
+    "tagIds": [
+      "47"
+    ]
+  },
+  "tags": [
+    {
+      "id": "47",
+      "name": "47-name"
+    }
+  ]
+}

@@ -122,5 +122,10 @@ namespace LinkIt.Samples {
         public void Dispose(){
             //in case you need to dispose database connections or other ressources.
         }
+
+        public object GetOpenedConnection(string connectionName)
+        {
+            return connectionName;
+        }
     }
 }

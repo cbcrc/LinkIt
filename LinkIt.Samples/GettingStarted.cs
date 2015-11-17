@@ -43,21 +43,51 @@ namespace LinkIt.Samples {
         }
 
         [Test]
-        public void LoadLink_Query()
-        {
-            var result = GetMediaByKeyword("fish");
+        public void LoadLink_FromQuery() {
+            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().FromQuery(
+                () => GetMediaByKeyword("fish")
+            );
 
-            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().FromModels(result);
+            //stle: what to do?
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+        [Test]
+        public void LoadLink_FromQueryWithDependencies() {
+            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().FromQuery(
+                referenceLoader => {
+                    var referenceLoaderImpl = (FakeReferenceLoader) referenceLoader;
+                    var fakeConnection = referenceLoaderImpl.GetOpenedConnection("MyConnectionName");
+                    return GetMediaByKeyword("fish", fakeConnection);
+                }
+            );
+
+            //stle: what to do?
+            ApprovalsExt.VerifyPublicProperties(actual);
+        }
+
+
+        [Test]
+        public void LoadLink_FromTransiantModel()
+        {
+            var model = new Media
+            {
+                Id = "99",
+                Title = "Humpback Whale",
+                TagIds = new List<string> {"47"}
+            };
+
+            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().FromModel(model);
 
             //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         //stle: should support enumerable in from models
-        private Media[] GetMediaByKeyword(string fish)
+        private List<Media> GetMediaByKeyword(string fish, object fakeConnection=null)
         {
             //fake result of a database query
-            return new []{
+            return new List<Media>{
                 new Media{
                     Id = "99",
                     Title = "Humpback Whale",
