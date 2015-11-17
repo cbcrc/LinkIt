@@ -103,7 +103,6 @@ namespace LinkIt.Samples {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        //stle: should support enumerable in from models
         private List<BlogPost> GetBlogPostByKeyword(string fish, object fakeConnection = null) {
             //fake result of a database query
             return new List<BlogPost>{
@@ -148,7 +147,6 @@ namespace LinkIt.Samples {
     public class BlogPost {
         public int Id { get; set; }
         public string Title { get; set; }
-        //stle: set this as a IEnumerable
         public List<string> TagIds { get; set; }
         public Author Author { get; set; }
         public MultimediaContentReference MultimediaContentRef { get; set; }

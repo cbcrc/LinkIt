@@ -67,8 +67,8 @@ namespace LinkIt.ConfigBuilders
             ILinkTarget<TLinkedSource, TReference> linkTarget) 
         {
             return AddNonPolymorphicLoadLinkExpression(
-                linkTarget,
                 getLookupIds,
+                linkTarget, 
                 new IncludeReferenceById<TReference, TId, TReference, TId>(
                     CreateIdentityFunc<TId>()
                 )
@@ -185,8 +185,8 @@ namespace LinkIt.ConfigBuilders
                 );
 
             return AddNonPolymorphicLoadLinkExpression(
-                linkTarget,
                 getLookupIds,
+                linkTarget, 
                 include
             );
         }
@@ -246,8 +246,8 @@ namespace LinkIt.ConfigBuilders
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
             return AddNonPolymorphicLoadLinkExpression(
-                linkTarget,
                 getNestedLinkedSourceModel,
+                linkTarget, 
                 new IncludeNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
                     CreateIdentityFunc<TChildLinkedSourceModel>()
                 )
@@ -306,10 +306,10 @@ namespace LinkIt.ConfigBuilders
             includes(includeBuilder);
 
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
-                linkTarget,
-                getLinks,
-                includeBuilder.Build(getDiscriminant)
-            );
+				getLinks,
+                linkTarget, 
+				includeBuilder.Build(getDiscriminant)
+			);
 
             return AddLoadLinkExpression(loadLinkExpression);
         }
@@ -349,12 +349,13 @@ namespace LinkIt.ConfigBuilders
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddNonPolymorphicLoadLinkExpression<TTargetProperty, TId>(
-            ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
-            Func<TLinkedSource, List<TId>> getLookupIds,
-            IInclude include) {
+            Func<TLinkedSource, List<TId>> getLookupIds, 
+            ILinkTarget<TLinkedSource, TTargetProperty> linkTarget, 
+            IInclude include) 
+        {
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TTargetProperty, TId, bool>(
-                linkTarget,
                 getLookupIds,
+                linkTarget, 
                 new IncludeSet<TLinkedSource, TTargetProperty, TId, bool>(
                     new Dictionary<bool, IInclude>
                     {

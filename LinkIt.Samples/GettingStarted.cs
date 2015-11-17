@@ -44,7 +44,6 @@ namespace LinkIt.Samples {
     public class Media {
         public string Id { get; set; }
         public string Title { get; set; }
-        //stle: set this as a IEnumerable
         public List<string> TagIds { get; set; }
     }
 
