@@ -29,8 +29,8 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkReferenceById(
-                LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsForSingleValue(getLookupId)
+                ToGetLookupIdsForSingleValue(getLookupId), 
+                LinkTargetFactory.Create(getLinkTarget)
             );
         }
 
@@ -42,8 +42,8 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkReferenceById(
-                LinkTargetFactory.Create(getLinkTarget),
-                getLookupIds 
+                getLookupIds, 
+                LinkTargetFactory.Create(getLinkTarget)
             );
         }
 
@@ -57,14 +57,14 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkReferenceById(
-                LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId)
+                ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId), 
+                LinkTargetFactory.Create(getLinkTarget)
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferenceById<TReference, TId>(
-            ILinkTarget<TLinkedSource, TReference> linkTarget,
-            Func<TLinkedSource, List<TId>> getLookupIds) 
+            Func<TLinkedSource, List<TId>> getLookupIds, 
+            ILinkTarget<TLinkedSource, TReference> linkTarget) 
         {
             return AddNonPolymorphicLoadLinkExpression(
                 linkTarget,
@@ -101,8 +101,8 @@ namespace LinkIt.ConfigBuilders
             if (initChildLinkedSource == null) { throw new ArgumentNullException("initChildLinkedSource"); }
 
             return LoadLinkNestedLinkedSourceById(
-                LinkTargetFactory.Create(getLinkTarget),
                 ToGetLookupIdsForSingleValue(getLookupId),
+                LinkTargetFactory.Create(getLinkTarget), 
                 (linkedSource, referenceIndex, childLinkedSource) =>
                     initChildLinkedSource(linkedSource, childLinkedSource)
             );
@@ -118,8 +118,8 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkNestedLinkedSourceById(
-                LinkTargetFactory.Create(getLinkTarget),
                 ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
+                LinkTargetFactory.Create(getLinkTarget), 
                 NullInitChildLinkedSource
             );
         }
@@ -136,8 +136,8 @@ namespace LinkIt.ConfigBuilders
             if (initChildLinkedSource == null) { throw new ArgumentNullException("initChildLinkedSource"); }
 
             return LoadLinkNestedLinkedSourceById(
-                LinkTargetFactory.Create(getLinkTarget),
                 ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
+                LinkTargetFactory.Create(getLinkTarget), 
                 (linkedSource, referenceIndex, childLinkedSource) =>
                     initChildLinkedSource(linkedSource, childLinkedSource)
             );
@@ -167,15 +167,15 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkNestedLinkedSourceById(
-                LinkTargetFactory.Create(getLinkTarget),
                 getLookupIds,
+                LinkTargetFactory.Create(getLinkTarget), 
                 initChildLinkedSource
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TChildLinkedSource, TId>(
-            ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
-            Func<TLinkedSource, List<TId>> getLookupIds,
+            Func<TLinkedSource, List<TId>> getLookupIds, 
+            ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget, 
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource)
         {
             var include = LinkedSourceConfigs.GetConfigFor<TChildLinkedSource>()
@@ -219,8 +219,8 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkNestedLinkedSourceFromModel(
-                LinkTargetFactory.Create(getLinkTarget),
-                ToGetLookupIdsForSingleValue(getNestedLinkedSourceModel)
+                ToGetLookupIdsForSingleValue(getNestedLinkedSourceModel), 
+                LinkTargetFactory.Create(getLinkTarget)
             );
         }
 
@@ -234,14 +234,14 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkNestedLinkedSourceFromModel(
-                LinkTargetFactory.Create(getLinkTarget),
-                getNestedLinkedSourceModels
+                getNestedLinkedSourceModels, 
+                LinkTargetFactory.Create(getLinkTarget)
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel>(
-            ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
-            Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModel
+            Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModel, 
+            ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
@@ -270,9 +270,9 @@ namespace LinkIt.ConfigBuilders
             if (includes == null) { throw new ArgumentNullException("includes"); }
 
             return PolymorphicLoadLink(
-                LinkTargetFactory.Create(getLinkTarget),
                 ToGetLookupIdsForSingleValue(getLink),
-                getDiscriminant,
+                LinkTargetFactory.Create(getLinkTarget),
+                getDiscriminant, 
                 includes
             );
         }
@@ -289,17 +289,17 @@ namespace LinkIt.ConfigBuilders
             if (includes == null) { throw new ArgumentNullException("includes"); }
 
             return PolymorphicLoadLink(
-                LinkTargetFactory.Create(getLinkTarget),
                 getLinks,
-                getDiscriminant,
+                LinkTargetFactory.Create(getLinkTarget),
+                getDiscriminant, 
                 includes
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TAbstractLinkTarget, TLink, TDiscriminant>(
-            ILinkTarget<TLinkedSource, TAbstractLinkTarget> linkTarget,
-            Func<TLinkedSource, List<TLink>> getLinks,
-            Func<TLink, TDiscriminant> getDiscriminant,
+            Func<TLinkedSource, List<TLink>> getLinks, 
+            ILinkTarget<TLinkedSource, TAbstractLinkTarget> linkTarget, 
+            Func<TLink, TDiscriminant> getDiscriminant, 
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes) 
         {
             var includeBuilder = new IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(linkTarget);
