@@ -45,7 +45,6 @@ namespace LinkIt.Samples {
         {
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(1);
 
-            //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
@@ -53,7 +52,6 @@ namespace LinkIt.Samples {
         public void LoadLinkByIds() {
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(2,1);
 
-            //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
@@ -63,7 +61,6 @@ namespace LinkIt.Samples {
                 () => GetBlogPostByKeyword("fish")
             );
 
-            //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
@@ -77,7 +74,6 @@ namespace LinkIt.Samples {
                 }
             );
 
-            //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
@@ -104,7 +100,6 @@ namespace LinkIt.Samples {
 
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model);
 
-            //stle: what to do?
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
