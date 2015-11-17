@@ -87,6 +87,24 @@ namespace LinkIt.Protocols
             }
         }
 
+        public List<TRootLinkedSource> FromQuery<TRootLinkedSourceModel>(Func<List<TRootLinkedSourceModel>> executeQuery)
+        {
+            return FromQuery(
+                referenceLoader => executeQuery()
+            );
+        }
+
+        public List<TRootLinkedSource> FromQuery<TRootLinkedSourceModel>(Func<IReferenceLoader, List<TRootLinkedSourceModel>> executeQuery) {
+            using (_referenceLoader) {
+                EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
+
+                var models = executeQuery(_referenceLoader);
+                //stle: list overload to avoid error?
+                return FromModels(models.ToArray());
+            }
+        }
+
+
         private void EnsureModelIdIsNotNull<TRootLinkedSourceModelId>(TRootLinkedSourceModelId[] modelIds)
         {
             if (modelIds == null) {

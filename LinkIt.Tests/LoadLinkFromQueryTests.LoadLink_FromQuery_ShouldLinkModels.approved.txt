@@ -1,0 +1,22 @@
+﻿[
+  {
+    "model": {
+      "id": "1",
+      "summaryImageId": "a"
+    },
+    "summaryImage": {
+      "id": "a",
+      "alt": "alt-a"
+    }
+  },
+  {
+    "model": {
+      "id": "2",
+      "summaryImageId": "b"
+    },
+    "summaryImage": {
+      "id": "b",
+      "alt": "alt-b"
+    }
+  }
+]
