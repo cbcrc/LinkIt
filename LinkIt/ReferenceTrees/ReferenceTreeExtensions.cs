@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LinkIt.ReferenceTrees {
     public static class ReferenceTreeExtensions {
-        public static List<List<Type>> ParseLoadLevels(this ReferenceTree rootReferenceTree) {
+        public static List<List<Type>> ParseLoadingLevels(this ReferenceTree rootReferenceTree) {
             var loadingLevelByReferenceType = new Dictionary<Type, int>();
             ParseTree(rootReferenceTree, 0, loadingLevelByReferenceType);
 

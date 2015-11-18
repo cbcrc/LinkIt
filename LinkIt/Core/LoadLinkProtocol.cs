@@ -69,7 +69,7 @@ namespace LinkIt.Core {
             _loadingLevelsByRootLinkedSourceType = new Dictionary<Type, List<List<Type>>>();
             foreach (var rootLinkedSourceType in GetAllPossibleRootLinkedSourceTypes()) {
                 var rootReferenceTree = CreateRootReferenceTree(rootLinkedSourceType);
-                var loadingLevels = rootReferenceTree.ParseLoadLevels();
+                var loadingLevels = rootReferenceTree.ParseLoadingLevels();
                 _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
             }
         }

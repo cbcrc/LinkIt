@@ -34,7 +34,7 @@ namespace LinkIt.Tests.ReferenceTrees {
         public void ParseLoadingLevels() {
             var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
-            var actual = rootReferenceTree.ParseLoadLevels();
+            var actual = rootReferenceTree.ParseLoadingLevels();
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
