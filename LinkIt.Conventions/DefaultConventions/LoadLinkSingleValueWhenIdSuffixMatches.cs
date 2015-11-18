@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.Core;
+using LinkIt.Shared;
 
 namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkSingleValueWhenIdSuffixMatches : ISingleValueConvention {
@@ -23,7 +23,7 @@ namespace LinkIt.Conventions.DefaultConventions {
             PropertyInfo linkedSourceModelProperty, 
             PropertyInfo linkTargetProperty)
         {
-            if (LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(typeof(TLinkTargetProperty))) {
+            if (typeof(TLinkTargetProperty).DoesImplementILinkedSourceOnceAndOnlyOnce()) {
                 loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty

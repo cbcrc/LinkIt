@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.Core;
 using LinkIt.Shared;
 
 namespace LinkIt.Conventions {
@@ -38,7 +37,7 @@ namespace LinkIt.Conventions {
         private List<Type> GetLinkedSourceTypes()
         {
             return _types
-                .Where(LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce)
+                .Where(LinkedSourceTypeExtensions.DoesImplementILinkedSourceOnceAndOnlyOnce)
                 .ToList();
         }
 

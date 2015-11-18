@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.Core;
+using LinkIt.Shared;
 
 namespace LinkIt.Conventions.DefaultConventions {
     public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatches : IByNullableValueTypeIdConvention {
@@ -25,7 +25,7 @@ namespace LinkIt.Conventions.DefaultConventions {
         ) 
             where TLinkedSourceModelProperty : struct
         {
-            if (LinkedSourceConfigs.DoesImplementILinkedSourceOnceAndOnlyOnce(typeof(TLinkTargetProperty))) {
+            if (typeof(TLinkTargetProperty).DoesImplementILinkedSourceOnceAndOnlyOnce()) {
                 loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty

@@ -43,6 +43,7 @@
     <Compile Include="PublicApi\ILoadedReferenceContext.cs" />
     <Compile Include="PublicApi\ILookupIdContext.cs" />
     <Compile Include="Shared\AssumptionFailed.cs" />
+    <Compile Include="Shared\LinkedSourceTypeExtensions.cs" />
     <Compile Include="Shared\PropertyInfoExtensions.cs" />
     <Compile Include="Shared\EnumerableExtensions.cs" />
     <Compile Include="Core\Interfaces\ILinkedSourceConfig.cs" />
