@@ -5,7 +5,7 @@ using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.Tests.Shared;
+using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using RC.Testing;

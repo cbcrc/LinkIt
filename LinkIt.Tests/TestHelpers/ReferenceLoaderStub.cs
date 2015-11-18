@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LinkIt.PublicApi;
 
-namespace LinkIt.Tests.Shared {
+namespace LinkIt.Tests.TestHelpers {
     
     public class ReferenceLoaderStub:IReferenceLoader
     {

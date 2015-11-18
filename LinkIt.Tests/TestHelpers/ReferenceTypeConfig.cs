@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using LinkIt.PublicApi;
 
-namespace LinkIt.Tests.Shared
+namespace LinkIt.Tests.TestHelpers
 {
     public class ReferenceTypeConfig<TReference, TId> : IReferenceTypeConfig {
         private readonly Func<List<TId>, List<TReference>> _loadReferences;

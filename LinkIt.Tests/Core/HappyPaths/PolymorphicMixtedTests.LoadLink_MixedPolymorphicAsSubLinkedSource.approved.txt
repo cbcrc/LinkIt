@@ -2,7 +2,7 @@
   "model": {
     "id": "1",
     "targetReference": {
-      "$type": "LinkIt.Tests.Shared.Person, LinkIt.Tests",
+      "$type": "LinkIt.Tests.TestHelpers.Person, LinkIt.Tests",
       "id": "as-sub-linked-source",
       "name": "The Name",
       "summaryImageId": "the-id"
