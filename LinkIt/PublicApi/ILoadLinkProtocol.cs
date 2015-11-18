@@ -1,6 +1,6 @@
 namespace LinkIt.PublicApi
 {
-    //Responsible for creating load linkers
+    //Responsible for creating a load linker for any root linked source type
     public interface ILoadLinkProtocol
     {
         ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>();

@@ -6,6 +6,9 @@ using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
+    //Responsible for giving access to any linked source config
+    //Responsible for creating linked source config
+    //Responsible for inferring the linked source model type
     public static class LinkedSourceConfigs
     {
         private static readonly Dictionary<Type, ILinkedSourceConfig> LinkedSourceConfigByType = new Dictionary<Type, ILinkedSourceConfig>();

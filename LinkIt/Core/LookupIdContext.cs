@@ -5,6 +5,8 @@ using LinkIt.PublicApi;
 
 namespace LinkIt.Core
 {
+    //In addition to the responsiblies of ILookupIdContext,
+    //responsible for gathering the lookup ids of a loading level.
     public class LookupIdContext : ILookupIdContext
     {
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();

@@ -4,6 +4,9 @@ using System.Linq;
 using LinkIt.PublicApi;
 
 namespace LinkIt.Core {
+
+    //In addition to the responsiblies of ILoadedReferenceContext,
+    //responsible for giving access to the loaded references of a root linked source.
     public class LoadedReferenceContext : ILoadedReferenceContext
     {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();

@@ -6,6 +6,8 @@ using LinkIt.PublicApi;
 
 namespace LinkIt.Core.Interfaces
 {
+    //Responsible for creating a load linker for a specific root linked source type
+    //Responsible for creating include with nested linked source
     public interface IGenericLinkedSourceConfig<TLinkedSource> : ILinkedSourceConfig
     {
         ILoadLinker<TLinkedSource> CreateLoadLinker(

@@ -5,6 +5,7 @@ using LinkIt.PublicApi;
 
 namespace LinkIt.Core
 {
+    //See ILoadLinker<TRootLinkedSource>
     public class LoadLinker<TRootLinkedSource, TExpectedRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
         where TRootLinkedSource : class, ILinkedSource<TExpectedRootLinkedSourceModel>, new() 
     {

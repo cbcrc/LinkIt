@@ -6,6 +6,9 @@ using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
 
 namespace LinkIt.Core {
+    //In addition to the responsiblies of ILoadLinkProtocol,
+    //responsible for gathering and giving access to the load link expressions
+    //responsible to infer loading levels for each possible root linked source
     public class LoadLinkProtocol : ILoadLinkProtocol
     {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;

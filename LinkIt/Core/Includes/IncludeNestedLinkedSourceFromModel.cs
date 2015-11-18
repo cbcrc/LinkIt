@@ -5,7 +5,10 @@ using LinkIt.ReferenceTrees;
 
 namespace LinkIt.Core.Includes
 {
-    public class IncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel>: 
+    //For a nested linked source obtained from the model (configured for specific discriminant of a link target):
+    //responsible for loading and linking the link target for a specific discriminant
+    //responsible for creating the reference tree for a specific discriminant
+    public class IncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel> : 
         IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink>, 
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()

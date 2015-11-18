@@ -10,6 +10,7 @@ using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
+    //See ILoadLinkExpression
     public class LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>:ILoadLinkExpression
     {
         private readonly ILinkTarget<TLinkedSource, TAbstractLinkTarget> _linkTarget;

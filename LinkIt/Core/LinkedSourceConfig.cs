@@ -9,6 +9,7 @@ using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
+    //See IGenericLinkedSourceConfig and ILinkedSourceConfig
     public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource> 
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
     {

@@ -5,6 +5,9 @@ using LinkIt.ReferenceTrees;
 
 namespace LinkIt.Core.Includes
 {
+    //For a nested linked source loaded by id,
+    //responsible for loading and linking the link target for a specific discriminant
+    //responsible for creating the reference tree for a specific discriminant
     public class IncludeNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
         IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>, 
         IIncludeWithAddLookupId<TLink>, 

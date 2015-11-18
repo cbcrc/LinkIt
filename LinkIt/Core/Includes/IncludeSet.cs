@@ -6,6 +6,7 @@ using LinkIt.Shared;
 
 namespace LinkIt.Core.Includes
 {
+    //Responsible for giving access to the includes of a specific link target.
     public class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includes;
