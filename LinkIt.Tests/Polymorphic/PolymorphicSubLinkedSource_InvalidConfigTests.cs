@@ -1,5 +1,6 @@
 ﻿using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
+using LinkIt.Tests.Core.HappyPaths;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Polymorphic {

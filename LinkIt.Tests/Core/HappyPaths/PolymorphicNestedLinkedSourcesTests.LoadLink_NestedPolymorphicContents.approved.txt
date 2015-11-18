@@ -16,7 +16,7 @@
   },
   "contents": [
     {
-      "$type": "LinkIt.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests+PersonWithoutContextualizationLinkedSource, LinkIt.Tests",
+      "$type": "LinkIt.Tests.Core.HappyPaths.PolymorphicNestedLinkedSourcesTests+PersonWithoutContextualizationLinkedSource, LinkIt.Tests",
       "model": {
         "id": "p1",
         "name": "name-p1",
@@ -24,7 +24,7 @@
       }
     },
     {
-      "$type": "LinkIt.Tests.Polymorphic.PolymorphicNestedLinkedSourcesTests+ImageWithContextualizationLinkedSource, LinkIt.Tests",
+      "$type": "LinkIt.Tests.Core.HappyPaths.PolymorphicNestedLinkedSourcesTests+ImageWithContextualizationLinkedSource, LinkIt.Tests",
       "model": {
         "id": "i1",
         "alt": "alt-i1"

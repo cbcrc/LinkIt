@@ -4,9 +4,8 @@ using LinkIt.PublicApi;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 using RC.Testing;
-using PolymorphicReference = LinkIt.Tests.Polymorphic.PolymorphicReferencesTests.PolymorphicReference;
 
-namespace LinkIt.Tests.Polymorphic {
+namespace LinkIt.Tests.Core.HappyPaths {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicReferenceTests {
@@ -40,7 +39,7 @@ namespace LinkIt.Tests.Polymorphic {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
                     Id = "1",
-                    Target = new PolymorphicReference {
+                    Target = new PolymorphicReferencesTests.PolymorphicReference {
                         Type = "image",
                         Id = "a"
                     }
@@ -55,7 +54,7 @@ namespace LinkIt.Tests.Polymorphic {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
                     Id = "1",
-                    Target = new PolymorphicReference {
+                    Target = new PolymorphicReferencesTests.PolymorphicReference {
                         Type = "person",
                         Id = "a"
                     }
@@ -72,7 +71,7 @@ namespace LinkIt.Tests.Polymorphic {
 
         public class Model{
             public string Id { get; set; }
-            public PolymorphicReference Target { get; set; }
+            public PolymorphicReferencesTests.PolymorphicReference Target { get; set; }
         }
     }
 }

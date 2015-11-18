@@ -2,12 +2,11 @@
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.PublicApi;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace LinkIt.Tests.Polymorphic {
+namespace LinkIt.Tests.Core.HappyPaths {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicReferencesTests {

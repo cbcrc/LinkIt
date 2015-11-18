@@ -6,7 +6,7 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace LinkIt.Tests.Polymorphic {
+namespace LinkIt.Tests.Core.HappyPaths {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicNestedLinkedSourcesTests {

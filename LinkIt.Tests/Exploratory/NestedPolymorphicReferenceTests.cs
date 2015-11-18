@@ -3,6 +3,7 @@ using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.PublicApi;
+using LinkIt.Tests.Core.HappyPaths;
 using LinkIt.Tests.Polymorphic;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
