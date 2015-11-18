@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace LinkIt.Tests {
     [TestFixture]
     public class LookupIdContextTests {
-        private ILookupIdContext _sut;
+        private LookupIdContext _sut;
 
         [SetUp]
         public void SetUp()
