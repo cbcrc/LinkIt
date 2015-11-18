@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.Core;
-//using LinkIt.LinkTargets;
+using LinkIt.Shared;
 
 namespace LinkIt.Conventions {
     public class FindAllConventionMatchesQuery{
@@ -74,7 +74,7 @@ namespace LinkIt.Conventions {
                     string.Format(
                         "The convention \"{0}\" failed for DoesApply. Link target id: {1}, linked source model property: {2}",
                         match.Convention.Name,
-                        match.LinkTargetProperty.GetLinkTargetId(),
+                        match.LinkTargetProperty.GetFullName(),
                         match.LinkedSourceModelProperty.Name
                     ),
                     ex

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.LinkTargets;
 using LinkIt.Shared;
 
 namespace LinkIt.Conventions
