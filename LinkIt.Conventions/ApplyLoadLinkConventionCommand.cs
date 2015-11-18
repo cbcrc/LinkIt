@@ -5,6 +5,7 @@ using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.LinkTargets;
+using LinkIt.Shared;
 
 namespace LinkIt.Conventions
 {
@@ -36,7 +37,7 @@ namespace LinkIt.Conventions
                     string.Format(
                         "The convention \"{0}\" failed for Apply. Link target id: {1}, linked source model property: {2}",
                         match.Convention.Name,
-                        match.LinkTargetProperty.GetLinkTargetId(),
+                        match.LinkTargetProperty.GetFullName(),
                         match.LinkedSourceModelProperty.Name
                     ),
                     ex.InnerException

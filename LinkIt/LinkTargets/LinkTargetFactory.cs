@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.LinkTargets.Interfaces;
+using LinkIt.Shared;
 
 namespace LinkIt.LinkTargets
 {
@@ -16,7 +17,7 @@ namespace LinkIt.LinkTargets
             PropertyInfo property = GetPropertyFromGetter(getLinkTarget);
 
             return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(
-                property.GetLinkTargetId(),
+                property.GetFullName(),
                 CreateSingleValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
         }
@@ -36,7 +37,7 @@ namespace LinkIt.LinkTargets
             PropertyInfo property = GetPropertyFromGetter(getLinkTarget);
 
             return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(
-                property.GetLinkTargetId(),
+                property.GetFullName(),
                 getLinkTarget.Compile(),
                 CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
             );
@@ -74,7 +75,7 @@ namespace LinkIt.LinkTargets
                 throw new ArgumentException(
                     string.Format(
                         "{0}: Only read-write property are supported",
-                        property.GetLinkTargetId()
+                        property.GetFullName()
                     )
                 );
             }

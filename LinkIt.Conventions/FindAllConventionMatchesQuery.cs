@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.Core;
-using LinkIt.LinkTargets;
+//using LinkIt.LinkTargets;
 
 namespace LinkIt.Conventions {
     public class FindAllConventionMatchesQuery{

@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace LinkIt.LinkTargets
+namespace LinkIt.Shared
 {
     public static class PropertyInfoExtensions
     {
@@ -11,7 +11,7 @@ namespace LinkIt.LinkTargets
                 property.GetSetMethod(false)!=null;
         }
 
-        public static string GetLinkTargetId(this PropertyInfo property) {
+        public static string GetFullName(this PropertyInfo property) {
             return string.Format(
                 "{0}/{1}",
                 property.DeclaringType,
