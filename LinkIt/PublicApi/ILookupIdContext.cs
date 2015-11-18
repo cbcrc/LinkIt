@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace LinkIt.PublicApi
 {
+    //Responsible for giving access to the lookup ids of a loading level.
     public interface ILookupIdContext
     {
-        void AddSingle<TReference, TId>(TId lookupId);
-        void AddMulti<TReference, TId>(List<TId> lookupIds);
         List<Type> GetReferenceTypes();
         List<TId> GetReferenceIds<TReference, TId>();
     }
