@@ -91,17 +91,17 @@
     </Compile>
     <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
     <Compile Include="OptionalNestedLinkedSourceTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicMixtedListTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicMixtedTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicReferencesTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicReferenceTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicSubLinkedSourceTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicMixtedListTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicMixtedTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicReferencesTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicReferenceTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicSubLinkedSourceTests.cs" />
     <Compile Include="Shared\Media.cs" />
     <Compile Include="Shared\MediaRepository.cs" />
     <Compile Include="Shared\IPolymorphicSource.cs" />
-    <Compile Include="Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicSubLinkedSourcesTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicNestedLinkedSourceTests.cs" />
+    <Compile Include="Core\HappyPaths\PolymorphicNestedLinkedSourcesTests.cs" />
     <Compile Include="Shared\ReferenceLoaderStub.cs" />
     <Compile Include="Shared\IPolymorphicModel.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />

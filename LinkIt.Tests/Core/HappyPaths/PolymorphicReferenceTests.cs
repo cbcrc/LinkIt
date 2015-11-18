@@ -1,10 +1,10 @@
 ﻿using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
+using PolymorphicReference = LinkIt.Tests.Polymorphic.PolymorphicReferencesTests.PolymorphicReference;
 
 namespace LinkIt.Tests.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
@@ -73,11 +73,6 @@ namespace LinkIt.Tests.Polymorphic {
         public class Model{
             public string Id { get; set; }
             public PolymorphicReference Target { get; set; }
-        }
-
-        public class PolymorphicReference {
-            public string Type { get; set; }
-            public string Id { get; set; }
         }
     }
 }

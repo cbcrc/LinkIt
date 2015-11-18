@@ -15,7 +15,7 @@ namespace LinkIt.Tests.Polymorphic {
         [SetUp]
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.For<WithNestedPolymorphicContentLinkedSource>()
+            loadLinkProtocolBuilder.For<LinkedSource>()
                 .PolymorphicLoadLink(
                     linkedSource => linkedSource.Model.ContentContextualization,
                     linkedSource => linkedSource.Content,
@@ -36,8 +36,8 @@ namespace LinkIt.Tests.Polymorphic {
 
         [Test]
         public void LoadLink_NestedPolymorphicContent() {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
-                new WithNestedPolymorphicContent {
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+                new Model {
                     Id = "1",
                     ContentContextualization = new PolymorphicNestedLinkedSourcesTests.ContentContextualization {
                         ContentType = "person",
@@ -50,10 +50,11 @@ namespace LinkIt.Tests.Polymorphic {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
+        //stle: dry: contextualization
         [Test]
         public void LoadLink_NestedPolymorphicContentWithContextualization_ShouldInitContextualization() {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
-                new WithNestedPolymorphicContent {
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+                new Model {
                     Id = "1",
                     ContentContextualization = new PolymorphicNestedLinkedSourcesTests.ContentContextualization {
                         ContentType = "image",
@@ -69,12 +70,12 @@ namespace LinkIt.Tests.Polymorphic {
         }
 
 
-        public class WithNestedPolymorphicContentLinkedSource : ILinkedSource<WithNestedPolymorphicContent> {
-            public WithNestedPolymorphicContent Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model> {
+            public Model Model { get; set; }
             public IPolymorphicSource Content { get; set; }
         }
 
-        public class WithNestedPolymorphicContent {
+        public class Model {
             public string Id { get; set; }
             public PolymorphicNestedLinkedSourcesTests.ContentContextualization ContentContextualization { get; set; }
         }

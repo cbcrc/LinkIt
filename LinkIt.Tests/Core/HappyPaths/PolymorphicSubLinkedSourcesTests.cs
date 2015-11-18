@@ -17,7 +17,7 @@ namespace LinkIt.Tests.Polymorphic {
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
-            loadLinkProtocolBuilder.For<WithPolymorphicSubLinkedSource>()
+            loadLinkProtocolBuilder.For<LinkedSource>()
                 .PolymorphicLoadLinkForList(
                     linkedSource => linkedSource.Model.Subs,
                     linkedSource => linkedSource.Subs,
@@ -44,8 +44,8 @@ namespace LinkIt.Tests.Polymorphic {
 
         [Test]
         public void LoadLink_SubContentWithoutReferences() {
-            var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>().FromModel(
-                new WithPolymorphicSubLinkedSourceContent {
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+                new Model {
                     Id = "1",
                     Subs = new List<IPolymorphicModel>
                     {
@@ -66,8 +66,8 @@ namespace LinkIt.Tests.Polymorphic {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        public class WithPolymorphicSubLinkedSource : ILinkedSource<WithPolymorphicSubLinkedSourceContent> {
-            public WithPolymorphicSubLinkedSourceContent Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model> {
+            public Model Model { get; set; }
             public List<IPolymorphicSource> Subs { get; set; }
         }
 
@@ -80,7 +80,7 @@ namespace LinkIt.Tests.Polymorphic {
             public SubContentWithoutReferences Model { get; set; }
         }
 
-        public class WithPolymorphicSubLinkedSourceContent {
+        public class Model {
             public string Id { get; set; }
             public List<IPolymorphicModel> Subs { get; set; }
         }
