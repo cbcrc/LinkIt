@@ -67,7 +67,6 @@ namespace LinkIt.Tests.Core.Polymorphic {
             public List<PolymorphicReference> Target { get; set; }
         }
 
-        //stle: should be shared
         public class PolymorphicReference {
             public string Type { get; set; }
             public string Id { get; set; }
