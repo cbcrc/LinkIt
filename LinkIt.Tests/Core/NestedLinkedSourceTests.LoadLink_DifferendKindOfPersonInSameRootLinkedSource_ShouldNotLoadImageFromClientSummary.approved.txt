@@ -1,0 +1,3 @@
+﻿[
+  "person-img-author-id"
+]

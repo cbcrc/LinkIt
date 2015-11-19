@@ -61,8 +61,6 @@ namespace LinkIt.Tests.Core
             Assert.That(actual, Is.Null);
         }
 
-        //stle: test: more efficient way to test all cases
-        //stle: test: ensure by models is also covered
         [Test]
         public void LoadLinkByIds() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds("one","two");

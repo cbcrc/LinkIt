@@ -1,4 +1,5 @@
-﻿using ApprovalTests.Reporters;
+﻿using System.Linq;
+using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.Tests.TestHelpers;
@@ -11,6 +12,7 @@ namespace LinkIt.Tests.Core {
     public class NestedLinkedSourceTests
     {
         private ILoadLinkProtocol _sut;
+        private ReferenceLoaderStub _referenceLoaderStub;
 
         [SetUp]
         public void SetUp() {
@@ -28,7 +30,8 @@ namespace LinkIt.Tests.Core {
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage);
 
-            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
+            _referenceLoaderStub = new ReferenceLoaderStub();
+            _sut = loadLinkProtocolBuilder.Build(() => _referenceLoaderStub);
         }
 
         [Test]
@@ -50,13 +53,14 @@ namespace LinkIt.Tests.Core {
             _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
                     Id = 1,
-                    AuthorDetailId = "32",
-                    ClientSummaryId = "666" //Image repository throws an exception for "person-img-666" 
+                    AuthorDetailId = "author-id",
+                    ClientSummaryId = "client-summary-id"
                 }
             );
 
-            //stle: improve this by allowing test visibility on which image id was resolved
-            //assert that does not throw
+            var imageLookupIds = _referenceLoaderStub.RecordedLookupIdContexts.Last().GetReferenceIds<Image, string>();
+
+            ApprovalsExt.VerifyPublicProperties(imageLookupIds);
         }
 
         [Test]
