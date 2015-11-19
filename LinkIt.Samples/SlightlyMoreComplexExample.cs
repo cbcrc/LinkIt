@@ -49,33 +49,18 @@ namespace LinkIt.Samples {
 
         [Test]
         public void LoadLinkByIds() {
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(2,1);
+            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(new List<int>{2,1});
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
-        public void LoadLink_FromQuery() {
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromQuery(
-                () => GetBlogPostByKeyword("fish")
-            );
+        public void LoadLink_FromQuery(){
+            var models = GetBlogPostByKeyword("fish");
+            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModels(models);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
-
-        [Test]
-        public void LoadLink_FromQueryWithDependencies() {
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromQuery(
-                referenceLoader => {
-                    var referenceLoaderImpl = (FakeReferenceLoader)referenceLoader;
-                    var fakeConnection = referenceLoaderImpl.GetOpenedConnection("MyConnectionName");
-                    return GetBlogPostByKeyword("fish", fakeConnection);
-                }
-            );
-
-            ApprovalsExt.VerifyPublicProperties(actual);
-        }
-
 
         [Test]
         public void LoadLink_FromTransiantModel() {
@@ -102,7 +87,7 @@ namespace LinkIt.Samples {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        private List<BlogPost> GetBlogPostByKeyword(string fish, object fakeConnection = null) {
+        private List<BlogPost> GetBlogPostByKeyword(string fish) {
             //fake result of a database query
             return new List<BlogPost>{
                 new BlogPost {

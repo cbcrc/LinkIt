@@ -69,7 +69,6 @@
     <Compile Include="LinkTargets\LinkTargetFactoryTests.cs" />
     <Compile Include="Core\LoadLinkConfig_WithCycleTests.cs" />
     <Compile Include="Core\LoadLinkExpressionOverridingTests.cs" />
-    <Compile Include="Core\LoadLinkFromQueryTests.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicList_WithDependenciesBetweenItemsTests.cs" />
     <Compile Include="TestHelpers\MediaLinkedSource.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSource_InvalidConfigTests.cs" />

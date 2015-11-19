@@ -23,16 +23,14 @@ namespace LinkIt.Core
 
         public TRootLinkedSource FromModel<TRootLinkedSourceModel>(TRootLinkedSourceModel model)
         {
-            return FromModels(model)
+            return FromModels(new List<TRootLinkedSourceModel>{model})
                 .SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(params TRootLinkedSourceModel[] models){
-            using (_referenceLoader){
-                if (models == null) {
-                    models = new[] { default(TRootLinkedSourceModel) };
-                }
+        public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(List<TRootLinkedSourceModel> models){
+            if (models == null) { throw new ArgumentNullException("models"); }
 
+            using (_referenceLoader){
                 EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
 
                 _loadedReferenceContext = new LoadedReferenceContext();
@@ -72,41 +70,17 @@ namespace LinkIt.Core
  
         public TRootLinkedSource ById<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
         {
-            return ByIds(modelId)
+            return ByIds(new List<TRootLinkedSourceModelId>{modelId})
                 .SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(params TRootLinkedSourceModelId[] modelIds)
+        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds)
         {
+            if (modelIds == null) { throw new ArgumentNullException("modelIds"); }
+
             using (_referenceLoader){
-                EnsureModelIdsIsNotNull(modelIds);
-
                 var models = LoadRootLinkedSourceModel(modelIds.ToList());
-                return FromModels(models.ToArray());
-            }
-        }
-
-        public List<TRootLinkedSource> FromQuery<TRootLinkedSourceModel>(Func<List<TRootLinkedSourceModel>> executeQuery)
-        {
-            return FromQuery(
-                referenceLoader => executeQuery()
-            );
-        }
-
-        public List<TRootLinkedSource> FromQuery<TRootLinkedSourceModel>(Func<IReferenceLoader, List<TRootLinkedSourceModel>> executeQuery) {
-            using (_referenceLoader) {
-                EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>();
-
-                var models = executeQuery(_referenceLoader);
-                return FromModels(models.ToArray());
-            }
-        }
-
-
-        private void EnsureModelIdsIsNotNull<TRootLinkedSourceModelId>(TRootLinkedSourceModelId[] modelIds)
-        {
-            if (modelIds == null) {
-                throw new ArgumentException("The argument modelIds cannot be a null array.");
+                return FromModels(models);
             }
         }
 

@@ -63,13 +63,15 @@ namespace LinkIt.Tests.Core {
         public void LoadLink_WithModels_ShouldLinkModels() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModels(
-                    new SingleReferenceContent {
-                        Id = "1",
-                        SummaryImageId = "a"
-                    },
-                    new SingleReferenceContent {
-                        Id = "2",
-                        SummaryImageId = "b"
+                    new List<SingleReferenceContent>{
+                        new SingleReferenceContent {
+                            Id = "1",
+                            SummaryImageId = "a"
+                        },
+                        new SingleReferenceContent {
+                            Id = "2",
+                            SummaryImageId = "b"
+                        }
                     }
                 );
 
@@ -82,7 +84,7 @@ namespace LinkIt.Tests.Core {
         [Test]
         public void LoadLink_ModelsWithNullModel_ShouldLinkNull() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
-                .FromModels<SingleReferenceContent>(null);
+                .FromModels<SingleReferenceContent>(new List<SingleReferenceContent>{null});
             
             Assert.That(actual, Is.EquivalentTo(new List<SingleReferenceLinkedSource>{null}));
         }
@@ -91,7 +93,9 @@ namespace LinkIt.Tests.Core {
         public void LoadLink_ModelsWithWrongModelType_ShouldThrow() {
             TestDelegate act = () => _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModels(
-                    "The model of SingleReferenceLinkedSource is not a string"
+                    new List<string>{
+                        "The model of SingleReferenceLinkedSource is not a string"
+                    }
                 );
 
             Assert.That(act, Throws.ArgumentException

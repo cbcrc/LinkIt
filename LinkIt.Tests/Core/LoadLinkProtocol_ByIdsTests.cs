@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
@@ -63,14 +65,14 @@ namespace LinkIt.Tests.Core
 
         [Test]
         public void LoadLinkByIds() {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds("one","two");
+            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"one","two"});
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         [Test]
         public void LoadLinkByIds_WithNullInReferenceIds_ShouldLinkNull() {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds("one", null, "two");
+            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"one", null, "two"});
             
             Assert.That(actual.Count, Is.EqualTo(3));
             Assert.That(actual[1], Is.Null);
@@ -78,7 +80,7 @@ namespace LinkIt.Tests.Core
 
         [Test]
         public void LoadLinkByIds_WithListOfNulls_ShouldLinkNullWithoutLoading() {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds<string>(null, null);
+            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds<string>(new List<string>{null, null});
 
             Assert.That(actual, Is.EquivalentTo(new string[]{null,null}));
 
@@ -91,20 +93,8 @@ namespace LinkIt.Tests.Core
 
 
         [Test]
-        public void LoadLinkByIds_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet(){
-            string[] modelIds = null;
-            TestDelegate act = () => _sut.LoadLink<PersonLinkedSource>().ByIds(modelIds);
-
-            Assert.That(act,
-                Throws.ArgumentException
-                    .With.Message.Contains("null array").And
-                    .With.Message.Contains("modelIds")
-            );
-        }
-
-        [Test]
         public void LoadLinkByIds_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds("a", "a");
+            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"a", "a"});
 
             var linkedSourceModelIds = actual.Select(linkedSource => linkedSource.Model.Id);
             Assert.That(linkedSourceModelIds, Is.EquivalentTo(new[] { "a", "a" }));
@@ -119,7 +109,7 @@ namespace LinkIt.Tests.Core
 
         [Test]
         public void LoadLinkByIds_ManyReferencesCannotBeResolved_ShouldLinkNull() {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds("cannot-be-resolved");
+            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"cannot-be-resolved"});
 
             Assert.That(actual.Single(), Is.Null);
         }

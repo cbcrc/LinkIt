@@ -117,13 +117,10 @@ namespace LinkIt.Samples {
         }
 
         public void Dispose(){
-            //in case you need to dispose database connections or other ressources.
-        }
-
-        public object GetOpenedConnection(string connectionName)
-        {
-            //in case you need to share opened connection or other ressources.
-            return connectionName; //a real implementation would return an opened connection
+            //In case you need to dispose database connections or other ressources.
+     
+            //Will always be invoked as soon as the load phase is completed or
+            //if an exception is thrown
         }
     }
 }
