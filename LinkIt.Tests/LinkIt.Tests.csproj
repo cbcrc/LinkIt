@@ -60,70 +60,67 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exploratory\ContextualizationTests.cs" />
-    <Compile Include="Exploratory\Generics\GenericPieTests.cs" />
-    <Compile Include="Exploratory\Generics\Pie.cs" />
-    <Compile Include="Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
+    <Compile Include="Core\Exploratory\ContextualizationTests.cs" />
+    <Compile Include="Core\Exploratory\Generics\GenericPieTests.cs" />
+    <Compile Include="Core\Exploratory\Generics\Pie.cs" />
+    <Compile Include="Core\Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
     <Compile Include="LinkTargets\SingleValueLinkTargetTests.cs" />
     <Compile Include="LinkTargets\MultiValueLinkTargetTests.cs" />
     <Compile Include="LinkTargets\LinkTargetFactoryTests.cs" />
-    <Compile Include="LoadLinkConfig_WithCycleTests.cs" />
-    <Compile Include="LoadLinkExpressionOverridingTests.cs" />
-    <Compile Include="LoadLinkFromQueryTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicList_WithDependenciesBetweenItemsTests.cs" />
+    <Compile Include="Core\LoadLinkConfig_WithCycleTests.cs" />
+    <Compile Include="Core\LoadLinkExpressionOverridingTests.cs" />
+    <Compile Include="Core\LoadLinkFromQueryTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicList_WithDependenciesBetweenItemsTests.cs" />
     <Compile Include="Shared\MediaLinkedSource.cs" />
-    <Compile Include="Polymorphic\PolymorphicSubLinkedSource_InvalidConfigTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSource_InvalidConfigTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_PolymorphicTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_SimplestRootLinkedSourceTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_SubLinkedSourceTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_NestedLinkedSourceTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_ReferenceTests.cs" />
-    <Compile Include="LoadLinkModelTests.cs" />
-    <Compile Include="LoadLinkProtocol_ByIdsTests.cs" />
-    <Compile Include="LoadLinkProtocolTests.cs" />
-    <Compile Include="ManyReferencesTests.cs">
+    <Compile Include="Core\LoadLinkModelTests.cs" />
+    <Compile Include="Core\LoadLinkProtocol_ByIdsTests.cs" />
+    <Compile Include="Core\LoadLinkProtocolTests.cs" />
+    <Compile Include="Core\ManyReferencesTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MultipleReferencesTypeTests.cs">
+    <Compile Include="Core\MultipleReferencesTypeTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NestedLinkedSourcesTests.cs" />
-    <Compile Include="NestedLinkedSourceTests.cs">
+    <Compile Include="Core\NestedLinkedSourcesTests.cs" />
+    <Compile Include="Core\NestedLinkedSourceTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exploratory\NestedPolymorphicReferenceTests.cs" />
-    <Compile Include="OptionalNestedLinkedSourceTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicMixtedListTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicMixtedTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicReferencesTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicReferenceTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicSubLinkedSourceTests.cs" />
+    <Compile Include="Core\Exploratory\NestedPolymorphicReferenceTests.cs" />
+    <Compile Include="Core\OptionalNestedLinkedSourceTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicMixtedListTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicMixtedTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicReferencesTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicReferenceTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSourceTests.cs" />
     <Compile Include="Shared\Media.cs" />
     <Compile Include="Shared\MediaRepository.cs" />
     <Compile Include="Shared\IPolymorphicSource.cs" />
-    <Compile Include="Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
-    <Compile Include="Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
+    <Compile Include="Core\Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
     <Compile Include="Shared\ReferenceLoaderStub.cs" />
     <Compile Include="Shared\IPolymorphicModel.cs" />
     <Compile Include="Shared\IReferenceTypeConfig.cs" />
     <Compile Include="Shared\Person.cs" />
-    <Compile Include="Exploratory\Generics\PieRepository.cs" />
+    <Compile Include="Core\Exploratory\Generics\PieRepository.cs" />
     <Compile Include="Shared\PersonRepository.cs" />
     <Compile Include="Shared\Image.cs" />
     <Compile Include="Shared\ImageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LookupIdContextTests.cs" />
+    <Compile Include="Core\LookupIdContextTests.cs" />
     <Compile Include="Shared\ReferenceTypeConfig.cs" />
-    <Compile Include="OptionalReferenceTests.cs" />
-    <Compile Include="SingleReferenceTests.cs">
+    <Compile Include="Core\OptionalReferenceTests.cs" />
+    <Compile Include="Core\SingleReferenceTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SubLinkedSourcesTests.cs" />
-    <Compile Include="SubLinkedSourceTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="Core\SubLinkedSourcesTests.cs" />
+    <Compile Include="Core\SubLinkedSourceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LinkIt\LinkIt.csproj">
