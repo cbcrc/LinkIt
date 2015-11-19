@@ -6,7 +6,7 @@ using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.Tests.Shared;
+using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Conventions.Tests

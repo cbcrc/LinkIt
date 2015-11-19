@@ -1,4 +1,4 @@
-﻿namespace LinkIt.Tests.Shared
+﻿namespace LinkIt.Tests.TestHelpers
 {
     public interface IPolymorphicModel
     {}

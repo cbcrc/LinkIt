@@ -18,7 +18,7 @@
   },
   "polyLinks": [
     {
-      "$type": "LinkIt.Tests.Shared.Image, LinkIt.Tests",
+      "$type": "LinkIt.Tests.TestHelpers.Image, LinkIt.Tests",
       "id": "before",
       "alt": "alt-before"
     },
@@ -35,7 +35,7 @@
       }
     },
     {
-      "$type": "LinkIt.Tests.Shared.Image, LinkIt.Tests",
+      "$type": "LinkIt.Tests.TestHelpers.Image, LinkIt.Tests",
       "id": "after",
       "alt": "alt-after"
     }

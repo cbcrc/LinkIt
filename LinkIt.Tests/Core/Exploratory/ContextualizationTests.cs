@@ -1,7 +1,7 @@
 ﻿using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.Shared;
+using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core.Exploratory {

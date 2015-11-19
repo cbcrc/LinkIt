@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace LinkIt.Tests.Shared
+namespace LinkIt.Tests.TestHelpers
 {
     public class MediaRepository
     {

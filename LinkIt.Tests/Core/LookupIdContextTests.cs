@@ -1,5 +1,5 @@
 ﻿using LinkIt.Core;
-using LinkIt.Tests.Shared;
+using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core {

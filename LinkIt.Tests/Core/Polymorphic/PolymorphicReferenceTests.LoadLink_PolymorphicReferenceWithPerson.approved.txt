@@ -7,7 +7,7 @@
     }
   },
   "target": {
-    "$type": "LinkIt.Tests.Shared.Person, LinkIt.Tests",
+    "$type": "LinkIt.Tests.TestHelpers.Person, LinkIt.Tests",
     "id": "a",
     "name": "name-a",
     "summaryImageId": "person-img-a"

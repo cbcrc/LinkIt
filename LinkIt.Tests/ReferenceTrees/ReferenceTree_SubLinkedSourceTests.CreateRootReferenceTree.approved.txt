@@ -6,14 +6,14 @@
   "children": [
     {
       "node": {
-        "referenceType": "LinkIt.Tests.Shared.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "referenceType": "LinkIt.Tests.TestHelpers.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
         "linkTargetId": "LinkIt.Tests.ReferenceTrees.ReferenceTree_SubLinkedSourceTests+PostLinkedSource/SummaryImage"
       },
       "children": []
     },
     {
       "node": {
-        "referenceType": "LinkIt.Tests.Shared.Person, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "referenceType": "LinkIt.Tests.TestHelpers.Person, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
         "linkTargetId": "LinkIt.Tests.ReferenceTrees.ReferenceTree_SubLinkedSourceTests+PostThreadLinkedSource/Author"
       },
       "children": []
