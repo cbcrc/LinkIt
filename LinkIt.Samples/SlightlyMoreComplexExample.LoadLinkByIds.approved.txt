@@ -1,6 +1,68 @@
 ﻿[
   {
     "model": {
+      "id": 3,
+      "title": "Title-3",
+      "tagIds": [
+        "fake-blog-post-tag-103",
+        "fake-blog-post-tag-104"
+      ],
+      "author": {
+        "name": "author-name-3",
+        "email": "author-email-3",
+        "imageId": "author-image-3"
+      },
+      "multimediaContentRef": {
+        "type": "media",
+        "id": "multi-3"
+      }
+    },
+    "tags": [
+      {
+        "id": "fake-blog-post-tag-103",
+        "name": "fake-blog-post-tag-103-name"
+      },
+      {
+        "id": "fake-blog-post-tag-104",
+        "name": "fake-blog-post-tag-104-name"
+      }
+    ],
+    "author": {
+      "model": {
+        "name": "author-name-3",
+        "email": "author-email-3",
+        "imageId": "author-image-3"
+      },
+      "image": {
+        "id": "author-image-3",
+        "alt": "author-image-3-alt",
+        "url": "author-image-3-url"
+      }
+    },
+    "multimediaContent": {
+      "$type": "LinkIt.Samples.MediaLinkedSource, LinkIt.Samples",
+      "model": {
+        "id": "multi-3",
+        "title": "title-multi-3",
+        "tagIds": [
+          "tag-multi-3-a",
+          "tag-multi-3-b"
+        ]
+      },
+      "tags": [
+        {
+          "id": "tag-multi-3-a",
+          "name": "tag-multi-3-a-name"
+        },
+        {
+          "id": "tag-multi-3-b",
+          "name": "tag-multi-3-b-name"
+        }
+      ]
+    }
+  },
+  {
+    "model": {
       "id": 2,
       "title": "Title-2",
       "tagIds": [

@@ -34,7 +34,9 @@ namespace LinkIt.Samples {
 
         [Test]
         public void LoadLink_ByIds() {
-            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(new List<string>{"one", "two", "three"});
+            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(
+                new List<string>{"one", "two", "three"}
+            );
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }

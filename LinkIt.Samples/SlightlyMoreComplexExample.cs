@@ -49,7 +49,9 @@ namespace LinkIt.Samples {
 
         [Test]
         public void LoadLinkByIds() {
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(new List<int>{2,1});
+            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(
+                new List<int>{3,2,1}
+            );
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
