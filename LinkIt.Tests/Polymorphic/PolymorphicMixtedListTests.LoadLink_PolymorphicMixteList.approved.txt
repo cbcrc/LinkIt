@@ -1,0 +1,47 @@
+﻿{
+  "model": {
+    "id": "1",
+    "targetReference": [
+      1,
+      "nested",
+      {
+        "$type": "LinkIt.Tests.Shared.Person, LinkIt.Tests",
+        "id": "as-sub-linked-source",
+        "name": "The Name",
+        "summaryImageId": "the-id"
+      }
+    ]
+  },
+  "target": [
+    {
+      "$type": "LinkIt.Tests.Shared.Person, LinkIt.Tests",
+      "id": "1",
+      "name": "name-1",
+      "summaryImageId": "person-img-1"
+    },
+    {
+      "$type": "LinkIt.Tests.PersonLinkedSource, LinkIt.Tests",
+      "model": {
+        "id": "nested",
+        "name": "name-nested",
+        "summaryImageId": "person-img-nested"
+      },
+      "summaryImage": {
+        "id": "person-img-nested",
+        "alt": "alt-person-img-nested"
+      }
+    },
+    {
+      "$type": "LinkIt.Tests.PersonLinkedSource, LinkIt.Tests",
+      "model": {
+        "id": "as-sub-linked-source",
+        "name": "The Name",
+        "summaryImageId": "the-id"
+      },
+      "summaryImage": {
+        "id": "the-id",
+        "alt": "alt-the-id"
+      }
+    }
+  ]
+}

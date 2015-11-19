@@ -1,0 +1,37 @@
+﻿{
+  "model": {
+    "id": "1",
+    "subs": [
+      {
+        "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImage, LinkIt.Tests",
+        "id": "a",
+        "imageId": "i-a"
+      },
+      {
+        "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferences, LinkIt.Tests",
+        "id": "b",
+        "title": "sub-b"
+      }
+    ]
+  },
+  "subs": [
+    {
+      "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImageLinkedSource, LinkIt.Tests",
+      "model": {
+        "id": "a",
+        "imageId": "i-a"
+      },
+      "image": {
+        "id": "i-a",
+        "alt": "alt-i-a"
+      }
+    },
+    {
+      "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferencesLinkedSource, LinkIt.Tests",
+      "model": {
+        "id": "b",
+        "title": "sub-b"
+      }
+    }
+  ]
+}

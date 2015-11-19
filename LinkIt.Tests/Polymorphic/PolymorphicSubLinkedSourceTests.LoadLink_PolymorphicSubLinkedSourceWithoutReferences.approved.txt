@@ -1,0 +1,16 @@
+﻿{
+  "model": {
+    "id": "1",
+    "target": {
+      "type": "pdf",
+      "id": "a"
+    }
+  },
+  "target": {
+    "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourceTests+PdfReferenceLinkedSource, LinkIt.Tests",
+    "model": {
+      "type": "pdf",
+      "id": "a"
+    }
+  }
+}

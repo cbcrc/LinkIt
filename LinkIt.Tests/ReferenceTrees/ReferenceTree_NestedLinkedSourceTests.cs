@@ -4,7 +4,7 @@ using LinkIt.Core;
 using LinkIt.PublicApi;
 using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
-using LinkIt.Tests.TestHelpers;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 

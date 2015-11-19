@@ -1,0 +1,28 @@
+﻿{
+  "model": {
+    "id": "1",
+    "target": [
+      {
+        "type": "person",
+        "id": "a"
+      },
+      {
+        "type": "image",
+        "id": "a"
+      }
+    ]
+  },
+  "target": [
+    {
+      "$type": "LinkIt.Tests.Shared.Person, LinkIt.Tests",
+      "id": "a",
+      "name": "name-a",
+      "summaryImageId": "person-img-a"
+    },
+    {
+      "$type": "LinkIt.Tests.Shared.Image, LinkIt.Tests",
+      "id": "a",
+      "alt": "alt-a"
+    }
+  ]
+}

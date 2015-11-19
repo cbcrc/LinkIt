@@ -1,0 +1,14 @@
+﻿{
+  "model": {
+    "id": "1",
+    "target": {
+      "type": "image",
+      "id": "a"
+    }
+  },
+  "target": {
+    "$type": "LinkIt.Tests.Shared.Image, LinkIt.Tests",
+    "id": "a",
+    "alt": "alt-a"
+  }
+}

@@ -3,6 +3,6 @@
     "LinkIt.Tests.ReferenceTrees.ReferenceTree_ReferenceTests+Model, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ],
   [
-    "LinkIt.Tests.TestHelpers.Person, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    "LinkIt.Tests.Shared.Person, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
   ]
 ]

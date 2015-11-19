@@ -1,0 +1,20 @@
+﻿{
+  "model": {
+    "id": "1",
+    "target": {
+      "type": "web-page",
+      "id": "a"
+    }
+  },
+  "target": {
+    "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourceTests+WebPageReferenceLinkedSource, LinkIt.Tests",
+    "model": {
+      "title": "title-a",
+      "imageId": "computed-image-ida"
+    },
+    "image": {
+      "id": "computed-image-ida",
+      "alt": "alt-computed-image-ida"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
-using LinkIt.Tests.TestHelpers;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
 namespace LinkIt.Tests

@@ -1,6 +1,6 @@
 ﻿using LinkIt.LinkTargets;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
+using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
 namespace LinkIt.Tests {
