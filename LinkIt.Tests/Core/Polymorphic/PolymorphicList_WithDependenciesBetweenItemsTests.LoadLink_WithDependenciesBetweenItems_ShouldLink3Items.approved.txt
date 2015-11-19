@@ -23,7 +23,7 @@
       "alt": "alt-before"
     },
     {
-      "$type": "LinkIt.Tests.PersonLinkedSource, LinkIt.Tests",
+      "$type": "LinkIt.Tests.Core.PersonLinkedSource, LinkIt.Tests",
       "model": {
         "id": "the-person",
         "name": "name-the-person",

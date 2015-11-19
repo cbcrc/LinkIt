@@ -3,12 +3,12 @@
     "id": "1",
     "subs": [
       {
-        "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImage, LinkIt.Tests",
+        "$type": "LinkIt.Tests.Core.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImage, LinkIt.Tests",
         "id": "a",
         "imageId": "i-a"
       },
       {
-        "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferences, LinkIt.Tests",
+        "$type": "LinkIt.Tests.Core.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferences, LinkIt.Tests",
         "id": "b",
         "title": "sub-b"
       }
@@ -16,7 +16,7 @@
   },
   "subs": [
     {
-      "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImageLinkedSource, LinkIt.Tests",
+      "$type": "LinkIt.Tests.Core.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithImageLinkedSource, LinkIt.Tests",
       "model": {
         "id": "a",
         "imageId": "i-a"
@@ -27,7 +27,7 @@
       }
     },
     {
-      "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferencesLinkedSource, LinkIt.Tests",
+      "$type": "LinkIt.Tests.Core.Polymorphic.PolymorphicSubLinkedSourcesTests+SubContentWithoutReferencesLinkedSource, LinkIt.Tests",
       "model": {
         "id": "b",
         "title": "sub-b"

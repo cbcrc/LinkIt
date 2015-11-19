@@ -1,4 +1,4 @@
-namespace LinkIt.Tests.Exploratory.Generics
+namespace LinkIt.Tests.Core.Exploratory.Generics
 {
     public class Pie<T>
     {

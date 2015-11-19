@@ -7,7 +7,7 @@
     }
   },
   "target": {
-    "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourceTests+WebPageReferenceLinkedSource, LinkIt.Tests",
+    "$type": "LinkIt.Tests.Core.Polymorphic.PolymorphicSubLinkedSourceTests+WebPageReferenceLinkedSource, LinkIt.Tests",
     "model": {
       "title": "title-a",
       "imageId": "computed-image-ida"

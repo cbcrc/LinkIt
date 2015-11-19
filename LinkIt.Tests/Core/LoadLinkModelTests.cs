@@ -6,7 +6,7 @@ using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
-namespace LinkIt.Tests {
+namespace LinkIt.Tests.Core {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class LoadLinkModelTests

@@ -4,12 +4,11 @@ using System.Linq;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace LinkIt.Tests.Exploratory {
+namespace LinkIt.Tests.Core.Exploratory {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests

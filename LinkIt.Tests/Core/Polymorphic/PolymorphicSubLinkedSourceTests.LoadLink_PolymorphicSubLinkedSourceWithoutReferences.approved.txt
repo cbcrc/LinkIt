@@ -7,7 +7,7 @@
     }
   },
   "target": {
-    "$type": "LinkIt.Tests.Polymorphic.PolymorphicSubLinkedSourceTests+PdfReferenceLinkedSource, LinkIt.Tests",
+    "$type": "LinkIt.Tests.Core.Polymorphic.PolymorphicSubLinkedSourceTests+PdfReferenceLinkedSource, LinkIt.Tests",
     "model": {
       "type": "pdf",
       "id": "a"

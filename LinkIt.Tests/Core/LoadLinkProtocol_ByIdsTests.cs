@@ -6,7 +6,7 @@ using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace LinkIt.Tests
+namespace LinkIt.Tests.Core
 {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]

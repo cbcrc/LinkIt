@@ -9,7 +9,7 @@
     }
   },
   "target": {
-    "$type": "LinkIt.Tests.PersonLinkedSource, LinkIt.Tests",
+    "$type": "LinkIt.Tests.Core.PersonLinkedSource, LinkIt.Tests",
     "model": {
       "id": "as-sub-linked-source",
       "name": "The Name",

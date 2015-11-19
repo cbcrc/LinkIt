@@ -6,7 +6,7 @@ using LinkIt.Tests.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
-namespace LinkIt.Tests.Polymorphic {
+namespace LinkIt.Tests.Core.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicList_WithDependenciesBetweenItemsTests {

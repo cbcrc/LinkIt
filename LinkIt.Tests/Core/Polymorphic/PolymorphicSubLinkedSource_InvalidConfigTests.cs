@@ -2,7 +2,7 @@
 using LinkIt.ConfigBuilders;
 using NUnit.Framework;
 
-namespace LinkIt.Tests.Polymorphic {
+namespace LinkIt.Tests.Core.Polymorphic {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class PolymorphicSubLinkedSource_InvalidConfigTests {

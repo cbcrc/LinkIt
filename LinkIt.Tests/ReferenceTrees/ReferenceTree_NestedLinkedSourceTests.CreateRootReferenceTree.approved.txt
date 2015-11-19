@@ -20,7 +20,7 @@
         {
           "node": {
             "referenceType": "LinkIt.Tests.Shared.Image, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-            "linkTargetId": "LinkIt.Tests.PersonLinkedSource/SummaryImage"
+            "linkTargetId": "LinkIt.Tests.Core.PersonLinkedSource/SummaryImage"
           },
           "children": []
         }

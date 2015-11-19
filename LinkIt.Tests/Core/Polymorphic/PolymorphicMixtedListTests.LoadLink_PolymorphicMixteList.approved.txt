@@ -20,7 +20,7 @@
       "summaryImageId": "person-img-1"
     },
     {
-      "$type": "LinkIt.Tests.PersonLinkedSource, LinkIt.Tests",
+      "$type": "LinkIt.Tests.Core.PersonLinkedSource, LinkIt.Tests",
       "model": {
         "id": "nested",
         "name": "name-nested",
@@ -32,7 +32,7 @@
       }
     },
     {
-      "$type": "LinkIt.Tests.PersonLinkedSource, LinkIt.Tests",
+      "$type": "LinkIt.Tests.Core.PersonLinkedSource, LinkIt.Tests",
       "model": {
         "id": "as-sub-linked-source",
         "name": "The Name",
