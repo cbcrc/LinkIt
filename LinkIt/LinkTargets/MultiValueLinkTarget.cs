@@ -20,6 +20,7 @@ namespace LinkIt.LinkTargets
             _set = set;
         }
 
+        //See ILinkTarget.SetLinkTargetValue
         public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
         {
             _get(linkedSource)[linkTargetValueIndex] = linkTargetValue;

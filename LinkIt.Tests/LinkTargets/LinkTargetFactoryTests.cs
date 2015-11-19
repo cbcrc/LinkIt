@@ -3,7 +3,7 @@ using LinkIt.PublicApi;
 using LinkIt.Tests.Shared;
 using NUnit.Framework;
 
-namespace LinkIt.Tests {
+namespace LinkIt.Tests.LinkTargets {
     [TestFixture]
     public class LinkTargetFactoryTests {
         [Test]
