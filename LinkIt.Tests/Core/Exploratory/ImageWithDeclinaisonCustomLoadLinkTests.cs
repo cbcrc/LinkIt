@@ -156,10 +156,5 @@ namespace LinkIt.Tests.Core.Exploratory {
 
             loadedReferenceContext.AddReferences(imagesByDeclinaisonUrl);    
         }
-
-        public string RequiredConnection
-        {
-            get { return null; }
-        }
     }
 }

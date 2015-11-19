@@ -9,14 +9,11 @@ namespace LinkIt.Tests.TestHelpers
         //the necessity of this function could be generalized
         private readonly Func<TReference, TId> _getReferenceId;
 
-        public ReferenceTypeConfig(Func<List<TId>, List<TReference>> loadReferences, Func<TReference, TId> getReferenceId, string requiredConnection = null)
+        public ReferenceTypeConfig(Func<List<TId>, List<TReference>> loadReferences, Func<TReference, TId> getReferenceId)
         {
             _loadReferences = loadReferences;
             _getReferenceId = getReferenceId;
-            RequiredConnection = requiredConnection;
         }
-
-        public string RequiredConnection { get; private set; }
 
         public Type ReferenceType
         {

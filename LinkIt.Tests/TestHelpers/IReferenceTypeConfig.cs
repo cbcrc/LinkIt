@@ -7,6 +7,5 @@ namespace LinkIt.Tests.TestHelpers
     {
         Type ReferenceType { get; }
         void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext);
-        string RequiredConnection { get; }
     }
 }

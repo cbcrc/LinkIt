@@ -8,16 +8,13 @@ namespace LinkIt.Tests.TestHelpers {
     public class ReferenceLoaderStub:IReferenceLoader
     {
         private readonly Dictionary<Type, IReferenceTypeConfig> _referenceTypeConfigByReferenceType;
-        private bool _isConnectionOpen = false;
 
-        //stle: Config must be inside fake reference loader in order to access connection?
         private List<IReferenceTypeConfig> GetDefaultReferenceTypeConfigs()
         {
             return new List<IReferenceTypeConfig>{
                 new ReferenceTypeConfig<Image, string>(
-                    ids => new ImageRepository(_isConnectionOpen).GetByIds(ids),
-                    reference => reference.Id,
-                    "ouglo"
+                    ids => new ImageRepository().GetByIds(ids),
+                    reference => reference.Id
                 ),
                 new ReferenceTypeConfig<Person, string>(
                     ids => new PersonRepository().GetByIds(ids),
@@ -47,7 +44,6 @@ namespace LinkIt.Tests.TestHelpers {
         public void LoadReferences(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             RecordedLookupIdContexts.Add(lookupIdContext);
-            OpenConnectionIfRequired(lookupIdContext);
 
             foreach (var referenceType in lookupIdContext.GetReferenceTypes())
             {
@@ -66,27 +62,10 @@ namespace LinkIt.Tests.TestHelpers {
             referenceTypeConfig.Load(lookupIdContext, loadedReferenceContext);
         }
 
-        private void OpenConnectionIfRequired(ILookupIdContext lookupIdContext) {
-            if (GetReferenceTypeThatRequiresOugloConnection()
-                .Any(requiresOuglo =>
-                    lookupIdContext.GetReferenceTypes().Contains(requiresOuglo)
-                )) {
-                _isConnectionOpen = true;
-            }
-        }
-
-        private List<Type> GetReferenceTypeThatRequiresOugloConnection() {
-            return _referenceTypeConfigByReferenceType.Values
-                .Where(referenceTypeConfig => referenceTypeConfig.RequiredConnection == "ouglo")
-                .Select(referenceTypeConfig => referenceTypeConfig.ReferenceType)
-                .ToList();
-        }
-
         public bool IsDisposed { get; private set; }
 
         public void Dispose()
         {
-            _isConnectionOpen = false;
             IsDisposed = true;
         }
     }
