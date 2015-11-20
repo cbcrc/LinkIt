@@ -28,11 +28,11 @@ namespace LinkIt.Samples {
                     includes => includes
                         .Include<Image>().AsReferenceById(
                             "image",
-                            link => link.Id
+                            link => (string)link.Id
                         )
                         .Include<MediaLinkedSource>().AsNestedLinkedSourceById(
                             "media",
-                            link => link.Id
+                            link => (int)link.Id
                         )
                 );
 
@@ -67,23 +67,22 @@ namespace LinkIt.Samples {
         [Test]
         public void LoadLink_FromTransiantModel() {
             var model = new BlogPost {
-                Id = 77,
+                Id = 101,
                 Author = new Author{
-                    Name = "author-name-77",
-                    Email = "author-email-77",
-                    ImageId = "author-image-77",
+                    Name = "author-name-101",
+                    Email = "author-email-101",
+                    ImageId = "distinc-id-loaded-once",
                 },
                 MultimediaContentRef = new MultimediaContentReference{
-                    Type = "media",
-                    Id = "multi-77"
+                    Type = "image",
+                    Id = "distinc-id-loaded-once"
                 },
-                TagIds = new List<string>{
-                    "fake-blog-post-tag-"+(177),
-                    "fake-blog-post-tag-"+(178)
+                TagIds = new List<int>{
+                    1001,
+                    1002
                 },
-                Title = "Title-77"
+                Title = "Title-101"
             };
-
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model);
 
             ApprovalsExt.VerifyPublicProperties(actual);
@@ -97,35 +96,34 @@ namespace LinkIt.Samples {
                     Author = new Author{
                         Name = "author-name-77",
                         Email = "author-email-77",
-                        ImageId = "author-image-77",
+                        ImageId = "id-77",
                     },
                     MultimediaContentRef = new MultimediaContentReference{
                         Type = "media",
-                        Id = "multi-77"
+                        Id = 277
                     },
-                    TagIds = new List<string>{
-                        "fake-blog-post-tag-"+(177),
-                        "fake-blog-post-tag-"+(178)
+                    TagIds = new List<int>{
+                        177,
+                        178
                     },
-                    Title = "Title-77"
+                    Title = "Salmon"
                 },
                 new BlogPost {
-                    Id = 101,
+                    Id = 78,
                     Author = new Author{
-                        Name = "author-name-101",
-                        Email = "author-email-101",
-                        ImageId = "author-image-101",
+                        Name = "author-name-78",
+                        Email = "author-email-78",
+                        ImageId = "id-78",
                     },
                     MultimediaContentRef = new MultimediaContentReference{
-                        Type = "media",
-                        Id = "multi-101"
+                        Type = "image",
+                        Id = "id-123"
                     },
-                    TagIds = new List<string>{
-                        "fake-blog-post-tag-"+(201),
-                        "fake-blog-post-tag-"+(202)
+                    TagIds = new List<int>{
+                        178
                     },
-                    Title = "Title-101"
-                },
+                    Title = "Cod"
+                }
             };
         }
     }
@@ -133,7 +131,7 @@ namespace LinkIt.Samples {
     public class BlogPost {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<string> TagIds { get; set; }
+        public List<int> TagIds { get; set; }
         public Author Author { get; set; }
         public MultimediaContentReference MultimediaContentRef { get; set; }
     }
@@ -146,7 +144,7 @@ namespace LinkIt.Samples {
 
     public class MultimediaContentReference {
         public string Type { get; set; }
-        public string Id { get; set; }
+        public object Id { get; set; }
     }
 
     public class Image {

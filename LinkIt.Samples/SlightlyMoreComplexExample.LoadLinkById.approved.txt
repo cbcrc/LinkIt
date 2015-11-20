@@ -3,59 +3,59 @@
     "id": 1,
     "title": "Title-1",
     "tagIds": [
-      "fake-blog-post-tag-101",
-      "fake-blog-post-tag-102"
+      89,
+      90
     ],
     "author": {
       "name": "author-name-1",
       "email": "author-email-1",
-      "imageId": "author-image-1"
+      "imageId": "id-501"
     },
     "multimediaContentRef": {
       "type": "media",
-      "id": "multi-1"
+      "id": 1
     }
   },
   "tags": [
     {
-      "id": "fake-blog-post-tag-101",
-      "name": "fake-blog-post-tag-101-name"
+      "id": 89,
+      "name": "89-name"
     },
     {
-      "id": "fake-blog-post-tag-102",
-      "name": "fake-blog-post-tag-102-name"
+      "id": 90,
+      "name": "90-name"
     }
   ],
   "author": {
     "model": {
       "name": "author-name-1",
       "email": "author-email-1",
-      "imageId": "author-image-1"
+      "imageId": "id-501"
     },
     "image": {
-      "id": "author-image-1",
-      "alt": "author-image-1-alt",
-      "url": "author-image-1-url"
+      "id": "id-501",
+      "alt": "id-501-alt",
+      "url": "id-501-url"
     }
   },
   "multimediaContent": {
     "$type": "LinkIt.Samples.MediaLinkedSource, LinkIt.Samples",
     "model": {
-      "id": "multi-1",
-      "title": "title-multi-1",
+      "id": 1,
+      "title": "title-1",
       "tagIds": [
-        "tag-multi-1-a",
-        "tag-multi-1-b"
+        1001,
+        1002
       ]
     },
     "tags": [
       {
-        "id": "tag-multi-1-a",
-        "name": "tag-multi-1-a-name"
+        "id": 1001,
+        "name": "1001-name"
       },
       {
-        "id": "tag-multi-1-b",
-        "name": "tag-multi-1-b-name"
+        "id": 1002,
+        "name": "1002-name"
       }
     ]
   }

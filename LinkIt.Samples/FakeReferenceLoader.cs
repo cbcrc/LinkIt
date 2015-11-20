@@ -14,30 +14,30 @@ namespace LinkIt.Samples {
 
         private void LoadReference(Type referenceType, ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
+            if (referenceType == typeof(Media)) {
+                LoadMedia(lookupIdContext, loadedReferenceContext);
+            }
             if (referenceType == typeof(Tag)){
                 LoadTags(lookupIdContext, loadedReferenceContext);
-            }
-            if (referenceType == typeof(Media)) {
-                LoadMedia(lookupIdContext, loadedReferenceContext); 
-            }
-            if (referenceType == typeof(Image)) {
-                LoadImages(lookupIdContext, loadedReferenceContext);
             }
             if (referenceType == typeof(BlogPost)) {
                 LoadBlogPosts(lookupIdContext, loadedReferenceContext);
             }
+            if (referenceType == typeof(Image)) {
+                LoadImages(lookupIdContext, loadedReferenceContext);
+            }
         }
 
         private void LoadMedia(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext) {
-            var lookupIds = lookupIdContext.GetReferenceIds<Media, string>();
+            var lookupIds = lookupIdContext.GetReferenceIds<Media, int>();
             var references = lookupIds
                 .Select(id =>
                     new Media{
                         Id = id,
                         Title = "title-" + id,
-                        TagIds = new List<string> { 
-                            string.Format("tag-{0}-a", id),
-                            string.Format("tag-{0}-b", id)
+                        TagIds = new List<int> { 
+                            1000+id,
+                            1001+id
                         }
                     }
                 )
@@ -50,7 +50,7 @@ namespace LinkIt.Samples {
         }
 
         private void LoadTags(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext){
-            var lookupIds = lookupIdContext.GetReferenceIds<Tag, string>();
+            var lookupIds = lookupIdContext.GetReferenceIds<Tag, int>();
             var references = lookupIds
                 .Select(id=>
                     new Tag {
@@ -75,17 +75,19 @@ namespace LinkIt.Samples {
                         Author = new Author{
                             Name = "author-name-" +id,
                             Email = "author-email-" +id,
-                            ImageId = "author-image-" +id,
+                            ImageId = "id-"+(id+500),
                         },
                         MultimediaContentRef = new MultimediaContentReference{
                             Type = id % 2 == 0
                                 ? "image"
                                 : "media",
-                            Id = "multi-"+id
+                            Id = id % 2 == 0
+                                ? "id-"+id
+                                : (object)id,
                         },
-                        TagIds = new List<string>{
-                            "fake-blog-post-tag-"+(100+id),
-                            "fake-blog-post-tag-"+(101+id)
+                        TagIds = new List<int>{
+                            88+id,
+                            89+id,
                         },
                         Title = "Title-"+id
                     }

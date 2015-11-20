@@ -27,7 +27,7 @@ namespace LinkIt.Samples {
         [Test]
         public void LoadLink_ById()
         {
-            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ById("one");
+            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ById(1);
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
@@ -35,7 +35,7 @@ namespace LinkIt.Samples {
         [Test]
         public void LoadLink_ByIds() {
             var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(
-                new List<string>{"one", "two", "three"}
+                new List<int>{1, 2, 3}
             );
 
             ApprovalsExt.VerifyPublicProperties(actual);
@@ -43,13 +43,13 @@ namespace LinkIt.Samples {
     }
 
     public class Media {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
-        public List<string> TagIds { get; set; }
+        public List<int> TagIds { get; set; } //Tag references
     }
 
     public class Tag {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 
