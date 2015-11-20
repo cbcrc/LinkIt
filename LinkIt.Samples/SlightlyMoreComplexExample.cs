@@ -26,13 +26,13 @@ namespace LinkIt.Samples {
                     linkedSource => linkedSource.MultimediaContent,
                     link => link.Type,
                     includes => includes
-                        .Include<Image>().AsReferenceById(
-                            "image",
-                            link => (string)link.Id
-                        )
                         .Include<MediaLinkedSource>().AsNestedLinkedSourceById(
                             "media",
                             link => (int)link.Id
+                        )
+                        .Include<Image>().AsReferenceById(
+                            "image",
+                            link => (string)link.Id
                         )
                 );
 
@@ -71,11 +71,11 @@ namespace LinkIt.Samples {
                 Author = new Author{
                     Name = "author-name-101",
                     Email = "author-email-101",
-                    ImageId = "distinc-id-loaded-once",
+                    ImageId = "distinc-id-loaded-once", //same entity referenced twice
                 },
                 MultimediaContentRef = new MultimediaContentReference{
                     Type = "image",
-                    Id = "distinc-id-loaded-once"
+                    Id = "distinc-id-loaded-once" //same entity referenced twice
                 },
                 TagIds = new List<int>{
                     1001,
