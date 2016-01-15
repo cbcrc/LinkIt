@@ -19,5 +19,26 @@ namespace LinkIt.Shared
                 .ToList();
             return iLinkedSourceTypes;
         }
+
+        public static Type GetLinkedSourceModelType(this Type type) {
+            EnsureImplementsILinkedSourceOnceAndOnlyOnce(type);
+
+            var iLinkedSourceTypes = type.GetILinkedSourceTypes();
+            var iLinkedSourceType = iLinkedSourceTypes.Single();
+            return iLinkedSourceType.GenericTypeArguments.Single();
+        }
+
+        private static void EnsureImplementsILinkedSourceOnceAndOnlyOnce(Type linkedSourceType) {
+            if (!linkedSourceType.DoesImplementILinkedSourceOnceAndOnlyOnce()) {
+                throw new ArgumentException(
+                    string.Format(
+                        "{0} must implement ILinkedSource<> once and only once.",
+                        linkedSourceType
+                    ),
+                    "TLinkedSource"
+                );
+            }
+        }
+
     }
 }

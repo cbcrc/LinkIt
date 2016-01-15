@@ -30,7 +30,7 @@ namespace LinkIt.Core
         {
             Type[] typeArgs ={
                 linkedSourceType,
-                GetLinkedSourceModelType(linkedSourceType)
+                linkedSourceType.GetLinkedSourceModelType()
             };
 
             Type ctorGenericType = typeof(LinkedSourceConfig<,>);
@@ -39,28 +39,6 @@ namespace LinkIt.Core
             var ctor = ctorSpecificType.GetConstructors().Single();
             var uncasted = ctor.Invoke(new object[0]);
             return (ILinkedSourceConfig)uncasted;
-        }
-
-        private static Type GetLinkedSourceModelType(Type linkedSourceType)
-        {
-            EnsureImplementsILinkedSourceOnceAndOnlyOnce(linkedSourceType);
-
-            var iLinkedSourceTypes = linkedSourceType.GetILinkedSourceTypes();
-            var iLinkedSourceType = iLinkedSourceTypes.Single();
-            return iLinkedSourceType.GenericTypeArguments.Single();
-        }
-
-        private static void EnsureImplementsILinkedSourceOnceAndOnlyOnce(Type linkedSourceType)
-        {
-            if (!linkedSourceType.DoesImplementILinkedSourceOnceAndOnlyOnce()){
-                throw new ArgumentException(
-                    string.Format(
-                        "{0} must implement ILinkedSource<> once and only once.",
-                        linkedSourceType
-                    ),
-                    "TLinkedSource"
-                );
-            }
         }
     }
 }
