@@ -53,8 +53,10 @@ namespace LinkIt.Tests.Core {
                 }
             );
 
-            Assert.That(actual.Authors.Count, Is.EqualTo(3));
-            Assert.That(actual.Authors[1], Is.Null);
+            Assert.That(
+                actual.Authors.Select(author=>author.Model.Id).ToList(), 
+                Is.EqualTo(new List<string>{"a","b"})
+            );
         }
 
         [Test]
@@ -93,7 +95,7 @@ namespace LinkIt.Tests.Core {
                 }
             );
 
-            Assert.That(actual.Authors, Is.EquivalentTo(new List<PersonLinkedSource>{null,null}));
+            Assert.That(actual.Authors, Is.Empty);
         }
 
     }

@@ -99,6 +99,8 @@ namespace LinkIt.Core
             Load(1);
 
             LinkReferences();
+
+            FilterOutNullValues();
         }
 
         private void Load(int startAtLoadingLevel) {
@@ -153,5 +155,15 @@ namespace LinkIt.Core
                 }
             }
         }
+
+        private void FilterOutNullValues() {
+            foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt) {
+                var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource);
+                foreach (var loadLinkExpression in loadLinkExpressions) {
+                    loadLinkExpression.FilterOutNullValues(linkedSource);
+                }
+            }
+        }
+
     }
 }

@@ -34,6 +34,15 @@ namespace LinkIt.LinkTargets
             }
         }
 
+        public void FilterOutNullValues(TLinkedSource linkedSource){
+            var values = _get(linkedSource);
+            var valuesWithoutNull = values
+                .Where(value => value != null)
+                .ToList();
+
+            _set(linkedSource, valuesWithoutNull);
+        }
+
         public string Id { get; private set; }
 
         public bool Equals(ILinkTarget other) {

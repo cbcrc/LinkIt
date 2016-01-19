@@ -22,5 +22,7 @@ namespace LinkIt.LinkTargets.Interfaces
         );
 
         void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues);
+
+        void FilterOutNullValues(TLinkedSource linkedSource);
     }
 }

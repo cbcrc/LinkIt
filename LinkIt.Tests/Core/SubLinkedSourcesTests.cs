@@ -81,8 +81,10 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            Assert.That(actual.SubSubContents.Count, Is.EqualTo(3));
-            Assert.That(actual.SubSubContents[1], Is.Null);
+            Assert.That(
+                actual.SubSubContents.Select(subSubContent => subSubContent.Model.SummaryImageId).ToList(),
+                Is.EqualTo(new List<string> { "c", "d" })
+            );
         }
 
         [Test]

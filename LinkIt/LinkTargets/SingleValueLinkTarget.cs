@@ -23,6 +23,10 @@ namespace LinkIt.LinkTargets
             //Do nothing for single value
         }
 
+        public void FilterOutNullValues(TLinkedSource linkedSource) {
+            //Do nothing for single value
+        }
+
         public string Id { get; private set; }
 
         public bool Equals(ILinkTarget other) {

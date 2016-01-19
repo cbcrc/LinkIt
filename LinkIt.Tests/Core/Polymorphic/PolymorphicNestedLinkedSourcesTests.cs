@@ -83,8 +83,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
                 }
             );
 
-            Assert.That(actual.Contents.Count, Is.EqualTo(3));
-            Assert.That(actual.Contents[1], Is.Null);
+            Assert.That(actual.Contents.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -147,7 +146,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
                 }
             );
 
-            Assert.That(actual.Contents, Is.EquivalentTo(new List<IPolymorphicSource>{null,null}));
+            Assert.That(actual.Contents, Is.Empty);
         }
 
         public class WithNestedPolymorphicContentsLinkedSource : ILinkedSource<WithNestedPolymorphicContents> {

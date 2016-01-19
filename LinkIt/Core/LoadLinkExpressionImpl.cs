@@ -96,6 +96,12 @@ namespace LinkIt.Core
             );
         }
 
+        public void FilterOutNullValues(object linkedSource){
+            AssumeLinkedSourceIsOfTLinkedSource(linkedSource);
+
+            _linkTarget.FilterOutNullValues((TLinkedSource)linkedSource);
+        }
+
         private void SetLinkTargetValues<TInclude>(
             object linkedSource,
             Func<TLink, TInclude> getInclude,

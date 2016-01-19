@@ -17,6 +17,7 @@ namespace LinkIt.Core.Interfaces
         void LinkNestedLinkedSourceById(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked, LoadLinkProtocol loadLinkProtocol);
         void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol);
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
+        void FilterOutNullValues(object linkedSource);
 
         void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol);
     }

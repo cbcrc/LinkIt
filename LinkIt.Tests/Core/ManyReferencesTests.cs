@@ -61,8 +61,10 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            Assert.That(actual.FavoriteImages.Count, Is.EqualTo(3));
-            Assert.That(actual.FavoriteImages[1], Is.Null);
+            Assert.That(
+                actual.FavoriteImages.Select(favoriteImage => favoriteImage.Id).ToList(),
+                Is.EqualTo(new List<string> { "one", "two" })
+            );
         }
 
         [Test]
@@ -106,7 +108,7 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            Assert.That(actual.FavoriteImages, Is.EquivalentTo(new List<Image>{null,null}));
+            Assert.That(actual.FavoriteImages, Is.Empty);
         }
 
     }
