@@ -86,7 +86,7 @@ namespace LinkIt.Tests.Core {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModels<SingleReferenceContent>(new List<SingleReferenceContent>{null});
             
-            Assert.That(actual, Is.EquivalentTo(new List<SingleReferenceLinkedSource>{null}));
+            Assert.That(actual, Is.Empty);
         }
 
         [Test]

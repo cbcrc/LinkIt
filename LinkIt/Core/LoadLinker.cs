@@ -41,7 +41,10 @@ namespace LinkIt.Core
                     .ToList();
 
                 LoadLinkRootLinkedSource();
-                return linkedSources;
+
+                return linkedSources
+                    .Where(linkedSource=>linkedSource!=null)
+                    .ToList();
             }
         }
 

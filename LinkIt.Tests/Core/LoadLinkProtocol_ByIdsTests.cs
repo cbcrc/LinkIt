@@ -73,21 +73,21 @@ namespace LinkIt.Tests.Core
         [Test]
         public void LoadLinkByIds_WithNullInReferenceIds_ShouldLinkNull() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"one", null, "two"});
-            
-            Assert.That(actual.Count, Is.EqualTo(3));
-            Assert.That(actual[1], Is.Null);
+
+            Assert.That(
+                actual.Select(personLinkSource => personLinkSource.Model.Id).ToList(),
+                Is.EqualTo(new List<string> { "one", "two" })
+            );
         }
 
         [Test]
         public void LoadLinkByIds_WithListOfNulls_ShouldLinkNullWithoutLoading() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds<string>(new List<string>{null, null});
 
-            Assert.That(actual, Is.EquivalentTo(new string[]{null,null}));
-
+            Assert.That(actual, Is.Empty);
             var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
                 .GetReferenceTypes();
-
             Assert.That(loadedReferenceTypes, Is.Empty);
         }
 
@@ -111,7 +111,7 @@ namespace LinkIt.Tests.Core
         public void LoadLinkByIds_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"cannot-be-resolved"});
 
-            Assert.That(actual.Single(), Is.Null);
+            Assert.That(actual, Is.Empty);
         }
     }
 
