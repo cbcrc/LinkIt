@@ -4,7 +4,7 @@ LinkIt is an object-oriented data integration library that make it easy to load 
 
 LinkIt is not an object-relational mapping framework. It can be used for orchestrating the loading of objects and for linking the loaded objects togheter, not for defining how the objects are loaded. LinkIt is intended to be used in a variety of context such as data APIs, ETL processes, CQRS event handlers, web crawlers, etc.
 
-###Features
+### Features
 - Minimize coding effort by leveraging reuse and composition
 - Data source independant
 - Avoid the Select N + 1 problem
@@ -17,7 +17,7 @@ Getting Started
 ---------------
 To execute the examples below, see [LinkIt.Samples](todo). 
 
-###Linked Source
+### Linked Source
 A linked source is a class that has a property called `Model`, and other properties called link targets. For example, let's say you have theses two classes that you fetched separately by ids.
 
 ```csharp
@@ -41,7 +41,7 @@ public class MediaLinkedSource : ILinkedSource<Media> {
 }
 ```
 
-###Usage
+### Usage
 Load link by id
 ```csharp
 var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ById(1);
@@ -56,7 +56,7 @@ var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(
 
 However, prior to be able to use `_loadLinkProtocol.LoadLink` you need to define a load link protocol and a reference loader.
 
-###LoadLinkProtocol
+### LoadLinkProtocol
 A load link protocol has to be defined in order to load and link a linked source. Here is the protocol configuration for `MediaLinkedSource`.
 ```csharp
 var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
@@ -84,7 +84,7 @@ The load link protocol for a link target cannot be defined more than once. If mo
 
 To create your own conventions, please see how the [existing conventions are built](todo). Then, simply pass your convention by argument when calling `ApplyConventions`. 
 
-###ReferenceLoader
+### ReferenceLoader
 LinkIt can load object spread across many data source (web services, Sql databases, NoSql databases, in memory cache, file system, Git repository, etc.) and link them together as long as thoses objects can be fetched by ids. In order to define how objects are loaded, you have to create a reference loader. 
 
 LinkIt will always provide all lookup ids for a specific type in one batch; avoiding the Select N+1 problem. For example, if we load link `MediaLinkedSource` by ids (`"one", "two", "three"`), the lookup ids for `Tag` would be the id of the tags related to those three `Media` without duplicates and without null ids. Moreover, those ids will be passed to the `ReferenceLoader` in the same `LookupIdContext`.
@@ -161,12 +161,12 @@ Then the load link protocol can be built link this:
 _loadLinkProtocol = loadLinkProtocolBuilder.Build(()=>new FakeReferenceLoader());
 ```
 
-###Read more
+### Read more
 - [Slightly more complex example](todo)
 - [Known limitations](todo)
 
 
-#*** Will be a separate page ***
+# *** Will be a separate page ***
 
 Slightly more complex example
 ---------------
@@ -219,7 +219,7 @@ Most of the load link protocol can be defined using the default conventions.
 
 The `BlogPost` object own a nested object of type `Author`. In order to load link the author with the linked image, we need to add the link target `BlogPostLinkedSource/Autor` as a nested linked source of type `AuthorLinkedSource`.
 
-###Polymorphism
+### Polymorphism
 For the linked target `BlogPostLinkedSource/MultimediaContent`, we need to configure the load link protocol since none of the default conventions applies. Moreover, it is a special configuration since it involved some polymorphism.
 ```csharp
 loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
@@ -241,7 +241,7 @@ loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
 
 If `MultimediaContentRef.Type` is `"image"` an image will be loaded and linked; however, if `MultimediaContentRef.Type` is `"media"` a media with its tags will be loaded and linked. Here we are reusing `MediaLinkedSource` defined in the [Getting Started](todo) example.
 
-###Usage
+### Usage
 Load link by id
 ```csharp
 var actual = loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(1);
@@ -283,7 +283,7 @@ var model = new BlogPost {
 var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model);
 ```
 
-#*** Will be a separate page ***
+# *** Will be a separate page ***
 
 
 Known limitations
@@ -295,7 +295,7 @@ Known limitations
 
 The current protocol does not allow to perform database-side join to resolve the models of nested linked source. This performance optimization could be provided by developping database specific LinkIt extensions, but it is out of the scope as of now. For exemple, we could leverage the [database-side join of Mongo DB 3.2](https://www.mongodb.com/blog/post/joins-and-other-aggregation-enhancements-coming-in-mongodb-3-2-part-1-of-3-introduction).
 
-#*** Will be a separate repository ***
+# *** Will be a separate repository ***
 
 
 LinkIt extensions for AutoMapper
@@ -369,11 +369,11 @@ Mapper.CreateMap<Tag, TagDto>();
 ```
 We are done, we can leverage [AutoMapper](http://automapper.org/) to perform complex projections on our linked sources!
 
-###Read more
+### Read more
 - [Slightly more complex example](todo)
 
 
-#*** Will be a separate page ***
+# *** Will be a separate page ***
 
 Slightly more complex example
 ---------------
