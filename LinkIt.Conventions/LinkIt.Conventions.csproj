@@ -48,6 +48,7 @@
     <Compile Include="Interfaces\IByNullableValueTypeIdConvention.cs" />
     <Compile Include="Interfaces\ISingleValueConvention.cs" />
     <Compile Include="Interfaces\ILoadLinkExpressionConvention.cs" />
+    <Compile Include="DefaultConventions\LoadLinkExpressionConvention.cs" />
     <Compile Include="LoadLinkProtocolBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyInfoExtensions.cs" />

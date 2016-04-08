@@ -3,6 +3,7 @@ using System.Reflection;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions;
+using LinkIt.Conventions.DefaultConventions;
 using LinkIt.PublicApi;
 using NUnit.Framework;
 using RC.Testing;
@@ -16,12 +17,11 @@ namespace LinkIt.Samples {
         [SetUp]
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.ApplyConventions(
-                new[]{Assembly.GetExecutingAssembly()},
-                loadLinkProtocolBuilder.GetDefaultConventions()
+            _loadLinkProtocol = loadLinkProtocolBuilder.Build(
+                ()=>new FakeReferenceLoader(),
+                new[] { Assembly.GetExecutingAssembly() },
+                LoadLinkExpressionConvention.Default
             );
-
-            _loadLinkProtocol = loadLinkProtocolBuilder.Build(()=>new FakeReferenceLoader());
         }
 
         [Test]

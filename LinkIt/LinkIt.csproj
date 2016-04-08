@@ -35,6 +35,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigBuilders\ILoadLinkProtocolConfig.cs" />
     <Compile Include="PublicApi\ILoadLinkProtocol.cs" />
     <Compile Include="PublicApi\ILoadedReferenceContext.cs" />
     <Compile Include="PublicApi\ILookupIdContext.cs" />

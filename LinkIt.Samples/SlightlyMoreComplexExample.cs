@@ -3,6 +3,7 @@ using System.Reflection;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions;
+using LinkIt.Conventions.DefaultConventions;
 using LinkIt.PublicApi;
 using NUnit.Framework;
 using RC.Testing;
@@ -16,27 +17,11 @@ namespace LinkIt.Samples {
         [SetUp]
         public void SetUp() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            loadLinkProtocolBuilder.ApplyConventions(
-                new[]{Assembly.GetExecutingAssembly()},
-                loadLinkProtocolBuilder.GetDefaultConventions()
+            _loadLinkProtocol = loadLinkProtocolBuilder.Build(
+                () => new FakeReferenceLoader(),
+                new[] { Assembly.GetExecutingAssembly() },
+                LoadLinkExpressionConvention.Default
             );
-            loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
-                .PolymorphicLoadLink(
-                    linkedSource => linkedSource.Model.MultimediaContentRef,
-                    linkedSource => linkedSource.MultimediaContent,
-                    link => link.Type,
-                    includes => includes
-                        .Include<MediaLinkedSource>().AsNestedLinkedSourceById(
-                            "media",
-                            link => (int)link.Id
-                        )
-                        .Include<Image>().AsReferenceById(
-                            "image",
-                            link => (string)link.Id
-                        )
-                );
-
-            _loadLinkProtocol = loadLinkProtocolBuilder.Build(()=>new FakeReferenceLoader());
         }
 
         [Test]
@@ -163,5 +148,27 @@ namespace LinkIt.Samples {
     public class AuthorLinkedSource : ILinkedSource<Author> {
         public Author Model { get; set; }
         public Image Image { get; set; }
+    }
+
+    public class BlogPostLinkedSourceConfig : ILoadLinkProtocolConfig
+    {
+        public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder)
+        {
+            loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
+                .PolymorphicLoadLink(
+                    linkedSource => linkedSource.Model.MultimediaContentRef,
+                    linkedSource => linkedSource.MultimediaContent,
+                    link => link.Type,
+                    includes => includes
+                        .Include<MediaLinkedSource>().AsNestedLinkedSourceById(
+                            "media",
+                            link => (int)link.Id
+                        )
+                        .Include<Image>().AsReferenceById(
+                            "image",
+                            link => (string)link.Id
+                        )
+                );
+        }
     }
 }

@@ -3,22 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
-using LinkIt.Conventions.DefaultConventions;
 using LinkIt.Conventions.Interfaces;
+using LinkIt.PublicApi;
 using LinkIt.Shared;
 
 namespace LinkIt.Conventions
 {
     public static class LoadLinkProtocolBuilderExtensions
     {
-        public static List<ILoadLinkExpressionConvention> GetDefaultConventions(this LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
-            return new List<ILoadLinkExpressionConvention>{
-                new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches(),
-                new LoadLinkMultiValueWhenIdSuffixMatches(),
-                new LoadLinkSingleValueWhenIdSuffixMatches(),
-                new LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches(),
-                new LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches(),
-            };
+        public static ILoadLinkProtocol Build(
+            this LoadLinkProtocolBuilder loadLinkProtocolBuilder, 
+            Func<IReferenceLoader> createReferenceLoader,
+            IEnumerable<Assembly> assemblies,
+            List<ILoadLinkExpressionConvention> conventions)
+        {
+            loadLinkProtocolBuilder.ApplyConventions(
+                assemblies,
+                conventions
+            );
+            loadLinkProtocolBuilder.ApplyLoadLinkProtocolConfigs(assemblies);
+
+            return loadLinkProtocolBuilder.Build(createReferenceLoader);
         }
 
         public static void ApplyConventions(
