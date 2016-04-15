@@ -1,4 +1,4 @@
-LinkIt
+![LinkIt](logo.png) 
 ===============
 LinkIt is an object-oriented data integration library that make it easy to load different kind of objects and link them together. 
 

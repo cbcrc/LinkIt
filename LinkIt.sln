@@ -15,7 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkIt.Tests", "LinkIt.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D854EF51-D7E4-46C8-BF13-583FDD911202}"
 	ProjectSection(SolutionItems) = preProject
+		known-limitations.md = known-limitations.md
 		LinkIt Dependencies.pdf = LinkIt Dependencies.pdf
+		README.md = README.md
+		slightly-more-complex-example.md = slightly-more-complex-example.md
+		Visualization.jpg = Visualization.jpg
 	EndProjectSection
 EndProject
 Global
