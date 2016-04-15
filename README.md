@@ -76,9 +76,9 @@ By default, the load link protocol is defined by convention
 - when a model property name with the suffix `Id` or `Ids` matches a link target name
 - when a model property name is the same as a link target name
 
-Since the model property "Model.TagIds" match the link target "Tags", the MediaLinkedSourceConfig defined above is unessary and could be ommited.
+Since the model property `Model.TagIds` match the link target `Tags`, the `MediaLinkedSourceConfig` defined above is unessary and could be ommited.
 
-When invoking loadLinkProtocolBuilder.Build, all the assemblies passed by argument will be scanned and ILoadLinkProtocolConfig will be applied. Moreover, all the conventions passed by argument will be applied. If a convention conflict with an configuration explicitly defined in a ILoadLinkProtocolConfig, the configuration defined in a ILoadLinkProtocolConfig wins.
+When invoking `loadLinkProtocolBuilder.Build`, all the assemblies passed by argument will be scanned in order to apply the conventions and the `ILoadLinkProtocolConfig`. If a convention conflicts with a configuration explicitly defined in a `ILoadLinkProtocolConfig`, the configuration defined in a `ILoadLinkProtocolConfig` wins.
 
 ```csharp
     var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
@@ -89,12 +89,32 @@ When invoking loadLinkProtocolBuilder.Build, all the assemblies passed by argume
     );
 );
 ```
-To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `ApplyConventions`. 
+To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `loadLinkProtocolBuilder.Build`. 
 
 ### ReferenceLoader
-LinkIt can load object spread across many data source (web services, Sql databases, NoSql databases, in memory cache, file system, Git repository, etc.) and link them together as long as thoses objects can be fetched by ids. In order to define how objects are loaded, you have to create a reference loader. 
+LinkIt can load object spread across many data source (web services, Sql databases, NoSql databases, in memory cache, file system, Git repository, etc.) and link them together as long as thoses objects can be fetched by ids. LinkIt is not responsible for how the objects are loaded, you must defined this process for each possible reference type in a reference loader.
 
-LinkIt will always provide all lookup ids for a specific type in one batch; avoiding the Select N+1 problem. For example, if we load link `MediaLinkedSource` by ids (`"one", "two", "three"`), the lookup ids for `Tag` would be the id of the tags related to those three `Media` without duplicates and without null ids. Moreover, those ids will be passed to the `ReferenceLoader` in the same `LookupIdContext`.
+LinkIt will always provide all lookup ids for a reference type in one batch; avoiding the Select N+1 problem. 
+
+For example, if we load link `MediaLinkedSource` by ids (`"one", "two"), and the state of those media is  
+```json
+[
+    {
+        id:"one",
+        title:"title-one",
+        TagIds:[1,2]
+    },
+    {
+        id:"two",
+        title:"title-two",
+        TagIds:[2,3]
+    }
+]
+```
+
+the lookup ids for `Tag` would be `1,2,3`. 
+
+Note that lookup ids are always provided without duplicates and without null ids. Moreover, all the lookup ids for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources.
 
 Here is a reference loader that load fake data for our example. 
 ```csharp
