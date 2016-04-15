@@ -1,6 +1,6 @@
 ![LinkIt](logo.png) 
 ===============
-LinkIt is an object-oriented data integration library that make it easy to load different kind of objects and link them together. 
+LinkIt is an object-oriented data integration library that make it easy to load different kinds of objects and link them together. 
 
 LinkIt is not an object-relational mapping framework. It can be used for orchestrating the loading of objects and for linking the loaded objects togheter, not for defining how the objects are loaded. LinkIt is intended to be used in a variety of context such as data APIs, ETL processes, CQRS event handlers, web crawlers, etc.
 
