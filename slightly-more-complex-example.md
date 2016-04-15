@@ -1,5 +1,7 @@
 Slightly more complex example
 ---------------
+To execute this example, see [LinkIt.Samples](LinkIt.Samples/SlightlyMoreComplexExample.cs). 
+
 Let's say you have a blog post class that reference media, images and tags by ids. The model and linked source for media and tags are defined in the [getting started example](README.md).
 ```csharp
 public class BlogPost {
@@ -69,7 +71,7 @@ loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
     );
 ```
 
-If `MultimediaContentRef.Type` is `"image"` an image will be loaded and linked; however, if `MultimediaContentRef.Type` is `"media"` a media with its tags will be loaded and linked. Here we are reusing `MediaLinkedSource` defined in the [Getting Started](todo) example.
+If `MultimediaContentRef.Type` is `"image"` an image will be loaded and linked; however, if `MultimediaContentRef.Type` is `"media"` a media with its tags will be loaded and linked. Here we are reusing `MediaLinkedSource` defined in the [Getting Started](README.md) example.
 
 ### Usage
 Load link by id
