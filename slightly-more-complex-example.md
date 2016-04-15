@@ -44,6 +44,12 @@ public class AuthorLinkedSource : ILinkedSource<Author> {
     public Image Image { get; set; }
 }
 ```
+
+### Visualization
+![Visualization](visualization.jpg) 
+
+
+### LoadLinkProtocol
 Most of the load link protocol can be defined using the default conventions. 
 - `BlogPostLinkedSource/Tags` will match `BlogPost/TagIds`
 - `BlogPostLinkedSource/Autor` will match `BlogPost/Author`
