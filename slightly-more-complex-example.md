@@ -60,21 +60,25 @@ The `BlogPost` object own a nested object of type `Author`. In order to load lin
 ### Polymorphism
 For the linked target `BlogPostLinkedSource/MultimediaContent`, we need to configure the load link protocol since none of the default conventions applies. Moreover, it is a special configuration since it involved some polymorphism.
 ```csharp
-loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
-    .PolymorphicLoadLink(
-        linkedSource => linkedSource.Model.MultimediaContentRef,
-        linkedSource => linkedSource.MultimediaContent,
-        link => link.Type,
-        includes => includes
-            .Include<MediaLinkedSource>().AsNestedLinkedSourceById(
-                "media",
-                link => (int)link.Id
-            )
-            .Include<Image>().AsReferenceById(
-                "image",
-                link => (string)link.Id
-            )
-    );
+public class BlogPostLinkedSourceConfig : ILoadLinkProtocolConfig {
+    public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
+        loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
+            .PolymorphicLoadLink(
+                linkedSource => linkedSource.Model.MultimediaContentRef,
+                linkedSource => linkedSource.MultimediaContent,
+                link => link.Type,
+                includes => includes
+                    .Include<MediaLinkedSource>().AsNestedLinkedSourceById(
+                        "media",
+                        link => (int)link.Id
+                    )
+                    .Include<Image>().AsReferenceById(
+                        "image",
+                        link => (string)link.Id
+                    )
+            );
+    }
+}
 ```
 
 If `MultimediaContentRef.Type` is `"image"` an image will be loaded and linked; however, if `MultimediaContentRef.Type` is `"media"` a media with its tags will be loaded and linked. Here we are reusing `MediaLinkedSource` defined in the [Getting Started](README.md) example.
