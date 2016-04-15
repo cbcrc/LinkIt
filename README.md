@@ -59,29 +59,36 @@ However, prior to be able to use `_loadLinkProtocol.LoadLink` you need to define
 ### LoadLinkProtocol
 A load link protocol has to be defined in order to load and link a linked source. Here is the protocol configuration for `MediaLinkedSource`.
 ```csharp
-var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-loadLinkProtocolBuilder.For<MediaLinkedSource>()
-    .LoadLinkReferenceById(
-        linkedSource => linkedSource.Model.TagIds,
-        linkedSource => linkedSource.Tags
-    );
+public class MediaLinkedSourceConfig : ILoadLinkProtocolConfig {
+    public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
+        loadLinkProtocolBuilder.For<MediaLinkedSource>()
+            .LoadLinkReferenceById(
+                linkedSource => linkedSource.Model.TagIds,
+                linkedSource => linkedSource.Tags
+            );
+    }
+}
 ```
 
-However, we favor convention over configuration. The same protocol could be defined as follow.
-```csharp
-var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-loadLinkProtocolBuilder.ApplyConventions(
-    new[]{Assembly.GetExecutingAssembly()},
-    loadLinkProtocolBuilder.DefaultConventions()
-);
-```
+However, we favor convention over configuration. 
 
 By default, the load link protocol is defined by convention
 - when a model property name with the suffix `Id` or `Ids` matches a link target name
 - when a model property name is the same as a link target name
 
-The load link protocol for a link target cannot be defined more than once. If more than one convention apply or if a convention conflict with a protocol configuration the last one executed wins.
+Since the model property "Model.TagIds" match the link target "Tags", the MediaLinkedSourceConfig defined above is unessary and could be ommited.
 
+When invoking loadLinkProtocolBuilder.Build, all the assemblies passed by argument will be scanned and ILoadLinkProtocolConfig will be applied. Moreover, all the conventions passed by argument will be applied. If a convention conflict with an configuration explicitly defined in a ILoadLinkProtocolConfig, the configuration defined in a ILoadLinkProtocolConfig wins.
+
+```csharp
+    var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+    _loadLinkProtocol = loadLinkProtocolBuilder.Build(
+        ()=>new FakeReferenceLoader(),
+        new[] { Assembly.GetExecutingAssembly() },
+        LoadLinkExpressionConvention.Default
+    );
+);
+```
 To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `ApplyConventions`. 
 
 ### ReferenceLoader
