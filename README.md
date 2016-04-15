@@ -96,7 +96,7 @@ LinkIt can load object spread across many data source (web services, Sql databas
 
 LinkIt will always provide all lookup ids for a reference type in one batch; avoiding the Select N+1 problem. 
 
-For example, if we load link `MediaLinkedSource` by ids (`"one", "two"), and the state of those media is  
+For example, if we load link the `MediaLinkedSource` for ids '"one"' and '"two"', and the state of those media is  
 ```json
 [
     {
