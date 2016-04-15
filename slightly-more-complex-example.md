@@ -1,6 +1,6 @@
 Slightly more complex example
 ---------------
-Let's say you have a blog post class that reference media, images and tags by ids. The model and linked source for media and tags are defined in the [getting started example](todo).
+Let's say you have a blog post class that reference media, images and tags by ids. The model and linked source for media and tags are defined in the [getting started example](README.md).
 ```csharp
 public class BlogPost {
     public int Id { get; set; }
