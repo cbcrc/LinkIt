@@ -12,7 +12,7 @@ using LinkIt.ReferenceTrees;
 using LinkIt.Tests.Core;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
-using RC.Testing;
+
 
 namespace LinkIt.Tests.ReferenceTrees {
     [UseReporter(typeof(DiffReporter))]

@@ -30,14 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ApprovalTests">
+    <Reference Include="ApprovalTests, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ApprovalTests.3.0.8\lib\net40\ApprovalTests.dll</HintPath>
     </Reference>
-    <Reference Include="ApprovalUtilities">
-      <HintPath>..\packages\ApprovalUtilities.3.0.8\lib\net45\ApprovalUtilities.dll</HintPath>
+    <Reference Include="ApprovalUtilities, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ApprovalUtilities.3.0.11\lib\net45\ApprovalUtilities.dll</HintPath>
     </Reference>
-    <Reference Include="ApprovalUtilities.Net45">
-      <HintPath>..\packages\ApprovalUtilities.3.0.8\lib\net45\ApprovalUtilities.Net45.dll</HintPath>
+    <Reference Include="ApprovalUtilities.Net45, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ApprovalUtilities.3.0.11\lib\net45\ApprovalUtilities.Net45.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,9 +49,6 @@
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="RC.Testing">
-      <HintPath>..\packages\RC.Testing.1.0.0\lib\RC.Testing.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -70,6 +70,7 @@
     <Compile Include="Core\LoadLinkConfig_WithCycleTests.cs" />
     <Compile Include="Core\LoadLinkExpressionOverridingTests.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicList_WithDependenciesBetweenItemsTests.cs" />
+    <Compile Include="TestHelpers\ApprovalsExt.cs" />
     <Compile Include="TestHelpers\MediaLinkedSource.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSource_InvalidConfigTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_PolymorphicTests.cs" />
@@ -131,6 +132,7 @@
     <None Include="..\LinkItLicense.licenseheader">
       <Link>LinkItLicense.licenseheader</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

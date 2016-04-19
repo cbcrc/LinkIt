@@ -12,7 +12,7 @@ using LinkIt.Conventions.Interfaces;
 using LinkIt.PublicApi;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
-using RC.Testing;
+
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
 {

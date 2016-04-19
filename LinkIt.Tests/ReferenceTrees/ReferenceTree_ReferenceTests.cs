@@ -11,7 +11,7 @@ using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
-using RC.Testing;
+
 
 namespace LinkIt.Tests.ReferenceTrees {
     [UseReporter(typeof(DiffReporter))]

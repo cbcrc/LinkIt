@@ -8,7 +8,7 @@ using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
-using RC.Testing;
+
 
 namespace LinkIt.Tests.Core {
     [UseReporter(typeof(DiffReporter))]

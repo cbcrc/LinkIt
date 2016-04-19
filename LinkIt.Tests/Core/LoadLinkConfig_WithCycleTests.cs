@@ -3,14 +3,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
+//using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core {
-    [UseReporter(typeof(DiffReporter))]
     [TestFixture]
     public class LoadLinkConfig_WithCycleTests
     {

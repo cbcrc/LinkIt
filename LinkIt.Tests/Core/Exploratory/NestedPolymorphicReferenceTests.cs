@@ -10,7 +10,7 @@ using LinkIt.PublicApi;
 using LinkIt.Tests.Core.Polymorphic;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
-using RC.Testing;
+
 
 namespace LinkIt.Tests.Core.Exploratory {
     [UseReporter(typeof(DiffReporter))]

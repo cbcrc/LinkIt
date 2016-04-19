@@ -34,21 +34,14 @@
       <HintPath>..\packages\ApprovalTests.3.0.8\lib\net40\ApprovalTests.dll</HintPath>
     </Reference>
     <Reference Include="ApprovalUtilities">
-      <HintPath>..\packages\ApprovalUtilities.3.0.8\lib\net45\ApprovalUtilities.dll</HintPath>
+      <HintPath>..\packages\ApprovalUtilities.3.0.11\lib\net45\ApprovalUtilities.dll</HintPath>
     </Reference>
     <Reference Include="ApprovalUtilities.Net45">
-      <HintPath>..\packages\ApprovalUtilities.3.0.8\lib\net45\ApprovalUtilities.Net45.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\ApprovalUtilities.3.0.11\lib\net45\ApprovalUtilities.Net45.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="RC.Testing">
-      <HintPath>..\packages\RC.Testing.1.0.0\lib\RC.Testing.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,6 +68,10 @@
     <ProjectReference Include="..\LinkIt.Conventions\LinkIt.Conventions.csproj">
       <Project>{03d5bdbc-e219-49c1-88c0-f790411c7a35}</Project>
       <Name>LinkIt.Conventions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LinkIt.Tests\LinkIt.Tests.csproj">
+      <Project>{9882EE6A-E815-4AC0-85ED-CFCB35AC6109}</Project>
+      <Name>LinkIt.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\LinkIt\LinkIt.csproj">
       <Project>{5630adf5-f7d6-4257-b5e3-30dfe715af39}</Project>
