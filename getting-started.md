@@ -84,14 +84,14 @@ For example, if we load link the `MediaLinkedSource` for ids `"one"` and `"two"`
 ```json
 [
     {
-        id:"one",
-        title:"title-one",
-        tagIds:[1,2]
+        "id":"one",
+        "title":"title-one",
+        "tagIds":[1,2]
     },
     {
-        id:"two",
-        title:"title-two",
-        tagIds:[2,3]
+        "id":"two",
+        "title":"title-two",
+        "tagIds":[2,3]
     }
 ]
 ```
@@ -166,3 +166,10 @@ public class FakeReferenceLoader:IReferenceLoader
     }
 }
 ```
+
+### Read more
+- [Why Should I Use LinkIt?](why-without-how.md)
+- [Getting Started](getting-started.md)
+- [Slightly More Complex Example](slightly-more-complex-example.md)
+- [Known Limitations](known-limitations.md)
+- [License](LICENSE.txt)

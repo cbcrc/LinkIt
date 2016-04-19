@@ -91,7 +91,7 @@ LinkIt guarantee that all the lookup ids for the same reference type will always
 In order to avoid the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue) in the third query of the above example, the tag ids of each blog post and of each media of each blog post will be loaded in one single batch.
 
 ### Support polymorphism out of the box
-A polymorphic reference is a reference toward an object that can be of many different types. For example, `BlogPost` has a property named MultimediaContent that reference either a Media or an Image. Polymorphic references are typically difficult to handle, but LinkIt support them out of the box.
+A polymorphic reference is a reference toward an object that can be of many different types. For example, `BlogPost` has a property named `MultimediaContent` that reference either a `Media` or an `Image`. Polymorphic references are typically difficult to handle, but LinkIt support them out of the box.
 
 ### Favor convention over configuration
 LinkIt uses a declarative syntaxe in order to define how different types of object must be loaded and linked together. Working with LinkIt is closer to working with configuration files than writing imperative code. 
@@ -103,3 +103,9 @@ When using LinkIt you often need to map the object created for LinkIt to a DTO.
 
 In the .Net community, [AutoMapper](http://automapper.org/) is a well established solution for mapping one object to another. Thus, LinkIt does not try to reinvente the wheel but instead provide some [extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions) for AutoMapper in order to map the objects created for LinkIt to any other objects seamlessly.
 
+### Read more
+- [Why Should I Use LinkIt?](why-without-how.md)
+- [Getting Started](getting-started.md)
+- [Slightly More Complex Example](slightly-more-complex-example.md)
+- [Known Limitations](known-limitations.md)
+- [License](LICENSE.txt)
