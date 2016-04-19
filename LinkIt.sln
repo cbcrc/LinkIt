@@ -15,11 +15,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkIt.Tests", "LinkIt.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D854EF51-D7E4-46C8-BF13-583FDD911202}"
 	ProjectSection(SolutionItems) = preProject
-		known-limitations.md = known-limitations.md
 		LinkIt Dependencies.pdf = LinkIt Dependencies.pdf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{06254A73-7148-4D11-B3A2-9461E08587CB}"
+	ProjectSection(SolutionItems) = preProject
+		ConceptualReferences.jpg = ConceptualReferences.jpg
+		getting-started.md = getting-started.md
+		known-limitations.md = known-limitations.md
+		LinkedSourceReferences.jpg = LinkedSourceReferences.jpg
+		logo.png = logo.png
 		README.md = README.md
 		slightly-more-complex-example.md = slightly-more-complex-example.md
-		Visualization.jpg = Visualization.jpg
+		why-without-how.md = why-without-how.md
 	EndProjectSection
 EndProject
 Global
@@ -51,5 +59,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{06254A73-7148-4D11-B3A2-9461E08587CB} = {D854EF51-D7E4-46C8-BF13-583FDD911202}
 	EndGlobalSection
 EndGlobal

@@ -106,7 +106,7 @@ namespace LinkIt.Samples {
                 .Select(id =>
                     new Image {
                         Id = id,
-                        Alt = id + "-alt",
+                        Credits = id + "-credits",
                         Url = id + "-url"
                     }
                 )

@@ -35,7 +35,7 @@
       },
       "image": {
         "id": "id-503",
-        "alt": "id-503-alt",
+        "credits": "id-503-credits",
         "url": "id-503-url"
       }
     },
@@ -97,14 +97,14 @@
       },
       "image": {
         "id": "id-502",
-        "alt": "id-502-alt",
+        "credits": "id-502-credits",
         "url": "id-502-url"
       }
     },
     "multimediaContent": {
       "$type": "LinkIt.Samples.Image, LinkIt.Samples",
       "id": "id-2",
-      "alt": "id-2-alt",
+      "credits": "id-2-credits",
       "url": "id-2-url"
     }
   },
@@ -144,7 +144,7 @@
       },
       "image": {
         "id": "id-501",
-        "alt": "id-501-alt",
+        "credits": "id-501-credits",
         "url": "id-501-url"
       }
     },

@@ -35,7 +35,7 @@
       },
       "image": {
         "id": "id-77",
-        "alt": "id-77-alt",
+        "credits": "id-77-credits",
         "url": "id-77-url"
       }
     },
@@ -92,14 +92,14 @@
       },
       "image": {
         "id": "id-78",
-        "alt": "id-78-alt",
+        "credits": "id-78-credits",
         "url": "id-78-url"
       }
     },
     "multimediaContent": {
       "$type": "LinkIt.Samples.Image, LinkIt.Samples",
       "id": "id-123",
-      "alt": "id-123-alt",
+      "credits": "id-123-credits",
       "url": "id-123-url"
     }
   }

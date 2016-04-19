@@ -34,7 +34,7 @@
     },
     "image": {
       "id": "id-501",
-      "alt": "id-501-alt",
+      "credits": "id-501-credits",
       "url": "id-501-url"
     }
   },

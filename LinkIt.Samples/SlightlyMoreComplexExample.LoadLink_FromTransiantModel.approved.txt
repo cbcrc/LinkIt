@@ -34,14 +34,14 @@
     },
     "image": {
       "id": "distinc-id-loaded-once",
-      "alt": "distinc-id-loaded-once-alt",
+      "credits": "distinc-id-loaded-once-credits",
       "url": "distinc-id-loaded-once-url"
     }
   },
   "multimediaContent": {
     "$type": "LinkIt.Samples.Image, LinkIt.Samples",
     "id": "distinc-id-loaded-once",
-    "alt": "distinc-id-loaded-once-alt",
+    "credits": "distinc-id-loaded-once-credits",
     "url": "distinc-id-loaded-once-url"
   }
 }

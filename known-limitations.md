@@ -1,4 +1,4 @@
-Known limitations
+Known Limitations
 ---------------
 - Does not support polymorphism at root level
 - Queries are only supported at root level, all other objects have to be fetched by id

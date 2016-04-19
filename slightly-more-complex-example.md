@@ -1,4 +1,4 @@
-Slightly more complex example
+Slightly More Complex Example
 ---------------
 To execute this example, see [LinkIt.Samples](LinkIt.Samples/SlightlyMoreComplexExample.cs). 
 
@@ -46,7 +46,7 @@ public class AuthorLinkedSource : ILinkedSource<Author> {
 ```
 
 ### Visualization
-![Visualization](visualization.jpg) 
+![Visualization](LinkedSourceReferences.jpg) 
 
 
 ### LoadLinkProtocol
