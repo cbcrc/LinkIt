@@ -66,12 +66,11 @@ Since the model property `Model.TagIds` match the link target `Tags`, the `Media
 When invoking `loadLinkProtocolBuilder.Build`, all the assemblies passed by argument will be scanned in order to apply the conventions and the `ILoadLinkProtocolConfig`. If a convention conflicts with a configuration explicitly defined in a `ILoadLinkProtocolConfig`, the configuration defined in a `ILoadLinkProtocolConfig` wins.
 
 ```csharp
-    var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-    _loadLinkProtocol = loadLinkProtocolBuilder.Build(
-        ()=>new FakeReferenceLoader(),
-        new[] { Assembly.GetExecutingAssembly() },
-        LoadLinkExpressionConvention.Default
-    );
+var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+_loadLinkProtocol = loadLinkProtocolBuilder.Build(
+    ()=>new FakeReferenceLoader(),
+    new[] { Assembly.GetExecutingAssembly() },
+    LoadLinkExpressionConvention.Default
 );
 ```
 To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `loadLinkProtocolBuilder.Build`. 
@@ -87,12 +86,12 @@ For example, if we load link the `MediaLinkedSource` for ids `"one"` and `"two"`
     {
         id:"one",
         title:"title-one",
-        TagIds:[1,2]
+        tagIds:[1,2]
     },
     {
         id:"two",
         title:"title-two",
-        TagIds:[2,3]
+        tagIds:[2,3]
     }
 ]
 ```
@@ -166,9 +165,4 @@ public class FakeReferenceLoader:IReferenceLoader
         //if an exception is thrown
     }
 }
-```
-
-Then the load link protocol can be built link this: 
-```csharp
-_loadLinkProtocol = loadLinkProtocolBuilder.Build(()=>new FakeReferenceLoader());
 ```

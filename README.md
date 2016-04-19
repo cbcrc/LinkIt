@@ -18,3 +18,4 @@ LinkIt is not an object-relational mapping framework. It can be used for orchest
 - [Getting Started](getting-started.md)
 - [Slightly More Complex Example](slightly-more-complex-example.md)
 - [Known Limitations](known-limitations.md)
+- [License](LICENSE.txt)
