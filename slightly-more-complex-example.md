@@ -2,7 +2,7 @@ Slightly More Complex Example
 ---------------
 To execute this example, see [LinkIt.Samples](LinkIt.Samples/SlightlyMoreComplexExample.cs). 
 
-Let's say you have a blog post class that reference media, images and tags by ids. The model and linked source for media and tags are defined in the [getting started example](README.md).
+Let's say you have a blog post class that references a media, images and tags by ids. The model and linked source for media and tags are defined in the [getting started example](README.md).
 ```csharp
 public class BlogPost {
     public int Id { get; set; }
@@ -58,7 +58,7 @@ Most of the load link protocol can be defined using the default conventions.
 The `BlogPost` object own a nested object of type `Author`. In order to load link the author with the linked image, we need to add the link target `BlogPostLinkedSource/Autor` as a nested linked source of type `AuthorLinkedSource`.
 
 ### Polymorphism
-For the linked target `BlogPostLinkedSource/MultimediaContent`, we need to configure the load link protocol since none of the default conventions applies. Moreover, it is a special configuration since it involved some polymorphism.
+For the linked target `BlogPostLinkedSource/MultimediaContent`, we need to configure the load link protocol since none of the default conventions applies. Moreover, it is a special configuration since it involves some polymorphism.
 ```csharp
 public class BlogPostLinkedSourceConfig : ILoadLinkProtocolConfig {
     public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
@@ -81,7 +81,7 @@ public class BlogPostLinkedSourceConfig : ILoadLinkProtocolConfig {
 }
 ```
 
-If `MultimediaContentRef.Type` is `"image"` an image will be loaded and linked; however, if `MultimediaContentRef.Type` is `"media"` a media with its tags will be loaded and linked. Here we are reusing `MediaLinkedSource` defined in the [Getting Started](README.md) example.
+If `MultimediaContentRef.Type` is `"image"` then an image will be loaded and linked; however, if `MultimediaContentRef.Type` is `"media"`, a media with its tags will be loaded and linked. Here, we are reusing `MediaLinkedSource` as defined in the [Getting Started](README.md) example.
 
 ### Usage
 Load link by id
@@ -102,7 +102,7 @@ var models = GetBlogPostByKeyword("fish");
 var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModels(models);
 ```
 
-Load link transiant model (not in a data source)
+Load link transient model (not in a data source)
 ```csharp
 var model = new BlogPost {
     Id = 101,
