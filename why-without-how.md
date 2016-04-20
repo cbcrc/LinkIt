@@ -6,7 +6,7 @@ The Example
 ---------------
 ![ConceptualReferences](ConceptualReferences.jpg) 
 
-For example, here an instance of each object type.
+For example, here's an instance of each object type.
 
 **BlogPost**
 ```json
