@@ -9,7 +9,7 @@ LinkIt is not an object-relational mapping framework. It can be used for orchest
 - Data source independent
 - Avoid the Select N + 1 problem
 - Built-in support for references between complex types
-- Support polymorphism out of the box
+- Support for polymorphism out of the box
 - Favor convention over configuration
 - Perform complex projections easily with [LinkIt AutoMapper Extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions)
 
