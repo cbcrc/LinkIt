@@ -1,6 +1,6 @@
 Why Should I Use LinkIt?
 ===============
-Before getting started with how to use LinkIt, you may wonder why you should use it. The main features of Linkt are going to be demonstrated in the following example. This should help you to determine if LinkIt is a good fit for you.
+Before getting started with how to use LinkIt, you may wonder why you should use it. The main features of LinkIt are going to be demonstrated in the following example. This should help you to determine if LinkIt is a good fit for you.
 
 The Example
 ---------------
