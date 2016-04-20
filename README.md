@@ -6,7 +6,7 @@ LinkIt is not an object-relational mapping framework. It can be used for orchest
 
 ### Features
 - Minimize coding effort by leveraging reuse and composition
-- Data source independant
+- Data source independent
 - Avoid the Select N + 1 problem
 - Built-in support for references between complex types
 - Support polymorphism out of the box

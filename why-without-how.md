@@ -63,48 +63,47 @@ The Features
 ### Built-in support for references between complex types
 The types `BlogPost` and `Media` are complex types since they contain nested types. A `BlogPost` contains three nested types: a list of integers (`TagIds`), `Author` and `MultimediaContentReference`. A `Media` contains a list of integers (`TagIds`).
 
-As described by the [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch) problem, it is typically difficult to handle references between complex types in relationnal databases. 
+As described by the [object-relational impedance mismatch](https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch) problem, it is typically difficult to handle references between complex types in relational databases. 
 
-On to other hand, document database typically favor the scenario where references can be denormalized, but don't always provide effective tooling for refreshing those denormalized references. Moreover, the scenario where references cannot be easily denormalized is not always fully supported.
+On to other hand, document databases typically favor the scenario where references are denormalized, but don't always provide effective tooling for refreshing those denormalized references. Moreover, the scenario where references cannot be easily denormalized is not always fully supported.
 
-LinkIt offer built-in support for references between complex types.
+LinkIt offers built-in support for references between complex types.
 
-### Data source independant
-For the sake of example, let `BlogPost` be stored in a document database, `Media` and `Tag` be stored in a relationnal database and the `Image` be exposed through a web service. LinkIt is data source independant. This means that it's possible to load objects that are stored in different data sources and link them together. 
+### Data source independent
+For the sake of example, let `BlogPost` be stored in a document database, `Media` and `Tag` be stored in a relational database and `Image` be exposed through a web service. LinkIt is data source independent. This means that it's possible to load objects that are stored in different data sources and link them together. 
 
-Moreover, the query languages of document database are not standardized like SQL was for relationnal databases. LinkIt offer a limited query language that can be used accross any data sources.
+Moreover, the query languages of document databases are not standardized like SQL was for relational databases. LinkIt offer a limited query language that can be used across any data sources.
 
 ### Minimize coding effort by leveraging reuse and composition
 Imagine we need to fulfill theses three queries:
 
 1. Get a specific media with its tags
-2. Get a specific blog post with its tags, images, media (and media's tags)
-3. Get a list of blog posts with its tags, images, media (and media's tags)
+2. Get a specific blog post with its tags, images, media (and the media's tags)
+3. Get a list of blog posts with its tags, images, media (and the media's tags)
 
-The load link protocol used to fulfill query 1. can be reused to fulfill query 2. Moreover, query 3. can be fulfilled by reusing query 2 and query 1. 
+The load link protocol used to fulfill query 1 can be reused to fulfill query 2. Moreover, query 3 can be fulfilled by reusing query 2 and query 1. 
 
 LinkIt was designed to promote composition and reuse. This has a big impact on increasing code quality and minimizing coding effort. It allows for defining small queries that are ready to be reused in other contexts. Write once, test once, reuse everywhere! 
 
 ### Avoid the Select N + 1 problem
-LinkIt guarantee that all the lookup ids for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources. 
+LinkIt guarantees that all the lookup IDs for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources. 
 
-In order to avoid the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue) in the third query of the above example, the tag ids of each blog post and of each media of each blog post will be loaded in one single batch.
+In order to avoid the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue) in the third query of the above example, the tag IDs of each blog post and of each media of each blog post will be loaded in one single batch.
 
-### Support polymorphism out of the box
-A polymorphic reference is a reference toward an object that can be of many different types. For example, `BlogPost` has a property named `MultimediaContent` that reference either a `Media` or an `Image`. Polymorphic references are typically difficult to handle, but LinkIt support them out of the box.
+### Support for polymorphism out of the box
+A polymorphic reference is a reference to an object that can be of many different types. For example, `BlogPost` has a property named `MultimediaContent` that references either a `Media` or an `Image`. Polymorphic references are typically difficult to handle, but LinkIt supports them out of the box.
 
 ### Favor convention over configuration
-LinkIt uses a declarative syntaxe in order to define how different types of object must be loaded and linked together. Working with LinkIt is closer to working with configuration files than writing imperative code. 
+LinkIt uses a declarative syntax in order to define how different types of object must be loaded and linked together. Working with LinkIt is closer to working with configuration files than writing imperative code. 
 
-However, if the default naming conventions proposed by LinkIt are respected, most of the configurations can be avoided. Moreover, LinkIt allows you to define you own naming conventions. 
+However, if the default naming conventions proposed by LinkIt are respected, most of the configuration can be avoided. Moreover, LinkIt allows you to define you own naming conventions. 
 
 ### Perform complex projections easily with LinkIt AutoMapper Extensions
 When using LinkIt you often need to map the object created for LinkIt to a DTO. 
 
-In the .Net community, [AutoMapper](http://automapper.org/) is a well established solution for mapping one object to another. Thus, LinkIt does not try to reinvente the wheel but instead provide some [extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions) for AutoMapper in order to map the objects created for LinkIt to any other objects seamlessly.
+In the .NET community, [AutoMapper](http://automapper.org/) is a well-established solution for mapping one object to another. Thus, LinkIt does not try to reinvent the wheel but instead provides some [extensions for AutoMapper](https://github.com/cbcrc/LinkIt.AutoMapperExtensions) in order to map the objects created for LinkIt to any other objects seamlessly.
 
 ### Read more
-- [Why Should I Use LinkIt?](why-without-how.md)
 - [Getting Started](getting-started.md)
 - [Slightly More Complex Example](slightly-more-complex-example.md)
 - [Known Limitations](known-limitations.md)

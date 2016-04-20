@@ -3,7 +3,7 @@ Getting Started
 To execute this example, see [LinkIt.Samples](LinkIt.Samples/GettingStarted.cs). 
 
 ### Linked Source
-A linked source is a class that has a property called `Model`, and other properties called link targets. For example, let's say you have theses two classes that you fetched separately by ids.
+A linked source is a class that has a property called `Model`, and other properties called link targets. For example, let's say you have these two classes that you fetched separately by IDs.
 
 ```csharp
 public class Media {
@@ -27,19 +27,19 @@ public class MediaLinkedSource : ILinkedSource<Media> {
 ```
 
 ### Usage
-Load link by id
+Load link by ID
 ```csharp
 var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ById(1);
 ```
 
-Load link by ids
+Load link by IDs
 ```csharp
 var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(
     new List<int>{1, 2, 3}
 );
 ```
 
-However, prior to be able to use `_loadLinkProtocol.LoadLink` you need to define a load link protocol and a reference loader.
+However, prior to being able to use `_loadLinkProtocol.LoadLink`, you need to define a load link protocol and a reference loader.
 
 ### LoadLinkProtocol
 A load link protocol has to be defined in order to load and link a linked source. Here is the protocol configuration for `MediaLinkedSource`.
@@ -61,9 +61,9 @@ By default, the load link protocol is defined by convention
 - when a model property name with the suffix `Id` or `Ids` matches a link target name
 - when a model property name is the same as a link target name
 
-Since the model property `Model.TagIds` match the link target `Tags`, the `MediaLinkedSourceConfig` defined above is unessary and could be ommited.
+Since the model property `Model.TagIds` match the link target `Tags`, the `MediaLinkedSourceConfig` defined above is unnecessary and can be omitted.
 
-When invoking `loadLinkProtocolBuilder.Build`, all the assemblies passed by argument will be scanned in order to apply the conventions and the `ILoadLinkProtocolConfig`. If a convention conflicts with a configuration explicitly defined in a `ILoadLinkProtocolConfig`, the configuration defined in a `ILoadLinkProtocolConfig` wins.
+When invoking `loadLinkProtocolBuilder.Build`, all the assemblies passed by argument will be scanned in order to apply the conventions and the configuration classes implementing `ILoadLinkProtocolConfig`. If a convention conflicts with a configuration explicitly defined in a `ILoadLinkProtocolConfig`, the configuration defined in a `ILoadLinkProtocolConfig` wins.
 
 ```csharp
 var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
@@ -76,11 +76,11 @@ _loadLinkProtocol = loadLinkProtocolBuilder.Build(
 To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `loadLinkProtocolBuilder.Build`. 
 
 ### ReferenceLoader
-LinkIt can load object spread across many data source (web services, Sql databases, NoSql databases, in memory cache, file system, Git repository, etc.) and link them together as long as thoses objects can be fetched by ids. LinkIt is not responsible for defining how the objects are loaded, you must defined this process for each possible reference types in a reference loader.
+LinkIt can load objects spread across many data sources (web services, SQL databases, NoSQL databases, in-memory caches, file systems, Git repositories, etc.) and link them together as long as those objects can be fetched by IDs. LinkIt is not responsible for defining how the objects are loaded, you must define this process for each possible reference type in a reference loader.
 
-LinkIt will always provide all lookup ids for a reference type in one batch; avoiding the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue). 
+LinkIt will always provide all lookup IDs for a reference type in one batch; avoiding the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue). 
 
-For example, if we load link the `MediaLinkedSource` for ids `"one"` and `"two"`, and the state of those media is  
+For example, if we load link the `MediaLinkedSource` for IDs `"one"` and `"two"`, and the state of those media is  
 ```json
 [
     {
@@ -96,11 +96,11 @@ For example, if we load link the `MediaLinkedSource` for ids `"one"` and `"two"`
 ]
 ```
 
-the lookup ids for `Tag` would be `1,2,3`. 
+the lookup IDs for `Tag` would then be `1,2,3`. 
 
-Note that lookup ids are always provided without duplicates and without null ids. Moreover, all the lookup ids for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources.
+Note that lookup IDs are always provided without duplicates and without null IDs. Moreover, all the lookup IDs for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources.
 
-Here is a reference loader that load fake data for our example. 
+Here is a reference loader that loads fake data for our example. 
 ```csharp
 public class FakeReferenceLoader:IReferenceLoader
 {
@@ -159,7 +159,7 @@ public class FakeReferenceLoader:IReferenceLoader
     }
 
     public void Dispose(){
-        //In case you need to dispose database connections or other ressources.
+        //In case you need to dispose database connections or other resources.
  
         //Will always be invoked as soon as the load phase is completed or
         //if an exception is thrown
@@ -169,7 +169,6 @@ public class FakeReferenceLoader:IReferenceLoader
 
 ### Read more
 - [Why Should I Use LinkIt?](why-without-how.md)
-- [Getting Started](getting-started.md)
 - [Slightly More Complex Example](slightly-more-complex-example.md)
 - [Known Limitations](known-limitations.md)
 - [License](LICENSE.txt)
