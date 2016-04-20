@@ -13,7 +13,6 @@ using LinkIt.PublicApi;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
-
 namespace LinkIt.Samples {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
