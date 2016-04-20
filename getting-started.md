@@ -76,7 +76,7 @@ _loadLinkProtocol = loadLinkProtocolBuilder.Build(
 To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `loadLinkProtocolBuilder.Build`. 
 
 ### ReferenceLoader
-LinkIt can load object spread across many data source (web services, Sql databases, NoSql databases, in memory cache, file system, Git repository, etc.) and link them together as long as thoses objects can be fetched by ids. LinkIt is not responsible for defining how the objects are loaded, you must defined this process for each possible reference type in a reference loader.
+LinkIt can load object spread across many data source (web services, Sql databases, NoSql databases, in memory cache, file system, Git repository, etc.) and link them together as long as thoses objects can be fetched by ids. LinkIt is not responsible for defining how the objects are loaded, you must defined this process for each possible reference types in a reference loader.
 
 LinkIt will always provide all lookup ids for a reference type in one batch; avoiding the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue). 
 
