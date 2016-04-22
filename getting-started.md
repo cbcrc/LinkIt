@@ -78,28 +78,6 @@ To create your own conventions, please see how the [existing conventions are bui
 ### ReferenceLoader
 LinkIt can load objects spread across many data sources (web services, SQL databases, NoSQL databases, in-memory caches, file systems, Git repositories, etc.) and link them together as long as those objects can be fetched by IDs. LinkIt is not responsible for defining how the objects are loaded, you must define this process for each possible reference type in a reference loader.
 
-LinkIt will always provide all lookup IDs for a reference type in one batch; avoiding the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue). 
-
-For example, if we load link the `MediaLinkedSource` for IDs `"one"` and `"two"`, and the state of those media is  
-```json
-[
-    {
-        "id":"one",
-        "title":"title-one",
-        "tagIds":[1,2]
-    },
-    {
-        "id":"two",
-        "title":"title-two",
-        "tagIds":[2,3]
-    }
-]
-```
-
-the lookup IDs for `Tag` would then be `1,2,3`. 
-
-Note that lookup IDs are always provided without duplicates and without null IDs. Moreover, all the lookup IDs for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources.
-
 Here is a reference loader that loads fake data for our example. 
 ```csharp
 public class FakeReferenceLoader:IReferenceLoader
@@ -166,6 +144,28 @@ public class FakeReferenceLoader:IReferenceLoader
     }
 }
 ```
+
+LinkIt will always provide all lookup IDs for a reference type in one batch; avoiding the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue). 
+
+For example, if we load link the `MediaLinkedSource` for IDs `"one"` and `"two"`, and the state of those media is  
+```json
+[
+    {
+        "id":"one",
+        "title":"title-one",
+        "tagIds":[1,2]
+    },
+    {
+        "id":"two",
+        "title":"title-two",
+        "tagIds":[2,3]
+    }
+]
+```
+
+the lookup IDs for `Tag` would then be `1,2,3`. 
+
+Note that lookup IDs are always provided without duplicates and without null IDs. Moreover, all the lookup IDs for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources.
 
 ### Read more
 - [Why Should I Use LinkIt?](why-without-how.md)
