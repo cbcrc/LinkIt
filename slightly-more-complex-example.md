@@ -32,6 +32,7 @@ public class Image {
     public string Url { get; set; }
 }
 ```
+The model and linked source for media and tags are defined in the [getting started example](README.md).
 
 The linked source representing a blog post with its media, images and tags would be defined like this:
 ```csharp
@@ -47,8 +48,6 @@ public class AuthorLinkedSource : ILinkedSource<Author> {
     public Image Image { get; set; }
 }
 ```
-
-The model and linked source for media and tags are defined in the [getting started example](README.md).
 
 ### LoadLinkProtocol
 Most of the load link protocol can be defined using the default conventions. 
