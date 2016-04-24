@@ -130,3 +130,6 @@ var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model)
 - [Getting Started](getting-started.md)
 - [Known Limitations](known-limitations.md)
 - [License](LICENSE.txt)
+
+### See also
+- Perform complex projections easily with [LinkIt AutoMapper Extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions)

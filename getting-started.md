@@ -172,3 +172,6 @@ Note that lookup IDs are always provided without duplicates and without null IDs
 - [Slightly More Complex Example](slightly-more-complex-example.md)
 - [Known Limitations](known-limitations.md)
 - [License](LICENSE.txt)
+
+### See also
+- Perform complex projections easily with [LinkIt AutoMapper Extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions)
