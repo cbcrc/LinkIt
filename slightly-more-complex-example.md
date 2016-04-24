@@ -2,7 +2,10 @@ Slightly More Complex Example
 ---------------
 To execute this example, see [LinkIt.Samples](LinkIt.Samples/SlightlyMoreComplexExample.cs). 
 
-Let's say you have a blog post class that references media, images and tags by IDs. The model and linked source for media and tags are defined in the [getting started example](README.md).
+Let's say you have a blog post class that references media, images and tags by IDs. 
+
+![Visualization](LinkedSourceReferences.jpg) 
+
 ```csharp
 public class BlogPost {
     public int Id { get; set; }
@@ -45,9 +48,7 @@ public class AuthorLinkedSource : ILinkedSource<Author> {
 }
 ```
 
-### Visualization
-![Visualization](LinkedSourceReferences.jpg) 
-
+The model and linked source for media and tags are defined in the [getting started example](README.md).
 
 ### LoadLinkProtocol
 Most of the load link protocol can be defined using the default conventions. 
