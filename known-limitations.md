@@ -12,3 +12,6 @@ If recursive loading or database-side joins are required, an object that represe
 - [Getting Started](getting-started.md)
 - [Slightly More Complex Example](slightly-more-complex-example.md)
 - [License](LICENSE.txt)
+
+### See also
+- Perform complex projections easily with [LinkIt AutoMapper Extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions)

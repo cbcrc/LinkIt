@@ -19,3 +19,6 @@ LinkIt is not an object-relational mapping framework. It can be used for orchest
 - [Slightly More Complex Example](slightly-more-complex-example.md)
 - [Known Limitations](known-limitations.md)
 - [License](LICENSE.txt)
+
+### See also
+- Perform complex projections easily with [LinkIt AutoMapper Extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions)

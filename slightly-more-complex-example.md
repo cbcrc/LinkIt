@@ -2,7 +2,10 @@ Slightly More Complex Example
 ---------------
 To execute this example, see [LinkIt.Samples](LinkIt.Samples/SlightlyMoreComplexExample.cs). 
 
-Let's say you have a blog post class that references media, images and tags by IDs. The model and linked source for media and tags are defined in the [getting started example](README.md).
+Let's say you have a blog post class that references media, images and tags by IDs. 
+
+![Visualization](LinkedSourceReferences.jpg) 
+
 ```csharp
 public class BlogPost {
     public int Id { get; set; }
@@ -25,10 +28,11 @@ public class MultimediaContentReference {
 
 public class Image {
     public string Id { get; set; }
-    public string Alt { get; set; }
+    public string Credits { get; set; }
     public string Url { get; set; }
 }
 ```
+The model and linked source for media and tags are defined in the [getting started example](README.md).
 
 The linked source representing a blog post with its media, images and tags would be defined like this:
 ```csharp
@@ -44,10 +48,6 @@ public class AuthorLinkedSource : ILinkedSource<Author> {
     public Image Image { get; set; }
 }
 ```
-
-### Visualization
-![Visualization](LinkedSourceReferences.jpg) 
-
 
 ### LoadLinkProtocol
 Most of the load link protocol can be defined using the default conventions. 
@@ -130,3 +130,6 @@ var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model)
 - [Getting Started](getting-started.md)
 - [Known Limitations](known-limitations.md)
 - [License](LICENSE.txt)
+
+### See also
+- Perform complex projections easily with [LinkIt AutoMapper Extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions)
