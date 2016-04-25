@@ -4,7 +4,7 @@ To execute this example, see [LinkIt.Samples](LinkIt.Samples/SlightlyMoreComplex
 
 Let's say you have a blog post class that references media, images and tags by IDs. 
 
-![Visualization](LinkedSourceReferences.jpg)  
+![Visualization](LinkedSourceReferences.jpg)   
 
 ```csharp
 public class BlogPost {
