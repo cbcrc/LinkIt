@@ -52,7 +52,7 @@ public class AuthorLinkedSource : ILinkedSource<Author> {
 ### LoadLinkProtocol
 Most of the load link protocol can be defined using the default conventions. 
 - `BlogPostLinkedSource/Tags` will match `BlogPost/TagIds`
-- `BlogPostLinkedSource/Autor` will match `BlogPost/Author`
+- `BlogPostLinkedSource/Author` will match `BlogPost/Author`
 - `AuthorLinkedSource/Image` will match `Author/ImageId`
 
 The `BlogPost` object owns a nested object of type `Author`. In order to load link the author with its own linked image, we need to add the link target `BlogPostLinkedSource/Author` as a nested linked source of type `AuthorLinkedSource`.
