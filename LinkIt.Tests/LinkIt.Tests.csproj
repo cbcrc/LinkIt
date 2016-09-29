@@ -60,16 +60,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Exploratory\ContextualizationTests.cs" />
+    <Compile Include="Core\Exploratory\ContextualizationFromModelTests.cs" />
+    <Compile Include="Core\Exploratory\ContextualizationFromRootTests.cs" />
+    <Compile Include="Core\Exploratory\ContextualizationByIdTests.cs" />
     <Compile Include="Core\Exploratory\Generics\GenericPieTests.cs" />
     <Compile Include="Core\Exploratory\Generics\Pie.cs" />
     <Compile Include="Core\Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
     <Compile Include="LinkTargets\SingleValueLinkTargetTests.cs" />
     <Compile Include="LinkTargets\MultiValueLinkTargetTests.cs" />
     <Compile Include="LinkTargets\LinkTargetFactoryTests.cs" />
-    <Compile Include="Core\LoadLinkConfig_WithCycleTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_WithDependencyCycleTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_WithNestedCycleTests.cs" />
     <Compile Include="Core\LoadLinkExpressionOverridingTests.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicList_WithDependenciesBetweenItemsTests.cs" />
+    <Compile Include="ReferenceTrees\ReferenceTree_SideEffectBetweenNestedLinkedSourceTests.cs" />
     <Compile Include="TestHelpers\MediaLinkedSource.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSource_InvalidConfigTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_PolymorphicTests.cs" />

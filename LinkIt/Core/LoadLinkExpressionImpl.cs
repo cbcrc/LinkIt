@@ -63,7 +63,13 @@ namespace LinkIt.Core
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithCreateNestedLinkedSourceFromModel,
-                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(link, loadedReferenceContext, loadLinkProtocol)
+                (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(
+                    link, 
+                    loadedReferenceContext,
+                    (TLinkedSource)linkedSource,
+                    linkIndex,
+                    loadLinkProtocol
+                )
             );
         }
 
@@ -187,7 +193,7 @@ namespace LinkIt.Core
         private void AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
         {
             _includeSet
-                .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractLinkTarget, TLink>>()
+                .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource,TAbstractLinkTarget, TLink>>()
                 .ToList()
                 .ForEach(include =>
                     include.AddReferenceTreeForEachLinkTarget(parent, loadLinkProtocol)

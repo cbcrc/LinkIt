@@ -85,9 +85,8 @@ namespace LinkIt.Core {
             if (model == null) { return null; }
 
             var linkedSource = new TLinkedSource { Model = model };
-            if (init != null){
-                init(linkedSource);
-            }
+            init?.Invoke(linkedSource); //Important: Init before LinkNestedLinkedSourcesFromModel
+
             LinkNestedLinkedSourcesFromModel(linkedSource, loadLinkProtocol);
 
             _linkedSourcesToBeBuilt.Add(linkedSource);

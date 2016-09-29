@@ -36,9 +36,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigBuilders\ILoadLinkProtocolConfig.cs" />
+    <Compile Include="PublicApi\LoadLinkProtocolStatistics.cs" />
     <Compile Include="PublicApi\ILoadLinkProtocol.cs" />
     <Compile Include="PublicApi\ILoadedReferenceContext.cs" />
     <Compile Include="PublicApi\ILookupIdContext.cs" />
+    <Compile Include="ReferenceTrees\ReferenceDependencyDagNode.cs" />
+    <Compile Include="ReferenceTrees\ReferenceDependencyDag.cs" />
+    <Compile Include="Shared\SingleItemExtensions.cs" />
     <Compile Include="Shared\AssumptionFailed.cs" />
     <Compile Include="Shared\LinkedSourceTypeExtensions.cs" />
     <Compile Include="Shared\PropertyInfoExtensions.cs" />

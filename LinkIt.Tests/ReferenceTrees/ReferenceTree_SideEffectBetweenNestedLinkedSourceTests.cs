@@ -1,11 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Core;
 using LinkIt.PublicApi;
 using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
-using LinkIt.Shared;
 using LinkIt.Tests.Core;
 using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
@@ -14,8 +13,7 @@ using RC.Testing;
 namespace LinkIt.Tests.ReferenceTrees {
     [UseReporter(typeof(DiffReporter))]
     [TestFixture]
-    public class ReferenceTree_NestedLinkedSourceTests
-    {
+    public class ReferenceTree_SideEffectBetweenNestedLinkedSourceTests {
         private LoadLinkProtocol _sut;
 
         [SetUp]
@@ -23,24 +21,29 @@ namespace LinkIt.Tests.ReferenceTrees {
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
-                .LoadLinkReferenceById(
-                    linkedSource => linkedSource.Model.PreImageId,
-                    linkedSource => linkedSource.PreImage
-                )
                 .LoadLinkNestedLinkedSourceById(
                     linkedSource => linkedSource.Model.PersonId,
                     linkedSource => linkedSource.Person
                 )
-                .LoadLinkReferenceById(
-                    linkedSource => linkedSource.Model.PostImageId,
-                    linkedSource => linkedSource.PostImage
+                .LoadLinkNestedLinkedSourceById(
+                    linkedSource => linkedSource.Model.PersonGroupId,
+                    linkedSource => linkedSource.PersonGroup
                 );
+            loadLinkProtocolBuilder.For<PersonGroupLinkedSource>()
+                .LoadLinkReferenceById(
+                    linkedSource => linkedSource.Model.PersonIds,
+                    linkedSource => linkedSource.People
+                );
+
+
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
                     linkedSource => linkedSource.SummaryImage
                 );
-            _sut = (LoadLinkProtocol)loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
+            _sut = (LoadLinkProtocol)loadLinkProtocolBuilder.Build(
+                () => null //not required
+            );
         }
 
         [Test]
@@ -56,21 +59,32 @@ namespace LinkIt.Tests.ReferenceTrees {
 
             var actual = rootReferenceTree.ParseLoadingLevels();
 
+            Assert.That(actual[2].Contains(typeof(Person)));
+            Assert.That(actual[3].Contains(typeof(Image)));
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
         public class LinkedSource : ILinkedSource<Model> {
             public Model Model { get; set; }
-            public Image PreImage { get; set; }
             public PersonLinkedSource Person { get; set; }
-            public Image PostImage { get; set; }
+            public PersonGroupLinkedSource PersonGroup { get; set; }
+        }
+
+        public class PersonGroupLinkedSource : ILinkedSource<PersonGroup> {
+            public PersonGroup Model { get; set; }
+            public List<Person> People { get; set; }
         }
 
         public class Model {
             public int Id { get; set; }
-            public string PreImageId { get; set; }
             public string PersonId { get; set; }
-            public string PostImageId { get; set; }
+            public int PersonGroupId { get; set; }
         }
+
+        public class PersonGroup {
+            public int Id { get; set; }
+            public List<string> PersonIds { get; set; }
+        }
+
     }
 }

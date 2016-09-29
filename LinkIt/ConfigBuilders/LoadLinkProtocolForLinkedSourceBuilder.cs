@@ -164,7 +164,7 @@ namespace LinkIt.ConfigBuilders
         {
             if (getLookupIds == null) { throw new ArgumentNullException("getLookupIds"); }
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
-            if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
+            if (initChildLinkedSource == null) { throw new ArgumentNullException("initChildLinkedSource"); }
 
             return LoadLinkNestedLinkedSourceById(
                 getLookupIds,
@@ -219,8 +219,27 @@ namespace LinkIt.ConfigBuilders
             if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
 
             return LoadLinkNestedLinkedSourceFromModel(
-                ToGetLookupIdsForSingleValue(getNestedLinkedSourceModel), 
-                LinkTargetFactory.Create(getLinkTarget)
+                getNestedLinkedSourceModel, 
+                getLinkTarget,
+                NullInitChildLinkedSourceForSingleValue
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel>(
+            Func<TLinkedSource, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            Expression<Func<TLinkedSource, TChildLinkedSource>> getLinkTarget,
+            Action<TLinkedSource, TChildLinkedSource> initChildLinkedSource
+        ) where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
+        {
+            if (getNestedLinkedSourceModel == null) { throw new ArgumentNullException("getNestedLinkedSourceModel"); }
+            if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
+            if (initChildLinkedSource == null) { throw new ArgumentNullException("initChildLinkedSource"); }
+
+            return LoadLinkNestedLinkedSourceFromModel(
+                ToGetLookupIdsForSingleValue(getNestedLinkedSourceModel),
+                LinkTargetFactory.Create(getLinkTarget),
+                (linkedSource, referenceIndex, childLinkedSource) =>
+                    initChildLinkedSource(linkedSource, childLinkedSource)
             );
         }
 
@@ -235,22 +254,44 @@ namespace LinkIt.ConfigBuilders
 
             return LoadLinkNestedLinkedSourceFromModel(
                 getNestedLinkedSourceModels, 
-                LinkTargetFactory.Create(getLinkTarget)
+                getLinkTarget,
+                NullInitChildLinkedSource
+            );
+        }
+
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel>(
+           Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModels,
+           Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
+           Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource
+       )
+           where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() {
+            if (getNestedLinkedSourceModels == null) { throw new ArgumentNullException("getNestedLinkedSourceModels"); }
+            if (getLinkTarget == null) { throw new ArgumentNullException("getLinkTarget"); }
+            if (initChildLinkedSource == null) { throw new ArgumentNullException("initChildLinkedSource"); }
+
+            return LoadLinkNestedLinkedSourceFromModel(
+                getNestedLinkedSourceModels,
+                LinkTargetFactory.Create(getLinkTarget),
+                initChildLinkedSource
             );
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel>(
             Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModel, 
-            ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget
+            ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
+            Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new() 
         {
+            var include = new IncludeNestedLinkedSourceFromModel<TLinkedSource,TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
+                    CreateIdentityFunc<TChildLinkedSourceModel>(),
+                    initChildLinkedSource
+            );
+
             return AddNonPolymorphicLoadLinkExpression(
                 getNestedLinkedSourceModel,
                 linkTarget, 
-                new IncludeNestedLinkedSourceFromModel<TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
-                    CreateIdentityFunc<TChildLinkedSourceModel>()
-                )
+                include
             );
         }
 

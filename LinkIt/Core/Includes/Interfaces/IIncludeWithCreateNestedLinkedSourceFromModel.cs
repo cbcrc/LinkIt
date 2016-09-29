@@ -2,9 +2,15 @@ using LinkIt.ReferenceTrees;
 
 namespace LinkIt.Core.Includes.Interfaces
 {
-    public interface IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink>:IInclude
+    public interface IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource,TAbstractChildLinkedSource, TLink>:IInclude
     {
-        TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(TLink link, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol);
+        TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(
+            TLink link, 
+            LoadedReferenceContext loadedReferenceContext, 
+            TLinkedSource linkedSource,
+            int referenceIndex,
+            LoadLinkProtocol loadLinkProtocol
+        );
 
         void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol);
     }

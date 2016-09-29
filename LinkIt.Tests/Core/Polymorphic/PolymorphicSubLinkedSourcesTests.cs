@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
@@ -24,11 +25,15 @@ namespace LinkIt.Tests.Core.Polymorphic {
                     includes => includes
                         .Include<SubContentWithImageLinkedSource>().AsNestedLinkedSourceFromModel(
                             typeof(SubContentWithImage),
-                            link => (SubContentWithImage)link
+                            link => (SubContentWithImage)link,
+                            (linkedSource, referenceIndex, childLinkedSource) =>
+                                childLinkedSource.Contextualization = linkedSource.Model.Contextualizations[referenceIndex]
                         )
                         .Include<SubContentWithoutReferencesLinkedSource>().AsNestedLinkedSourceFromModel(
                             typeof(SubContentWithoutReferences),
-                            link => (SubContentWithoutReferences)link
+                            link => (SubContentWithoutReferences)link,
+                            (linkedSource, referenceIndex, childLinkedSource) =>
+                                childLinkedSource.Contextualization = linkedSource.Model.Contextualizations[referenceIndex]
                         )
                 );
 
@@ -46,6 +51,12 @@ namespace LinkIt.Tests.Core.Polymorphic {
             var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>().FromModel(
                 new WithPolymorphicSubLinkedSourceContent {
                     Id = "1",
+                    Contextualizations = new[]
+                    {
+                        "first-contextualization",
+                        "middle-contextualization",
+                        "last-contextualization",
+                    }.ToList(),
                     Subs = new List<IPolymorphicModel>
                     {
                         new SubContentWithImage
@@ -53,6 +64,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
                             Id="a",
                             ImageId = "i-a"
                         },
+                        null,
                         new SubContentWithoutReferences
                         {
                             Id="b",
@@ -72,15 +84,18 @@ namespace LinkIt.Tests.Core.Polymorphic {
 
         public class SubContentWithImageLinkedSource : ILinkedSource<SubContentWithImage>, IPolymorphicSource {
             public SubContentWithImage Model { get; set; }
+            public string Contextualization { get; set; }
             public Image Image { get; set; }
         }
 
         public class SubContentWithoutReferencesLinkedSource : ILinkedSource<SubContentWithoutReferences>, IPolymorphicSource{
             public SubContentWithoutReferences Model { get; set; }
+            public string Contextualization { get; set; }
         }
 
         public class WithPolymorphicSubLinkedSourceContent {
             public string Id { get; set; }
+            public List<string> Contextualizations { get; set; }
             public List<IPolymorphicModel> Subs { get; set; }
         }
 

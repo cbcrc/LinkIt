@@ -5,6 +5,7 @@ using LinkIt.ConfigBuilders;
 using LinkIt.Conventions;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 using NUnit.Framework;
 using RC.Testing;
 
@@ -19,7 +20,7 @@ namespace LinkIt.Samples {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             _loadLinkProtocol = loadLinkProtocolBuilder.Build(
                 ()=>new FakeReferenceLoader(),
-                new[] { Assembly.GetExecutingAssembly() },
+                Assembly.GetExecutingAssembly().Yield(),
                 LoadLinkExpressionConvention.Default
             );
         }
