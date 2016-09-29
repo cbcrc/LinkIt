@@ -89,6 +89,11 @@ namespace LinkIt.Tests.Core.Polymorphic {
             );
 
             Assert.That(actual.Contents.Count, Is.EqualTo(2));
+            Assert.That(
+                ((ImageWithContextualizationLinkedSource)actual.Contents[1]).ContentContextualization.Title, 
+                Is.EqualTo("altered image title")
+            );
+
         }
 
         [Test]

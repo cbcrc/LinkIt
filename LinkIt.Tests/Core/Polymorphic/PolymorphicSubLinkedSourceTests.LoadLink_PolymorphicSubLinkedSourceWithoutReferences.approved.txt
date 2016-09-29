@@ -11,6 +11,7 @@
     "model": {
       "type": "pdf",
       "id": "a"
-    }
+    },
+    "contextualization": "From the level below:1"
   }
 }

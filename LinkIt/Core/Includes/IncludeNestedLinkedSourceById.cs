@@ -47,7 +47,9 @@ namespace LinkIt.Core.Includes
             var childLinkedSource = loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource(
                     reference,
-                    loadLinkProtocol, CreateInitChildLinkedSourceAction(linkedSource, referenceIndex));
+                    loadLinkProtocol, 
+                    CreateInitChildLinkedSourceAction(linkedSource, referenceIndex)
+            );
 
             return (TAbstractChildLinkedSource)(object)childLinkedSource;
         }

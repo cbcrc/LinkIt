@@ -1,7 +1,7 @@
 ﻿{
   "node": {
     "referenceType": "LinkIt.Tests.ReferenceTrees.ReferenceTree_ReferenceTests+Model, LinkIt.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-    "linkTargetId": "root"
+    "linkTargetId": "root of LinkIt.Tests.ReferenceTrees.ReferenceTree_ReferenceTests+LinkedSource"
   },
   "children": [
     {

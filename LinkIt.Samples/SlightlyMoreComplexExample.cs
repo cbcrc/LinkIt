@@ -10,9 +10,9 @@ using LinkIt.ConfigBuilders;
 using LinkIt.Conventions;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
+using LinkIt.Shared;
 using NUnit.Framework;
-
+using RC.Testing;
 
 namespace LinkIt.Samples {
     [UseReporter(typeof(DiffReporter))]
@@ -25,7 +25,7 @@ namespace LinkIt.Samples {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             _loadLinkProtocol = loadLinkProtocolBuilder.Build(
                 () => new FakeReferenceLoader(),
-                new[] { Assembly.GetExecutingAssembly() },
+                Assembly.GetExecutingAssembly().Yield(),
                 LoadLinkExpressionConvention.Default
             );
         }

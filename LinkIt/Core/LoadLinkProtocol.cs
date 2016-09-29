@@ -77,7 +77,18 @@ namespace LinkIt.Core {
             _loadingLevelsByRootLinkedSourceType = new Dictionary<Type, List<List<Type>>>();
             foreach (var rootLinkedSourceType in GetAllPossibleRootLinkedSourceTypes()) {
                 var rootReferenceTree = CreateRootReferenceTree(rootLinkedSourceType);
-                var loadingLevels = rootReferenceTree.ParseLoadingLevels();
+
+                List<List<Type>> loadingLevels;
+                try {
+                    loadingLevels = rootReferenceTree.ParseLoadingLevels();
+                }
+                catch (NotSupportedException ex) {
+                    throw new NotSupportedException(
+                        $"Unable to create the load link protocol for {rootLinkedSourceType}. For more details, see inner exception.",
+                        ex
+                    );
+                }
+                
                 _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
             }
         }
@@ -101,7 +112,7 @@ namespace LinkIt.Core {
             var rootLinkedSourceConfig = LinkedSourceConfigs.GetConfigFor(rootLinkedSourceType);
             var rootReferenceTree = new ReferenceTree(
                 rootLinkedSourceConfig.LinkedSourceModelType,
-                "root",
+                $"root of {rootLinkedSourceType}",
                 null
             );
 
@@ -111,7 +122,7 @@ namespace LinkIt.Core {
             catch (NotSupportedException ex) {
                 throw new NotSupportedException(
                     string.Format(
-                        "Unable to create root reference tree for {0}. For more details, see inner exception.",
+                        "Unable to create the load link protocol for {0}. For more details, see inner exception.",
                         rootLinkedSourceConfig.LinkedSourceType
                     ),
                     ex
@@ -122,5 +133,9 @@ namespace LinkIt.Core {
         }
 
         #endregion
+
+        public LoadLinkProtocolStatistics Statistics{
+            get { return new LoadLinkProtocolStatistics(_loadingLevelsByRootLinkedSourceType); }
+        }
     }
 }

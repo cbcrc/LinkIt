@@ -26,6 +26,10 @@ namespace LinkIt.Core.Interfaces
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource = null
         );
 
-        IInclude CreateIncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget);
+        IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, 
+            ILinkTarget linkTarget,
+            Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource = null
+        );
     }
 }

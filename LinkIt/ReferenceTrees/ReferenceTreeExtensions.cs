@@ -5,50 +5,29 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LinkIt.ReferenceTrees {
     public static class ReferenceTreeExtensions {
-        public static List<List<Type>> ParseLoadingLevels(this ReferenceTree rootReferenceTree) {
-            var loadingLevelByReferenceType = new Dictionary<Type, int>();
-            ParseTree(rootReferenceTree, 0, loadingLevelByReferenceType);
-
-            return ToReferenceTypeToBeLoadedForEachLoadingLevel(loadingLevelByReferenceType);
-        }
-
-        private static void ParseTree(ReferenceTree referenceTree, int loadingLevel, Dictionary<Type, int> loadingLevelByReferenceType)
+        public static List<List<Type>> ParseLoadingLevels(this ReferenceTree rootReferenceTree)
         {
-            ParseNode(referenceTree.Node, loadingLevelByReferenceType, loadingLevel);
+            var referenceDependencyDag = CreateReferenceDependencyDag(rootReferenceTree);
+            return referenceDependencyDag.ReferenceTypeToBeLoadedForEachLoadingLevel();
+        }
 
-            foreach (var child in referenceTree.Children) {
-                ParseTree(
-                    child, 
-                    loadingLevel+1,
-                    loadingLevelByReferenceType
+        private static ReferenceDependencyDag CreateReferenceDependencyDag(ReferenceTree rootReferenceTree) {
+            var referenceDependencyDag = new ReferenceDependencyDag(rootReferenceTree.Node.ReferenceType);
+            AddDependencyFromChildrenToParent(referenceDependencyDag, rootReferenceTree);
+            return referenceDependencyDag;
+        }
+
+        private static void AddDependencyFromChildrenToParent(ReferenceDependencyDag referenceDependencyDag, ReferenceTree parent) {
+            foreach (var child in parent.Children) {
+                referenceDependencyDag.AddDependency(
+                    from: child.Node.ReferenceType,
+                    to: parent.Node.ReferenceType
                 );
+                AddDependencyFromChildrenToParent(referenceDependencyDag, child);
             }
-        }
-
-        private static void ParseNode(ReferenceToLoad node, Dictionary<Type, int> loadingLevelByReferenceType, int loadingLevel){
-            var currentValue = GetLoadingLevelCurrentValue(node.ReferenceType, loadingLevelByReferenceType);
-            var newValue = Math.Max(currentValue, loadingLevel);
-            loadingLevelByReferenceType[node.ReferenceType] = newValue;
-        }
-
-        private static int GetLoadingLevelCurrentValue(Type referenceType, Dictionary<Type, int> loadingLevelByReferenceType) {
-            if (!loadingLevelByReferenceType.ContainsKey(referenceType)) { return -1; }
-            return loadingLevelByReferenceType[referenceType];
-        }
-
-        private static List<List<Type>> ToReferenceTypeToBeLoadedForEachLoadingLevel(Dictionary<Type, int> loadingLevelByReferenceType) {
-            return loadingLevelByReferenceType
-                .GroupBy(
-                    keySelector: p => p.Value, //loadingLevel
-                    elementSelector: p => p.Key //referenceType
-                )
-                .OrderBy(group=>group.Key)
-                .Select(group=>group.ToList())
-                .ToList();
         }
     }
 }

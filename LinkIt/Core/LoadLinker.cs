@@ -26,13 +26,21 @@ namespace LinkIt.Core
             _loadLinkProtocol = loadLinkProtocol;
         }
 
-        public TRootLinkedSource FromModel<TRootLinkedSourceModel>(TRootLinkedSourceModel model)
+        public TRootLinkedSource FromModel<TRootLinkedSourceModel>(
+            TRootLinkedSourceModel model,
+            Action<TRootLinkedSource> initRootLinkedSource)
         {
-            return FromModels(new List<TRootLinkedSourceModel>{model})
-                .SingleOrDefault();
+            return FromModels(
+                new List<TRootLinkedSourceModel>{model},
+                ToInitRootLinkedSources(initRootLinkedSource)
+            )
+            .SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(List<TRootLinkedSourceModel> models){
+        public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(
+            List<TRootLinkedSourceModel> models,
+            Action<int, TRootLinkedSource> initRootLinkedSources)
+        {
             if (models == null) { throw new ArgumentNullException("models"); }
 
             using (_referenceLoader){
@@ -42,7 +50,7 @@ namespace LinkIt.Core
 
                 var linkedSources = models
                     .Cast<TExpectedRootLinkedSourceModel>()
-                    .Select(CreateLinkedSource)
+                    .Select((model,index)=>CreateLinkedSource(model, index, initRootLinkedSources))
                     .ToList();
 
                 LoadLinkRootLinkedSource();
@@ -70,25 +78,56 @@ namespace LinkIt.Core
             }
         }
 
-        private TRootLinkedSource CreateLinkedSource(TExpectedRootLinkedSourceModel model)
+        private TRootLinkedSource CreateLinkedSource(TExpectedRootLinkedSourceModel model, int index, Action<int, TRootLinkedSource> initRootLinkedSources)
         {
             return _loadedReferenceContext
-                .CreatePartiallyBuiltLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(model, _loadLinkProtocol, null);
-        }
- 
-        public TRootLinkedSource ById<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId)
-        {
-            return ByIds(new List<TRootLinkedSourceModelId>{modelId})
-                .SingleOrDefault();
+                .CreatePartiallyBuiltLinkedSource<TRootLinkedSource, TExpectedRootLinkedSourceModel>(
+                    model, 
+                    _loadLinkProtocol, 
+                    CreateInitChildLinkedSourceAction(
+                        initRootLinkedSources,
+                        index
+                    )
+                );
         }
 
-        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds)
+        private Action<TRootLinkedSource> CreateInitChildLinkedSourceAction(Action<int, TRootLinkedSource> initRootLinkedSources, int index) {
+            if (initRootLinkedSources == null) { return null; }
+
+            return childLinkedSource => initRootLinkedSources(index, childLinkedSource);
+        }
+
+
+        public TRootLinkedSource ById<TRootLinkedSourceModelId>(
+            TRootLinkedSourceModelId modelId,
+            Action<TRootLinkedSource> initRootLinkedSource)
+        {
+            return ByIds(
+                new List<TRootLinkedSourceModelId>{modelId},
+                ToInitRootLinkedSources(initRootLinkedSource)
+            )
+            .SingleOrDefault();
+        }
+
+        private static Action<int, TRootLinkedSource> ToInitRootLinkedSources(Action<TRootLinkedSource> initRootLinkedSource)
+        {
+            if (initRootLinkedSource == null) { return null; }
+
+            return (referenceIndex,rootLinkedSource)=>initRootLinkedSource(rootLinkedSource);
+        }
+
+        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(
+            List<TRootLinkedSourceModelId> modelIds,
+            Action<int, TRootLinkedSource> initRootLinkedSources)
         {
             if (modelIds == null) { throw new ArgumentNullException("modelIds"); }
 
             using (_referenceLoader){
                 var models = LoadRootLinkedSourceModel(modelIds.ToList());
-                return FromModels(models);
+                return FromModels(
+                    models,
+                    initRootLinkedSources
+                );
             }
         }
 

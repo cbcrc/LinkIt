@@ -28,7 +28,9 @@ namespace LinkIt.Tests.Core.Polymorphic {
                     includes => includes
                         .Include<PdfReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "pdf",
-                            link=>link
+                            link=>link,
+                            (linkedSource, referenceIndex, childLinkedSource) =>
+                                childLinkedSource.Contextualization = "From the level below:"+linkedSource.Model.Id
                         )
                         .Include<WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "web-page",
@@ -89,6 +91,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
 
         public class PdfReferenceLinkedSource : ILinkedSource<PolymorphicReference> {
             public PolymorphicReference Model { get; set; }
+            public string Contextualization { get; set; }
         }
 
         public class Model{

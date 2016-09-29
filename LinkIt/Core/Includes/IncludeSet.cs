@@ -31,8 +31,8 @@ namespace LinkIt.Core.Includes
             return include;
         }
 
-        public IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink> GetIncludeWithCreateNestedLinkedSourceFromModel(TLink link) {
-            return GetInclude<IIncludeWithCreateNestedLinkedSourceFromModel<TAbstractChildLinkedSource,TLink>>(link);
+        public IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource,TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceFromModel(TLink link) {
+            return GetInclude<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource,TAbstractChildLinkedSource, TLink>>(link);
         }
 
         public IIncludeWithAddLookupId<TLink> GetIncludeWithAddLookupId(TLink linkForReferenceType) {

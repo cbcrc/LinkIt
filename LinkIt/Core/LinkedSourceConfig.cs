@@ -47,13 +47,17 @@ namespace LinkIt.Core
             );
         }
 
-        public IInclude CreateIncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, ILinkTarget linkTarget)
+        public IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, 
+            ILinkTarget linkTarget,
+            Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource)
         {
             EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
             AssumeClassIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
 
-            return new IncludeNestedLinkedSourceFromModel<TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
-                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel)
+            return new IncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
+                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel),
+                initChildLinkedSource
             );
         }
 
