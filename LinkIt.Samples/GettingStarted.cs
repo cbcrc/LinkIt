@@ -11,8 +11,8 @@ using LinkIt.Conventions;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.PublicApi;
 using LinkIt.Shared;
+using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
-using RC.Testing;
 
 namespace LinkIt.Samples {
     [UseReporter(typeof(DiffReporter))]

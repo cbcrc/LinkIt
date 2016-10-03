@@ -74,6 +74,7 @@
     <Compile Include="Core\LoadLinkExpressionOverridingTests.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicList_WithDependenciesBetweenItemsTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_SideEffectBetweenNestedLinkedSourceTests.cs" />
+    <Compile Include="TestHelpers\ApprovalsExt.cs" />
     <Compile Include="TestHelpers\MediaLinkedSource.cs" />
     <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSource_InvalidConfigTests.cs" />
     <Compile Include="ReferenceTrees\ReferenceTree_PolymorphicTests.cs" />
