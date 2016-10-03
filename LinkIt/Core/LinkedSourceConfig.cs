@@ -15,7 +15,7 @@ using LinkIt.Shared;
 namespace LinkIt.Core
 {
     //See IGenericLinkedSourceConfig and ILinkedSourceConfig
-    public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource> 
+    public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource>
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
     {
         public LinkedSourceConfig(){
@@ -27,8 +27,8 @@ namespace LinkIt.Core
         public Type LinkedSourceModelType { get; set; }
 
         public ILoadLinker<TLinkedSource> CreateLoadLinker(
-            IReferenceLoader referenceLoader, 
-            List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel, 
+            IReferenceLoader referenceLoader,
+            List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel,
             LoadLinkProtocol loadLinkProtocol)
         {
             return new LoadLinker<TLinkedSource, TLinkedSourceModel>(referenceLoader, referenceTypeToBeLoadedForEachLoadingLevel, loadLinkProtocol);
@@ -47,10 +47,36 @@ namespace LinkIt.Core
             );
         }
 
+        public IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
+            Func<TLink, TId> getLookupId,
+            Action<TLink, TLinkedSource> initChildLinkedSource)
+        {
+            AssumeClassIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
+
+            return new IncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel, TId>(
+                getLookupId,
+                initChildLinkedSource
+            );
+        }
+
         public IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, 
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
             ILinkTarget linkTarget,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource)
+        {
+            EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
+            AssumeClassIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
+
+            return new IncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
+                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel),
+                initChildLinkedSource
+            );
+        }
+
+        public IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            ILinkTarget linkTarget,
+            Action<TLink, TLinkedSource> initChildLinkedSource)
         {
             EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
             AssumeClassIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();

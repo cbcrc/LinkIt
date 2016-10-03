@@ -26,10 +26,21 @@ namespace LinkIt.Core.Interfaces
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource = null
         );
 
+        IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
+            Func<TLink, TId> getLookupId,
+            Action<TLink, TLinkedSource> initChildLinkedSource
+        );
+
         IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel, 
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
             ILinkTarget linkTarget,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource = null
+        );
+
+        IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
+            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            ILinkTarget linkTarget,
+            Action<TLink, TLinkedSource> initChildLinkedSource
         );
     }
 }

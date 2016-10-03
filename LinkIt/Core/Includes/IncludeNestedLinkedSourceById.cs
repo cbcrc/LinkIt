@@ -14,13 +14,14 @@ namespace LinkIt.Core.Includes
     //responsible for loading and linking the link target for a specific discriminant
     //responsible for creating the reference tree for a specific discriminant
     public class IncludeNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel, TId> :
-        IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>, 
-        IIncludeWithAddLookupId<TLink>, 
-        IIncludeWithChildLinkedSource 
+        IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>,
+        IIncludeWithAddLookupId<TLink>,
+        IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TId> _getLookupId;
-        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSource;
+        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceWithParentAndReferenceIndex;
+        private readonly Action<TLink, TChildLinkedSource> _initChildLinkedSourceWithLink;
 
         public IncludeNestedLinkedSourceById(
             Func<TLink, TId> getLookupId,
@@ -28,7 +29,18 @@ namespace LinkIt.Core.Includes
         )
         {
             _getLookupId = getLookupId;
-            _initChildLinkedSource = initChildLinkedSource;
+            _initChildLinkedSourceWithParentAndReferenceIndex = initChildLinkedSource;
+            ReferenceType = typeof(TChildLinkedSourceModel);
+            ChildLinkedSourceType = typeof(TChildLinkedSource);
+        }
+
+        public IncludeNestedLinkedSourceById(
+            Func<TLink, TId> getLookupId,
+            Action<TLink, TChildLinkedSource> initChildLinkedSource
+        )
+        {
+            _getLookupId = getLookupId;
+            _initChildLinkedSourceWithLink = initChildLinkedSource;
             ReferenceType = typeof(TChildLinkedSourceModel);
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
@@ -47,17 +59,25 @@ namespace LinkIt.Core.Includes
             var childLinkedSource = loadedReferenceContext
                 .CreatePartiallyBuiltLinkedSource(
                     reference,
-                    loadLinkProtocol, 
-                    CreateInitChildLinkedSourceAction(linkedSource, referenceIndex)
+                    loadLinkProtocol,
+                    CreateInitChildLinkedSourceAction(linkedSource, referenceIndex, link)
             );
 
             return (TAbstractChildLinkedSource)(object)childLinkedSource;
         }
 
-        private Action<TChildLinkedSource> CreateInitChildLinkedSourceAction(TLinkedSource linkedSource, int referenceIndex) {
-            if (_initChildLinkedSource == null) { return null; }
+        private Action<TChildLinkedSource> CreateInitChildLinkedSourceAction(TLinkedSource linkedSource, int referenceIndex, TLink link) {
+            if (_initChildLinkedSourceWithParentAndReferenceIndex != null)
+            {
+                return childLinkedSource => _initChildLinkedSourceWithParentAndReferenceIndex(linkedSource, referenceIndex, childLinkedSource);
+            }
 
-            return childLinkedSource => _initChildLinkedSource(linkedSource, referenceIndex, childLinkedSource);
+            if (_initChildLinkedSourceWithLink != null)
+            {
+                return childLinkedSource => _initChildLinkedSourceWithLink(link, childLinkedSource);
+            }
+
+            return null;
         }
 
         public Type ChildLinkedSourceType { get; private set; }
