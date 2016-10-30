@@ -1,9 +1,9 @@
 Known Limitations
 ---------------
-- Does not support polymorphism at root level
-- Queries are only supported at root level, all other objects have to be fetched by ID
 - Does not support recursive loading
 - Nested relation between linked source cannot be resolved by database-side join
+- Does not support polymorphism at root level
+- Queries are only supported at root level, all other objects have to be fetched by ID
 
 If recursive loading or database-side joins are required, an object that represents the result of those operations must be created and loaded by the reference loader. Then, this object can be loaded and linked by LinkIt like any other object.
 
