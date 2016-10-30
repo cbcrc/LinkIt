@@ -39,41 +39,7 @@ var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(
 );
 ```
 
-However, prior to being able to use `_loadLinkProtocol.LoadLink`, you need to define a load link protocol and a reference loader.
-
-### LoadLinkProtocol
-A load link protocol has to be defined in order to load and link a linked source. Here is the protocol configuration for `MediaLinkedSource`.
-```csharp
-public class MediaLinkedSourceConfig : ILoadLinkProtocolConfig {
-    public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
-        loadLinkProtocolBuilder.For<MediaLinkedSource>()
-            .LoadLinkReferenceById(
-                linkedSource => linkedSource.Model.TagIds,
-                linkedSource => linkedSource.Tags
-            );
-    }
-}
-```
-
-However, we favor convention over configuration. 
-
-By default, the load link protocol is defined by convention
-- when a model property name with the suffix `Id` or `Ids` matches a link target name
-- when a model property name is the same as a link target name
-
-Since the model property `Model.TagIds` match the link target `Tags`, the `MediaLinkedSourceConfig` defined above is unnecessary and can be omitted.
-
-When invoking `loadLinkProtocolBuilder.Build`, all the assemblies passed by argument will be scanned in order to apply the conventions and the configuration classes implementing `ILoadLinkProtocolConfig`. If a convention conflicts with a configuration explicitly defined in a `ILoadLinkProtocolConfig`, the configuration defined in a `ILoadLinkProtocolConfig` wins.
-
-```csharp
-var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-_loadLinkProtocol = loadLinkProtocolBuilder.Build(
-    ()=>new FakeReferenceLoader(),
-    new[] { Assembly.GetExecutingAssembly() },
-    LoadLinkExpressionConvention.Default
-);
-```
-To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `loadLinkProtocolBuilder.Build`. 
+However, prior to being able to use `_loadLinkProtocol.LoadLink`, you need to define a reference loader and a load link protocol.
 
 ### ReferenceLoader
 LinkIt can load objects spread across many data sources (web services, SQL databases, NoSQL databases, in-memory caches, file systems, Git repositories, etc.) and link them together as long as those objects can be fetched by IDs. LinkIt is not responsible for defining how the objects are loaded, you must define this process for each possible reference type in a reference loader.
@@ -145,6 +111,7 @@ public class FakeReferenceLoader:IReferenceLoader
 }
 ```
 
+### ReferenceLoader and the Select N + 1 Problem
 LinkIt will always provide all lookup IDs for a reference type in one batch; avoiding the [select N + 1 problem](http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue). 
 
 For example, if we load link the `MediaLinkedSource` for IDs `"one"` and `"two"`, and the state of those media is  
@@ -166,6 +133,40 @@ For example, if we load link the `MediaLinkedSource` for IDs `"one"` and `"two"`
 the lookup IDs for `Tag` would then be `1,2,3`. 
 
 Note that lookup IDs are always provided without duplicates and without null IDs. Moreover, all the lookup IDs for the same reference type will always be loaded in one batch regardless of the complexity of the linked sources.
+
+### LoadLinkProtocol
+A load link protocol has to be defined in order to load and link a linked source. Here is the protocol configuration for `MediaLinkedSource`.
+```csharp
+public class MediaLinkedSourceConfig : ILoadLinkProtocolConfig {
+    public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder) {
+        loadLinkProtocolBuilder.For<MediaLinkedSource>()
+            .LoadLinkReferenceById(
+                linkedSource => linkedSource.Model.TagIds,
+                linkedSource => linkedSource.Tags
+            );
+    }
+}
+```
+
+However, we favor convention over configuration. 
+
+By default, the load link protocol is defined by convention
+- when a model property name with the suffix `Id` or `Ids` matches a link target name
+- when a model property name is the same as a link target name
+
+Since the model property `Model.TagIds` match the link target `Tags`, the `MediaLinkedSourceConfig` defined above is unnecessary and can be omitted.
+
+When invoking `loadLinkProtocolBuilder.Build`, all the assemblies passed by argument will be scanned in order to apply the conventions and the configuration classes implementing `ILoadLinkProtocolConfig`. If a convention conflicts with a configuration explicitly defined in a `ILoadLinkProtocolConfig`, the configuration defined in a `ILoadLinkProtocolConfig` wins.
+
+```csharp
+var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+_loadLinkProtocol = loadLinkProtocolBuilder.Build(
+    ()=>new FakeReferenceLoader(),
+    new[] { Assembly.GetExecutingAssembly() },
+    LoadLinkExpressionConvention.Default
+);
+```
+To create your own conventions, please see how the [existing conventions are built](LinkIt.Conventions/DefaultConventions). Then, simply pass your convention by argument when calling `loadLinkProtocolBuilder.Build`. 
 
 ### Read more
 - [Why Should I Use LinkIt?](why-without-how.md)
