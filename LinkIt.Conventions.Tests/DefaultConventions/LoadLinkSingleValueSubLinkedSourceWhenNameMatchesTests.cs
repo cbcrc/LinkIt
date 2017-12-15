@@ -5,47 +5,56 @@
 
 using System;
 using System.Collections.Generic;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
-
+using LinkIt.TestHelpers;
+using Xunit;
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
 {
-    public class LoadLinkSingleValueSubLinkedSourceWhenNameMatchesTests {
+    public class LoadLinkSingleValueSubLinkedSourceWhenNameMatchesTests
+    {
         [Fact]
-        public void GetLinkedSourceTypes(){
+        public void GetLinkedSourceTypes()
+        {
+            var model = new Model
+            {
+                Id = "One",
+                Media = new Media
+                {
+                    Id = 1
+                }
+            };
+            var sut = BuildLoadLinkProtocol();
+
+            var actual = sut.LoadLink<LinkedSource>().FromModel(model);
+
+            Assert.Same(model, actual.Model);
+            Assert.Equal(model.Media.Id, actual.Media.Model.Id);
+        }
+
+        private static ILoadLinkProtocol BuildLoadLinkProtocol()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            
+
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
                 new List<ILoadLinkExpressionConvention> { new LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches() }
             );
 
-            var sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
-
-            var actual = sut.LoadLink<LinkedSource>().FromModel(
-                new Model{
-                    Id="One",
-                    Media = new Media{
-                        Id = 1
-                    }
-                }
-            );
-
-            ApprovalsExt.VerifyPublicProperties(actual);
+            return loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public MediaLinkedSource Media { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class Model{
+        public class Model
+        {
             public string Id { get; set; }
             public Media Media { get; set; }
         }

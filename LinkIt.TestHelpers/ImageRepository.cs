@@ -6,18 +6,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LinkIt.Tests.TestHelpers
+namespace LinkIt.TestHelpers
 {
-    public class PersonRepository
+    public class ImageRepository
     {
-        public List<Person> GetByIds(List<string> ids)
+        public List<Image> GetByIds(List<string> ids)
         {
             return ids
                 .Where(id => id != "cannot-be-resolved")
-                .Select(id => new Person {
+                .Select(id => new Image{
                     Id = id, 
-                    Name = "name-" + id,
-                    SummaryImageId = "person-img-" + id
+                    Alt = "alt-" + id
                 })
                 .ToList();
         }

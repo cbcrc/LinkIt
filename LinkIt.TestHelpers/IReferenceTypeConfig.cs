@@ -6,7 +6,7 @@
 using System;
 using LinkIt.PublicApi;
 
-namespace LinkIt.Tests.TestHelpers
+namespace LinkIt.TestHelpers
 {
     public interface IReferenceTypeConfig
     {

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LinkIt.TestHelpers\LinkIt.TestHelpers.csproj" />
     <ProjectReference Include="..\LinkIt\LinkIt.csproj" />
   </ItemGroup>
 

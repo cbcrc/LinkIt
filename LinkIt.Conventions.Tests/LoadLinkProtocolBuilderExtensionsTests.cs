@@ -7,117 +7,120 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
 namespace LinkIt.Conventions.Tests
 {
-    public class LoadLinkProtocolBuilderExtensionsTests {
+    public class LoadLinkProtocolBuilderExtensionsTests
+    {
         [Fact]
-        public void ApplyConventions_ShouldMatchExpectedLinkTargets(){
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            var conventionStub = new ConventionStub();
-            
-            loadLinkProtocolBuilder.ApplyConventions(
-                new List<Type> { typeof(LinkedSourceWithImage), typeof(LinkedSourceWithPerson) },
-                new List<ILoadLinkExpressionConvention> { conventionStub }
-            );
-
-            Assert.That(
-                conventionStub.LinkTargetPropertyNamesWhereConventionApplies,
-                Is.EquivalentTo(new[] { "Image", "Person" })
-            );
-        }
-
-        [Fact]
-        public void ApplyConventions_ShouldFilterModelOutWhenMatchingLinkTarget() {
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            var conventionStub = new ConventionStub();
-
-            loadLinkProtocolBuilder.ApplyConventions(
-                new List<Type> { typeof(LinkedSourceWithImage)},
-                new List<ILoadLinkExpressionConvention> { conventionStub }
-            );
-
-            Assert.That(
-                conventionStub.DidAttemptToMatchModelAsLinkTarget,
-                Is.False
-            );
-        }
-
-        [Fact]
-        public void ApplyConventions_DuplicateConventions_ShouldThrow() {
+        public void ApplyConventions_DuplicateConventions_ShouldThrow()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
-            TestDelegate act = () => loadLinkProtocolBuilder.ApplyConventions(
+            Action act = () => loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSourceWithImage) },
-                new List<ILoadLinkExpressionConvention>{
+                new List<ILoadLinkExpressionConvention>
+                {
                     new ConventionStub("same-name"),
                     new ConventionStub("same-name")
                 }
             );
 
-            Assert.That(act, Throws.ArgumentException
-                .With.Message.ContainsSubstring("with the same name")
-                .With.Message.ContainsSubstring("same-name")
-            );
+            var exception = Assert.Throws<ArgumentException>(act);
+            Assert.Contains("with the same name", exception.Message);
+            Assert.Contains("same-name", exception.Message);
         }
 
         [Fact]
-        public void ApplyConventions_ParameterizableConventions_ShouldNotThrow() {
+        public void ApplyConventions_ParameterizableConventions_ShouldNotThrow()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSourceWithImage) },
-                new List<ILoadLinkExpressionConvention>{
+                new List<ILoadLinkExpressionConvention>
+                {
                     new ConventionStub("same-name"),
                     new ConventionStub("different-name")
                 }
             );
         }
 
+        [Fact]
+        public void ApplyConventions_ShouldFilterModelOutWhenMatchingLinkTarget()
+        {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            var conventionStub = new ConventionStub();
 
-        public class LinkedSourceWithImage : ILinkedSource<Model>{
-            public Model Model { get; set; }
+            loadLinkProtocolBuilder.ApplyConventions(
+                new List<Type> { typeof(LinkedSourceWithImage) },
+                new List<ILoadLinkExpressionConvention> { conventionStub }
+            );
+
+            Assert.False(conventionStub.DidAttemptToMatchModelAsLinkTarget);
+        }
+
+        [Fact]
+        public void ApplyConventions_ShouldMatchExpectedLinkTargets()
+        {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+            var conventionStub = new ConventionStub();
+
+            loadLinkProtocolBuilder.ApplyConventions(
+                new List<Type> { typeof(LinkedSourceWithImage), typeof(LinkedSourceWithPerson) },
+                new List<ILoadLinkExpressionConvention> { conventionStub }
+            );
+
+            Assert.Equal(
+                new[] { "Image", "Person" },
+                conventionStub.LinkTargetPropertyNamesWhereConventionApplies);
+        }
+
+        public class LinkedSourceWithImage : ILinkedSource<Model>
+        {
             public Image NotImage { get; set; }
             public Image Image { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class LinkedSourceWithPerson : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSourceWithPerson : ILinkedSource<Model>
+        {
             public Person Person { get; set; }
             public Person NotPerson { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class Model{
+        public class Model
+        {
             public string Id { get; set; }
             public string ImageId { get; set; }
             public string PersonId { get; set; }
         }
 
-        public class ConventionStub:ISingleValueConvention
+        public class ConventionStub : ISingleValueConvention
         {
-            public ConventionStub(string name=null)
-            {
-                Name = name??"Convention stub";
-            }
-
-            public string Name { get; private set; }
-
             public readonly List<string> LinkTargetPropertyNamesWhereConventionApplies = new List<string>();
 
-            public string Id { get { return "Stub"; } }
-            
+            public ConventionStub(string name = null)
+            {
+                Name = name ?? "Convention stub";
+            }
+
+            public string Id => "Stub";
+
+            public bool DidAttemptToMatchModelAsLinkTarget { get; private set; }
+
+            public string Name { get; }
+
 
             public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
-                if (linkTargetProperty.Name == "Model"){
-                    DidAttemptToMatchModelAsLinkTarget = true;
-                }
+                if (linkTargetProperty.Name == "Model") DidAttemptToMatchModelAsLinkTarget = true;
 
                 var matchingName = linkTargetProperty.Name + "Id";
                 return matchingName == linkedSourceModelProperty.Name;
@@ -127,8 +130,6 @@ namespace LinkIt.Conventions.Tests
             {
                 LinkTargetPropertyNamesWhereConventionApplies.Add(linkTargetProperty.Name);
             }
-
-            public bool DidAttemptToMatchModelAsLinkTarget { get; private set; }
         }
     }
 }

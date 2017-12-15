@@ -7,63 +7,54 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
 namespace LinkIt.Conventions.Tests
 {
-    public class LoadLinkProtocolBuilderExtensions_ConventionErrorHandlingTests {
+    public class LoadLinkProtocolBuilderExtensions_ConventionErrorHandlingTests
+    {
         [Fact]
-        public void ApplyConventions_DoesApplyFailed_ShouldThrow(){
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            
-            TestDelegate act = () => loadLinkProtocolBuilder.ApplyConventions(
-                new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new DoesApplyFailedConvention() }
-            );
-
-            Assert.That(
-                act,
-                Throws.Exception
-                    .With.Message.ContainsSubstring("Does apply failed convention").And
-                    .With.Message.ContainsSubstring("LinkedSource/Person").And
-                    .With.Message.ContainsSubstring("PersonId").And
-                    .With.InnerException
-                        .With.Message.ContainsSubstring("does apply failed")
-
-            );
-        }
-
-        [Fact]
-        public void ApplyConventions_ApplyFailed_ShouldThrow() {
+        public void ApplyConventions_ApplyFailed_ShouldThrow()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
-            TestDelegate act = () => loadLinkProtocolBuilder.ApplyConventions(
+            Action act = () => loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
                 new List<ILoadLinkExpressionConvention> { new ApplyFailedConvention() }
             );
 
-            Assert.That(
-                act,
-                Throws.Exception
-                    .With.Message.ContainsSubstring("ApplyFailedConvention").And
-                    .With.Message.ContainsSubstring("LinkedSource/Person").And
-                    .With.Message.ContainsSubstring("PersonId").And
-                    .With.InnerException
-                        .With.Message.ContainsSubstring("apply failed")
+            var exception = Assert.ThrowsAny<Exception>(act);
+            Assert.Contains("ApplyFailedConvention", exception.Message);
+            Assert.Contains("LinkedSource/Person", exception.Message);
+            Assert.Contains("PersonId", exception.Message);
+            Assert.Contains("apply failed", exception.InnerException.Message);
+        }
+
+        [Fact]
+        public void ApplyConventions_DoesApplyFailed_ShouldThrow()
+        {
+            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
+
+            Action act = () => loadLinkProtocolBuilder.ApplyConventions(
+                new List<Type> { typeof(LinkedSource) },
+                new List<ILoadLinkExpressionConvention> { new DoesApplyFailedConvention() }
             );
+
+            var exception = Assert.ThrowsAny<Exception>(act);
+            Assert.Contains("Does apply failed convention", exception.Message);
+            Assert.Contains("LinkedSource/Person", exception.Message);
+            Assert.Contains("PersonId", exception.Message);
+            Assert.Contains("does apply failed", exception.InnerException.Message);
         }
 
 
-        public class DoesApplyFailedConvention: ISingleValueConvention
+        public class DoesApplyFailedConvention : ISingleValueConvention
         {
-            public string Name{
-                get { return "Does apply failed convention"; } 
-            }
+            public string Name => "Does apply failed convention";
 
             public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
@@ -71,13 +62,13 @@ namespace LinkIt.Conventions.Tests
             }
 
             public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
-            {}
+            {
+            }
         }
 
-        public class ApplyFailedConvention: ISingleValueConvention {
-            public string Name {
-                get { return "ApplyFailedConvention"; }
-            }
+        public class ApplyFailedConvention : ISingleValueConvention
+        {
+            public string Name => "ApplyFailedConvention";
 
             public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
@@ -90,12 +81,14 @@ namespace LinkIt.Conventions.Tests
             }
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public Person Person { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class Model {
+        public class Model
+        {
             public string PersonId { get; set; }
         }
     }
