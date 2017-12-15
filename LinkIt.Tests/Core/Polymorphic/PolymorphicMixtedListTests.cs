@@ -4,19 +4,19 @@
 #endregion
 
 using System.Collections.Generic;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core.Polymorphic {
-    public class PolymorphicMixtedListTests {
+namespace LinkIt.Tests.Core.Polymorphic
+{
+    public class PolymorphicMixtedListTests
+    {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public PolymorphicMixtedListTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
             loadLinkProtocolBuilder.For<LinkedSource>()
@@ -24,10 +24,9 @@ namespace LinkIt.Tests.Core.Polymorphic {
                     linkedSource => linkedSource.Model.TargetReference,
                     linkedSource => linkedSource.Target,
                     link => link.GetType(),
-                    includes => includes
-                        .Include<Person>().AsReferenceById(
+                    includes => includes.Include<Person>().AsReferenceById(
                             typeof(int),
-                            link=>link.ToString()
+                            link => link.ToString()
                         )
                         .Include<PersonLinkedSource>().AsNestedLinkedSourceById(
                             typeof(string),
@@ -35,44 +34,66 @@ namespace LinkIt.Tests.Core.Polymorphic {
                         )
                         .Include<PersonLinkedSource>().AsNestedLinkedSourceFromModel(
                             typeof(Person),
-                            link => (Person)link
+                            link => (Person) link
                         )
                 );
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                );
-            
+                    linkedSource => linkedSource.SummaryImage);
+
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Fact]
-        public void LoadLink_PolymorphicMixteList() {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
-                new Model {
-                    Id = "1",
-                    TargetReference = new List<object>{
-                        1,
-                        "nested",
-                        new Person{
-                            Id = "as-sub-linked-source",
-                            Name = "The Name",
-                            SummaryImageId = "the-id"
-                        }
+        public void LoadLink_PolymorphicMixedList()
+        {
+            var model = new Model
+            {
+                Id = "1",
+                TargetReference = new List<object>
+                {
+                    1,
+                    "nested",
+                    new Person
+                    {
+                        Id = "as-sub-linked-source",
+                        Name = "The Name",
+                        SummaryImageId = "the-id"
                     }
                 }
+            };
+            var actual = _sut.LoadLink<LinkedSource>().FromModel(model);
+
+            Assert.Collection(
+                actual.Target,
+                target =>
+                {
+                    var person = Assert.IsType<Person>(target);
+                    Assert.Equal("1", person.Id);
+                },
+                target =>
+                {
+                    var personLinkedSource = Assert.IsType<PersonLinkedSource>(target);
+                    Assert.Equal("nested", personLinkedSource.Model.Id);
+                },
+                target =>
+                {
+                    var personLinkedSource = Assert.IsType<PersonLinkedSource>(target);
+                    Assert.Same(((Person)model.TargetReference[2]), personLinkedSource.Model);
+                    Assert.Equal("the-id", personLinkedSource.SummaryImage.Id);
+                }
             );
-
-            ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public List<object> Target { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class Model{
+        public class Model
+        {
             public string Id { get; set; }
             public List<object> TargetReference { get; set; }
         }

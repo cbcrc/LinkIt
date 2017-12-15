@@ -5,7 +5,7 @@ using LinkIt.Shared;
 
 namespace LinkIt.ReferenceTrees
 {
-    //I wanted to reuse some open source graph library. 
+    //I wanted to reuse some open source graph library.
     //QuickGraph is the only one I found that could do the job,
     //but it seems like I cannot release my code under MIT licence
     //if I use QuickGraph which us MS public license
@@ -78,8 +78,7 @@ namespace LinkIt.ReferenceTrees
                 );
 
                 throw new NotSupportedException(
-                    $@"
-Recursive load link is not supported. 
+                    $@"Recursive load link is not supported. 
 Cannot infer which reference type should be loaded first 
 {ReferenceType} 
 or 

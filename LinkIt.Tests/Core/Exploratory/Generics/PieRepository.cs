@@ -4,6 +4,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LinkIt.Tests.Core.Exploratory.Generics
 {
@@ -11,8 +12,7 @@ namespace LinkIt.Tests.Core.Exploratory.Generics
     {
         public List<Pie<T>> GetByPieContentIds(List<string> ids)
         {
-            return ids
-                .Select(id => new Pie<T>(id))
+            return ids.Select(id => new Pie<T>(id))
                 .ToList();
         }
     }

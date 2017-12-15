@@ -3,12 +3,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
-
+using LinkIt.TestHelpers;
+using Xunit;
 
 namespace LinkIt.Tests.Core
 {
@@ -16,8 +14,8 @@ namespace LinkIt.Tests.Core
     {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public OptionalNestedLinkedSourceTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
                 .LoadLinkNestedLinkedSourceById(
@@ -28,42 +26,48 @@ namespace LinkIt.Tests.Core
             loadLinkProtocolBuilder.For<MediaLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                );
+                    linkedSource => linkedSource.SummaryImage);
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Fact]
-        public void LoadLink_WithValue_ShouldLinkMedia() {
+        public void LoadLink_WithValue_ShouldLinkMedia()
+        {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
-                new Model {
+                new Model
+                {
                     Id = "1",
                     MediaId = 32
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Equal(32, actual.Media.Model.Id);
+            Assert.Equal("img32", actual.Media.SummaryImage.Id);
         }
 
         [Fact]
-        public void LoadLink_WithoutValue_ShouldLinkNull() {
+        public void LoadLink_WithoutValue_ShouldLinkNull()
+        {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
-                new Model {
+                new Model
+                {
                     Id = "1",
                     MediaId = null
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Null(actual.Media);
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public MediaLinkedSource Media { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class Model {
+        public class Model
+        {
             public string Id { get; set; }
             public int? MediaId { get; set; }
         }

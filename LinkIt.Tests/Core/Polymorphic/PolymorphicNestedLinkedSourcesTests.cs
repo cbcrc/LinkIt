@@ -5,32 +5,31 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core.Polymorphic {
-    public class PolymorphicNestedLinkedSourcesTests {
+namespace LinkIt.Tests.Core.Polymorphic
+{
+    public class PolymorphicNestedLinkedSourcesTests
+    {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public PolymorphicNestedLinkedSourcesTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithNestedPolymorphicContentsLinkedSource>()
                 .PolymorphicLoadLinkForList(
                     linkedSource => linkedSource.Model.ContentContextualizations,
                     linkedSource => linkedSource.Contents,
                     link => link.ContentType,
-                    includes => includes
-                        .Include<PersonWithoutContextualizationLinkedSource>().AsNestedLinkedSourceById(
+                    includes => includes.Include<PersonWithoutContextualizationLinkedSource>().AsNestedLinkedSourceById(
                             "person",
-                            link => (string)link.Id)
+                            link => (string) link.Id)
                         .Include<ImageWithContextualizationLinkedSource>().AsNestedLinkedSourceById(
                             "image",
-                            link => (string)link.Id,
+                            link => (string) link.Id,
                             (linkedSource, referenceIndex, childLinkedSource) =>
                             {
                                 var contextualization = linkedSource.Model.ContentContextualizations[referenceIndex];
@@ -43,145 +42,176 @@ namespace LinkIt.Tests.Core.Polymorphic {
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContents() {
+        public void LoadLink_NestedPolymorphicContents()
+        {
+            var personContextualization = new ContentContextualization
+            {
+                ContentType = "person",
+                Id = "p1",
+                Title = "altered person title"
+            };
+            var imageConstextualization = new ContentContextualization
+            {
+                ContentType = "image",
+                Id = "i1",
+                Title = "altered image title"
+            };
+
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
-                new WithNestedPolymorphicContents {
+                new WithNestedPolymorphicContents
+                {
                     Id = "1",
-                    ContentContextualizations = new List<ContentContextualization>{
-                        new ContentContextualization{
-                            ContentType = "person",
-                            Id = "p1",
-                            Title = "altered person title"
-                        },
-                        new ContentContextualization{
-                            ContentType = "image",
-                            Id = "i1",
-                            Title = "altered image title"
-                        }
+                    ContentContextualizations = new List<ContentContextualization>
+                    {
+                        personContextualization,
+                        imageConstextualization
                     }
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Collection(
+                actual.Contents,
+                target =>
+                {
+                    var linkedSource = Assert.IsType<PersonWithoutContextualizationLinkedSource>(target);
+                    Assert.Equal(personContextualization.Id, linkedSource.Model.Id);
+                },
+                target =>
+                {
+                    var linkedSource = Assert.IsType<ImageWithContextualizationLinkedSource>(target);
+                    Assert.Equal(imageConstextualization.Id, linkedSource.Model.Id);
+                    Assert.Same(imageConstextualization, linkedSource.ContentContextualization);
+                }
+            );
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldLinkNull() {
+        public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldIgnoreNull()
+        {
+            var personContextualization = new ContentContextualization
+            {
+                ContentType = "person",
+                Id = "p1",
+                Title = "altered person title"
+            };
+            var imageConstextualization = new ContentContextualization
+            {
+                ContentType = "image",
+                Id = "i1",
+                Title = "altered image title"
+            };
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
-                new WithNestedPolymorphicContents {
+                new WithNestedPolymorphicContents
+                {
                     Id = "1",
-                    ContentContextualizations = new List<ContentContextualization>{
-                        new ContentContextualization{
-                            ContentType = "person",
-                            Id = "p1",
-                            Title = "altered person title"
-                        },
+                    ContentContextualizations = new List<ContentContextualization>
+                    {
+                        personContextualization,
                         null,
-                        new ContentContextualization{
-                            ContentType = "image",
-                            Id = "i1",
-                            Title = "altered image title"
-                        }
+                        imageConstextualization
                     }
                 }
             );
 
-            Assert.That(actual.Contents.Count, Is.EqualTo(2));
-            Assert.That(
-                ((ImageWithContextualizationLinkedSource)actual.Contents[1]).ContentContextualization.Title, 
-                Is.EqualTo("altered image title")
+            Assert.Collection(
+                actual.Contents,
+                target =>
+                {
+                    var linkedSource = Assert.IsType<PersonWithoutContextualizationLinkedSource>(target);
+                    Assert.Equal(personContextualization.Id, linkedSource.Model.Id);
+                },
+                target =>
+                {
+                    var linkedSource = Assert.IsType<ImageWithContextualizationLinkedSource>(target);
+                    Assert.Equal("i1", linkedSource.Model.Id);
+                    Assert.Same(imageConstextualization, linkedSource.ContentContextualization);
+                }
             );
-
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySet() {
+        public void LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySet()
+        {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
-                new WithNestedPolymorphicContents {
+                new WithNestedPolymorphicContents
+                {
                     Id = "1",
                     ContentContextualizations = null
                 }
             );
 
-            Assert.That(actual.Contents, Is.Empty);
+            Assert.Empty(actual.Contents);
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicates() {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
-                new WithNestedPolymorphicContents {
-                    Id = "1",
-                    ContentContextualizations = new List<ContentContextualization>{
-                        new ContentContextualization{
-                            ContentType = "image",
-                            Id = "i1",
-                            Title = "altered image title"
-                        },
-                        new ContentContextualization{
-                            ContentType = "image",
-                            Id = "i1",
-                            Title = "altered image title"
-                        }
-                    }
-                }
-            );
-
-            var asImageIds = actual.Contents
-                .Cast<ImageWithContextualizationLinkedSource>()
-                .Select(image => image.Model.Id)
-                .ToList();
-
-            Assert.That(asImageIds, Is.EquivalentTo(new[] { "i1", "i1" }));
-        }
-
-        [Fact]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
-                new WithNestedPolymorphicContents {
-                    Id = "1",
-                    ContentContextualizations = new List<ContentContextualization>{
-                        new ContentContextualization{
-                            ContentType = "image",
-                            Id = "cannot-be-resolved",
-                            Title = "altered image title"
-                        },
-                        new ContentContextualization{
-                            ContentType = "image",
-                            Id = "cannot-be-resolved",
-                            Title = "altered image title"
-                        }
-                    }
-                }
-            );
-
-            Assert.That(actual.Contents, Is.Empty);
-        }
-
-        public class WithNestedPolymorphicContentsLinkedSource : ILinkedSource<WithNestedPolymorphicContents> {
-            public WithNestedPolymorphicContents Model { get; set; }
-            public List<IPolymorphicSource> Contents { get; set; }
-        }
-
-        public class ImageWithContextualizationLinkedSource : IPolymorphicSource, ILinkedSource<Image>
+        public void LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicates()
         {
-            public Image Model { get; set; }
-            public ContentContextualization ContentContextualization { get; set; }
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
+                new WithNestedPolymorphicContents
+                {
+                    Id = "1",
+                    ContentContextualizations = new List<ContentContextualization>
+                    {
+                        new ContentContextualization
+                        {
+                            ContentType = "image",
+                            Id = "i1",
+                            Title = "altered image title"
+                        },
+                        new ContentContextualization
+                        {
+                            ContentType = "image",
+                            Id = "i2",
+                            Title = "altered image title"
+                        }
+                    }
+                }
+            );
+
+            var asImageIds = actual.Contents.Cast<ImageWithContextualizationLinkedSource>()
+                .Select(image => image.Model.Id);
+
+            Assert.Equal(new[] { "i1", "i2" }, asImageIds);
         }
 
-        public class PersonWithoutContextualizationLinkedSource : IPolymorphicSource, ILinkedSource<Person> {
-            public Person Model { get; set; }
+        [Fact]
+        public void LoadLink_ManyReferencesCannotBeResolved_ShouldNotLink()
+        {
+            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
+                new WithNestedPolymorphicContents
+                {
+                    Id = "1",
+                    ContentContextualizations = new List<ContentContextualization>
+                    {
+                        new ContentContextualization
+                        {
+                            ContentType = "image",
+                            Id = "cannot-be-resolved",
+                            Title = "altered image title"
+                        },
+                        new ContentContextualization
+                        {
+                            ContentType = "image",
+                            Id = "cannot-be-resolved",
+                            Title = "altered image title"
+                        }
+                    }
+                }
+            );
+
+            Assert.Empty(actual.Contents);
         }
 
-        public class WithNestedPolymorphicContents {
+        public class WithNestedPolymorphicContentsLinkedSource : ILinkedSource<WithNestedPolymorphicContents>
+        {
+            public List<IPolymorphicSource> Contents { get; set; }
+            public WithNestedPolymorphicContents Model { get; set; }
+        }
+
+        public class WithNestedPolymorphicContents
+        {
             public string Id { get; set; }
             public List<ContentContextualization> ContentContextualizations { get; set; }
-        }
-
-        public class ContentContextualization
-        {
-            public string ContentType { get; set; }
-            public object Id{ get; set; }
-            public string Title{ get; set; }
         }
     }
 }

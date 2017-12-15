@@ -3,44 +3,45 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
 using LinkIt.LinkTargets;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-namespace LinkIt.Tests.LinkTargets {
-    public class SingleValueLinkTargetTests {
-        private LinkedSource _actual;
-        private SingleValueLinkTarget<LinkedSource, Image> _sut;
-
-        [SetUp]
-        public void SetUp() {
+namespace LinkIt.Tests.LinkTargets
+{
+    public class SingleValueLinkTargetTests
+    {
+        public SingleValueLinkTargetTests()
+        {
             _actual = new LinkedSource();
 
-            _sut = (SingleValueLinkTarget<LinkedSource, Image>)LinkTargetFactory.Create<LinkedSource, Image>(
-                linkedSource => linkedSource.Image
-            );
+            _sut = (SingleValueLinkTarget<LinkedSource, Image>) LinkTargetFactory.Create<LinkedSource, Image>(
+                linkedSource => linkedSource.Image);
         }
+
+        private readonly LinkedSource _actual;
+        private readonly SingleValueLinkTarget<LinkedSource, Image> _sut;
 
         [Fact]
-        public void SetTargetProperty() {
-            _sut.LazyInit(_actual,1);
+        public void SetTargetProperty()
+        {
+            _sut.LazyInit(_actual, 1);
             _sut.SetLinkTargetValue(_actual, new Image { Alt = "the-alt" }, 0);
 
-            Assert.That(_actual.Image.Alt, Is.EqualTo("the-alt"));
+            Assert.Equal("the-alt", _actual.Image.Alt);
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public Image Image { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class Model {
+        public class Model
+        {
             public int Id { get; set; }
             public string ImageId { get; set; }
         }
-
     }
 }

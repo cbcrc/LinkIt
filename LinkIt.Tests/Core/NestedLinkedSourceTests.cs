@@ -4,21 +4,20 @@
 #endregion
 
 using System.Linq;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core {
+namespace LinkIt.Tests.Core
+{
     public class NestedLinkedSourceTests
     {
-        private ILoadLinkProtocol _sut;
         private ReferenceLoaderStub _referenceLoaderStub;
+        private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public NestedLinkedSourceTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<NestedLinkedSource>()
                 .LoadLinkNestedLinkedSourceById(
@@ -41,20 +40,25 @@ namespace LinkIt.Tests.Core {
         public void LoadLink_NestedLinkedSource()
         {
             var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
-                new NestedContent {
+                new NestedContent
+                {
                     Id = 1,
                     AuthorDetailId = "32",
                     ClientSummaryId = "33"
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Equal("32", actual.AuthorDetail.Model.Id);
+            Assert.Equal(actual.AuthorDetail.Model.SummaryImageId, actual.AuthorDetail.SummaryImage.Id);
+            Assert.Equal("33", actual.ClientSummary.Id);
         }
 
         [Fact]
-        public void LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummary() {
+        public void LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummary()
+        {
             _sut.LoadLink<NestedLinkedSource>().FromModel(
-                new NestedContent {
+                new NestedContent
+                {
                     Id = 1,
                     AuthorDetailId = "author-id",
                     ClientSummaryId = "client-summary-id"
@@ -63,62 +67,50 @@ namespace LinkIt.Tests.Core {
 
             var imageLookupIds = _referenceLoaderStub.RecordedLookupIdContexts.Last().GetReferenceIds<Image, string>();
 
-            ApprovalsExt.VerifyPublicProperties(imageLookupIds);
+            Assert.Equal(new [] { "person-img-author-id" }, imageLookupIds);
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull() {
+        public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull()
+        {
             var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
-                new NestedContent {
+                new NestedContent
+                {
                     Id = 1,
                     AuthorDetailId = null,
                     ClientSummaryId = "33"
                 }
             );
 
-            Assert.That(actual.AuthorDetail, Is.Null);
+            Assert.Null(actual.AuthorDetail);
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNull() {
+        public void LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNull()
+        {
             var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
-                new NestedContent {
+                new NestedContent
+                {
                     Id = 1,
                     AuthorDetailId = "cannot-be-resolved",
                     ClientSummaryId = "33"
                 }
             );
 
-            Assert.That(actual.AuthorDetail, Is.Null);
+            Assert.Null(actual.AuthorDetail);
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot() {
+        public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot()
+        {
             NestedContent model = null;
 
             var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(model);
 
-            Assert.That(actual, Is.Null);
+            Assert.Null(actual);
         }
     }
 
 
-    public class NestedLinkedSource:ILinkedSource<NestedContent>
-    {
-        public NestedContent Model { get; set; }
-        public PersonLinkedSource AuthorDetail { get; set; }
-        public Person ClientSummary { get; set; }
-    }
 
-    public class NestedContent {
-        public int Id { get; set; }
-        public string AuthorDetailId { get; set; }
-        public string ClientSummaryId { get; set; }
-    }
-
-    public class PersonLinkedSource: ILinkedSource<Person>
-    {
-        public Person Model { get; set; }
-        public Image SummaryImage{ get; set; }
-    }
 }

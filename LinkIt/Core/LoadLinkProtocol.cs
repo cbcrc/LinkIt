@@ -44,14 +44,14 @@ namespace LinkIt.Core
 
         public LoadLinkProtocolStatistics Statistics => new LoadLinkProtocolStatistics(_loadingLevelsByRootLinkedSourceType);
 
-        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
+        internal List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
             return GetLoadLinkExpressions(linkedSource)
                 .Where(loadLinkExpression => loadLinkExpression.ReferenceTypes.Contains(referenceType))
                 .ToList();
         }
 
-        public List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource)
+        internal List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource)
         {
             return GetLoadLinkExpressions(linkedSource.GetType());
         }
@@ -117,12 +117,12 @@ namespace LinkIt.Core
 
         #region Reference Trees
 
-        public void AddReferenceTreeForEachLinkTarget(Type linkedSourceType, ReferenceTree parent)
+        internal void AddReferenceTreeForEachLinkTarget(Type linkedSourceType, ReferenceTree parent)
         {
             foreach (var loadLinkExpression in GetLoadLinkExpressions(linkedSourceType)) loadLinkExpression.AddReferenceTreeForEachInclude(parent, this);
         }
 
-        public ReferenceTree CreateRootReferenceTree(Type rootLinkedSourceType)
+        internal ReferenceTree CreateRootReferenceTree(Type rootLinkedSourceType)
         {
             var rootLinkedSourceConfig = LinkedSourceConfigs.GetConfigFor(rootLinkedSourceType);
             var rootReferenceTree = new ReferenceTree(

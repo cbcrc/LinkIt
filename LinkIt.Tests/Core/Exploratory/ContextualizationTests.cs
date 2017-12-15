@@ -3,61 +3,46 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-namespace LinkIt.Tests.Core.Exploratory {
-    public class ContextualizationTests{
-        private ILoadLinkProtocol _sut;
-
-        [SetUp]
-        public void SetUp() {
+namespace LinkIt.Tests.Core.Exploratory
+{
+    public class ContextualizationTests
+    {
+        public ContextualizationTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithContextualizedReferenceLinkedSource>()
                 .LoadLinkNestedLinkedSourceById(
                     linkedSource => linkedSource.Model.PersonContextualization.Id,
                     linkedSource => linkedSource.Person,
-                    (linkedSource, childLinkedSource) => 
+                    (linkedSource, childLinkedSource) =>
                         childLinkedSource.Contextualization = linkedSource.Model.PersonContextualization
                 );
             loadLinkProtocolBuilder.For<PersonContextualizedLinkedSource>()
                 .LoadLinkReferenceById(
-                    linkedSource => 
-                        linkedSource.Contextualization.SummaryImageId ?? 
+                    linkedSource =>
+                        linkedSource.Contextualization.SummaryImageId ??
                         linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                );
+                    linkedSource => linkedSource.SummaryImage);
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
+        private readonly ILoadLinkProtocol _sut;
+
         [Fact]
-        public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
+        public void LoadLink_WithContextualization_ShouldLinkOverriddenImage()
         {
             var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(
-                new WithContextualizedReference {
+                new WithContextualizedReference
+                {
                     Id = "1",
-                    PersonContextualization = new PersonContextualization {
-                        Id = "32",
-                        Name = "Altered named",
-                        SummaryImageId = null
-                    }
-                }
-            );
-
-            Assert.That(actual.Person.Contextualization.SummaryImageId, Is.Null);
-            Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("person-img-32"));
-        }
-
-        [Fact]
-        public void LoadLink_WithContextualization_ShouldLinkOverriddenImage() {
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(
-                new WithContextualizedReference {
-                    Id = "1",
-                    PersonContextualization = new PersonContextualization {
+                    PersonContextualization = new PersonContextualization
+                    {
                         Id = "32",
                         Name = "Altered named",
                         SummaryImageId = "overriden-image"
@@ -65,33 +50,28 @@ namespace LinkIt.Tests.Core.Exploratory {
                 }
             );
 
-            Assert.That(actual.Person.Contextualization.SummaryImageId, Is.EqualTo("overriden-image"));
-            Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("overriden-image"));
+            Assert.Equal("overriden-image", actual.Person.Contextualization.SummaryImageId);
+            Assert.Equal("overriden-image", actual.Person.SummaryImage.Id);
         }
 
-    }
+        [Fact]
+        public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
+        {
+            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(
+                new WithContextualizedReference
+                {
+                    Id = "1",
+                    PersonContextualization = new PersonContextualization
+                    {
+                        Id = "32",
+                        Name = "Altered named",
+                        SummaryImageId = null
+                    }
+                }
+            );
 
-    public class WithContextualizedReferenceLinkedSource : ILinkedSource<WithContextualizedReference>
-    {
-        public WithContextualizedReference Model { get; set; }
-        public PersonContextualizedLinkedSource Person { get; set; }
-    }
-
-    public class PersonContextualizedLinkedSource: ILinkedSource<Person>
-    {
-        public Person Model { get; set; }
-        public PersonContextualization Contextualization { get; set; }
-        public Image SummaryImage { get; set; }
-    }
-
-    public class WithContextualizedReference {
-        public string Id { get; set; }
-        public PersonContextualization PersonContextualization { get; set; }
-    }
-
-    public class PersonContextualization{
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string SummaryImageId { get; set; }
+            Assert.Null(actual.Person.Contextualization.SummaryImageId);
+            Assert.Equal("person-img-32", actual.Person.SummaryImage.Id);
+        }
     }
 }

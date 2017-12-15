@@ -3,27 +3,24 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core {
+namespace LinkIt.Tests.Core
+{
     public class SingleReferenceTests
     {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp()
+        public SingleReferenceTests()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                );
+                    linkedSource => linkedSource.SummaryImage);
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
@@ -32,47 +29,53 @@ namespace LinkIt.Tests.Core {
         public void LoadLink_SingleReference()
         {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
-                new SingleReferenceContent {
+                new SingleReferenceContent
+                {
                     Id = "1",
                     SummaryImageId = "a"
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Equal("a", actual.SummaryImage.Id);
         }
 
         [Fact]
-        public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
+        public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull()
+        {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
-                new SingleReferenceContent {
+                new SingleReferenceContent
+                {
                     Id = "1",
                     SummaryImageId = null
                 }
             );
 
-            Assert.That(actual.SummaryImage, Is.Null);
+            Assert.Null(actual.SummaryImage);
         }
 
         [Fact]
-        public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull() {
+        public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull()
+        {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
-                new SingleReferenceContent {
+                new SingleReferenceContent
+                {
                     Id = "1",
                     SummaryImageId = "cannot-be-resolved"
                 }
             );
 
-            Assert.That(actual.SummaryImage, Is.Null);
+            Assert.Null(actual.SummaryImage);
         }
     }
 
-    public class SingleReferenceLinkedSource: ILinkedSource<SingleReferenceContent>
+    public class SingleReferenceLinkedSource : ILinkedSource<SingleReferenceContent>
     {
+        public Image SummaryImage { get; set; }
         public SingleReferenceContent Model { get; set; }
-        public Image SummaryImage{ get; set; }
     }
 
-    public class SingleReferenceContent {
+    public class SingleReferenceContent
+    {
         public string Id { get; set; }
         public string SummaryImageId { get; set; }
     }

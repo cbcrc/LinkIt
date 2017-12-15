@@ -3,19 +3,19 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core.Polymorphic {
-    public class PolymorphicSubLinkedSourceTests {
+namespace LinkIt.Tests.Core.Polymorphic
+{
+    public class PolymorphicSubLinkedSourceTests
+    {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public PolymorphicSubLinkedSourceTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
             loadLinkProtocolBuilder.For<LinkedSource>()
@@ -23,96 +23,110 @@ namespace LinkIt.Tests.Core.Polymorphic {
                     linkedSource => linkedSource.Model.Target,
                     linkedSource => linkedSource.Target,
                     link => link.Type,
-                    includes => includes
-                        .Include<PdfReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
+                    includes => includes.Include<PdfReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "pdf",
-                            link=>link,
+                            link => link,
                             (linkedSource, referenceIndex, childLinkedSource) =>
-                                childLinkedSource.Contextualization = "From the level below:"+linkedSource.Model.Id
+                                childLinkedSource.Contextualization = "From the level below:" + linkedSource.Model.Id
                         )
                         .Include<WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "web-page",
-                            link=>link.GetAsBlogPostReference()
+                            link => link.GetAsBlogPostReference()
                         )
                 );
 
             loadLinkProtocolBuilder.For<WebPageReferenceLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.ImageId,
-                    linkedSource => linkedSource.Image
-                );
+                    linkedSource => linkedSource.Image);
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Fact]
-        public void LoadLink_PolymorphicSubLinkedSourceWithoutReferences() {
+        public void LoadLink_PolymorphicSubLinkedSourceWithoutReferences()
+        {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
-                new Model {
+                new Model
+                {
                     Id = "1",
-                    Target = new PolymorphicReference {
+                    Target = new PolymorphicReference
+                    {
                         Type = "pdf",
                         Id = "a"
                     }
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            var linkedSource = Assert.IsType<PdfReferenceLinkedSource>(actual.Target);
+            Assert.Equal("From the level below:1", linkedSource.Contextualization);
         }
 
         [Fact]
-        public void LoadLink_PolymorphicSubLinkedSourceWithGetSubLinkedSourceModel() {
+        public void LoadLink_PolymorphicSubLinkedSourceWithGetSubLinkedSourceModel()
+        {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
-                new Model {
+                new Model
+                {
                     Id = "1",
-                    Target = new PolymorphicReference {
+                    Target = new PolymorphicReference
+                    {
                         Type = "web-page",
                         Id = "a"
                     }
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            var linkedSource = Assert.IsType<WebPageReferenceLinkedSource>(actual.Target);
+            Assert.Equal("title-a", linkedSource.Model.Title);
+            Assert.Equal("computed-image-ida", linkedSource.Model.ImageId);
+            Assert.Equal("computed-image-ida", linkedSource.Image.Id);
         }
 
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public object Target { get; set; }
+            public Model Model { get; set; }
         }
 
         public class WebPageReferenceLinkedSource : ILinkedSource<WebPageReference>
         {
-            public WebPageReference Model { get; set; }
             public Image Image { get; set; }
+            public WebPageReference Model { get; set; }
         }
 
-        public class PdfReferenceLinkedSource : ILinkedSource<PolymorphicReference> {
-            public PolymorphicReference Model { get; set; }
+        public class PdfReferenceLinkedSource : ILinkedSource<PolymorphicReference>
+        {
             public string Contextualization { get; set; }
+            public PolymorphicReference Model { get; set; }
         }
 
-        public class Model{
+        public class Model
+        {
             public string Id { get; set; }
             public PolymorphicReference Target { get; set; }
         }
 
-        public class PolymorphicReference {
+        public class PolymorphicReference
+        {
             public string Type { get; set; }
             public string Id { get; set; }
 
             public WebPageReference GetAsBlogPostReference()
             {
-                return new WebPageReference{
+                return new WebPageReference
+                {
                     Title = "title-" + Id,
-                    ImageId = "computed-image-id" + Id,
+                    ImageId = "computed-image-id" + Id
                 };
             }
         }
 
-        public class WebPageReference{
+        public class WebPageReference
+        {
             public string Title { get; set; }
-            public string ImageId{ get; set; }
+            public string ImageId { get; set; }
         }
     }
 }

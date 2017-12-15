@@ -1,5 +1,5 @@
 ﻿using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
+using LinkIt.TestHelpers;
 
 namespace LinkIt.Tests.Core.Exploratory
 {

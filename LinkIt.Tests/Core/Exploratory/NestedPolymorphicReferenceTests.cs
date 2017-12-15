@@ -4,59 +4,71 @@
 #endregion
 
 using System.Collections.Generic;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.Core.Polymorphic;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core.Exploratory {
-    public class NestedPolymorphicReferenceTests {
-        private ILoadLinkProtocol _sut;
-
-        [SetUp]
-        public void SetUp() {
+namespace LinkIt.Tests.Core.Exploratory
+{
+    public class NestedPolymorphicReferenceTests
+    {
+        public NestedPolymorphicReferenceTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithNestedPolymorphicReferenceLinkedSource>()
                 .PolymorphicLoadLinkForList(
                     linkedSource => linkedSource.Model.PolyIds,
                     linkedSource => linkedSource.Contents,
                     reference => reference.GetType(),
-                    includes => includes
-                        .Include<PersonLinkedSource>().AsNestedLinkedSourceById(
+                    includes => includes.Include<PersonLinkedSource>().AsNestedLinkedSourceById(
                             typeof(string),
-                            reference => (string)reference)
-                        .Include<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource>().AsNestedLinkedSourceById(
+                            reference => (string) reference)
+                        .Include<ImageWithContextualizationLinkedSource>().AsNestedLinkedSourceById(
                             typeof(int),
-                            reference => ((int)reference).ToString()));
+                            reference => ((int) reference).ToString()));
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
+        private readonly ILoadLinkProtocol _sut;
+
         [Fact]
-        public void LoadLink_NestedPolymorphicReference() {
+        public void LoadLink_NestedPolymorphicReference()
+        {
             var actual = _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>().FromModel(
-                new WithNestedPolymorphicReference {
+                new WithNestedPolymorphicReference
+                {
                     Id = "1",
                     PolyIds = new List<object> { "p1", 32 }
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Collection(
+                actual.Contents,
+                linkedSource =>
+                {
+                    var personLinkedSource = Assert.IsType<PersonLinkedSource>(linkedSource);
+                    Assert.Equal("p1", personLinkedSource.Model.Id);
+                },
+                linkedSource =>
+                {
+                    var imageLinkedSource = Assert.IsType<ImageWithContextualizationLinkedSource>(linkedSource);
+                    Assert.Equal("32", imageLinkedSource.Model.Id);
+                }
+            );
         }
 
-        public class WithNestedPolymorphicReferenceLinkedSource : ILinkedSource<WithNestedPolymorphicReference> {
-            public WithNestedPolymorphicReference Model { get; set; }
+        public class WithNestedPolymorphicReferenceLinkedSource : ILinkedSource<WithNestedPolymorphicReference>
+        {
             public List<object> Contents { get; set; }
+            public WithNestedPolymorphicReference Model { get; set; }
         }
 
-        public class WithNestedPolymorphicReference {
+        public class WithNestedPolymorphicReference
+        {
             public string Id { get; set; }
             public List<object> PolyIds { get; set; }
         }
-
-        
     }
 }

@@ -3,23 +3,22 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
+using System;
+using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.Core;
 using LinkIt.PublicApi;
-using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.ReferenceTrees {
-    public class ReferenceTree_SimplestRootLinkedSourceTests
+namespace LinkIt.Tests.ReferenceTrees
+{
+    public class ReferenceTree_SimplestRootLinkedSourceTest
     {
         private LoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp()
+        public ReferenceTree_SimplestRootLinkedSourceTest()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>();
@@ -27,26 +26,31 @@ namespace LinkIt.Tests.ReferenceTrees {
         }
 
         [Fact]
-        public void CreateRootReferenceTree() {
+        public void CreateRootReferenceTree()
+        {
             var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Equal(typeof(Model), actual.Node.ReferenceType);
+            Assert.Equal($"root of {typeof(LinkedSource)}", actual.Node.LinkTargetId);
         }
 
         [Fact]
-        public void ParseLoadingLevels() {
+        public void ParseLoadingLevels()
+        {
             var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
             var actual = rootReferenceTree.ParseLoadingLevels();
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Equal(typeof(Model), actual[0][0]);
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public Model Model { get; set; }
         }
 
-        public class Model {
+        public class Model
+        {
             public int Id { get; set; }
         }
     }

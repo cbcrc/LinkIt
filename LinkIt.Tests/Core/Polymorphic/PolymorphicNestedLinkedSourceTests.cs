@@ -3,32 +3,31 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core.Polymorphic {
-    public class PolymorphicNestedLinkedSourceTests {
+namespace LinkIt.Tests.Core.Polymorphic
+{
+    public class PolymorphicNestedLinkedSourceTests
+    {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public PolymorphicNestedLinkedSourceTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<WithNestedPolymorphicContentLinkedSource>()
                 .PolymorphicLoadLink(
                     linkedSource => linkedSource.Model.ContentContextualization,
                     linkedSource => linkedSource.Content,
                     link => link.ContentType,
-                    includes => includes
-                        .Include<PolymorphicNestedLinkedSourcesTests.PersonWithoutContextualizationLinkedSource>().AsNestedLinkedSourceById(
+                    includes => includes.Include<PersonWithoutContextualizationLinkedSource>().AsNestedLinkedSourceById(
                             "person",
-                            link => (string)link.Id)
-                        .Include<PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource>().AsNestedLinkedSourceById(
+                            link => (string) link.Id)
+                        .Include<ImageWithContextualizationLinkedSource>().AsNestedLinkedSourceById(
                             "image",
-                            link => (string)link.Id,
+                            link => (string) link.Id,
                             (linkedSource, referenceIndex, childLinkedSource) =>
                                 childLinkedSource.ContentContextualization = linkedSource.Model.ContentContextualization)
                 );
@@ -37,11 +36,14 @@ namespace LinkIt.Tests.Core.Polymorphic {
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContent() {
+        public void LoadLink_NestedPolymorphicContent()
+        {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
-                new WithNestedPolymorphicContent {
+                new WithNestedPolymorphicContent
+                {
                     Id = "1",
-                    ContentContextualization = new PolymorphicNestedLinkedSourcesTests.ContentContextualization {
+                    ContentContextualization = new ContentContextualization
+                    {
                         ContentType = "person",
                         Id = "p1",
                         Title = "altered person title"
@@ -49,15 +51,19 @@ namespace LinkIt.Tests.Core.Polymorphic {
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            var linkedSource = Assert.IsType<PersonWithoutContextualizationLinkedSource>(actual.Content);
+            Assert.Equal("p1", linkedSource.Model.Id);
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentWithContextualization_ShouldInitContextualization() {
+        public void LoadLink_NestedPolymorphicContentWithContextualization_ShouldInitContextualization()
+        {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
-                new WithNestedPolymorphicContent {
+                new WithNestedPolymorphicContent
+                {
                     Id = "1",
-                    ContentContextualization = new PolymorphicNestedLinkedSourcesTests.ContentContextualization {
+                    ContentContextualization = new ContentContextualization
+                    {
                         ContentType = "image",
                         Id = "i1",
                         Title = "altered image title"
@@ -66,19 +72,21 @@ namespace LinkIt.Tests.Core.Polymorphic {
             );
 
             var contentAsImage =
-                actual.Content as PolymorphicNestedLinkedSourcesTests.ImageWithContextualizationLinkedSource;
-            Assert.That(contentAsImage.ContentContextualization.Title, Is.EqualTo("altered image title"));
+                actual.Content as ImageWithContextualizationLinkedSource;
+            Assert.Equal("altered image title", contentAsImage.ContentContextualization.Title);
         }
 
 
-        public class WithNestedPolymorphicContentLinkedSource : ILinkedSource<WithNestedPolymorphicContent> {
-            public WithNestedPolymorphicContent Model { get; set; }
+        public class WithNestedPolymorphicContentLinkedSource : ILinkedSource<WithNestedPolymorphicContent>
+        {
             public IPolymorphicSource Content { get; set; }
+            public WithNestedPolymorphicContent Model { get; set; }
         }
 
-        public class WithNestedPolymorphicContent {
+        public class WithNestedPolymorphicContent
+        {
             public string Id { get; set; }
-            public PolymorphicNestedLinkedSourcesTests.ContentContextualization ContentContextualization { get; set; }
+            public ContentContextualization ContentContextualization { get; set; }
         }
     }
 }

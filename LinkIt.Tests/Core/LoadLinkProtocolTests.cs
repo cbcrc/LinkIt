@@ -3,10 +3,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
+using System;
 using LinkIt.ConfigBuilders;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
 namespace LinkIt.Tests.Core
 {
@@ -19,29 +19,26 @@ namespace LinkIt.Tests.Core
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                );
+                    linkedSource => linkedSource.SummaryImage);
             var sut = new ReferenceLoaderStub();
-            var loadLinkConfig = loadLinkProtocolBuilder.Build(()=>sut);
+            var loadLinkConfig = loadLinkProtocolBuilder.Build(() => sut);
 
             loadLinkConfig.LoadLink<PersonLinkedSource>().ById("dont-care");
 
-            Assert.That(sut.IsDisposed, Is.True);
+            Assert.True(sut.IsDisposed);
         }
 
         [Fact]
-        public void LoadLink_LinkedSourceWithoutLoadLinkExpressionAtRoot_ShouldThrow() {
+        public void LoadLink_LinkedSourceWithoutLoadLinkExpressionAtRoot_ShouldThrow()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            var sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
+            var sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
-            TestDelegate act = () => sut.LoadLink<PersonLinkedSource>().ById("dont-care");
+            Action act = () => sut.LoadLink<PersonLinkedSource>().ById("dont-care");
 
-            Assert.That(act, Throws.InvalidOperationException
-                .With.Message.Contains("PersonLinkedSource").And
-                .With.Message.Contains("root linked source")
-            );
-
+            var ex = Assert.Throws<InvalidOperationException>(act);
+            Assert.Contains("PersonLinkedSource", ex.Message);
+            Assert.Contains("root linked source", ex.Message);
         }
-
     }
 }

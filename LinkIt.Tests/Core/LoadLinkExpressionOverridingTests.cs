@@ -4,20 +4,16 @@
 #endregion
 
 using System;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
 namespace LinkIt.Tests.Core
 {
     public class LoadLinkExpressionOverridingTests
     {
-        private ILoadLinkProtocol _sut;
-
-        [SetUp]
-        public void SetUp()
+        public LoadLinkExpressionOverridingTests()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
@@ -30,28 +26,30 @@ namespace LinkIt.Tests.Core
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            //override
+                //override
             loadLinkProtocolBuilder.For<SingleReferenceLinkedSource>()
                 .LoadLinkReferenceById(
-                    linkedSource => linkedSource.Model.SummaryImageId+"-overridden",
+                    linkedSource => linkedSource.Model.SummaryImageId + "-overridden",
                     linkedSource => linkedSource.SummaryImage
                 );
 
-            _sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
+            _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
+
+        private readonly ILoadLinkProtocol _sut;
 
         [Fact]
         public void LoadLink_WithOverriddenLoadLinkExpression_ShouldUseOverriddenLoadLinkExpression()
         {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
-                new SingleReferenceContent {
+                new SingleReferenceContent
+                {
                     Id = "1",
                     SummaryImageId = "a"
                 }
             );
 
-            Assert.That(actual.SummaryImage.Id, Is.EqualTo("a-overridden"));
+            Assert.Equal("a-overridden", actual.SummaryImage.Id);
         }
-
     }
 }

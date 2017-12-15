@@ -3,24 +3,24 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
+using System;
 using System.Collections.Generic;
-using ApprovalTests.Reporters;
+using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.Core;
 using LinkIt.PublicApi;
-using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.ReferenceTrees {
-    public class ReferenceTree_SubLinkedSourceTests
+namespace LinkIt.Tests.ReferenceTrees
+{
+    public class ReferenceTree_SubLinkedSourceTest
     {
         private LoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public ReferenceTree_SubLinkedSourceTest()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
                 .LoadLinkNestedLinkedSourceFromModel(
@@ -30,64 +30,86 @@ namespace LinkIt.Tests.ReferenceTrees {
             loadLinkProtocolBuilder.For<PostThreadLinkedSource>()
                 .LoadLinkNestedLinkedSourceFromModel(
                     linkedSource => linkedSource.Model.Posts,
-                    linkedSource => linkedSource.Posts
-                )
+                    linkedSource => linkedSource.Posts)
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.AuthorId,
-                    linkedSource => linkedSource.Author
-                );
+                    linkedSource => linkedSource.Author);
             loadLinkProtocolBuilder.For<PostLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                );
+                    linkedSource => linkedSource.SummaryImage);
 
-            _sut = (LoadLinkProtocol)loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
+            _sut = (LoadLinkProtocol) loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         [Fact]
-        public void CreateRootReferenceTree(){
+        public void CreateRootReferenceTree()
+        {
             var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            var expected = GetExpectedReferenceTree();
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        private static ReferenceTree GetExpectedReferenceTree()
+        {
+            var expected = new ReferenceTree(typeof(Model), $"root of {typeof(LinkedSource)}", null);
+            new ReferenceTree(typeof(Image), $"{typeof(PostLinkedSource)}/{nameof(PostLinkedSource.SummaryImage)}", expected);
+            new ReferenceTree(typeof(Person), $"{typeof(PostThreadLinkedSource)}/{nameof(PostThreadLinkedSource.Author)}", expected);
+
+            return expected;
         }
 
         [Fact]
-        public void ParseLoadingLevels() {
+        public void ParseLoadingLevels()
+        {
             var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
             var actual = rootReferenceTree.ParseLoadingLevels();
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Type[][] expected =
+            {
+                new[] { typeof(Model) },
+                new[] { typeof(Image), typeof(Person) },
+            };
+
+            actual.Should().BeEquivalentTo(expected);
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public PostThreadLinkedSource PostThread { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class PostThreadLinkedSource : ILinkedSource<PostThread> {
-            public PostThread Model { get; set; }
+        public class PostThreadLinkedSource : ILinkedSource<PostThread>
+        {
             public List<PostLinkedSource> Posts { get; set; }
             public Person Author { get; set; }
+            public PostThread Model { get; set; }
         }
 
-        public class PostLinkedSource : ILinkedSource<Post> {
-            public Post Model { get; set; }
+        public class PostLinkedSource : ILinkedSource<Post>
+        {
             public Image SummaryImage { get; set; }
+            public Post Model { get; set; }
         }
 
-        public class Model {
+        public class Model
+        {
             public int Id { get; set; }
             public PostThread PostThread { get; set; }
         }
 
-        public class PostThread{
+        public class PostThread
+        {
             public string AuthorId { get; set; }
             public List<Post> Posts { get; set; }
         }
 
-        public class Post{
+        public class Post
+        {
             public string SummaryImageId { get; set; }
         }
     }

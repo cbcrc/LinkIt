@@ -3,19 +3,19 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-
-namespace LinkIt.Tests.Core.Polymorphic {
-    public class PolymorphicReferenceTests {
+namespace LinkIt.Tests.Core.Polymorphic
+{
+    public class PolymorphicReferenceTests
+    {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public PolymorphicReferenceTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
             loadLinkProtocolBuilder.For<LinkedSource>()
@@ -23,8 +23,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
                     linkedSource => linkedSource.Model.Target,
                     linkedSource => linkedSource.Target,
                     link => link.Type,
-                    includes => includes
-                        .Include<Image>().AsReferenceById(
+                    includes => includes.Include<Image>().AsReferenceById(
                             "image",
                             link => link.Id
                         )
@@ -38,46 +37,57 @@ namespace LinkIt.Tests.Core.Polymorphic {
         }
 
         [Fact]
-        public void LoadLink_PolymorphicReferenceWithImage() {
+        public void LoadLink_PolymorphicReferenceWithImage()
+        {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
-                new Model {
+                new Model
+                {
                     Id = "1",
-                    Target = new PolymorphicReference {
+                    Target = new PolymorphicReference
+                    {
                         Type = "image",
                         Id = "a"
                     }
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            var image = Assert.IsType<Image>(actual.Target);
+            Assert.Equal("a", image.Id);
         }
 
         [Fact]
-        public void LoadLink_PolymorphicReferenceWithPerson() {
+        public void LoadLink_PolymorphicReferenceWithPerson()
+        {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
-                new Model {
+                new Model
+                {
                     Id = "1",
-                    Target = new PolymorphicReference {
+                    Target = new PolymorphicReference
+                    {
                         Type = "person",
                         Id = "a"
                     }
                 }
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            var person = Assert.IsType<Person>(actual.Target);
+            Assert.Equal("a", person.Id);
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public object Target { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class Model{
+        public class Model
+        {
             public string Id { get; set; }
             public PolymorphicReference Target { get; set; }
         }
 
-        public class PolymorphicReference {
+        public class PolymorphicReference
+        {
             public string Type { get; set; }
             public string Id { get; set; }
         }

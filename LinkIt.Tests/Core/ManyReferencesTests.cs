@@ -5,12 +5,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using ApprovalTests.Reporters;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
-
+using LinkIt.TestHelpers;
+using Xunit;
 
 namespace LinkIt.Tests.Core
 {
@@ -18,22 +16,19 @@ namespace LinkIt.Tests.Core
     {
         private ILoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp() {
+        public ManyReferencesTests()
+        {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<ManyReferencesLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                )
+                    linkedSource => linkedSource.SummaryImage)
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.AuthorImageId,
-                    linkedSource => linkedSource.AuthorImage
-                )
+                    linkedSource => linkedSource.AuthorImage)
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.FavoriteImageIds,
-                    linkedSource => linkedSource.FavoriteImages
-                );
+                    linkedSource => linkedSource.FavoriteImages);
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
@@ -42,21 +37,36 @@ namespace LinkIt.Tests.Core
         public void LoadLink_ManyReferences()
         {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
-                new ManyReferencesContent {
+                new ManyReferencesContent
+                {
                     Id = 1,
                     SummaryImageId = "summary-image-id",
                     AuthorImageId = "author-image-id",
                     FavoriteImageIds = new List<string> { "one", "two" }
                 }
             );
-            
-            ApprovalsExt.VerifyPublicProperties(actual);
+
+            Assert.Collection(
+                actual.FavoriteImages,
+                image =>
+                {
+                    Assert.Equal("one", image.Id);
+                    Assert.Equal("alt-one", image.Alt);
+                },
+                image =>
+                {
+                    Assert.Equal("two", image.Id);
+                    Assert.Equal("alt-two", image.Alt);
+                }
+            );
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull() {
+        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull()
+        {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
-                new ManyReferencesContent {
+                new ManyReferencesContent
+                {
                     Id = 1,
                     SummaryImageId = "dont-care",
                     AuthorImageId = "dont-care",
@@ -64,16 +74,15 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            Assert.That(
-                actual.FavoriteImages.Select(favoriteImage => favoriteImage.Id).ToList(),
-                Is.EqualTo(new List<string> { "one", "two" })
-            );
+            Assert.Equal(new [] { "one", "two" }, actual.FavoriteImages.Select(image => image.Id));
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet() {
+        public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet()
+        {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
-                new ManyReferencesContent {
+                new ManyReferencesContent
+                {
                     Id = 1,
                     SummaryImageId = "dont-care",
                     AuthorImageId = "dont-care",
@@ -81,13 +90,15 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            Assert.That(actual.FavoriteImages, Is.Empty);
+            Assert.Empty(actual.FavoriteImages);
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
+        public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates()
+        {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
-                new ManyReferencesContent {
+                new ManyReferencesContent
+                {
                     Id = 1,
                     SummaryImageId = "dont-care",
                     AuthorImageId = "dont-care",
@@ -96,14 +107,16 @@ namespace LinkIt.Tests.Core
             );
 
             var linkedImagesIds = actual.FavoriteImages.Select(image => image.Id);
-            Assert.That(linkedImagesIds, Is.EquivalentTo(new []{"a", "a"}));
+            Assert.Equal(new[] { "a", "a" }, linkedImagesIds);
         }
 
 
         [Fact]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
+        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull()
+        {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
-                new ManyReferencesContent {
+                new ManyReferencesContent
+                {
                     Id = 1,
                     SummaryImageId = "dont-care",
                     AuthorImageId = "dont-care",
@@ -111,23 +124,23 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            Assert.That(actual.FavoriteImages, Is.Empty);
+            Assert.Empty(actual.FavoriteImages);
         }
-
     }
 
-    public class ManyReferencesLinkedSource: ILinkedSource<ManyReferencesContent>{
-        public ManyReferencesContent Model { get; set; }
+    public class ManyReferencesLinkedSource : ILinkedSource<ManyReferencesContent>
+    {
         public Image SummaryImage { get; set; }
         public Image AuthorImage { get; set; }
         public List<Image> FavoriteImages { get; set; }
+        public ManyReferencesContent Model { get; set; }
     }
 
-    public class ManyReferencesContent {
+    public class ManyReferencesContent
+    {
         public int Id { get; set; }
         public string SummaryImageId { get; set; }
         public string AuthorImageId { get; set; }
         public List<string> FavoriteImageIds { get; set; }
     }
-
 }

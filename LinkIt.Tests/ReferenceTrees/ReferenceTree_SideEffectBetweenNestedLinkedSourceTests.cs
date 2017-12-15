@@ -1,19 +1,20 @@
-﻿using System.Collections.Generic;
-using ApprovalTests.Reporters;
+﻿using System;
+using System.Collections.Generic;
+using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.Core;
 using LinkIt.PublicApi;
 using LinkIt.ReferenceTrees;
-using LinkIt.Tests.Core;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-namespace LinkIt.Tests.ReferenceTrees {
-    public class ReferenceTree_SideEffectBetweenNestedLinkedSourceTests {
+namespace LinkIt.Tests.ReferenceTrees
+{
+    public class ReferenceTree_SideEffectBetweenNestedLinkedSourceTests
+    {
         private LoadLinkProtocol _sut;
 
-        [SetUp]
-        public void SetUp()
+        public ReferenceTree_SideEffectBetweenNestedLinkedSourceTests()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
@@ -28,59 +29,83 @@ namespace LinkIt.Tests.ReferenceTrees {
             loadLinkProtocolBuilder.For<PersonGroupLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.PersonIds,
-                    linkedSource => linkedSource.People
-                );
+                    linkedSource => linkedSource.People);
 
 
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.SummaryImageId,
-                    linkedSource => linkedSource.SummaryImage
-                );
-            _sut = (LoadLinkProtocol)loadLinkProtocolBuilder.Build(
+                    linkedSource => linkedSource.SummaryImage);
+            _sut = (LoadLinkProtocol) loadLinkProtocolBuilder.Build(
                 () => null //not required
             );
         }
 
         [Fact]
-        public void CreateRootReferenceTree() {
+        public void CreateRootReferenceTree()
+        {
             var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            var expected = GetExpectedReferenceTree();
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        private static ReferenceTree GetExpectedReferenceTree()
+        {
+            var expected = new ReferenceTree(typeof(Model), $"root of {typeof(LinkedSource)}", null);
+
+            var child1 = new ReferenceTree(typeof(Person), $"{typeof(LinkedSource)}/{nameof(LinkedSource.Person)}", expected);
+            new ReferenceTree(typeof(Image), $"{typeof(PersonLinkedSource)}/{nameof(PersonLinkedSource.SummaryImage)}", child1);
+
+            var child2 = new ReferenceTree(typeof(PersonGroup), $"{typeof(LinkedSource)}/{nameof(LinkedSource.PersonGroup)}", expected);
+            new ReferenceTree(typeof(Person), $"{typeof(PersonGroupLinkedSource)}/{nameof(PersonGroupLinkedSource.People)}", child2);
+
+            return expected;
         }
 
         [Fact]
-        public void ParseLoadingLevels() {
+        public void ParseLoadingLevels()
+        {
             var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
             var actual = rootReferenceTree.ParseLoadingLevels();
 
-            Assert.That(actual[2].Contains(typeof(Person)));
-            Assert.That(actual[3].Contains(typeof(Image)));
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Type[][] expected =
+            {
+                new[] { typeof(Model) },
+                new[] { typeof(PersonGroup) },
+                new[] { typeof(Person) },
+                new[] { typeof(Image) }
+            };
+
+            actual.Should().BeEquivalentTo(expected);
         }
 
-        public class LinkedSource : ILinkedSource<Model> {
-            public Model Model { get; set; }
+        public class LinkedSource : ILinkedSource<Model>
+        {
             public PersonLinkedSource Person { get; set; }
             public PersonGroupLinkedSource PersonGroup { get; set; }
+            public Model Model { get; set; }
         }
 
-        public class PersonGroupLinkedSource : ILinkedSource<PersonGroup> {
-            public PersonGroup Model { get; set; }
+        public class PersonGroupLinkedSource : ILinkedSource<PersonGroup>
+        {
             public List<Person> People { get; set; }
+            public PersonGroup Model { get; set; }
         }
 
-        public class Model {
+        public class Model
+        {
             public int Id { get; set; }
             public string PersonId { get; set; }
             public int PersonGroupId { get; set; }
         }
 
-        public class PersonGroup {
+        public class PersonGroup
+        {
             public int Id { get; set; }
             public List<string> PersonIds { get; set; }
         }
-
     }
 }

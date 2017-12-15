@@ -4,15 +4,16 @@
 #endregion
 
 using LinkIt.Core;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-namespace LinkIt.Tests.Core {
-    public class LookupIdContextTests {
+namespace LinkIt.Tests.Core
+{
+    public class LookupIdContextTests
+    {
         private LookupIdContext _sut;
 
-        [SetUp]
-        public void SetUp()
+        public LookupIdContextTests()
         {
             _sut = new LookupIdContext();
         }
@@ -20,29 +21,30 @@ namespace LinkIt.Tests.Core {
         [Fact]
         public void Add_Distinct_ShouldAdd()
         {
-            _sut.AddSingle<Image,string>("a");
+            _sut.AddSingle<Image, string>("a");
             _sut.AddSingle<Image, string>("b");
 
-            Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new []{"a","b"}));
+            Assert.Equal(new[] { "a", "b" }, _sut.GetReferenceIds<Image, string>());
         }
 
         [Fact]
-        public void Add_WithDuplicates_DuplicatesShouldNotBeAdded() {
+        public void Add_WithDuplicates_DuplicatesShouldNotBeAdded()
+        {
             _sut.AddSingle<Image, string>("a");
             _sut.AddSingle<Image, string>("a");
             _sut.AddSingle<Image, string>("b");
 
-            Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
+            Assert.Equal(new[] { "a", "b" }, _sut.GetReferenceIds<Image, string>());
         }
 
         [Fact]
-        public void Add_NullId_ShouldIgnoreNullId() {
+        public void Add_NullId_ShouldIgnoreNullId()
+        {
             _sut.AddSingle<Image, string>(null);
 
             var actual = _sut.GetReferenceTypes();
 
-            Assert.That(actual, Is.Empty);
+            Assert.Empty(actual);
         }
-
     }
 }

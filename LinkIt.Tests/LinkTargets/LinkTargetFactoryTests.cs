@@ -3,99 +3,100 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
+using System;
 using LinkIt.LinkTargets;
 using LinkIt.PublicApi;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using LinkIt.TestHelpers;
+using Xunit;
 
-namespace LinkIt.Tests.LinkTargets {
-    public class LinkTargetFactoryTests {
+namespace LinkIt.Tests.LinkTargets
+{
+    public class LinkTargetFactoryTests
+    {
+
         [Fact]
-        public void Create_LinkTargetShouldBeEqualtable() {
+        public void Create_LinkTargetShouldBeEquatable()
+        {
             var summaryImage1 = LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
-                linkedSource => linkedSource.SummaryImage
-            );
+                linkedSource => linkedSource.SummaryImage);
             var summaryImage2 = LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
-                linkedSource => linkedSource.SummaryImage
-            );
+                linkedSource => linkedSource.SummaryImage);
             var anotherImage = LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
-                linkedSource => linkedSource.AnotherImage
-            );
+                linkedSource => linkedSource.AnotherImage);
 
-            Assert.That(summaryImage1.Equals(summaryImage2), Is.True);
-            Assert.That(summaryImage1.Equals(anotherImage), Is.False);
+            Assert.True(summaryImage2.Equals(summaryImage1));
+            Assert.False(anotherImage.Equals(summaryImage1));
         }
 
 
         [Fact]
         public void Create_WithNestedGetter_ShouldThrow()
         {
-            TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, string>(
-                linkedSource => linkedSource.SummaryImage.Alt
-            );
+            Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, string>(
+                linkedSource => linkedSource.SummaryImage.Alt);
 
-            Assert.That(act, Throws.ArgumentException
-                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource").And
-                .With.Message.ContainsSubstring("direct getter")
-            );
+            var exception = Assert.Throws<ArgumentException>(act);
+            Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
+            Assert.Contains("direct getter", exception.Message);
         }
 
         [Fact]
-        public void Test_WithExpression_ShouldThrow() {
-            TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
+        public void Test_WithExpression_ShouldThrow()
+        {
+            Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.SummaryImage ?? new Image()
             );
 
-            Assert.That(act, Throws.ArgumentException
-                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource").And
-                .With.Message.ContainsSubstring("direct getter")
-            );
+            var exception = Assert.Throws<ArgumentException>(act);
+            Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
+            Assert.Contains("direct getter", exception.Message);
         }
 
         [Fact]
-        public void Test_WithFunc_ShouldThrow() {
-            TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
+        public void Test_WithFunc_ShouldThrow()
+        {
+            Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.AnImageFunc()
             );
 
-            Assert.That(act, Throws.ArgumentException
-                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource").And
-                .With.Message.ContainsSubstring("direct getter")
-            );
+            var exception = Assert.Throws<ArgumentException>(act);
+            Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
+            Assert.Contains("direct getter", exception.Message);
         }
 
         [Fact]
-        public void Test_WithReadOnlyProperty_ShouldThrow() {
-            TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
-                linkedSource => linkedSource.AReadOnlyImage
-            );
+        public void Test_WithPrivateSetter_ShouldThrow()
+        {
+            Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
+                linkedSource => linkedSource.APrivateSetterImage);
 
-            Assert.That(act, Throws.ArgumentException
-                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource/AReadOnlyImage").And
-                .With.Message.ContainsSubstring("read-write")
-            );
+            var exception = Assert.Throws<ArgumentException>(act);
+            Assert.Contains("ForLinkedTargetLinkedSource/APrivateSetterImage", exception.Message);
+            Assert.Contains("read-write", exception.Message);
         }
 
         [Fact]
-        public void Test_WithPrivateSetter_ShouldThrow() {
-            TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
-                linkedSource => linkedSource.APrivateSetterImage
-            );
+        public void Test_WithReadOnlyProperty_ShouldThrow()
+        {
+            Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
+                linkedSource => linkedSource.AReadOnlyImage);
 
-            Assert.That(act, Throws.ArgumentException
-                .With.Message.ContainsSubstring("ForLinkedTargetLinkedSource/APrivateSetterImage").And
-                .With.Message.ContainsSubstring("read-write")
-            );
+            var exception = Assert.Throws<ArgumentException>(act);
+            Assert.Contains("ForLinkedTargetLinkedSource/AReadOnlyImage", exception.Message);
+            Assert.Contains("read-write", exception.Message);
         }
-
-        public class ForLinkedTargetLinkedSource : ILinkedSource<Person> {
-            public Person Model { get; set; }
+        public class ForLinkedTargetLinkedSource : ILinkedSource<Person>
+        {
             public Image SummaryImage { get; set; }
             public Image AnotherImage { get; set; }
-            
-            public Image AnImageFunc(){ return null; }
-            public Image AReadOnlyImage { get { return null; } }
+            public Image AReadOnlyImage => null;
             public Image APrivateSetterImage { get; private set; }
+            public Person Model { get; set; }
+
+            public Image AnImageFunc()
+            {
+                return null;
+            }
         }
     }
 }
