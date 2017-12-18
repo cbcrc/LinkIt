@@ -1,4 +1,5 @@
-﻿using LinkIt.ConfigBuilders;
+﻿using System.Threading.Tasks;
+using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
 using Xunit;
@@ -30,7 +31,7 @@ namespace LinkIt.Tests.Core.Exploratory
         private readonly ILoadLinkProtocol _sut;
 
         [Fact]
-        public void LoadLink_WithContextualization_ShouldLinkOverriddenImage()
+        public async Task LoadLink_WithContextualization_ShouldLinkOverriddenImage()
         {
             var model = new WithContextualizedReference
             {
@@ -42,7 +43,7 @@ namespace LinkIt.Tests.Core.Exploratory
                     SummaryImageId = "overriden-image"
                 }
             };
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(model);
+            var actual = await _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModelAsync(model);
 
             Assert.Same(model.PersonContextualization, actual.Person.Contextualization);
             Assert.Equal(model.PersonContextualization.Id, actual.Person.Model.Id);
@@ -50,7 +51,7 @@ namespace LinkIt.Tests.Core.Exploratory
         }
 
         [Fact]
-        public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
+        public async Task LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
         {
             var model = new WithContextualizedReference
             {
@@ -62,7 +63,7 @@ namespace LinkIt.Tests.Core.Exploratory
                     SummaryImageId = null
                 }
             };
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(model);
+            var actual = await _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModelAsync(model);
 
             Assert.Same(model.PersonContextualization, actual.Person.Contextualization);
             Assert.Equal($"person-img-{model.PersonContextualization.Id}", actual.Person.SummaryImage.Id);

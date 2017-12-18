@@ -29,9 +29,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_MultipleReferencesTypeTests()
+        public async System.Threading.Tasks.Task LoadLink_MultipleReferencesTypeTestsAsync()
         {
-            var actual = _sut.LoadLink<MultipleReferencesTypeLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<MultipleReferencesTypeLinkedSource>().FromModelAsync(
                 new MultipleReferencesTypeContent
                 {
                     Id = 1,

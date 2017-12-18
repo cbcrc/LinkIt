@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.PublicApi;
 
 namespace LinkIt.TestHelpers
@@ -30,7 +31,7 @@ namespace LinkIt.TestHelpers
 
         public bool IsDisposed { get; private set; }
 
-        public void LoadReferences(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        public async Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             RecordedLookupIdContexts.Add(lookupIdContext);
 

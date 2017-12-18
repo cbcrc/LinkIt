@@ -48,9 +48,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_SubContentWithoutReferences()
+        public async System.Threading.Tasks.Task LoadLink_SubContentWithoutReferencesAsync()
         {
-            var actual = _sut.LoadLink<WithPolymorphicSubLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithPolymorphicSubLinkedSource>().FromModelAsync(
                 new WithPolymorphicSubLinkedSourceContent
                 {
                     Id = "1",

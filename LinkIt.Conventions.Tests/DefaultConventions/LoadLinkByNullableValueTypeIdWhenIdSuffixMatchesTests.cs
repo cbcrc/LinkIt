@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.Conventions.Interfaces;
@@ -17,7 +18,7 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
     public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatchesTests
     {
         [Fact]
-        public void GetLinkedSourceTypes()
+        public async Task GetLinkedSourceTypes()
         {
             var model = new Model
             {
@@ -27,7 +28,7 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
             };
             var sut = BuildLoadLinkProtocol();
 
-            var actual = sut.LoadLink<LinkedSource>().FromModel(model);
+            var actual = await sut.LoadLink<LinkedSource>().FromModelAsync(model);
 
             Assert.Same(model, actual.Model);
             Assert.Equal(model.MediaNestedLinkedSourceId, actual.MediaNestedLinkedSource.Id);

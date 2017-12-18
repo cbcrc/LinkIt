@@ -45,9 +45,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_MixedPolymorphicAsReference()
+        public async System.Threading.Tasks.Task LoadLink_MixedPolymorphicAsReferenceAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",
@@ -60,9 +60,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_MixedPolymorphicAsNestedLinkedSource()
+        public async System.Threading.Tasks.Task LoadLink_MixedPolymorphicAsNestedLinkedSourceAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",
@@ -75,7 +75,7 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_MixedPolymorphicAsSubLinkedSource()
+        public async System.Threading.Tasks.Task LoadLink_MixedPolymorphicAsSubLinkedSourceAsync()
         {
             var person = new Person
             {
@@ -83,7 +83,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                 Name = "The Name",
                 SummaryImageId = "the-id"
             };
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",

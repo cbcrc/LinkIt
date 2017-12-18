@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.Samples.LinkedSources;
 using Xunit;
 
@@ -20,9 +21,9 @@ namespace LinkIt.Samples
         }
 
         [Fact]
-        public void LoadLink_ById()
+        public async Task LoadLink_ById()
         {
-            var actual = _fixture.LoadLinkProtocol.LoadLink<MediaLinkedSource>().ById(1);
+            var actual = await _fixture.LoadLinkProtocol.LoadLink<MediaLinkedSource>().ByIdAsync(1);
 
             Assert.Equal(1, actual.Model.Id);
             Assert.Collection(
@@ -33,9 +34,9 @@ namespace LinkIt.Samples
         }
 
         [Fact]
-        public void LoadLink_ByIds()
+        public async Task LoadLink_ByIds()
         {
-            var actual = _fixture.LoadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(new List<int> { 1, 2, 3 })
+            var actual = (await _fixture.LoadLinkProtocol.LoadLink<MediaLinkedSource>().ByIdsAsync(new List<int> { 1, 2, 3 }))
                 .OrderBy(x => x.Model.Id)
                 .ToList();
 

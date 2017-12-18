@@ -42,7 +42,7 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContents()
+        public async System.Threading.Tasks.Task LoadLink_NestedPolymorphicContentsAsync()
         {
             var personContextualization = new ContentContextualization
             {
@@ -57,7 +57,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                 Title = "altered image title"
             };
 
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicContents
                 {
                     Id = "1",
@@ -86,7 +86,7 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldIgnoreNull()
+        public async System.Threading.Tasks.Task LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldIgnoreNullAsync()
         {
             var personContextualization = new ContentContextualization
             {
@@ -100,7 +100,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                 Id = "i1",
                 Title = "altered image title"
             };
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicContents
                 {
                     Id = "1",
@@ -130,9 +130,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySet()
+        public async System.Threading.Tasks.Task LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySetAsync()
         {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicContents
                 {
                     Id = "1",
@@ -144,9 +144,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicates()
+        public async System.Threading.Tasks.Task LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicatesAsync()
         {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicContents
                 {
                     Id = "1",
@@ -175,9 +175,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldNotLink()
+        public async System.Threading.Tasks.Task LoadLink_ManyReferencesCannotBeResolved_ShouldNotLinkAsync()
         {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicContents
                 {
                     Id = "1",

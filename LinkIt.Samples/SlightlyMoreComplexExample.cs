@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.Samples.LinkedSources;
 using LinkIt.Samples.Models;
 using Xunit;
@@ -71,10 +72,10 @@ namespace LinkIt.Samples
         }
 
         [Fact]
-        public void LoadLink_FromQuery()
+        public async Task LoadLink_FromQuery()
         {
             var models = GetBlogPostByKeyword("fish");
-            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModels(models);
+            var actual = await _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModelsAsync(models);
 
             Assert.Equal(models.Count, actual.Count);
 
@@ -83,7 +84,7 @@ namespace LinkIt.Samples
         }
 
         [Fact]
-        public void LoadLink_FromTransiantModel()
+        public async Task LoadLink_FromTransiantModel()
         {
             var model = new BlogPost
             {
@@ -106,26 +107,26 @@ namespace LinkIt.Samples
                 },
                 Title = "Title-101"
             };
-            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model);
+            var actual = await _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModelAsync(model);
 
             AssertLinkedSourceForModel(model, actual);
         }
 
         [Fact]
-        public void LoadLinkById()
+        public async Task LoadLinkById()
         {
-            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(1);
+            var actual = await _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIdAsync(1);
 
             Assert.Equal(1, actual.Model.Id);
             AssertLinkedSourceForModel(actual.Model, actual);
         }
 
         [Fact]
-        public void LoadLinkByIds()
+        public async Task LoadLinkByIds()
         {
-            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(
+            var actual = (await _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIdsAsync(
                 new List<int> { 3, 2, 1 }
-            ).OrderBy(x => x.Model.Id).ToList();
+            )).OrderBy(x => x.Model.Id).ToList();
 
             Assert.Collection(
                 actual,

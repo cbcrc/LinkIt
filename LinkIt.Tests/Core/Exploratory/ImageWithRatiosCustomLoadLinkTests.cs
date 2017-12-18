@@ -31,9 +31,9 @@ namespace LinkIt.Tests.Core.Exploratory
         private readonly ILoadLinkProtocol _sut;
 
         [Fact]
-        public void LoadLink_ImagesFromDeclinaisonUrl()
+        public async System.Threading.Tasks.Task LoadLink_ImagesFromDeclinaisonUrlAsync()
         {
-            var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithImageLinkedSource>().FromModelAsync(
                 new WithImage
                 {
                     Id = "1",
@@ -45,9 +45,9 @@ namespace LinkIt.Tests.Core.Exploratory
         }
 
         [Fact]
-        public void LoadLink_ImagesFromDeclinaisonUrlCannotBeResolved_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_ImagesFromDeclinaisonUrlCannotBeResolved_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithImageLinkedSource>().FromModelAsync(
                 new WithImage
                 {
                     Id = "1",
@@ -59,9 +59,9 @@ namespace LinkIt.Tests.Core.Exploratory
         }
 
         [Fact]
-        public void LoadLink_ImagesFromDeclinaisonUrlWithoutReferenceId_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_ImagesFromDeclinaisonUrlWithoutReferenceId_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithImageLinkedSource>().FromModelAsync(
                 new WithImage
                 {
                     Id = "1",

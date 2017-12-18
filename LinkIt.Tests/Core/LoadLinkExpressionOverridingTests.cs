@@ -39,9 +39,9 @@ namespace LinkIt.Tests.Core
         private readonly ILoadLinkProtocol _sut;
 
         [Fact]
-        public void LoadLink_WithOverriddenLoadLinkExpression_ShouldUseOverriddenLoadLinkExpression()
+        public async System.Threading.Tasks.Task LoadLink_WithOverriddenLoadLinkExpression_ShouldUseOverriddenLoadLinkExpressionAsync()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelAsync(
                 new SingleReferenceContent
                 {
                     Id = "1",

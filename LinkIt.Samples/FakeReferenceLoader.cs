@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.PublicApi;
 using LinkIt.Samples.Models;
 
@@ -13,7 +14,7 @@ namespace LinkIt.Samples
 {
     public class FakeReferenceLoader : IReferenceLoader
     {
-        public void LoadReferences(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        public async Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             foreach (var referenceType in lookupIdContext.GetReferenceTypes())
             {

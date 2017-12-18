@@ -4,6 +4,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 
 namespace LinkIt.PublicApi
 {
@@ -13,7 +14,7 @@ namespace LinkIt.PublicApi
         //if an exception is thrown
         : IDisposable
     {
-        void LoadReferences(
+        Task LoadReferencesAsync(
             ILookupIdContext lookupIdContext,
             ILoadedReferenceContext loadedReferenceContext
         );

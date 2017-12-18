@@ -5,28 +5,29 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LinkIt.PublicApi
 {
     //Responsible for loading and linking root linked sources
     public interface ILoadLinker<TRootLinkedSource>
     {
-        TRootLinkedSource FromModel<TRootLinkedSourceModel>(
+        Task<TRootLinkedSource> FromModelAsync<TRootLinkedSourceModel>(
             TRootLinkedSourceModel model,
             Action<TRootLinkedSource> initRootLinkedSource = null
         );
 
-        List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(
+        Task<List<TRootLinkedSource>> FromModelsAsync<TRootLinkedSourceModel>(
             List<TRootLinkedSourceModel> models,
             Action<int, TRootLinkedSource> initRootLinkedSources = null
         );
 
-        TRootLinkedSource ById<TRootLinkedSourceModelId>(
+        Task<TRootLinkedSource> ByIdAsync<TRootLinkedSourceModelId>(
             TRootLinkedSourceModelId modelId,
             Action<TRootLinkedSource> initRootLinkedSource = null
         );
 
-        List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(
+        Task<List<TRootLinkedSource>> ByIdsAsync<TRootLinkedSourceModelId>(
             List<TRootLinkedSourceModelId> modelIds,
             Action<int, TRootLinkedSource> initRootLinkedSources = null
         );

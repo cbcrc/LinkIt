@@ -6,13 +6,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt", "LinkIt\LinkIt.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt.Tests", "LinkIt.Tests\LinkIt.Tests.csproj", "{A126FAF0-B945-42F1-9267-766E67C92825}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt.Conventions", "LinkIt.Conventions\LinkIt.Conventions.csproj", "{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt.Conventions.Tests", "LinkIt.Conventions.Tests\LinkIt.Conventions.Tests.csproj", "{7A97AB8A-D206-4F8F-8FE9-F4FE87C7BD07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt.Samples", "LinkIt.Samples\LinkIt.Samples.csproj", "{6AACAD49-8DDE-44F5-88F8-73E13684B285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkIt.TestHelpers", "LinkIt.TestHelpers\LinkIt.TestHelpers.csproj", "{542CCDDC-59EF-45C7-973B-FDD4A1F30A7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt.TestHelpers", "LinkIt.TestHelpers\LinkIt.TestHelpers.csproj", "{542CCDDC-59EF-45C7-973B-FDD4A1F30A7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,18 +45,6 @@ Global
 		{A126FAF0-B945-42F1-9267-766E67C92825}.Release|x64.Build.0 = Release|Any CPU
 		{A126FAF0-B945-42F1-9267-766E67C92825}.Release|x86.ActiveCfg = Release|Any CPU
 		{A126FAF0-B945-42F1-9267-766E67C92825}.Release|x86.Build.0 = Release|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Debug|x64.Build.0 = Debug|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Debug|x86.Build.0 = Debug|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Release|x64.ActiveCfg = Release|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Release|x64.Build.0 = Release|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Release|x86.ActiveCfg = Release|Any CPU
-		{7D6C1E09-BDF9-45BB-A7E6-6E110AFC0250}.Release|x86.Build.0 = Release|Any CPU
 		{7A97AB8A-D206-4F8F-8FE9-F4FE87C7BD07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A97AB8A-D206-4F8F-8FE9-F4FE87C7BD07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A97AB8A-D206-4F8F-8FE9-F4FE87C7BD07}.Debug|x64.ActiveCfg = Debug|Any CPU

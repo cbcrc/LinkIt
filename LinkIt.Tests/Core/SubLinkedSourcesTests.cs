@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
@@ -41,9 +42,9 @@ namespace LinkIt.Tests.Core
 
 
         [Fact]
-        public void LoadLink_SubLinkedSources()
+        public async Task LoadLink_SubLinkedSources()
         {
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModelAsync(
                 new SubContentsOwner
                 {
                     Id = "1",
@@ -73,9 +74,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_SubLinkedSourcesWithNullInReferenceIds_ShouldNotLinkNull()
+        public async Task LoadLink_SubLinkedSourcesWithNullInReferenceIds_ShouldNotLinkNull()
         {
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModelAsync(
                 new SubContentsOwner
                 {
                     Id = "1",
@@ -93,10 +94,10 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_SubLinkedSourcesWithoutReferenceIds_ShouldLinkEmptySet()
+        public async Task LoadLink_SubLinkedSourcesWithoutReferenceIds_ShouldLinkEmptySet()
         {
 
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModelAsync(
                 new SubContentsOwner
                 {
                     Id = "1",
@@ -110,9 +111,9 @@ namespace LinkIt.Tests.Core
 
 
         [Fact]
-        public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates()
+        public async Task LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates()
         {
-            var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModelAsync(
                 new SubContentsOwner
                 {
                     Id = "1",

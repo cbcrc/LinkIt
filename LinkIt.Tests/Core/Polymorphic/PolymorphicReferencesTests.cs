@@ -38,9 +38,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_PolymorphicReferenceWithImage()
+        public async System.Threading.Tasks.Task LoadLink_PolymorphicReferenceWithImageAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",

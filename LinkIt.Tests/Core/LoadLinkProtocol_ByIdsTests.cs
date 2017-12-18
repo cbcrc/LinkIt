@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
@@ -32,9 +33,9 @@ namespace LinkIt.Tests.Core
 
 
         [Fact]
-        public void LoadLinkById()
+        public async Task LoadLinkByIdAsync()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ById("one");
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdAsync("one");
 
             var expected = GetExpectedPersonLinkedSource("one");
             actual.Should().BeEquivalentTo(expected);
@@ -59,25 +60,25 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLinkById_ManyReferencesCannotBeResolved_ShouldLinkNull()
+        public async Task LoadLinkById_ManyReferencesCannotBeResolved_ShouldLinkNull()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ById("cannot-be-resolved");
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdAsync("cannot-be-resolved");
 
             Assert.Null(actual);
         }
 
         [Fact]
-        public void LoadLinkById_WithNullId_ShouldLinkNull()
+        public async Task LoadLinkById_WithNullId_ShouldLinkNull()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ById<string>(null);
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdAsync<string>(null);
 
             Assert.Null(actual);
         }
 
         [Fact]
-        public void LoadLinkById_WithNullId_ShouldLinkNullWithoutLoading()
+        public async Task LoadLinkById_WithNullId_ShouldLinkNullWithoutLoading()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ById<string>(null);
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdAsync<string>(null);
 
             var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
@@ -87,9 +88,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLinkByIds()
+        public async Task LoadLinkByIds()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string> { "one", "two" });
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdsAsync(new List<string> { "one", "two" });
 
             var expected = new[]
             {
@@ -101,18 +102,18 @@ namespace LinkIt.Tests.Core
 
 
         [Fact]
-        public void LoadLinkByIds_ManyReferencesCannotBeResolved_ShouldLinkNull()
+        public async Task LoadLinkByIds_ManyReferencesCannotBeResolved_ShouldLinkNull()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string> { "cannot-be-resolved" });
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdsAsync(new List<string> { "cannot-be-resolved" });
 
             Assert.Empty(actual);
         }
 
 
         [Fact]
-        public void LoadLinkByIds_ManyReferencesWithDuplicates_ShouldLinkDuplicates()
+        public async Task LoadLinkByIds_ManyReferencesWithDuplicates_ShouldLinkDuplicatesAsync()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string> { "a", "a" });
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdsAsync(new List<string> { "a", "a" });
 
             var linkedSourceModelIds = actual.Select(linkedSource => linkedSource.Model.Id);
             Assert.Equal(new[] { "a", "a" }, linkedSourceModelIds);
@@ -125,9 +126,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLinkByIds_WithListOfNulls_ShouldLinkNullWithoutLoading()
+        public async Task LoadLinkByIds_WithListOfNulls_ShouldLinkNullWithoutLoadingAsync()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string> { null, null });
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdsAsync(new List<string> { null, null });
 
             Assert.Empty(actual);
             var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
@@ -137,9 +138,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLinkByIds_WithNullInReferenceIds_ShouldLinkNull()
+        public async Task LoadLinkByIds_WithNullInReferenceIds_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string> { "one", null, "two" });
+            var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdsAsync(new List<string> { "one", null, "two" });
 
             Assert.Equal(
                 new List<string> { "one", "two" },

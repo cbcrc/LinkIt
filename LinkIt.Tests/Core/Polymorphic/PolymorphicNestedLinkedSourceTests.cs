@@ -36,9 +36,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContent()
+        public async System.Threading.Tasks.Task LoadLink_NestedPolymorphicContentAsync()
         {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicContent
                 {
                     Id = "1",
@@ -56,9 +56,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_NestedPolymorphicContentWithContextualization_ShouldInitContextualization()
+        public async System.Threading.Tasks.Task LoadLink_NestedPolymorphicContentWithContextualization_ShouldInitContextualizationAsync()
         {
-            var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicContent
                 {
                     Id = "1",

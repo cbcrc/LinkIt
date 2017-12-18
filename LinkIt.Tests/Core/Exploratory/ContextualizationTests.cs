@@ -35,9 +35,9 @@ namespace LinkIt.Tests.Core.Exploratory
         private readonly ILoadLinkProtocol _sut;
 
         [Fact]
-        public void LoadLink_WithContextualization_ShouldLinkOverriddenImage()
+        public async System.Threading.Tasks.Task LoadLink_WithContextualization_ShouldLinkOverriddenImageAsync()
         {
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModelAsync(
                 new WithContextualizedReference
                 {
                     Id = "1",
@@ -55,9 +55,9 @@ namespace LinkIt.Tests.Core.Exploratory
         }
 
         [Fact]
-        public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
+        public async System.Threading.Tasks.Task LoadLink_WithoutContextualization_ShouldLinkDefaultImageAsync()
         {
-            var actual = _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithContextualizedReferenceLinkedSource>().FromModelAsync(
                 new WithContextualizedReference
                 {
                     Id = "1",

@@ -26,9 +26,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_SingleReference()
+        public async System.Threading.Tasks.Task LoadLink_SingleReferenceAsync()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelAsync(
                 new SingleReferenceContent
                 {
                     Id = "1",
@@ -40,9 +40,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelAsync(
                 new SingleReferenceContent
                 {
                     Id = "1",
@@ -54,9 +54,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelAsync(
                 new SingleReferenceContent
                 {
                     Id = "1",

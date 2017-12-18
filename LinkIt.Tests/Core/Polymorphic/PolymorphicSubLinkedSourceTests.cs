@@ -44,9 +44,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_PolymorphicSubLinkedSourceWithoutReferences()
+        public async System.Threading.Tasks.Task LoadLink_PolymorphicSubLinkedSourceWithoutReferencesAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",
@@ -63,9 +63,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_PolymorphicSubLinkedSourceWithGetSubLinkedSourceModel()
+        public async System.Threading.Tasks.Task LoadLink_PolymorphicSubLinkedSourceWithGetSubLinkedSourceModelAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",

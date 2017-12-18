@@ -34,9 +34,9 @@ namespace LinkIt.Tests.Core.Exploratory
         private readonly ILoadLinkProtocol _sut;
 
         [Fact]
-        public void LoadLink_NestedPolymorphicReference()
+        public async System.Threading.Tasks.Task LoadLink_NestedPolymorphicReferenceAsync()
         {
-            var actual = _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<WithNestedPolymorphicReferenceLinkedSource>().FromModelAsync(
                 new WithNestedPolymorphicReference
                 {
                     Id = "1",

@@ -32,9 +32,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSource()
+        public async System.Threading.Tasks.Task LoadLink_NestedLinkedSourceAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSources>().FromModelAsync(
                 new NestedContents
                 {
                     Id = 1,
@@ -58,9 +58,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSources>().FromModelAsync(
                 new NestedContents
                 {
                     Id = 1,
@@ -72,9 +72,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet()
+        public async System.Threading.Tasks.Task LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySetAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSources>().FromModelAsync(
                 new NestedContents
                 {
                     Id = 1,
@@ -86,9 +86,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates()
+        public async System.Threading.Tasks.Task LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicatesAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSources>().FromModelAsync(
                 new NestedContents
                 {
                     Id = 1,
@@ -103,9 +103,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSources>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSources>().FromModelAsync(
                 new NestedContents
                 {
                     Id = 1,

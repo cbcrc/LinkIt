@@ -32,9 +32,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_WithValue_ShouldLinkMedia()
+        public async System.Threading.Tasks.Task LoadLink_WithValue_ShouldLinkMediaAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",
@@ -47,9 +47,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_WithoutValue_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_WithoutValue_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",

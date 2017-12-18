@@ -37,9 +37,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSource()
+        public async System.Threading.Tasks.Task LoadLink_NestedLinkedSourceAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSource>().FromModelAsync(
                 new NestedContent
                 {
                     Id = 1,
@@ -54,9 +54,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummary()
+        public async System.Threading.Tasks.Task LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummaryAsync()
         {
-            _sut.LoadLink<NestedLinkedSource>().FromModel(
+            await _sut.LoadLink<NestedLinkedSource>().FromModelAsync(
                 new NestedContent
                 {
                     Id = 1,
@@ -71,9 +71,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSource>().FromModelAsync(
                 new NestedContent
                 {
                     Id = 1,
@@ -86,9 +86,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNull()
+        public async System.Threading.Tasks.Task LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNullAsync()
         {
-            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<NestedLinkedSource>().FromModelAsync(
                 new NestedContent
                 {
                     Id = 1,
@@ -101,11 +101,11 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot()
+        public async System.Threading.Tasks.Task LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRootAsync()
         {
             NestedContent model = null;
 
-            var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(model);
+            var actual = await _sut.LoadLink<NestedLinkedSource>().FromModelAsync(model);
 
             Assert.Null(actual);
         }

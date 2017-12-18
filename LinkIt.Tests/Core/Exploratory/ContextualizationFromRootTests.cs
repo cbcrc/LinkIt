@@ -24,9 +24,9 @@ namespace LinkIt.Tests.Core.Exploratory
         private readonly ILoadLinkProtocol _sut;
 
         [Fact]
-        public void LoadLink_WithContextualization_ShouldLinkOverriddenImage()
+        public async System.Threading.Tasks.Task LoadLink_WithContextualization_ShouldLinkOverriddenImageAsync()
         {
-            var actual = _sut.LoadLink<PersonContextualizedLinkedSource>().ById(
+            var actual = await _sut.LoadLink<PersonContextualizedLinkedSource>().ByIdAsync(
                 "32",
                 linkedSource => linkedSource.Contextualization = new PersonContextualization
                 {
@@ -41,9 +41,9 @@ namespace LinkIt.Tests.Core.Exploratory
         }
 
         [Fact]
-        public void LoadLink_WithContextualizationsAndSomeIdCannotBeResolved_ShouldOnlyContextextualizedResolvableIds()
+        public async System.Threading.Tasks.Task LoadLink_WithContextualizationsAndSomeIdCannotBeResolved_ShouldOnlyContextextualizedResolvableIdsAsync()
         {
-            var actual = _sut.LoadLink<PersonContextualizedLinkedSource>().ByIds(
+            var actual = await _sut.LoadLink<PersonContextualizedLinkedSource>().ByIdsAsync(
                 new[] { "88", "cannot-be-resolved", "99" }.ToList(),
                 (referenceIndex, linkedSource) => linkedSource.Contextualization = new PersonContextualization
                 {

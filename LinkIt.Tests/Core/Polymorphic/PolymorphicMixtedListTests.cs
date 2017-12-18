@@ -46,7 +46,7 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_PolymorphicMixedList()
+        public async System.Threading.Tasks.Task LoadLink_PolymorphicMixedListAsync()
         {
             var model = new Model
             {
@@ -63,7 +63,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                     }
                 }
             };
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(model);
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(model);
 
             Assert.Collection(
                 actual.Target,

@@ -1,4 +1,5 @@
-﻿using LinkIt.ConfigBuilders;
+﻿using System.Threading.Tasks;
+using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
 using Xunit;
@@ -42,9 +43,9 @@ namespace LinkIt.Tests.Core.Exploratory
         }
 
         [Fact]
-        public void LoadLink_WithContextualization_ShouldLinkOverriddenImage()
+        public async Task LoadLink_WithContextualization_ShouldLinkOverriddenImage()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Person = new Person
@@ -67,9 +68,9 @@ namespace LinkIt.Tests.Core.Exploratory
         }
 
         [Fact]
-        public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
+        public async Task LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Person = new Person

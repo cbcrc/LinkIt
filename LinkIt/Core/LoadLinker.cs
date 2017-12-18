@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.PublicApi;
 
 namespace LinkIt.Core
@@ -26,18 +27,18 @@ namespace LinkIt.Core
             _loadLinkProtocol = loadLinkProtocol;
         }
 
-        public TRootLinkedSource FromModel<TRootLinkedSourceModel>(
+        public async Task<TRootLinkedSource> FromModelAsync<TRootLinkedSourceModel>(
             TRootLinkedSourceModel model,
             Action<TRootLinkedSource> initRootLinkedSource)
         {
-            return FromModels(
-                    new List<TRootLinkedSourceModel> { model },
-                    ToInitRootLinkedSources(initRootLinkedSource)
-                )
-                .SingleOrDefault();
+            var linkedSources = await FromModelsAsync(
+                new List<TRootLinkedSourceModel> { model },
+                ToInitRootLinkedSources(initRootLinkedSource)
+            );
+            return linkedSources.SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> FromModels<TRootLinkedSourceModel>(
+        public async Task<List<TRootLinkedSource>> FromModelsAsync<TRootLinkedSourceModel>(
             List<TRootLinkedSourceModel> models,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
@@ -54,7 +55,7 @@ namespace LinkIt.Core
                     .Select((model, index) => CreateLinkedSource(model, index, initRootLinkedSources))
                     .ToList();
 
-                LoadLinkRootLinkedSource();
+                await LoadLinkRootLinkedSource();
 
                 return linkedSources
                     .Where(linkedSource => linkedSource != null)
@@ -63,18 +64,18 @@ namespace LinkIt.Core
         }
 
 
-        public TRootLinkedSource ById<TRootLinkedSourceModelId>(
+        public async Task<TRootLinkedSource> ByIdAsync<TRootLinkedSourceModelId>(
             TRootLinkedSourceModelId modelId,
             Action<TRootLinkedSource> initRootLinkedSource)
         {
-            return ByIds(
-                    new List<TRootLinkedSourceModelId> { modelId },
-                    ToInitRootLinkedSources(initRootLinkedSource)
-                )
-                .SingleOrDefault();
+            var linkedSources = await ByIdsAsync(
+                new List<TRootLinkedSourceModelId> { modelId },
+                ToInitRootLinkedSources(initRootLinkedSource)
+            );
+            return linkedSources.SingleOrDefault();
         }
 
-        public List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(
+        public async Task<List<TRootLinkedSource>> ByIdsAsync<TRootLinkedSourceModelId>(
             List<TRootLinkedSourceModelId> modelIds,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
@@ -82,8 +83,8 @@ namespace LinkIt.Core
 
             using (_referenceLoader)
             {
-                var models = LoadRootLinkedSourceModel(modelIds.ToList());
-                return FromModels(
+                var models = await LoadRootLinkedSourceModelAsync(modelIds.ToList());
+                return await FromModelsAsync(
                     models,
                     initRootLinkedSources
                 );
@@ -133,28 +134,28 @@ namespace LinkIt.Core
             return (referenceIndex, rootLinkedSource) => initRootLinkedSource(rootLinkedSource);
         }
 
-        private List<TExpectedRootLinkedSourceModel> LoadRootLinkedSourceModel<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds)
+        private async Task<List<TExpectedRootLinkedSourceModel>> LoadRootLinkedSourceModelAsync<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds)
         {
             var lookupIdContext = new LookupIdContext();
             lookupIdContext.AddMulti<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
 
             var loadedRootLinkedSourceModel = new LoadedReferenceContext();
-            _referenceLoader.LoadReferences(lookupIdContext, loadedRootLinkedSourceModel);
+            await _referenceLoader.LoadReferencesAsync(lookupIdContext, loadedRootLinkedSourceModel);
 
             return loadedRootLinkedSourceModel
                 .GetOptionalReferences<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
         }
 
-        private void LoadLinkRootLinkedSource()
+        private async Task LoadLinkRootLinkedSource()
         {
-            Load(1);
+            await LoadAsync(1);
 
             LinkReferences();
 
             FilterOutNullValues();
         }
 
-        private void Load(int startAtLoadingLevel)
+        private async Task LoadAsync(int startAtLoadingLevel)
         {
             using (_referenceLoader)
             {
@@ -162,16 +163,16 @@ namespace LinkIt.Core
                 {
                     var referenceTypeToBeLoaded = _referenceTypeToBeLoadedForEachLoadingLevel[loadingLevel];
 
-                    LoadNestingLevel(referenceTypeToBeLoaded);
+                    await LoadNestingLevelAsync(referenceTypeToBeLoaded);
                     LinkNestedLinkedSourcesById(referenceTypeToBeLoaded);
                 }
             }
         }
 
-        private void LoadNestingLevel(List<Type> referenceTypeToBeLoaded)
+        private async Task LoadNestingLevelAsync(List<Type> referenceTypeToBeLoaded)
         {
             var lookupIdContext = GetLookupIdContextForLoadingLevel(referenceTypeToBeLoaded);
-            _referenceLoader.LoadReferences(lookupIdContext, _loadedReferenceContext);
+            await _referenceLoader.LoadReferencesAsync(lookupIdContext, _loadedReferenceContext);
         }
 
         private LookupIdContext GetLookupIdContextForLoadingLevel(List<Type> referenceTypesToBeLoaded)

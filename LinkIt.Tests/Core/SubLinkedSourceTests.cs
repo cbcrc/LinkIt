@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
+using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
@@ -37,9 +38,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_SubLinkedSource()
+        public async Task LoadLink_SubLinkedSource()
         {
-            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SubContentOwnerLinkedSource>().FromModelAsync(
                 new SubContentOwner
                 {
                     Id = "1",
@@ -62,9 +63,9 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull()
+        public async Task LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull()
         {
-            var actual = _sut.LoadLink<SubContentOwnerLinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<SubContentOwnerLinkedSource>().FromModelAsync(
                 new SubContentOwner
                 {
                     Id = "1",

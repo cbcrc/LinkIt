@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
@@ -43,18 +44,18 @@ namespace LinkIt.Tests.Core.Exploratory.Generics
         private readonly ILoadLinkProtocol _sut;
 
         [Fact]
-        public void LoadLink_IntPie()
+        public async Task LoadLink_IntPie()
         {
-            var actual = _sut.LoadLink<IntPieLinkedSource>().ById("2");
+            var actual = await _sut.LoadLink<IntPieLinkedSource>().ByIdAsync("2");
 
             Assert.Equal("2", actual.Model.Id);
             Assert.Equal("Int32", actual.SummaryImage.Id);
         }
 
         [Fact]
-        public void LoadLink_StringPie()
+        public async Task LoadLink_StringPie()
         {
-            var actual = _sut.LoadLink<StringPieLinkedSource>().ById("1");
+            var actual = await _sut.LoadLink<StringPieLinkedSource>().ByIdAsync("1");
 
             Assert.Equal("1", actual.Model.Id);
             Assert.Equal("String", actual.SummaryImage.Id);

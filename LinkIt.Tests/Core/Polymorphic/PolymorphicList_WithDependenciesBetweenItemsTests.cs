@@ -42,9 +42,9 @@ namespace LinkIt.Tests.Core.Polymorphic
         }
 
         [Fact]
-        public void LoadLink_WithDependenciesBetweenItems_ShouldLink3Items()
+        public async System.Threading.Tasks.Task LoadLink_WithDependenciesBetweenItems_ShouldLink3ItemsAsync()
         {
-            var actual = _sut.LoadLink<LinkedSource>().FromModel(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",

@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
@@ -28,63 +29,60 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_WithModel_ShouldLinkModel()
+        public async Task LoadLink_WithModel_ShouldLinkModel()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
-                .FromModel(
-                    new SingleReferenceContent
-                    {
-                        Id = "1",
-                        SummaryImageId = "a"
-                    }
-                );
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelAsync(
+                new SingleReferenceContent
+                {
+                    Id = "1",
+                    SummaryImageId = "a"
+                }
+            );
 
             Assert.Equal("1", actual.Model.Id);
             Assert.Equal("a", actual.SummaryImage.Id);
         }
 
         [Fact]
-        public void LoadLink_WithWrontModelType_ShouldThrow()
+        public async Task LoadLink_WithWrontModelType_ShouldThrow()
         {
-            Action act = () =>
-                _sut.LoadLink<SingleReferenceLinkedSource>()
-                    .FromModel(
+            Func<Task> act = async () =>
+                await _sut.LoadLink<SingleReferenceLinkedSource>()
+                    .FromModelAsync(
                         "The model of SingleReferenceLinkedSource is not a string"
                     );
 
-            var ex = Assert.Throws<ArgumentException>(act);
+            var ex = await Assert.ThrowsAsync<ArgumentException>(act);
             Assert.Contains("SingleReferenceContent", ex.Message);
             Assert.Contains("String", ex.Message);
         }
 
         [Fact]
-        public void LoadLink_ModelWithNullModel_ShouldReturnNull()
+        public async Task LoadLink_ModelWithNullModel_ShouldReturnNull()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
-                .FromModel<SingleReferenceContent>(null);
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelAsync<SingleReferenceContent>(null);
 
             Assert.Null(actual);
         }
 
         [Fact]
-        public void LoadLink_WithModels_ShouldLinkModels()
+        public async Task LoadLink_WithModels_ShouldLinkModels()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
-                .FromModels(
-                    new List<SingleReferenceContent>
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelsAsync(
+                new List<SingleReferenceContent>
+                {
+                    new SingleReferenceContent
                     {
-                        new SingleReferenceContent
-                        {
-                            Id = "1",
-                            SummaryImageId = "a"
-                        },
-                        new SingleReferenceContent
-                        {
-                            Id = "2",
-                            SummaryImageId = "b"
-                        }
+                        Id = "1",
+                        SummaryImageId = "a"
+                    },
+                    new SingleReferenceContent
+                    {
+                        Id = "2",
+                        SummaryImageId = "b"
                     }
-                );
+                }
+            );
 
             var summaryImageIds = actual
                 .Select(item => item.SummaryImage.Id)
@@ -93,26 +91,24 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public void LoadLink_ModelsWithNullModel_ShouldLinkNull()
+        public async Task LoadLink_ModelsWithNullModel_ShouldLinkNull()
         {
-            var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
-                .FromModels(new List<SingleReferenceContent> { null });
+            var actual = await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelsAsync(new List<SingleReferenceContent> { null });
 
             Assert.Empty(actual);
         }
 
         [Fact]
-        public void LoadLink_ModelsWithWrongModelType_ShouldThrow()
+        public async Task LoadLink_ModelsWithWrongModelType_ShouldThrow()
         {
-            Action act = () => _sut.LoadLink<SingleReferenceLinkedSource>()
-                .FromModels(
-                    new List<string>
-                    {
-                        "The model of SingleReferenceLinkedSource is not a string"
-                    }
-                );
+            Func<Task> act = async () => await _sut.LoadLink<SingleReferenceLinkedSource>().FromModelsAsync(
+                new List<string>
+                {
+                    "The model of SingleReferenceLinkedSource is not a string"
+                }
+            );
 
-            var ex = Assert.Throws<ArgumentException>(act);
+            var ex = await Assert.ThrowsAsync<ArgumentException>(act);
             Assert.Contains("SingleReferenceContent", ex.Message);
             Assert.Contains("String", ex.Message);
         }
