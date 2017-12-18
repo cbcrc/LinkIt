@@ -3,176 +3,160 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
+using System;
 using System.Collections.Generic;
-using System.Reflection;
-using ApprovalTests.Reporters;
-using LinkIt.ConfigBuilders;
-using LinkIt.Conventions;
-using LinkIt.Conventions.DefaultConventions;
-using LinkIt.PublicApi;
-using LinkIt.Shared;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using System.Linq;
+using LinkIt.Samples.LinkedSources;
+using LinkIt.Samples.Models;
+using Xunit;
 
-namespace LinkIt.Samples {
-    public class SlightlyMoreComplexExample {
-        private ILoadLinkProtocol _loadLinkProtocol;
+namespace LinkIt.Samples
+{
+    public class SlightlyMoreComplexExample: IClassFixture<LoadLinkProtocolFixture>
+    {
+        private readonly LoadLinkProtocolFixture _fixture;
 
-        [SetUp]
-        public void SetUp() {
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            _loadLinkProtocol = loadLinkProtocolBuilder.Build(
-                () => new FakeReferenceLoader(),
-                Assembly.GetExecutingAssembly().Yield(),
-                LoadLinkExpressionConvention.Default
-            );
-        }
-
-        [Fact]
-        public void LoadLinkById()
+        public SlightlyMoreComplexExample(LoadLinkProtocolFixture fixture)
         {
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(1);
-
-            ApprovalsExt.VerifyPublicProperties(actual);
+            _fixture = fixture;
         }
 
-        [Fact]
-        public void LoadLinkByIds() {
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(
-                new List<int>{3,2,1}
-            );
-
-            ApprovalsExt.VerifyPublicProperties(actual);
-        }
-
-        [Fact]
-        public void LoadLink_FromQuery(){
-            var models = GetBlogPostByKeyword("fish");
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModels(models);
-
-            ApprovalsExt.VerifyPublicProperties(actual);
-        }
-
-        [Fact]
-        public void LoadLink_FromTransiantModel() {
-            var model = new BlogPost {
-                Id = 101,
-                Author = new Author{
-                    Name = "author-name-101",
-                    Email = "author-email-101",
-                    ImageId = "distinc-id-loaded-once", //same entity referenced twice
-                },
-                MultimediaContentRef = new MultimediaContentReference{
-                    Type = "image",
-                    Id = "distinc-id-loaded-once" //same entity referenced twice
-                },
-                TagIds = new List<int>{
-                    1001,
-                    1002
-                },
-                Title = "Title-101"
-            };
-            var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model);
-
-            ApprovalsExt.VerifyPublicProperties(actual);
-        }
-
-        private List<BlogPost> GetBlogPostByKeyword(string fish) {
+        private List<BlogPost> GetBlogPostByKeyword(string fish)
+        {
             //fake result of a database query
-            return new List<BlogPost>{
-                new BlogPost {
+            return new List<BlogPost>
+            {
+                new BlogPost
+                {
                     Id = 77,
-                    Author = new Author{
+                    Author = new Author
+                    {
                         Name = "author-name-77",
                         Email = "author-email-77",
-                        ImageId = "id-77",
+                        ImageId = "id-77"
                     },
-                    MultimediaContentRef = new MultimediaContentReference{
+                    MultimediaContentRef = new MultimediaContentReference
+                    {
                         Type = "media",
                         Id = 277
                     },
-                    TagIds = new List<int>{
+                    TagIds = new List<int>
+                    {
                         177,
                         178
                     },
                     Title = "Salmon"
                 },
-                new BlogPost {
+                new BlogPost
+                {
                     Id = 78,
-                    Author = new Author{
+                    Author = new Author
+                    {
                         Name = "author-name-78",
                         Email = "author-email-78",
-                        ImageId = "id-78",
+                        ImageId = "id-78"
                     },
-                    MultimediaContentRef = new MultimediaContentReference{
+                    MultimediaContentRef = new MultimediaContentReference
+                    {
                         Type = "image",
                         Id = "id-123"
                     },
-                    TagIds = new List<int>{
+                    TagIds = new List<int>
+                    {
                         178
                     },
                     Title = "Cod"
                 }
             };
         }
-    }
 
-    public class BlogPost {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public List<int> TagIds { get; set; }
-        public Author Author { get; set; }
-        public MultimediaContentReference MultimediaContentRef { get; set; }
-    }
-
-    public class Author {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string ImageId { get; set; }
-    }
-
-    public class MultimediaContentReference {
-        public string Type { get; set; }
-        public object Id { get; set; }
-    }
-
-    public class Image {
-        public string Id { get; set; }
-        public string Credits { get; set; }
-        public string Url { get; set; }
-    }
-
-    public class BlogPostLinkedSource : ILinkedSource<BlogPost> {
-        public BlogPost Model { get; set; }
-        public List<Tag> Tags { get; set; }
-        public AuthorLinkedSource Author { get; set; }
-        public object MultimediaContent { get; set; }
-    }
-
-    public class AuthorLinkedSource : ILinkedSource<Author> {
-        public Author Model { get; set; }
-        public Image Image { get; set; }
-    }
-
-    public class BlogPostLinkedSourceConfig : ILoadLinkProtocolConfig
-    {
-        public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder)
+        [Fact]
+        public void LoadLink_FromQuery()
         {
-            loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
-                .PolymorphicLoadLink(
-                    linkedSource => linkedSource.Model.MultimediaContentRef,
-                    linkedSource => linkedSource.MultimediaContent,
-                    link => link.Type,
-                    includes => includes
-                        .Include<MediaLinkedSource>().AsNestedLinkedSourceById(
-                            "media",
-                            link => (int)link.Id
-                        )
-                        .Include<Image>().AsReferenceById(
-                            "image",
-                            link => (string)link.Id
-                        )
-                );
+            var models = GetBlogPostByKeyword("fish");
+            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModels(models);
+
+            Assert.Equal(models.Count, actual.Count);
+
+            AssertLinkedSourceForModel(models[0], actual[0]);
+            AssertLinkedSourceForModel(models[1], actual[1]);
+        }
+
+        [Fact]
+        public void LoadLink_FromTransiantModel()
+        {
+            var model = new BlogPost
+            {
+                Id = 101,
+                Author = new Author
+                {
+                    Name = "author-name-101",
+                    Email = "author-email-101",
+                    ImageId = "distinc-id-loaded-once" //same entity referenced twice
+                },
+                MultimediaContentRef = new MultimediaContentReference
+                {
+                    Type = "image",
+                    Id = "distinc-id-loaded-once" //same entity referenced twice
+                },
+                TagIds = new List<int>
+                {
+                    1001,
+                    1002
+                },
+                Title = "Title-101"
+            };
+            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModel(model);
+
+            AssertLinkedSourceForModel(model, actual);
+        }
+
+        [Fact]
+        public void LoadLinkById()
+        {
+            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(1);
+
+            Assert.Equal(1, actual.Model.Id);
+            AssertLinkedSourceForModel(actual.Model, actual);
+        }
+
+        [Fact]
+        public void LoadLinkByIds()
+        {
+            var actual = _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(
+                new List<int> { 3, 2, 1 }
+            ).OrderBy(x => x.Model.Id).ToList();
+
+            Assert.Collection(
+                actual,
+                linkedSource => { Assert.Equal(1, linkedSource.Model.Id); AssertLinkedSourceForModel(linkedSource.Model, linkedSource); },
+                linkedSource => { Assert.Equal(2, linkedSource.Model.Id); AssertLinkedSourceForModel(linkedSource.Model, linkedSource); },
+                linkedSource => { Assert.Equal(3, linkedSource.Model.Id); AssertLinkedSourceForModel(linkedSource.Model, linkedSource); }
+            );
+        }
+
+        private static void AssertLinkedSourceForModel(BlogPost model, BlogPostLinkedSource linkedSource)
+        {
+            Assert.Same(model, linkedSource.Model);
+            Assert.Collection(
+                linkedSource.Tags,
+                model.TagIds.Select<int, Action<Tag>>(tagId => (t => Assert.Equal(tagId, t.Id))).ToArray()
+            );
+            Assert.Same(model.Author, linkedSource.Author.Model);
+            Assert.Equal(model.Author.ImageId, linkedSource.Author.Image.Id);
+
+            if (model.MultimediaContentRef.Type == "image")
+            {
+                Assert.IsType<Image>(linkedSource.MultimediaContent);
+                var image = (Image) linkedSource.MultimediaContent;
+                Assert.Equal(model.MultimediaContentRef.Id, image.Id);
+            }
+            else if (model.MultimediaContentRef.Type == "media")
+            {
+                Assert.IsType<MediaLinkedSource>(linkedSource.MultimediaContent);
+                var mediaLinkedSource = (MediaLinkedSource) linkedSource.MultimediaContent;
+                Assert.Equal(model.MultimediaContentRef.Id, mediaLinkedSource.Model.Id);
+            }
         }
     }
 }

@@ -4,61 +4,63 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Reflection;
-using ApprovalTests.Reporters;
-using LinkIt.ConfigBuilders;
-using LinkIt.Conventions;
-using LinkIt.Conventions.DefaultConventions;
-using LinkIt.PublicApi;
-using LinkIt.Shared;
-using LinkIt.Tests.TestHelpers;
-using NUnit.Framework;
+using System.Linq;
+using LinkIt.Samples.LinkedSources;
+using Xunit;
 
-namespace LinkIt.Samples {
-    public class GettingStarted {
-        private ILoadLinkProtocol _loadLinkProtocol;
+namespace LinkIt.Samples
+{
+    public class GettingStarted: IClassFixture<LoadLinkProtocolFixture>
+    {
+        private readonly LoadLinkProtocolFixture _fixture;
 
-        [SetUp]
-        public void SetUp() {
-            var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-            _loadLinkProtocol = loadLinkProtocolBuilder.Build(
-                ()=>new FakeReferenceLoader(),
-                Assembly.GetExecutingAssembly().Yield(),
-                LoadLinkExpressionConvention.Default
-            );
+        public GettingStarted(LoadLinkProtocolFixture fixture)
+        {
+            _fixture = fixture;
         }
 
         [Fact]
         public void LoadLink_ById()
         {
-            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ById(1);
+            var actual = _fixture.LoadLinkProtocol.LoadLink<MediaLinkedSource>().ById(1);
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Equal(1, actual.Model.Id);
+            Assert.Collection(
+                actual.Tags,
+                t => Assert.Equal(1001, t.Id),
+                t => Assert.Equal(1002, t.Id)
+            );
         }
 
         [Fact]
-        public void LoadLink_ByIds() {
-            var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(
-                new List<int>{1, 2, 3}
+        public void LoadLink_ByIds()
+        {
+            var actual = _fixture.LoadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(new List<int> { 1, 2, 3 })
+                .OrderBy(x => x.Model.Id)
+                .ToList();
+
+            Assert.Equal(3, actual.Count);
+
+            Assert.Equal(1, actual[0].Model.Id);
+            Assert.Collection(
+                actual[0].Tags,
+                t => Assert.Equal(1001, t.Id),
+                t => Assert.Equal(1002, t.Id)
             );
 
-            ApprovalsExt.VerifyPublicProperties(actual);
+            Assert.Equal(2, actual[1].Model.Id);
+            Assert.Collection(
+                actual[1].Tags,
+                t => Assert.Equal(1002, t.Id),
+                t => Assert.Equal(1003, t.Id)
+            );
+
+            Assert.Equal(3, actual[2].Model.Id);
+            Assert.Collection(
+                actual[2].Tags,
+                t => Assert.Equal(1003, t.Id),
+                t => Assert.Equal(1004, t.Id)
+            );
         }
-    }
-
-    public class Media {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public List<int> TagIds { get; set; } //Tag references
-    }
-
-    public class Tag {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class MediaLinkedSource : ILinkedSource<Media> {
-        public Media Model { get; set; }
-        public List<Tag> Tags { get; set; }
     }
 }
