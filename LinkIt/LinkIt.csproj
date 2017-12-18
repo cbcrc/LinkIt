@@ -1,102 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5630ADF5-F7D6-4257-B5E3-30DFE715AF39}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LinkIt</RootNamespace>
-    <AssemblyName>LinkIt</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>LinkIt is an object-oriented data integration library that make it easy to load different kinds of objects and link them together. 
+
+LinkIt is not an object-relational mapping framework. It can be used for orchestrating the loading of objects and for linking the loaded objects togheter, not for defining how the objects are loaded. LinkIt is intended to be used in a variety of context such as data APIs, ETL processes, CQRS event handlers, web crawlers, etc. 
+
+Features 
+- Minimize coding effort by 
+- leveraging reuse and composition 
+- Data source independant 
+- Avoid the Select N + 1 problem 
+- Built-in support for references between complex types 
+- Support polymorphism out of the box 
+- Favor convention over configuration 
+- Perform complex projections easily with LinkIt AutoMapper Extensions</Description>
+    <Version>1.1.0</Version>
+    <Authors>Stéphane Leblanc, Laurent le Beau-Martin</Authors>
+    <Company>Radio-Canada/CBC</Company>
+    <Copyright>Copyright (c) 2015-2017 Radio-Canada/CBC</Copyright>
+    <PackageIconUrl>https://raw.githubusercontent.com/cbcrc/LinkIt/master/icon.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/cbcrc/LinkIt</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/cbcrc/LinkIt/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageTags>c# data integration database</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ConfigBuilders\ILoadLinkProtocolConfig.cs" />
-    <Compile Include="PublicApi\LoadLinkProtocolStatistics.cs" />
-    <Compile Include="PublicApi\ILoadLinkProtocol.cs" />
-    <Compile Include="PublicApi\ILoadedReferenceContext.cs" />
-    <Compile Include="PublicApi\ILookupIdContext.cs" />
-    <Compile Include="ReferenceTrees\ReferenceDependencyDagNode.cs" />
-    <Compile Include="ReferenceTrees\ReferenceDependencyDag.cs" />
-    <Compile Include="Shared\SingleItemExtensions.cs" />
-    <Compile Include="Shared\AssumptionFailed.cs" />
-    <Compile Include="Shared\LinkedSourceTypeExtensions.cs" />
-    <Compile Include="Shared\PropertyInfoExtensions.cs" />
-    <Compile Include="Shared\EnumerableExtensions.cs" />
-    <Compile Include="Core\Interfaces\ILinkedSourceConfig.cs" />
-    <Compile Include="LinkTargets\Interfaces\ILinkTarget.cs" />
-    <Compile Include="Core\LinkedSourceConfig.cs" />
-    <Compile Include="Core\LinkedSourceConfigs.cs" />
-    <Compile Include="LinkTargets\MultiValueLinkTarget.cs" />
-    <Compile Include="LinkTargets\SingleValueLinkTarget.cs" />
-    <Compile Include="ReferenceTrees\ReferenceToLoad.cs" />
-    <Compile Include="PublicApi\ILoadLinker.cs" />
-    <Compile Include="ConfigBuilders\IncludeAsBuilder.cs" />
-    <Compile Include="ConfigBuilders\IncludeSetBuilder.cs" />
-    <Compile Include="Core\Interfaces\IGenericLinkedSourceConfig.cs" />
-    <Compile Include="LinkTargets\LinkTargetFactory.cs" />
-    <Compile Include="Core\LoadLinker.cs" />
-    <Compile Include="Core\Includes\Interfaces\IInclude.cs" />
-    <Compile Include="Core\Includes\Interfaces\IIncludeWithChildLinkedSource.cs" />
-    <Compile Include="Core\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceById.cs" />
-    <Compile Include="Core\Includes\Interfaces\IIncludeWithAddLookupId.cs" />
-    <Compile Include="Core\Includes\Interfaces\IIncludeWithCreateNestedLinkedSourceFromModel.cs" />
-    <Compile Include="Core\Includes\Interfaces\IIncludeWithGetReference.cs" />
-    <Compile Include="Core\Includes\IncludeSet.cs" />
-    <Compile Include="Core\Includes\IncludeReferenceById.cs" />
-    <Compile Include="Core\Includes\IncludeNestedLinkedSourceById.cs" />
-    <Compile Include="Core\LoadLinkExpressionImpl.cs" />
-    <Compile Include="Core\Includes\IncludeNestedLinkedSourceFromModel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConfigBuilders\LoadLinkProtocolBuilder.cs" />
-    <Compile Include="ConfigBuilders\LoadLinkProtocolForLinkedSourceBuilder.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTreeExtensions.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree.cs" />
-    <Compile Include="Core\LoadLinkProtocol.cs" />
-    <Compile Include="PublicApi\ILinkedSource.cs" />
-    <Compile Include="PublicApi\IReferenceLoader.cs" />
-    <Compile Include="Core\LoadedReferenceContext.cs" />
-    <Compile Include="Core\Interfaces\ILoadLinkExpression.cs" />
-    <Compile Include="Core\LookupIdContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\LinkItLicense.licenseheader">
-      <Link>LinkItLicense.licenseheader</Link>
-    </None>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

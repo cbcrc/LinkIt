@@ -1,76 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{03D5BDBC-E219-49C1-88C0-F790411C7A35}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LinkIt.Conventions</RootNamespace>
-    <AssemblyName>LinkIt.Conventions</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\LinkIt\LinkIt.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DefaultConventions\LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches.cs" />
-    <Compile Include="DefaultConventions\LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches.cs" />
-    <Compile Include="FindAllConventionMatchesQuery.cs" />
-    <Compile Include="ApplyLoadLinkConventionCommand.cs" />
-    <Compile Include="ConventionMatch.cs" />
-    <Compile Include="DefaultConventions\LoadLinkMultiValueWhenIdSuffixMatches.cs" />
-    <Compile Include="DefaultConventions\LoadLinkByNullableValueTypeIdWhenIdSuffixMatches.cs" />
-    <Compile Include="FuncGenerator.cs" />
-    <Compile Include="DefaultConventions\LoadLinkSingleValueWhenIdSuffixMatches.cs" />
-    <Compile Include="Interfaces\IMultiValueConvention.cs" />
-    <Compile Include="Interfaces\IByNullableValueTypeIdConvention.cs" />
-    <Compile Include="Interfaces\ISingleValueConvention.cs" />
-    <Compile Include="Interfaces\ILoadLinkExpressionConvention.cs" />
-    <Compile Include="DefaultConventions\LoadLinkExpressionConvention.cs" />
-    <Compile Include="LoadLinkProtocolBuilderExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyInfoExtensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LinkIt\LinkIt.csproj">
-      <Project>{5630adf5-f7d6-4257-b5e3-30dfe715af39}</Project>
-      <Name>LinkIt</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\LinkItLicense.licenseheader">
-      <Link>LinkItLicense.licenseheader</Link>
-    </None>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

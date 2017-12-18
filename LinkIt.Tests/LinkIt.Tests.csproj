@@ -1,149 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9882EE6A-E815-4AC0-85ED-CFCB35AC6109}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LinkIt.Tests</RootNamespace>
-    <AssemblyName>LinkIt.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="ApprovalTests, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ApprovalTests.3.0.8\lib\net40\ApprovalTests.dll</HintPath>
-    </Reference>
-    <Reference Include="ApprovalUtilities, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ApprovalUtilities.3.0.11\lib\net45\ApprovalUtilities.dll</HintPath>
-    </Reference>
-    <Reference Include="ApprovalUtilities.Net45, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ApprovalUtilities.3.0.11\lib\net45\ApprovalUtilities.Net45.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="FluentAssertions" Version="5.0.0-beta0004" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Core\Exploratory\ContextualizationFromModelTests.cs" />
-    <Compile Include="Core\Exploratory\ContextualizationFromRootTests.cs" />
-    <Compile Include="Core\Exploratory\ContextualizationByIdTests.cs" />
-    <Compile Include="Core\Exploratory\Generics\GenericPieTests.cs" />
-    <Compile Include="Core\Exploratory\Generics\Pie.cs" />
-    <Compile Include="Core\Exploratory\ImageWithDeclinaisonCustomLoadLinkTests.cs" />
-    <Compile Include="LinkTargets\SingleValueLinkTargetTests.cs" />
-    <Compile Include="LinkTargets\MultiValueLinkTargetTests.cs" />
-    <Compile Include="LinkTargets\LinkTargetFactoryTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_WithDependencyCycleTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_WithNestedCycleTests.cs" />
-    <Compile Include="Core\LoadLinkExpressionOverridingTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicList_WithDependenciesBetweenItemsTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_SideEffectBetweenNestedLinkedSourceTests.cs" />
-    <Compile Include="TestHelpers\ApprovalsExt.cs" />
-    <Compile Include="TestHelpers\MediaLinkedSource.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSource_InvalidConfigTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_PolymorphicTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_SimplestRootLinkedSourceTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_SubLinkedSourceTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_NestedLinkedSourceTests.cs" />
-    <Compile Include="ReferenceTrees\ReferenceTree_ReferenceTests.cs" />
-    <Compile Include="Core\LoadLinkModelTests.cs" />
-    <Compile Include="Core\LoadLinkProtocol_ByIdsTests.cs" />
-    <Compile Include="Core\LoadLinkProtocolTests.cs" />
-    <Compile Include="Core\ManyReferencesTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Core\MultipleReferencesTypeTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Core\NestedLinkedSourcesTests.cs" />
-    <Compile Include="Core\NestedLinkedSourceTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Core\Exploratory\NestedPolymorphicReferenceTests.cs" />
-    <Compile Include="Core\OptionalNestedLinkedSourceTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicMixtedListTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicMixtedTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicReferencesTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicReferenceTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSourceTests.cs" />
-    <Compile Include="TestHelpers\Media.cs" />
-    <Compile Include="TestHelpers\MediaRepository.cs" />
-    <Compile Include="TestHelpers\IPolymorphicSource.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicSubLinkedSourcesTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicNestedLinkedSourceTests.cs" />
-    <Compile Include="Core\Polymorphic\PolymorphicNestedLinkedSourcesTests.cs" />
-    <Compile Include="TestHelpers\ReferenceLoaderStub.cs" />
-    <Compile Include="TestHelpers\IPolymorphicModel.cs" />
-    <Compile Include="TestHelpers\IReferenceTypeConfig.cs" />
-    <Compile Include="TestHelpers\Person.cs" />
-    <Compile Include="Core\Exploratory\Generics\PieRepository.cs" />
-    <Compile Include="TestHelpers\PersonRepository.cs" />
-    <Compile Include="TestHelpers\Image.cs" />
-    <Compile Include="TestHelpers\ImageRepository.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\LookupIdContextTests.cs" />
-    <Compile Include="TestHelpers\ReferenceTypeConfig.cs" />
-    <Compile Include="Core\OptionalReferenceTests.cs" />
-    <Compile Include="Core\SingleReferenceTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Core\SubLinkedSourcesTests.cs" />
-    <Compile Include="Core\SubLinkedSourceTests.cs" />
+    <ProjectReference Include="..\LinkIt\LinkIt.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LinkIt\LinkIt.csproj">
-      <Project>{5630adf5-f7d6-4257-b5e3-30dfe715af39}</Project>
-      <Name>LinkIt</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\LinkItLicense.licenseheader">
-      <Link>LinkItLicense.licenseheader</Link>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
