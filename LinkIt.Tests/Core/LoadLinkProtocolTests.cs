@@ -10,11 +10,9 @@ using NUnit.Framework;
 
 namespace LinkIt.Tests.Core
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkProtocolTests
     {
-        [Test]
+        [Fact]
         public void LoadLink_ShouldDisposeLoader()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
@@ -31,7 +29,7 @@ namespace LinkIt.Tests.Core
             Assert.That(sut.IsDisposed, Is.True);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_LinkedSourceWithoutLoadLinkExpressionAtRoot_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             var sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());

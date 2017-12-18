@@ -11,8 +11,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.Core.Polymorphic {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class PolymorphicNestedLinkedSourceTests {
         private ILoadLinkProtocol _sut;
 
@@ -38,7 +36,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedPolymorphicContent() {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
                 new WithNestedPolymorphicContent {
@@ -54,7 +52,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedPolymorphicContentWithContextualization_ShouldInitContextualization() {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentLinkedSource>().FromModel(
                 new WithNestedPolymorphicContent {

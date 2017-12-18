@@ -6,8 +6,6 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core.Exploratory {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class ContextualizationFromRootTests{
         private ILoadLinkProtocol _sut;
 
@@ -25,7 +23,7 @@ namespace LinkIt.Tests.Core.Exploratory {
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithContextualization_ShouldLinkOverriddenImage() {
             var actual = _sut.LoadLink<PersonContextualizedLinkedSource>().ById(
                 "32",
@@ -40,7 +38,7 @@ namespace LinkIt.Tests.Core.Exploratory {
             Assert.That(actual.SummaryImage.Id, Is.EqualTo("overriden-image"));
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithContextualizationsAndSomeIdCannotBeResolved_ShouldOnlyContextextualizedResolvableIds() {
             var actual = _sut.LoadLink<PersonContextualizedLinkedSource>().ByIds(
                 new [] {"88", "cannot-be-resolved", "99", }.ToList(),

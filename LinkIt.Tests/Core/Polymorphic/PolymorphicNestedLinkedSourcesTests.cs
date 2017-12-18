@@ -13,8 +13,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.Core.Polymorphic {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class PolymorphicNestedLinkedSourcesTests {
         private ILoadLinkProtocol _sut;
 
@@ -44,7 +42,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedPolymorphicContents() {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
@@ -67,7 +65,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedPolymorphicContentsWithNullInReferenceIds_ShouldLinkNull() {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
@@ -96,7 +94,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
 
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedPolymorphicContentsWithoutReferenceIds_ShouldLinkEmptySet() {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
@@ -108,7 +106,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             Assert.That(actual.Contents, Is.Empty);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedPolymorphicContentsWithDuplicates_ShouldLinkDuplicates() {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {
@@ -136,7 +134,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             Assert.That(asImageIds, Is.EquivalentTo(new[] { "i1", "i1" }));
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<WithNestedPolymorphicContentsLinkedSource>().FromModel(
                 new WithNestedPolymorphicContents {

@@ -12,8 +12,6 @@ using NUnit.Framework;
 
 namespace LinkIt.Tests.Core
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkExpressionOverridingTests
     {
         private ILoadLinkProtocol _sut;
@@ -42,7 +40,7 @@ namespace LinkIt.Tests.Core
             _sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithOverriddenLoadLinkExpression_ShouldUseOverriddenLoadLinkExpression()
         {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(

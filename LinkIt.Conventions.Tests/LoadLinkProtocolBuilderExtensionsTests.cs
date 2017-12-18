@@ -16,10 +16,8 @@ using NUnit.Framework;
 
 namespace LinkIt.Conventions.Tests
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkProtocolBuilderExtensionsTests {
-        [Test]
+        [Fact]
         public void ApplyConventions_ShouldMatchExpectedLinkTargets(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             var conventionStub = new ConventionStub();
@@ -35,7 +33,7 @@ namespace LinkIt.Conventions.Tests
             );
         }
 
-        [Test]
+        [Fact]
         public void ApplyConventions_ShouldFilterModelOutWhenMatchingLinkTarget() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             var conventionStub = new ConventionStub();
@@ -51,7 +49,7 @@ namespace LinkIt.Conventions.Tests
             );
         }
 
-        [Test]
+        [Fact]
         public void ApplyConventions_DuplicateConventions_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
@@ -69,7 +67,7 @@ namespace LinkIt.Conventions.Tests
             );
         }
 
-        [Test]
+        [Fact]
         public void ApplyConventions_ParameterizableConventions_ShouldNotThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 

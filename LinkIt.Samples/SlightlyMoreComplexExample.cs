@@ -15,8 +15,6 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Samples {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class SlightlyMoreComplexExample {
         private ILoadLinkProtocol _loadLinkProtocol;
 
@@ -30,7 +28,7 @@ namespace LinkIt.Samples {
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkById()
         {
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ById(1);
@@ -38,7 +36,7 @@ namespace LinkIt.Samples {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkByIds() {
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().ByIds(
                 new List<int>{3,2,1}
@@ -47,7 +45,7 @@ namespace LinkIt.Samples {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_FromQuery(){
             var models = GetBlogPostByKeyword("fish");
             var actual = _loadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModels(models);
@@ -55,7 +53,7 @@ namespace LinkIt.Samples {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_FromTransiantModel() {
             var model = new BlogPost {
                 Id = 101,

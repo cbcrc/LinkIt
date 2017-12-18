@@ -5,8 +5,6 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core.Exploratory {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class ContextualizationFromModelTests {
         private ILoadLinkProtocol _sut;
 
@@ -31,7 +29,7 @@ namespace LinkIt.Tests.Core.Exploratory {
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithoutContextualization_ShouldLinkDefaultImage()
         {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
@@ -53,7 +51,7 @@ namespace LinkIt.Tests.Core.Exploratory {
             Assert.That(actual.Person.SummaryImage.Id, Is.EqualTo("defaultSummaryImageId"));
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithContextualization_ShouldLinkOverriddenImage() {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {

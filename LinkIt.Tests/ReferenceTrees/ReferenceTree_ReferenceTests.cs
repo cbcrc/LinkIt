@@ -14,8 +14,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.ReferenceTrees {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class ReferenceTree_ReferenceTests
     {
         private LoadLinkProtocol _sut;
@@ -36,14 +34,14 @@ namespace LinkIt.Tests.ReferenceTrees {
             _sut = (LoadLinkProtocol)loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void CreateRootReferenceTree() {
             var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void ParseLoadingLevels() {
             var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
 

@@ -16,10 +16,8 @@ using NUnit.Framework;
 
 namespace LinkIt.Conventions.Tests
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkProtocolBuilderExtensions_ConventionErrorHandlingTests {
-        [Test]
+        [Fact]
         public void ApplyConventions_DoesApplyFailed_ShouldThrow(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             
@@ -40,7 +38,7 @@ namespace LinkIt.Conventions.Tests
             );
         }
 
-        [Test]
+        [Fact]
         public void ApplyConventions_ApplyFailed_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 

@@ -14,8 +14,6 @@ using NUnit.Framework;
 
 namespace LinkIt.Tests.Core
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class ManyReferencesTests
     {
         private ILoadLinkProtocol _sut;
@@ -40,7 +38,7 @@ namespace LinkIt.Tests.Core
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ManyReferences()
         {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
@@ -55,7 +53,7 @@ namespace LinkIt.Tests.Core
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNull() {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
@@ -72,7 +70,7 @@ namespace LinkIt.Tests.Core
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySet() {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
@@ -86,7 +84,7 @@ namespace LinkIt.Tests.Core
             Assert.That(actual.FavoriteImages, Is.Empty);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {
@@ -102,7 +100,7 @@ namespace LinkIt.Tests.Core
         }
 
 
-        [Test]
+        [Fact]
         public void LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<ManyReferencesLinkedSource>().FromModel(
                 new ManyReferencesContent {

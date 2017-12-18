@@ -15,8 +15,6 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Samples {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class GettingStarted {
         private ILoadLinkProtocol _loadLinkProtocol;
 
@@ -30,7 +28,7 @@ namespace LinkIt.Samples {
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ById()
         {
             var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ById(1);
@@ -38,7 +36,7 @@ namespace LinkIt.Samples {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ByIds() {
             var actual = _loadLinkProtocol.LoadLink<MediaLinkedSource>().ByIds(
                 new List<int>{1, 2, 3}

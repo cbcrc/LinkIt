@@ -8,10 +8,8 @@ using LinkIt.ConfigBuilders;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core.Polymorphic {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class PolymorphicSubLinkedSource_InvalidConfigTests {
-        [Test]
+        [Fact]
         public void LoadLink_PolymorphicSubLinkedSourceWithWrongLinkedSourceModelType_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
@@ -36,7 +34,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithDiscriminantDuplicate_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 

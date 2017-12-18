@@ -12,8 +12,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.Core.Polymorphic {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class PolymorphicList_WithDependenciesBetweenItemsTests {
         private ILoadLinkProtocol _sut;
 
@@ -45,7 +43,7 @@ namespace LinkIt.Tests.Core.Polymorphic {
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithDependenciesBetweenItems_ShouldLink3Items() {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {

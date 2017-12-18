@@ -1,3 +1,0 @@
-﻿[
-  "person-img-author-id"
-]

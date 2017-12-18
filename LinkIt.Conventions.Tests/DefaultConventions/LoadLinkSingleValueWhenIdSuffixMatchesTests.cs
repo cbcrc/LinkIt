@@ -16,10 +16,8 @@ using NUnit.Framework;
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkSingleValueWhenIdSuffixMatchesTests {
-        [Test]
+        [Fact]
         public void GetLinkedSourceTypes(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             

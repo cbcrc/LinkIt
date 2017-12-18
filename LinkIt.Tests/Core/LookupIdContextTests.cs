@@ -8,7 +8,6 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core {
-    [TestFixture]
     public class LookupIdContextTests {
         private LookupIdContext _sut;
 
@@ -18,7 +17,7 @@ namespace LinkIt.Tests.Core {
             _sut = new LookupIdContext();
         }
 
-        [Test]
+        [Fact]
         public void Add_Distinct_ShouldAdd()
         {
             _sut.AddSingle<Image,string>("a");
@@ -27,7 +26,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new []{"a","b"}));
         }
 
-        [Test]
+        [Fact]
         public void Add_WithDuplicates_DuplicatesShouldNotBeAdded() {
             _sut.AddSingle<Image, string>("a");
             _sut.AddSingle<Image, string>("a");
@@ -36,7 +35,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(_sut.GetReferenceIds<Image, string>(), Is.EquivalentTo(new[] { "a", "b" }));
         }
 
-        [Test]
+        [Fact]
         public void Add_NullId_ShouldIgnoreNullId() {
             _sut.AddSingle<Image, string>(null);
 

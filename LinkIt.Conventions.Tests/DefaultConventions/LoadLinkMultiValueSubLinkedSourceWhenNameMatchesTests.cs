@@ -17,10 +17,8 @@ using NUnit.Framework.Constraints;
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkMultiValueSubLinkedSourceWhenNameMatchesTests {
-        [Test]
+        [Fact]
         public void GetLinkedSourceTypes(){
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             

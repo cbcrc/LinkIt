@@ -14,8 +14,6 @@ using NUnit.Framework;
 
 namespace LinkIt.Tests.Core
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class SubLinkedSourcesTests
     {
         private ILoadLinkProtocol _sut;
@@ -48,7 +46,7 @@ namespace LinkIt.Tests.Core
 
 
 
-        [Test]
+        [Fact]
         public void LoadLink_SubLinkedSources()
         {
             var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
@@ -72,7 +70,7 @@ namespace LinkIt.Tests.Core
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_SubLinkedSourcesWithNullInReferenceIds_ShouldLinkNull() {
             var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
                 new SubContentsOwner {
@@ -92,7 +90,7 @@ namespace LinkIt.Tests.Core
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_SubLinkedSourcesWithoutReferenceIds_ShouldLinkEmptySet() {
             var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
                 new SubContentsOwner {
@@ -106,7 +104,7 @@ namespace LinkIt.Tests.Core
         }
 
 
-        [Test]
+        [Fact]
         public void LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
             var actual = _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModel(
                 new SubContentsOwner {

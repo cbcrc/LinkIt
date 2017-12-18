@@ -5,10 +5,8 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.ReferenceTrees {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class ReferenceTree_WithDependencyCycleTests {
-        [Test]
+        [Fact]
         public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<DependencyCycleLinkedSource>()

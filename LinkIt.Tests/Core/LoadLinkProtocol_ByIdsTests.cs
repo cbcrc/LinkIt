@@ -15,8 +15,6 @@ using NUnit.Framework;
 
 namespace LinkIt.Tests.Core
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkConfig_ByIdsTests
     {
         private ReferenceLoaderStub _referenceLoaderStub;
@@ -36,21 +34,21 @@ namespace LinkIt.Tests.Core
         }
 
 
-        [Test]
+        [Fact]
         public void LoadLinkById() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ById("one");
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkById_WithNullId_ShouldLinkNull() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ById<string>(null);
 
             Assert.That(actual, Is.Null);
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkById_WithNullId_ShouldLinkNullWithoutLoading() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ById<string>(null);
 
@@ -61,21 +59,21 @@ namespace LinkIt.Tests.Core
             Assert.That(loadedReferenceTypes, Is.Empty);
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkById_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ById("cannot-be-resolved");
 
             Assert.That(actual, Is.Null);
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkByIds() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"one","two"});
 
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkByIds_WithNullInReferenceIds_ShouldLinkNull() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"one", null, "two"});
 
@@ -85,7 +83,7 @@ namespace LinkIt.Tests.Core
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLinkByIds_WithListOfNulls_ShouldLinkNullWithoutLoading() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds<string>(new List<string>{null, null});
 
@@ -97,7 +95,7 @@ namespace LinkIt.Tests.Core
         }
 
 
-        [Test]
+        [Fact]
         public void LoadLinkByIds_ManyReferencesWithDuplicates_ShouldLinkDuplicates() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"a", "a"});
 
@@ -112,7 +110,7 @@ namespace LinkIt.Tests.Core
         }
 
 
-        [Test]
+        [Fact]
         public void LoadLinkByIds_ManyReferencesCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<PersonLinkedSource>().ByIds(new List<string>{"cannot-be-resolved"});
 

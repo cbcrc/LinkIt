@@ -11,7 +11,6 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.LinkTargets {
-    [TestFixture]
     public class MultiValueLinkTargetTests {
         private LinkedSource _actual;
         private MultiValueLinkTarget<LinkedSource, Image> _sut;
@@ -25,7 +24,7 @@ namespace LinkIt.Tests.LinkTargets {
             );
         }
 
-        [Test]
+        [Fact]
         public void SetTargetProperty() {
             _sut.LazyInit(_actual,2);
             _sut.SetLinkTargetValue(_actual, new Image { Alt = "the-alt1" }, 0);

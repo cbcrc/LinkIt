@@ -11,8 +11,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.Core {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class SingleReferenceTests
     {
         private ILoadLinkProtocol _sut;
@@ -30,7 +28,7 @@ namespace LinkIt.Tests.Core {
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_SingleReference()
         {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
@@ -43,7 +41,7 @@ namespace LinkIt.Tests.Core {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_SingleReferenceWithoutReferenceId_ShouldLinkNull() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
                 new SingleReferenceContent {
@@ -55,7 +53,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(actual.SummaryImage, Is.Null);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_SingleReferenceCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>().FromModel(
                 new SingleReferenceContent {

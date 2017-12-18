@@ -10,10 +10,9 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core {
-    [TestFixture]
     public class LoadLinkConfig_WithCycleTests
     {
-        [Test]
+        [Fact]
         public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<CycleInReferenceLinkedSource>()
@@ -36,7 +35,7 @@ namespace LinkIt.Tests.Core {
                 );
         }
 
-        [Test]
+        [Fact]
         public void CreateLoadLinkConfig_WithCycleCausedByDirectNestedLinkedSource_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<DirectCycleInNestedLinkedSource>()
@@ -59,7 +58,7 @@ namespace LinkIt.Tests.Core {
                 );
         }
 
-        [Test]
+        [Fact]
         public void CreateLoadLinkConfig_WithCycleCausedByIndirectNestedLinkedSource_ShouldThrow() {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<IndirectCycleLevel0LinkedSource>()

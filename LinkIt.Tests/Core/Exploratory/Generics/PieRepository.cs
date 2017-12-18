@@ -4,7 +4,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LinkIt.Tests.Core.Exploratory.Generics
 {

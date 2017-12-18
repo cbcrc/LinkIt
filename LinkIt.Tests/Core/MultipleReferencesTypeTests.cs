@@ -11,8 +11,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.Core {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class MultipleReferencesTypeTests
     {
         private ILoadLinkProtocol _sut;
@@ -34,7 +32,7 @@ namespace LinkIt.Tests.Core {
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_MultipleReferencesTypeTests()
         {
             var actual = _sut.LoadLink<MultipleReferencesTypeLinkedSource>().FromModel(

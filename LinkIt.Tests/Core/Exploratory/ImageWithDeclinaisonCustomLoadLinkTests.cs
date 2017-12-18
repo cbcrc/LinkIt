@@ -14,8 +14,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.Core.Exploratory {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class ImageWithDeclinaisonCustomLoadLinkTests
     {
         private ILoadLinkProtocol _sut;
@@ -34,7 +32,7 @@ namespace LinkIt.Tests.Core.Exploratory {
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ImagesFromDeclinaisonUrl()
         {
             var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
@@ -47,7 +45,7 @@ namespace LinkIt.Tests.Core.Exploratory {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ImagesFromDeclinaisonUrlWithoutReferenceId_ShouldLinkNull() {
             var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
                 new WithImage {
@@ -59,7 +57,7 @@ namespace LinkIt.Tests.Core.Exploratory {
             Assert.That(actual.Image, Is.Null);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ImagesFromDeclinaisonUrlCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<WithImageLinkedSource>().FromModel(
                 new WithImage {

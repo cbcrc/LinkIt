@@ -12,8 +12,6 @@ using NUnit.Framework;
 
 
 namespace LinkIt.Tests.Core {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class NestedLinkedSourceTests
     {
         private ILoadLinkProtocol _sut;
@@ -39,7 +37,7 @@ namespace LinkIt.Tests.Core {
             _sut = loadLinkProtocolBuilder.Build(() => _referenceLoaderStub);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedLinkedSource()
         {
             var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
@@ -53,7 +51,7 @@ namespace LinkIt.Tests.Core {
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_DifferendKindOfPersonInSameRootLinkedSource_ShouldNotLoadImageFromClientSummary() {
             _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
@@ -68,7 +66,7 @@ namespace LinkIt.Tests.Core {
             ApprovalsExt.VerifyPublicProperties(imageLookupIds);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedLinkedSourceWithoutReferenceId_ShouldLinkNull() {
             var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
@@ -81,7 +79,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(actual.AuthorDetail, Is.Null);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedLinkedSourceCannotBeResolved_ShouldLinkNull() {
             var actual = _sut.LoadLink<NestedLinkedSource>().FromModel(
                 new NestedContent {
@@ -94,7 +92,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(actual.AuthorDetail, Is.Null);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_NestedLinkedSourceRootCannotBeResolved_ShouldReturnNullAsRoot() {
             NestedContent model = null;
 

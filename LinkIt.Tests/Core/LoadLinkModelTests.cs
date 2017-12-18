@@ -12,8 +12,6 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.Core {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class LoadLinkModelTests
     {
         private ILoadLinkProtocol _sut;
@@ -29,7 +27,7 @@ namespace LinkIt.Tests.Core {
             _sut = loadLinkProtocolBuilder.Build(()=>new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithModel_ShouldLinkModel() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModel(
@@ -43,7 +41,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(actual.SummaryImage.Id, Is.EqualTo("a"));
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithWrontModelType_ShouldThrow() {
             TestDelegate act = () => _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModel(
@@ -56,7 +54,7 @@ namespace LinkIt.Tests.Core {
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ModelWithNullModel_ShouldReturnNull() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModel<SingleReferenceContent>(null);
@@ -64,7 +62,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(actual, Is.Null);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithModels_ShouldLinkModels() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModels(
@@ -86,7 +84,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(summaryImageIds, Is.EquivalentTo(new[] {"a", "b"}));
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ModelsWithNullModel_ShouldLinkNull() {
             var actual = _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModels<SingleReferenceContent>(new List<SingleReferenceContent>{null});
@@ -94,7 +92,7 @@ namespace LinkIt.Tests.Core {
             Assert.That(actual, Is.Empty);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_ModelsWithWrongModelType_ShouldThrow() {
             TestDelegate act = () => _sut.LoadLink<SingleReferenceLinkedSource>()
                 .FromModels(

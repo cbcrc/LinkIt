@@ -12,8 +12,6 @@ using NUnit.Framework;
 
 namespace LinkIt.Tests.Core
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class OptionalNestedLinkedSourceTests
     {
         private ILoadLinkProtocol _sut;
@@ -36,7 +34,7 @@ namespace LinkIt.Tests.Core
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithValue_ShouldLinkMedia() {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {
@@ -48,7 +46,7 @@ namespace LinkIt.Tests.Core
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_WithoutValue_ShouldLinkNull() {
             var actual = _sut.LoadLink<LinkedSource>().FromModel(
                 new Model {

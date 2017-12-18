@@ -9,9 +9,8 @@ using LinkIt.Tests.TestHelpers;
 using NUnit.Framework;
 
 namespace LinkIt.Tests.LinkTargets {
-    [TestFixture]
     public class LinkTargetFactoryTests {
-        [Test]
+        [Fact]
         public void Create_LinkTargetShouldBeEqualtable() {
             var summaryImage1 = LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.SummaryImage
@@ -28,7 +27,7 @@ namespace LinkIt.Tests.LinkTargets {
         }
 
 
-        [Test]
+        [Fact]
         public void Create_WithNestedGetter_ShouldThrow()
         {
             TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, string>(
@@ -41,7 +40,7 @@ namespace LinkIt.Tests.LinkTargets {
             );
         }
 
-        [Test]
+        [Fact]
         public void Test_WithExpression_ShouldThrow() {
             TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.SummaryImage ?? new Image()
@@ -53,7 +52,7 @@ namespace LinkIt.Tests.LinkTargets {
             );
         }
 
-        [Test]
+        [Fact]
         public void Test_WithFunc_ShouldThrow() {
             TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.AnImageFunc()
@@ -65,7 +64,7 @@ namespace LinkIt.Tests.LinkTargets {
             );
         }
 
-        [Test]
+        [Fact]
         public void Test_WithReadOnlyProperty_ShouldThrow() {
             TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.AReadOnlyImage
@@ -77,7 +76,7 @@ namespace LinkIt.Tests.LinkTargets {
             );
         }
 
-        [Test]
+        [Fact]
         public void Test_WithPrivateSetter_ShouldThrow() {
             TestDelegate act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.APrivateSetterImage

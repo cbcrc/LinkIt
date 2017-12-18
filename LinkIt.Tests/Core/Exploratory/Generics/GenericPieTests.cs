@@ -12,8 +12,6 @@ using NUnit.Framework;
 
 namespace LinkIt.Tests.Core.Exploratory.Generics
 {
-    [UseReporter(typeof(DiffReporter))]
-    [TestFixture]
     public class GenericPieTests{
         private ILoadLinkProtocol _sut;
 
@@ -47,7 +45,7 @@ namespace LinkIt.Tests.Core.Exploratory.Generics
             );
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_StringPie()
         {
             var actual = _sut.LoadLink<StringPieLinkedSource>().ById("1");
@@ -55,7 +53,7 @@ namespace LinkIt.Tests.Core.Exploratory.Generics
             ApprovalsExt.VerifyPublicProperties(actual);
         }
 
-        [Test]
+        [Fact]
         public void LoadLink_IntPie() {
             var actual = _sut.LoadLink<IntPieLinkedSource>().ById("2");
 
