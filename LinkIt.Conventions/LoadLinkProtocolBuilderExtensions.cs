@@ -17,7 +17,7 @@ namespace LinkIt.Conventions
     public static class LoadLinkProtocolBuilderExtensions
     {
         public static ILoadLinkProtocol Build(
-            this LoadLinkProtocolBuilder loadLinkProtocolBuilder, 
+            this LoadLinkProtocolBuilder loadLinkProtocolBuilder,
             Func<IReferenceLoader> createReferenceLoader,
             IEnumerable<Assembly> assemblies,
             List<ILoadLinkExpressionConvention> conventions)
@@ -36,9 +36,9 @@ namespace LinkIt.Conventions
             IEnumerable<Assembly> assemblies,
             List<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null) { throw new ArgumentNullException("loadLinkProtocolBuilder"); }
-            if (assemblies == null) { throw new ArgumentNullException("assemblies"); }
-            if (conventions == null) { throw new ArgumentNullException("conventions"); }
+            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException("loadLinkProtocolBuilder");
+            if (assemblies == null) throw new ArgumentNullException("assemblies");
+            if (conventions == null) throw new ArgumentNullException("conventions");
 
             var types = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
@@ -56,9 +56,9 @@ namespace LinkIt.Conventions
             List<Type> types,
             List<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null) { throw new ArgumentNullException("loadLinkProtocolBuilder"); }
-            if (types == null) { throw new ArgumentNullException("types"); }
-            if (conventions == null) { throw new ArgumentNullException("conventions"); }
+            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException("loadLinkProtocolBuilder");
+            if (types == null) throw new ArgumentNullException("types");
+            if (conventions == null) throw new ArgumentNullException("conventions");
             EnsureConventionNamesAreUnique(conventions);
 
             var matches = new FindAllConventionMatchesQuery(types, conventions).Execute();
@@ -66,17 +66,17 @@ namespace LinkIt.Conventions
             command.Execute();
         }
 
-        private static void EnsureConventionNamesAreUnique(List<ILoadLinkExpressionConvention> conventions) {
+        private static void EnsureConventionNamesAreUnique(List<ILoadLinkExpressionConvention> conventions)
+        {
             var notUniqueConventionNames = conventions.GetNotUniqueKey(convention => convention.Name);
 
-            if (notUniqueConventionNames.Any()) {
+            if (notUniqueConventionNames.Any())
                 throw new ArgumentException(
                     string.Format(
                         "Cannot have many conventions with the same name: {0}",
-                        String.Join(",", notUniqueConventionNames)
+                        string.Join(",", notUniqueConventionNames)
                     )
                 );
-            }
         }
     }
 }

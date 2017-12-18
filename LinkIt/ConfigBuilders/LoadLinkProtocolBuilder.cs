@@ -11,19 +11,20 @@ using LinkIt.Core;
 using LinkIt.Core.Interfaces;
 using LinkIt.PublicApi;
 
-namespace LinkIt.ConfigBuilders {
+namespace LinkIt.ConfigBuilders
+{
     public class LoadLinkProtocolBuilder
     {
-        private readonly Dictionary<string, ILoadLinkExpression> _loadLinkExpressionsById = 
+        private readonly Dictionary<string, ILoadLinkExpression> _loadLinkExpressionsById =
             new Dictionary<string, ILoadLinkExpression>();
 
         public void ApplyLoadLinkProtocolConfigs(IEnumerable<Assembly> assemblies)
         {
-            if (assemblies == null) { throw new ArgumentNullException("assemblies"); }
+            if (assemblies == null) throw new ArgumentNullException("assemblies");
 
             var loadLinkProtocolConfigTypes = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => type.GetInterface("LinkIt.ConfigBuilders.ILoadLinkProtocolConfig")!=null)
+                .Where(type => type.GetInterface("LinkIt.ConfigBuilders.ILoadLinkProtocolConfig") != null)
                 .ToList();
 
             var loadLinkProtocolConfigs = loadLinkProtocolConfigTypes
@@ -31,12 +32,11 @@ namespace LinkIt.ConfigBuilders {
                 .Cast<ILoadLinkProtocolConfig>()
                 .ToList();
 
-            foreach (var loadLinkProtocolConfig in loadLinkProtocolConfigs){
-                loadLinkProtocolConfig.ConfigureLoadLinkProtocol(this);
-            }
+            foreach (var loadLinkProtocolConfig in loadLinkProtocolConfigs) loadLinkProtocolConfig.ConfigureLoadLinkProtocol(this);
         }
 
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> For<TLinkedSource>(){
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> For<TLinkedSource>()
+        {
             return new LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>(AddLoadLinkExpression);
         }
 
@@ -47,10 +47,10 @@ namespace LinkIt.ConfigBuilders {
 
         public ILoadLinkProtocol Build(Func<IReferenceLoader> createReferenceLoader)
         {
-            if (createReferenceLoader == null) { throw new ArgumentNullException("createReferenceLoader"); }
+            if (createReferenceLoader == null) throw new ArgumentNullException("createReferenceLoader");
 
             return new LoadLinkProtocol(
-                _loadLinkExpressionsById.Values.ToList(), 
+                _loadLinkExpressionsById.Values.ToList(),
                 createReferenceLoader
             );
         }

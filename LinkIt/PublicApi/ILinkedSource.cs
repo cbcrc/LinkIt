@@ -3,9 +3,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-namespace LinkIt.PublicApi {
+namespace LinkIt.PublicApi
+{
     //Responsible for defining the link targets of a model
-    public interface ILinkedSource<TModel> {
+    public interface ILinkedSource<TModel>
+    {
         TModel Model { get; set; }
     }
 }

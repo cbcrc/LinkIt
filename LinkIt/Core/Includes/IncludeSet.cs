@@ -14,8 +14,8 @@ namespace LinkIt.Core.Includes
     //Responsible for giving access to the includes of a specific link target.
     public class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {
-        private readonly Dictionary<TDiscriminant, IInclude> _includes;
         private readonly Func<TLink, TDiscriminant> _getDiscriminant;
+        private readonly Dictionary<TDiscriminant, IInclude> _includes;
 
         public IncludeSet(Dictionary<TDiscriminant, IInclude> includes, Func<TLink, TDiscriminant> getDiscriminant)
         {
@@ -23,36 +23,42 @@ namespace LinkIt.Core.Includes
             _getDiscriminant = getDiscriminant;
         }
 
-        public IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceByIdForReferenceType(TLink link, Type referenceType) {
+        public IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceByIdForReferenceType(TLink link, Type referenceType)
+        {
             var include = GetInclude<IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>>(link);
-            
-            if (include == null || include.ReferenceType != referenceType){ return null; }
+
+            if (include == null || include.ReferenceType != referenceType) return null;
 
             return include;
         }
 
-        public IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource,TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceFromModel(TLink link) {
-            return GetInclude<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource,TAbstractChildLinkedSource, TLink>>(link);
+        public IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceFromModel(TLink link)
+        {
+            return GetInclude<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink>>(link);
         }
 
-        public IIncludeWithAddLookupId<TLink> GetIncludeWithAddLookupId(TLink linkForReferenceType) {
+        public IIncludeWithAddLookupId<TLink> GetIncludeWithAddLookupId(TLink linkForReferenceType)
+        {
             return GetInclude<IIncludeWithAddLookupId<TLink>>(linkForReferenceType);
         }
 
-        public IIncludeWithGetReference<TAbstractChildLinkedSource, TLink> GetIncludeWithGetReference(TLink link) {
+        public IIncludeWithGetReference<TAbstractChildLinkedSource, TLink> GetIncludeWithGetReference(TLink link)
+        {
             return GetInclude<IIncludeWithGetReference<TAbstractChildLinkedSource, TLink>>(link);
         }
 
-        public List<IIncludeWithAddLookupId<TLink>> GetIncludesWithAddLookupId(){
+        public List<IIncludeWithAddLookupId<TLink>> GetIncludesWithAddLookupId()
+        {
             return GetIncludes<IIncludeWithAddLookupId<TLink>>();
         }
 
-        public List<IIncludeWithChildLinkedSource> GetIncludesWithChildLinkedSource(){
+        public List<IIncludeWithChildLinkedSource> GetIncludesWithChildLinkedSource()
+        {
             return GetIncludes<IIncludeWithChildLinkedSource>();
         }
 
-        private TInclude GetInclude<TInclude>(TLink link) 
-            where TInclude:class
+        private TInclude GetInclude<TInclude>(TLink link)
+            where TInclude : class
         {
             AssumeNotNullLink<TInclude>(link);
 
@@ -67,32 +73,28 @@ namespace LinkIt.Core.Includes
         private void AssumeIncludeExistsForDiscriminant<TInclude>(TDiscriminant discriminant) where TInclude : class
         {
             if (!_includes.ContainsKey(discriminant))
-            {
                 throw new AssumptionFailed(
                     string.Format(
                         "{0}: Cannot invoke GetInclude for discriminant={1}",
-                        typeof (TLinkedSource),
+                        typeof(TLinkedSource),
                         discriminant
-                        )
-                    );
-            }
+                    )
+                );
         }
 
         private static void AssumeNotNullLink<TInclude>(TLink link) where TInclude : class
         {
             if (link == null)
-            {
                 throw new AssumptionFailed(
                     string.Format(
                         "{0}: Cannot invoke GetInclude with a null link",
-                        typeof (TLinkedSource)
-                        )
-                    );
-            }
+                        typeof(TLinkedSource)
+                    )
+                );
         }
 
-        public List<TInclude> GetIncludes<TInclude>() 
-            where TInclude:class,IInclude
+        public List<TInclude> GetIncludes<TInclude>()
+            where TInclude : class, IInclude
         {
             return _includes.Values
                 .Where(include => include is TInclude)

@@ -24,19 +24,21 @@ namespace LinkIt.Conventions
             _matches = matches;
         }
 
-        public void Execute(){
-            foreach (var match in _matches) {
-                ApplyConvention(match);
-            }
+        public void Execute()
+        {
+            foreach (var match in _matches) ApplyConvention(match);
         }
 
-        private void ApplyConvention(ConventionMatch match) {
-            try { 
-                if (match.Convention is ISingleValueConvention) { ApplySingleValueConvention(match); }
-                if (match.Convention is IMultiValueConvention) { ApplyMultiValueConvention(match); }
-                if (match.Convention is IByNullableValueTypeIdConvention) { ApplyNullableValueTypeIdConvention(match); }
+        private void ApplyConvention(ConventionMatch match)
+        {
+            try
+            {
+                if (match.Convention is ISingleValueConvention) ApplySingleValueConvention(match);
+                if (match.Convention is IMultiValueConvention) ApplyMultiValueConvention(match);
+                if (match.Convention is IByNullableValueTypeIdConvention) ApplyNullableValueTypeIdConvention(match);
             }
-            catch (TargetInvocationException ex) {
+            catch (TargetInvocationException ex)
+            {
                 throw new Exception(
                     string.Format(
                         "The convention \"{0}\" failed for Apply. Link target id: {1}, linked source model property: {2}",
@@ -50,8 +52,10 @@ namespace LinkIt.Conventions
         }
 
         #region ApplySingleValueConvention
-        private void ApplySingleValueConvention(ConventionMatch match) {
-            var method = GetType().GetMethod("ApplySingleValueConventionGeneric");
+
+        private void ApplySingleValueConvention(ConventionMatch match)
+        {
+            var method = GetType().GetMethod(nameof(ApplySingleValueConventionGeneric));
             var genericMethod = method.MakeGenericMethod(
                 match.LinkedSourceType,
                 match.LinkTargetProperty.PropertyType,
@@ -63,13 +67,12 @@ namespace LinkIt.Conventions
 
         public void ApplySingleValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match)
         {
-            var getLinkTargetProperty = FuncGenerator.
-                GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
-                    match.LinkTargetProperty.Name
-                );
+            var getLinkTargetProperty = FuncGenerator.GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
+                match.LinkTargetProperty.Name
+            );
             var getLinkedSourceModelProperty = FuncGenerator
                 .GenerateFromGetter<TLinkedSource, TLinkedSourceModelProperty>(
-                    string.Format("Model.{0}", match.LinkedSourceModelProperty.Name)
+                    $"Model.{match.LinkedSourceModelProperty.Name}"
                 );
 
             var casted = (ISingleValueConvention) match.Convention;
@@ -78,12 +81,15 @@ namespace LinkIt.Conventions
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty,
                 match.LinkedSourceModelProperty, match.LinkTargetProperty);
-        } 
+        }
+
         #endregion
 
         #region ApplyMultiValueConvention
-        private void ApplyMultiValueConvention(ConventionMatch match) {
-            var method = GetType().GetMethod("ApplyMultiValueConventionGeneric");
+
+        private void ApplyMultiValueConvention(ConventionMatch match)
+        {
+            var method = GetType().GetMethod(nameof(ApplyMultiValueConventionGeneric));
 
             var genericMethod = method.MakeGenericMethod(
                 match.LinkedSourceType,
@@ -95,27 +101,29 @@ namespace LinkIt.Conventions
         }
 
         public void ApplyMultiValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match)
-         {
-            var getLinkTargetProperty = FuncGenerator.
-                GenerateFromGetterAsExpression<TLinkedSource, List<TLinkTargetProperty>>(
-                    match.LinkTargetProperty.Name
-                );
+        {
+            var getLinkTargetProperty = FuncGenerator.GenerateFromGetterAsExpression<TLinkedSource, List<TLinkTargetProperty>>(
+                match.LinkTargetProperty.Name
+            );
             var getLinkedSourceModelProperty = FuncGenerator
                 .GenerateFromGetter<TLinkedSource, List<TLinkedSourceModelProperty>>(
-                    string.Format("Model.{0}", match.LinkedSourceModelProperty.Name)
+                    $"Model.{match.LinkedSourceModelProperty.Name}"
                 );
 
-            var casted = (IMultiValueConvention)match.Convention;
+            var casted = (IMultiValueConvention) match.Convention;
             casted.Apply(
                 _loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty, match.LinkedSourceModelProperty, match.LinkTargetProperty);
-        } 
+        }
+
         #endregion
 
         #region ApplyNullableValueTypeIdConvention
-        private void ApplyNullableValueTypeIdConvention(ConventionMatch match) {
-            var method = GetType().GetMethod("ApplyNullableValueTypeIdConventionGeneric");
+
+        private void ApplyNullableValueTypeIdConvention(ConventionMatch match)
+        {
+            var method = GetType().GetMethod(nameof(ApplyNullableValueTypeIdConventionGeneric));
             var genericMethod = method.MakeGenericMethod(
                 match.LinkedSourceType,
                 match.LinkTargetProperty.PropertyType,
@@ -126,22 +134,23 @@ namespace LinkIt.Conventions
         }
 
         public void ApplyNullableValueTypeIdConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match)
-            where TLinkedSourceModelProperty : struct {
-            var getLinkTargetProperty = FuncGenerator.
-                GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
-                    match.LinkTargetProperty.Name
-                );
+            where TLinkedSourceModelProperty : struct
+        {
+            var getLinkTargetProperty = FuncGenerator.GenerateFromGetterAsExpression<TLinkedSource, TLinkTargetProperty>(
+                match.LinkTargetProperty.Name
+            );
             var getLinkedSourceModelProperty = FuncGenerator
                 .GenerateFromGetter<TLinkedSource, TLinkedSourceModelProperty?>(
-                    string.Format("Model.{0}", match.LinkedSourceModelProperty.Name)
+                    $"Model.{match.LinkedSourceModelProperty.Name}"
                 );
 
-            var casted = (IByNullableValueTypeIdConvention)match.Convention;
+            var casted = (IByNullableValueTypeIdConvention) match.Convention;
             casted.Apply(
                 _loadLinkProtocolBuilder.For<TLinkedSource>(),
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty, match.LinkedSourceModelProperty, match.LinkTargetProperty);
-        } 
+        }
+
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace LinkIt.PublicApi
         : IDisposable
     {
         void LoadReferences(
-            ILookupIdContext lookupIdContext, 
+            ILookupIdContext lookupIdContext,
             ILoadedReferenceContext loadedReferenceContext
         );
     }

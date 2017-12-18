@@ -4,7 +4,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using LinkIt.Core.Interfaces;
 using LinkIt.Shared;
@@ -16,34 +16,32 @@ namespace LinkIt.Core
     //Responsible for inferring the linked source model type
     public static class LinkedSourceConfigs
     {
-        private static readonly Dictionary<Type, ILinkedSourceConfig> LinkedSourceConfigByType = new Dictionary<Type, ILinkedSourceConfig>();
+        private static readonly ConcurrentDictionary<Type, ILinkedSourceConfig> LinkedSourceConfigByType = new ConcurrentDictionary<Type, ILinkedSourceConfig>();
 
         public static IGenericLinkedSourceConfig<TLinkedSource> GetConfigFor<TLinkedSource>()
         {
-            return (IGenericLinkedSourceConfig<TLinkedSource>)GetConfigFor(typeof(TLinkedSource));
+            return (IGenericLinkedSourceConfig<TLinkedSource>) GetConfigFor(typeof(TLinkedSource));
         }
 
-        public static ILinkedSourceConfig GetConfigFor(Type linkedSourceType) {
-            if (!LinkedSourceConfigByType.ContainsKey(linkedSourceType)) {
-                LinkedSourceConfigByType.Add(linkedSourceType, CreateLinkedSourceConfig(linkedSourceType));
-            }
-
-            return LinkedSourceConfigByType[linkedSourceType];
+        public static ILinkedSourceConfig GetConfigFor(Type linkedSourceType)
+        {
+            return LinkedSourceConfigByType.GetOrAdd(linkedSourceType, CreateLinkedSourceConfig);
         }
 
         private static ILinkedSourceConfig CreateLinkedSourceConfig(Type linkedSourceType)
         {
-            Type[] typeArgs ={
+            Type[] typeArgs =
+            {
                 linkedSourceType,
                 linkedSourceType.GetLinkedSourceModelType()
             };
 
-            Type ctorGenericType = typeof(LinkedSourceConfig<,>);
-            Type ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
+            var ctorGenericType = typeof(LinkedSourceConfig<,>);
+            var ctorSpecificType = ctorGenericType.MakeGenericType(typeArgs);
 
             var ctor = ctorSpecificType.GetConstructors().Single();
             var uncasted = ctor.Invoke(new object[0]);
-            return (ILinkedSourceConfig)uncasted;
+            return (ILinkedSourceConfig) uncasted;
         }
     }
 }

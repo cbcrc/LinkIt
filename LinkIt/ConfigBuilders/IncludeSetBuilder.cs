@@ -13,7 +13,7 @@ namespace LinkIt.ConfigBuilders
 {
     public class IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>
     {
-        private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue = 
+        private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue =
             new Dictionary<TDiscriminant, IInclude>();
 
         public IncludeSetBuilder(ILinkTarget linkTarget)
@@ -21,7 +21,7 @@ namespace LinkIt.ConfigBuilders
             LinkTarget = linkTarget;
         }
 
-        public ILinkTarget LinkTarget { get; private set; }
+        public ILinkTarget LinkTarget { get; }
 
         public IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget> Include<TLinkTarget>()
             where TLinkTarget : TAbstractLinkTarget
@@ -29,8 +29,9 @@ namespace LinkIt.ConfigBuilders
             return new IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget>(this);
         }
 
-        internal void AddToIncludeSet(TDiscriminant discriminant, IInclude include){
-            if (_includeByDiscriminantValue.ContainsKey(discriminant)){
+        internal void AddToIncludeSet(TDiscriminant discriminant, IInclude include)
+        {
+            if (_includeByDiscriminantValue.ContainsKey(discriminant))
                 throw new ArgumentException(
                     string.Format(
                         "{0}: cannot have many includes for the same discriminant ({1}).",
@@ -38,12 +39,12 @@ namespace LinkIt.ConfigBuilders
                         discriminant
                     )
                 );
-            }
 
-            _includeByDiscriminantValue.Add(discriminant,include);
+            _includeByDiscriminantValue.Add(discriminant, include);
         }
 
-        internal IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> Build(Func<TLink, TDiscriminant> getDiscriminant) {
+        internal IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> Build(Func<TLink, TDiscriminant> getDiscriminant)
+        {
             return new IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
                 _includeByDiscriminantValue,
                 getDiscriminant

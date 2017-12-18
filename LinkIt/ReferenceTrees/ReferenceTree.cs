@@ -7,15 +7,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LinkIt.ReferenceTrees {
-    public class ReferenceTree{
+namespace LinkIt.ReferenceTrees
+{
+    public class ReferenceTree
+    {
         private readonly ReferenceTree _parent;
 
-        public ReferenceTree(Type referenceType, string linkTargetId, ReferenceTree parent){
+        public ReferenceTree(Type referenceType, string linkTargetId, ReferenceTree parent)
+        {
             Node = new ReferenceToLoad(referenceType, linkTargetId);
             Children = new List<ReferenceTree>();
 
-            if (parent != null){
+            if (parent != null)
+            {
                 EnsureDoesNotCreateCycle(parent);
 
                 _parent = parent;
@@ -23,17 +27,18 @@ namespace LinkIt.ReferenceTrees {
             }
         }
 
-        public ReferenceToLoad Node { get; private set; }
-        public List<ReferenceTree> Children { get; private set; }
+        public ReferenceToLoad Node { get; }
+        public List<ReferenceTree> Children { get; }
 
-        private void AddChild(ReferenceTree child){
+        private void AddChild(ReferenceTree child)
+        {
             Children.Add(child);
         }
 
         private void EnsureDoesNotCreateCycle(ReferenceTree parent)
         {
             var nodeThatCreatesCycle = GetNodeThatCreatesCycle(parent);
-            if (nodeThatCreatesCycle != null){
+            if (nodeThatCreatesCycle != null)
                 throw new NotSupportedException(
                     string.Format(
                         "Recursive load link is not supported. The cycle occurs between {0} and {1} for the reference of type {2}.",
@@ -42,15 +47,14 @@ namespace LinkIt.ReferenceTrees {
                         Node.ReferenceType
                     )
                 );
-            }
         }
 
         private ReferenceToLoad GetNodeThatCreatesCycle(ReferenceTree parent)
         {
-            if (parent == null) { return null; }
+            if (parent == null) return null;
 
             return parent.GetAncestorOrSelf()
-                .Select(item=>item.Node)
+                .Select(item => item.Node)
                 .FirstOrDefault(reference => reference.ReferenceType == Node.ReferenceType);
         }
 

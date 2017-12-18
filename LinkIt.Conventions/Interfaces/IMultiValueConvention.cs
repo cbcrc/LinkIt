@@ -11,12 +11,12 @@ using LinkIt.ConfigBuilders;
 
 namespace LinkIt.Conventions.Interfaces
 {
-    public interface IMultiValueConvention:ILoadLinkExpressionConvention
+    public interface IMultiValueConvention : ILoadLinkExpressionConvention
     {
         void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
-            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, 
-            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty, 
-            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty, 
+            LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
+            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
+            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty
         );

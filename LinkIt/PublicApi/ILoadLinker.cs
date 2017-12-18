@@ -22,13 +22,13 @@ namespace LinkIt.PublicApi
         );
 
         TRootLinkedSource ById<TRootLinkedSourceModelId>(
-            TRootLinkedSourceModelId modelId, 
+            TRootLinkedSourceModelId modelId,
             Action<TRootLinkedSource> initRootLinkedSource = null
         );
 
         List<TRootLinkedSource> ByIds<TRootLinkedSourceModelId>(
             List<TRootLinkedSourceModelId> modelIds,
-            Action<int,TRootLinkedSource> initRootLinkedSources = null
+            Action<int, TRootLinkedSource> initRootLinkedSources = null
         );
     }
 }

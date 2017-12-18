@@ -7,11 +7,13 @@ using System;
 
 namespace LinkIt.LinkTargets.Interfaces
 {
-    public interface ILinkTarget : IEquatable<ILinkTarget> {
+    public interface ILinkTarget : IEquatable<ILinkTarget>
+    {
         string Id { get; }
     }
 
-    public interface ILinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget {
+    public interface ILinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget
+    {
         //The parameter linkTargetValueIndex is essential to support the 
         //following use case. When list with polymorhic items is linked, 
         //if some items are nested linked source, it's possible those items

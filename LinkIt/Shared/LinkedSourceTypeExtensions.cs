@@ -12,11 +12,13 @@ namespace LinkIt.Shared
 {
     public static class LinkedSourceTypeExtensions
     {
-        public static bool DoesImplementILinkedSourceOnceAndOnlyOnce(this Type type) {
+        public static bool DoesImplementILinkedSourceOnceAndOnlyOnce(this Type type)
+        {
             return GetILinkedSourceTypes(type).Count == 1;
         }
 
-        public static List<Type> GetILinkedSourceTypes(this Type type) {
+        public static List<Type> GetILinkedSourceTypes(this Type type)
+        {
             var iLinkedSourceTypes = type.GetInterfaces()
                 .Where(interfaceType =>
                     interfaceType.IsGenericType &&
@@ -25,7 +27,8 @@ namespace LinkIt.Shared
             return iLinkedSourceTypes;
         }
 
-        public static Type GetLinkedSourceModelType(this Type type) {
+        public static Type GetLinkedSourceModelType(this Type type)
+        {
             EnsureImplementsILinkedSourceOnceAndOnlyOnce(type);
 
             var iLinkedSourceTypes = type.GetILinkedSourceTypes();
@@ -33,8 +36,9 @@ namespace LinkIt.Shared
             return iLinkedSourceType.GenericTypeArguments.Single();
         }
 
-        private static void EnsureImplementsILinkedSourceOnceAndOnlyOnce(Type linkedSourceType) {
-            if (!linkedSourceType.DoesImplementILinkedSourceOnceAndOnlyOnce()) {
+        private static void EnsureImplementsILinkedSourceOnceAndOnlyOnce(Type linkedSourceType)
+        {
+            if (!linkedSourceType.DoesImplementILinkedSourceOnceAndOnlyOnce())
                 throw new ArgumentException(
                     string.Format(
                         "{0} must implement ILinkedSource<> once and only once.",
@@ -42,8 +46,6 @@ namespace LinkIt.Shared
                     ),
                     "TLinkedSource"
                 );
-            }
         }
-
     }
 }

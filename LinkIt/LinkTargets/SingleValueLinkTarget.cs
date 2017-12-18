@@ -8,7 +8,7 @@ using LinkIt.LinkTargets.Interfaces;
 
 namespace LinkIt.LinkTargets
 {
-    public class SingleValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
+    public class SingleValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
     {
         private readonly Action<TLinkedSource, TTargetProperty> _set;
 
@@ -20,22 +20,26 @@ namespace LinkIt.LinkTargets
             Id = id;
         }
 
-        public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex){
+        public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
+        {
             _set(linkedSource, linkTargetValue);
         }
 
-        public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues){
+        public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues)
+        {
             //Do nothing for single value
         }
 
-        public void FilterOutNullValues(TLinkedSource linkedSource) {
+        public void FilterOutNullValues(TLinkedSource linkedSource)
+        {
             //Do nothing for single value
         }
 
-        public string Id { get; private set; }
+        public string Id { get; }
 
-        public bool Equals(ILinkTarget other) {
-            if (other == null) { return false; }
+        public bool Equals(ILinkTarget other)
+        {
+            if (other == null) return false;
 
             return Id.Equals(other.Id);
         }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LinkIt.PublicApi {
+namespace LinkIt.PublicApi
+{
     public class LoadLinkProtocolStatistics
     {
         private readonly Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType;
@@ -18,19 +19,20 @@ namespace LinkIt.PublicApi {
 
         public int MaxNumberOfReferenceTypeInOneLinkedSource => NumberOfReferenceTypeForEachLinkedSource.First().Value;
 
-        public List<KeyValuePair<Type, int>> LoadingLevelDepthForEachLinkedSource{
+        public List<KeyValuePair<Type, int>> LoadingLevelDepthForEachLinkedSource
+        {
             get
             {
                 return _loadingLevelsByRootLinkedSourceType
-                  .Select(item =>
-                      new KeyValuePair<Type, int>(
-                          item.Key,
-                          item.Value.Count
-                      )
-                  )
-                  .OrderByDescending(item=>item.Value)
-                  .ThenBy(item=>item.Key.FullName)
-                  .ToList();
+                    .Select(item =>
+                        new KeyValuePair<Type, int>(
+                            item.Key,
+                            item.Value.Count
+                        )
+                    )
+                    .OrderByDescending(item => item.Value)
+                    .ThenBy(item => item.Key.FullName)
+                    .ToList();
             }
         }
 
@@ -39,17 +41,17 @@ namespace LinkIt.PublicApi {
             get
             {
                 return _loadingLevelsByRootLinkedSourceType
-                  .Select(item =>
-                      new KeyValuePair<Type, int>(
-                          item.Key,
-                          item.Value
-                              .SelectMany(referencesForOneLoadingLevel=> referencesForOneLoadingLevel)
-                              .Count()
-                      )
-                  )
-                  .OrderByDescending(item => item.Value)
-                  .ThenBy(item => item.Key.FullName)
-                  .ToList();
+                    .Select(item =>
+                        new KeyValuePair<Type, int>(
+                            item.Key,
+                            item.Value
+                                .SelectMany(referencesForOneLoadingLevel => referencesForOneLoadingLevel)
+                                .Count()
+                        )
+                    )
+                    .OrderByDescending(item => item.Value)
+                    .ThenBy(item => item.Key.FullName)
+                    .ToList();
             }
         }
 

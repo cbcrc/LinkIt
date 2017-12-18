@@ -11,7 +11,8 @@ namespace LinkIt.Shared
 {
     public static class EnumerableExtensions
     {
-        public static List<TKey> GetNotUniqueKey<TItem, TKey>(this IEnumerable<TItem> items, Func<TItem, TKey> keySelector) {
+        public static List<TKey> GetNotUniqueKey<TItem, TKey>(this IEnumerable<TItem> items, Func<TItem, TKey> keySelector)
+        {
             return items
                 .GroupBy(keySelector)
                 .Where(group => group.Count() > 1)

@@ -10,14 +10,14 @@ using LinkIt.LinkTargets.Interfaces;
 
 namespace LinkIt.LinkTargets
 {
-    public class MultiValueLinkTarget<TLinkedSource, TTargetProperty>:ILinkTarget<TLinkedSource, TTargetProperty>
+    public class MultiValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
     {
         private readonly Func<TLinkedSource, List<TTargetProperty>> _get;
         private readonly Action<TLinkedSource, List<TTargetProperty>> _set;
 
         public MultiValueLinkTarget(
             string id,
-            Func<TLinkedSource, List<TTargetProperty>> get, 
+            Func<TLinkedSource, List<TTargetProperty>> get,
             Action<TLinkedSource, List<TTargetProperty>> set)
         {
             Id = id;
@@ -33,13 +33,15 @@ namespace LinkIt.LinkTargets
 
         public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues)
         {
-            if (_get(linkedSource) == null) {
+            if (_get(linkedSource) == null)
+            {
                 var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValues].ToList();
                 _set(linkedSource, polymorphicListToBeBuilt);
             }
         }
 
-        public void FilterOutNullValues(TLinkedSource linkedSource){
+        public void FilterOutNullValues(TLinkedSource linkedSource)
+        {
             var values = _get(linkedSource);
             var valuesWithoutNull = values
                 .Where(value => value != null)
@@ -48,10 +50,11 @@ namespace LinkIt.LinkTargets
             _set(linkedSource, valuesWithoutNull);
         }
 
-        public string Id { get; private set; }
+        public string Id { get; }
 
-        public bool Equals(ILinkTarget other) {
-            if (other == null) { return false; }
+        public bool Equals(ILinkTarget other)
+        {
+            if (other == null) return false;
 
             return Id.Equals(other.Id);
         }

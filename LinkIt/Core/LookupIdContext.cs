@@ -16,27 +16,8 @@ namespace LinkIt.Core
     {
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
 
-        public void AddSingle<TReference, TId>(TId lookupId) {
-            if (lookupId == null) { return; }
-
-            var tReference = typeof(TReference);
-            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
-                _lookupIdsByReferenceType.Add(tReference, new List<TId>());
-            }
-
-            var currentLookupIds = (List<TId>)_lookupIdsByReferenceType[tReference];
-            currentLookupIds.Add(lookupId);
-        }
-
-        public void AddMulti<TReference, TId>(List<TId> lookupIds) {
-            if (lookupIds == null) { throw new ArgumentNullException("lookupIds"); }
-
-            foreach (var lookupId in lookupIds) {
-                AddSingle<TReference, TId>(lookupId);
-            }
-        }
-
-        public List<Type> GetReferenceTypes() {
+        public List<Type> GetReferenceTypes()
+        {
             return _lookupIdsByReferenceType
                 .Keys
                 .ToList();
@@ -44,20 +25,37 @@ namespace LinkIt.Core
 
         public List<TId> GetReferenceIds<TReference, TId>()
         {
-            var tReference = typeof (TReference);
-            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) {
+            var tReference = typeof(TReference);
+            if (!_lookupIdsByReferenceType.ContainsKey(tReference))
                 throw new InvalidOperationException(
                     string.Format(
                         "There are no reference ids for this the type {0}.",
                         tReference.Name)
                 );
-            }
 
             var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
 
             return casted
                 .Distinct()
                 .ToList();
+        }
+
+        public void AddSingle<TReference, TId>(TId lookupId)
+        {
+            if (lookupId == null) return;
+
+            var tReference = typeof(TReference);
+            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) _lookupIdsByReferenceType.Add(tReference, new List<TId>());
+
+            var currentLookupIds = (List<TId>) _lookupIdsByReferenceType[tReference];
+            currentLookupIds.Add(lookupId);
+        }
+
+        public void AddMulti<TReference, TId>(List<TId> lookupIds)
+        {
+            if (lookupIds == null) throw new ArgumentNullException("lookupIds");
+
+            foreach (var lookupId in lookupIds) AddSingle<TReference, TId>(lookupId);
         }
     }
 }

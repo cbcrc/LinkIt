@@ -15,15 +15,16 @@ using LinkIt.Shared;
 namespace LinkIt.Core
 {
     //See IGenericLinkedSourceConfig and ILinkedSourceConfig
-    public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel>:IGenericLinkedSourceConfig<TLinkedSource>
+    public class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel> : IGenericLinkedSourceConfig<TLinkedSource>
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
     {
-        public LinkedSourceConfig(){
-            LinkedSourceType = typeof (TLinkedSource);
-            LinkedSourceModelType = typeof (TLinkedSourceModel);
+        public LinkedSourceConfig()
+        {
+            LinkedSourceType = typeof(TLinkedSource);
+            LinkedSourceModelType = typeof(TLinkedSourceModel);
         }
 
-        public Type LinkedSourceType { get; private set; }
+        public Type LinkedSourceType { get; }
         public Type LinkedSourceModelType { get; set; }
 
         public ILoadLinker<TLinkedSource> CreateLoadLinker(
@@ -93,11 +94,12 @@ namespace LinkIt.Core
             return link => (TLinkedSourceModel) (object) getNestedLinkedSourceModel(link);
         }
 
-        private void AssumeClassIsAssignableFrom<TAbstract,TConcrete>(){
-            var abstractType = typeof (TAbstract);
+        private void AssumeClassIsAssignableFrom<TAbstract, TConcrete>()
+        {
+            var abstractType = typeof(TAbstract);
             var concreteType = typeof(TConcrete);
 
-            if (!abstractType.IsAssignableFrom(concreteType)){
+            if (!abstractType.IsAssignableFrom(concreteType))
                 throw new AssumptionFailed(
                     string.Format(
                         "{0} is not assignable from {1}.",
@@ -105,11 +107,11 @@ namespace LinkIt.Core
                         concreteType
                     )
                 );
-            }
         }
 
-        private void EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(ILinkTarget linkTarget) {
-            if (!LinkedSourceModelType.IsAssignableFrom(typeof(TChildLinkedSourceModel))) {
+        private void EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(ILinkTarget linkTarget)
+        {
+            if (!LinkedSourceModelType.IsAssignableFrom(typeof(TChildLinkedSourceModel)))
                 throw new ArgumentException(
                     string.Format(
                         "{0}: getNestedLinkedSourceModel returns an invalid type. {1} is not assignable from {2}.",
@@ -118,8 +120,6 @@ namespace LinkIt.Core
                         typeof(TChildLinkedSourceModel)
                     )
                 );
-            }
         }
-
     }
 }

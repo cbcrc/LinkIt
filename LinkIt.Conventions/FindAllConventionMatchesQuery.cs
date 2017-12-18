@@ -10,10 +10,12 @@ using System.Reflection;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.Shared;
 
-namespace LinkIt.Conventions {
-    public class FindAllConventionMatchesQuery{
-        private readonly List<Type> _types;
+namespace LinkIt.Conventions
+{
+    public class FindAllConventionMatchesQuery
+    {
         private readonly List<ILoadLinkExpressionConvention> _conventions;
+        private readonly List<Type> _types;
 
         public FindAllConventionMatchesQuery(List<Type> types, List<ILoadLinkExpressionConvention> conventions)
         {
@@ -21,7 +23,8 @@ namespace LinkIt.Conventions {
             _conventions = conventions;
         }
 
-        public List<ConventionMatch> Execute() {
+        public List<ConventionMatch> Execute()
+        {
             var possibleMatches =
                 from linkedSourceType in GetLinkedSourceTypes()
                 from linkTargetProperty in GetLinkTargetProperties(linkedSourceType)
@@ -46,15 +49,17 @@ namespace LinkIt.Conventions {
                 .ToList();
         }
 
-        private List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType) {
+        private List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
+        {
             return linkedSourceType
                 .GetProperties()
-                .Where(property=>property.Name != "Model")
+                .Where(property => property.Name != "Model")
                 .Where(PropertyInfoExtensions.IsPublicReadWrite)
                 .ToList();
         }
 
-        private List<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType) {
+        private List<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType)
+        {
             var linkedSourceModelType = linkedSourceType
                 .GetProperty("Model")
                 .PropertyType;
@@ -64,16 +69,17 @@ namespace LinkIt.Conventions {
                 .ToList();
         }
 
-        private bool DoesConventionApply(ConventionMatch match) {
+        private bool DoesConventionApply(ConventionMatch match)
+        {
             var possibleConventionType = GetPossibleConventionType(match);
-            if (!possibleConventionType.IsInstanceOfType(match.Convention)) {
-                return false;
-            }
+            if (!possibleConventionType.IsInstanceOfType(match.Convention)) return false;
 
-            try{
+            try
+            {
                 return match.Convention.DoesApply(match.LinkedSourceModelProperty, match.LinkTargetProperty);
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 throw new Exception(
                     string.Format(
                         "The convention \"{0}\" failed for DoesApply. Link target id: {1}, linked source model property: {2}",
@@ -82,22 +88,20 @@ namespace LinkIt.Conventions {
                         match.LinkedSourceModelProperty.Name
                     ),
                     ex
-                ); 
+                );
             }
         }
 
-        private Type GetPossibleConventionType(ConventionMatch match) {
-            if (Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType) != null) {
-                return typeof(IByNullableValueTypeIdConvention);
-            }
-            if (IsGenericList(match.LinkTargetProperty)) {
-                return typeof(IMultiValueConvention);
-            }
+        private Type GetPossibleConventionType(ConventionMatch match)
+        {
+            if (Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType) != null) return typeof(IByNullableValueTypeIdConvention);
+            if (IsGenericList(match.LinkTargetProperty)) return typeof(IMultiValueConvention);
             return typeof(ISingleValueConvention);
         }
 
-        private static bool IsGenericList(PropertyInfo linkTargetProperty) {
-            if (!linkTargetProperty.PropertyType.IsGenericType) { return false; }
+        private static bool IsGenericList(PropertyInfo linkTargetProperty)
+        {
+            if (!linkTargetProperty.PropertyType.IsGenericType) return false;
 
             return linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>);
         }

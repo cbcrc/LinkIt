@@ -12,17 +12,17 @@ namespace LinkIt.Conventions
         public static bool MatchLinkedSourceModelPropertyName(this PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, string suffix)
         {
             return MatchLinkedSourceModelPropertyName(
-                linkTargetProperty.Name, 
-                linkedSourceModelProperty.Name, 
+                linkTargetProperty.Name,
+                linkedSourceModelProperty.Name,
                 suffix
             );
         }
 
-        public static bool MatchLinkedSourceModelPropertyName(this PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, string suffix, string lastCharacterToIgnore) {
+        public static bool MatchLinkedSourceModelPropertyName(this PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, string suffix, string lastCharacterToIgnore)
+        {
             if (!linkTargetProperty.Name.EndsWith(lastCharacterToIgnore) ||
-                !linkedSourceModelProperty.Name.EndsWith(lastCharacterToIgnore)) {
+                !linkedSourceModelProperty.Name.EndsWith(lastCharacterToIgnore))
                 return false;
-            }
 
             return MatchLinkedSourceModelPropertyName(
                 RemoveLastCharacter(linkTargetProperty, lastCharacterToIgnore),
@@ -31,11 +31,13 @@ namespace LinkIt.Conventions
             );
         }
 
-        private static bool MatchLinkedSourceModelPropertyName(string linkTargetPropertyName, string linkedSourceModelPropertyName, string suffix) {
+        private static bool MatchLinkedSourceModelPropertyName(string linkTargetPropertyName, string linkedSourceModelPropertyName, string suffix)
+        {
             return linkTargetPropertyName + suffix == linkedSourceModelPropertyName;
         }
 
-        private static string RemoveLastCharacter(PropertyInfo property, string lastCharacterToIgnore){
+        private static string RemoveLastCharacter(PropertyInfo property, string lastCharacterToIgnore)
+        {
             return property.Name.Remove(property.Name.Length - lastCharacterToIgnore.Length);
         }
     }

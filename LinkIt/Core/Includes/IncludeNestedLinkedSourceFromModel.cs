@@ -13,14 +13,14 @@ namespace LinkIt.Core.Includes
     //For a nested linked source obtained from the model (configured for specific discriminant of a link target):
     //responsible for loading and linking the link target for a specific discriminant
     //responsible for creating the reference tree for a specific discriminant
-    public class IncludeNestedLinkedSourceFromModel<TLinkedSource,TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel> :
-        IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource,TAbstractChildLinkedSource, TLink>,
+    public class IncludeNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel> :
+        IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink>,
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
     {
         private readonly Func<TLink, TChildLinkedSourceModel> _getNestedLinkedSourceModel;
-        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceWithParentAndReferenceIndex;
         private readonly Action<TLink, TChildLinkedSource> _initChildLinkedSourceWithLink;
+        private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceWithParentAndReferenceIndex;
 
         public IncludeNestedLinkedSourceFromModel(
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
@@ -42,7 +42,7 @@ namespace LinkIt.Core.Includes
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
-        public Type ChildLinkedSourceType { get; private set; }
+        public Type ChildLinkedSourceType { get; }
 
         public TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(
             TLink link,
@@ -61,24 +61,19 @@ namespace LinkIt.Core.Includes
                 );
         }
 
-        private Action<TChildLinkedSource> CreateInitChildLinkedSourceAction(TLinkedSource linkedSource, int referenceIndex, TLink link)
+
+        public void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
         {
-            if (_initChildLinkedSourceWithParentAndReferenceIndex != null)
-            {
-                return childLinkedSource => _initChildLinkedSourceWithParentAndReferenceIndex(linkedSource, referenceIndex, childLinkedSource);
-            }
-
-            if (_initChildLinkedSourceWithLink != null)
-            {
-                return childLinkedSource => _initChildLinkedSourceWithLink(link, childLinkedSource);
-            }
-
-            return null;
+            loadLinkProtocol.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, parent);
         }
 
+        private Action<TChildLinkedSource> CreateInitChildLinkedSourceAction(TLinkedSource linkedSource, int referenceIndex, TLink link)
+        {
+            if (_initChildLinkedSourceWithParentAndReferenceIndex != null) return childLinkedSource => _initChildLinkedSourceWithParentAndReferenceIndex(linkedSource, referenceIndex, childLinkedSource);
 
-        public void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol) {
-            loadLinkProtocol.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, parent);
+            if (_initChildLinkedSourceWithLink != null) return childLinkedSource => _initChildLinkedSourceWithLink(link, childLinkedSource);
+
+            return null;
         }
     }
 }
