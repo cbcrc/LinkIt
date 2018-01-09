@@ -4,6 +4,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
@@ -12,27 +14,32 @@ using LinkIt.Shared;
 
 namespace LinkIt.Conventions.DefaultConventions
 {
-    public class LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches : ISingleValueConvention
+    public class LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches : IMultiValueConvention
     {
-        public string Name => "Load link single value nested linked source from model source when name matches";
+        public string Name => "Load link multi value nested linked source from model when name matches";
 
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
         {
             if (linkTargetProperty.Name != linkedSourceModelProperty.Name) return false;
-            if (!linkTargetProperty.PropertyType.DoesImplementILinkedSourceOnceAndOnlyOnce()) return false;
-            if (linkTargetProperty.PropertyType.GetLinkedSourceModelType() != linkedSourceModelProperty.PropertyType) return false;
+
+            var sourceListItemType = linkedSourceModelProperty.PropertyType.GenericTypeArguments.Single();
+            var linkTargetListItemType = linkTargetProperty.PropertyType.GenericTypeArguments.Single();
+
+            if (!LinkedSourceTypeExtensions.DoesImplementILinkedSourceOnceAndOnlyOnce(linkTargetListItemType)) return false;
+
+            if (LinkedSourceTypeExtensions.GetLinkedSourceModelType(linkTargetListItemType) != sourceListItemType) return false;
 
             return true;
         }
 
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
-            Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty,
-            Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
+            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
+            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
         {
-            loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLink(
+            loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLinkForList<TLinkTargetProperty, TLinkedSourceModelProperty, bool>(
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty,
                 link => true,

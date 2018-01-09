@@ -68,9 +68,9 @@ namespace LinkIt.Conventions
 
         private static void EnsureConventionNamesAreUnique(List<ILoadLinkExpressionConvention> conventions)
         {
-            var notUniqueConventionNames = conventions.GetNotUniqueKey(convention => convention.Name);
+            var notUniqueConventionNames = EnumerableExtensions.GetNotUniqueKey(conventions, convention => convention.Name);
 
-            if (notUniqueConventionNames.Any())
+            if (notUniqueConventionNames.Any<string>())
                 throw new ArgumentException(
                     string.Format(
                         "Cannot have many conventions with the same name: {0}",

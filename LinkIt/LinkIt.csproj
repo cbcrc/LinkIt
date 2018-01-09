@@ -3,24 +3,23 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Title>LinkIt.AutoMapperExtensions</Title>
-    <Description>LinkIt is an object-oriented data integration library that make it easy to load different kinds of objects and link them together. 
+    <Title>LinkIt</Title>
+    <Description>LinkIt is an object-oriented data integration library that make it easy to load different kinds of objects and link them together.
 
-LinkIt is not an object-relational mapping framework. It can be used for orchestrating the loading of objects and for linking the loaded objects togheter, not for defining how the objects are loaded. LinkIt is intended to be used in a variety of context such as data APIs, ETL processes, CQRS event handlers, web crawlers, etc. 
+LinkIt is not an object-relational mapping framework. It can be used for orchestrating the loading of objects and for linking the loaded objects togheter, not for defining how the objects are loaded. LinkIt is intended to be used in a variety of context such as data APIs, ETL processes, CQRS event handlers, web crawlers, etc.
 
-Features 
-- Minimize coding effort by 
-- leveraging reuse and composition 
-- Data source independant 
-- Avoid the Select N + 1 problem 
-- Built-in support for references between complex types 
-- Support polymorphism out of the box 
-- Favor convention over configuration 
+Features
+- Minimize coding effort by leveraging reuse and composition
+- Data source independant
+- Avoid the Select N + 1 problem
+- Built-in support for references between complex types
+- Support polymorphism out of the box
+- Favor convention over configuration
 - Perform complex projections easily with LinkIt AutoMapper Extensions</Description>
     <Version>1.1.0</Version>
     <Authors>Stéphane Leblanc, Laurent le Beau-Martin</Authors>
     <Company>Radio-Canada/CBC</Company>
-    <Copyright>Copyright (c) 2015-2017 Radio-Canada/CBC</Copyright>
+    <Copyright>Copyright (c) 2015-2018 Radio-Canada/CBC</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/cbcrc/LinkIt/master/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/cbcrc/LinkIt</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/cbcrc/LinkIt/master/LICENSE.txt</PackageLicenseUrl>
