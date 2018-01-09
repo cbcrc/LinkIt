@@ -43,7 +43,7 @@ namespace LinkIt.Conventions
                     string.Format(
                         "The convention \"{0}\" failed for Apply. Link target id: {1}, linked source model property: {2}",
                         match.Convention.Name,
-                        match.LinkTargetProperty.GetFullName(),
+                        PropertyInfoExtensions.GetFullName(match.LinkTargetProperty),
                         match.LinkedSourceModelProperty.Name
                     ),
                     ex.InnerException

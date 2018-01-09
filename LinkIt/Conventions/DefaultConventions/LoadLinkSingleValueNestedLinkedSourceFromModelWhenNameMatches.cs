@@ -19,8 +19,8 @@ namespace LinkIt.Conventions.DefaultConventions
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
         {
             if (linkTargetProperty.Name != linkedSourceModelProperty.Name) return false;
-            if (!linkTargetProperty.PropertyType.DoesImplementILinkedSourceOnceAndOnlyOnce()) return false;
-            if (linkTargetProperty.PropertyType.GetLinkedSourceModelType() != linkedSourceModelProperty.PropertyType) return false;
+            if (!LinkedSourceTypeExtensions.DoesImplementILinkedSourceOnceAndOnlyOnce(linkTargetProperty.PropertyType)) return false;
+            if (LinkedSourceTypeExtensions.GetLinkedSourceModelType(linkTargetProperty.PropertyType) != linkedSourceModelProperty.PropertyType) return false;
 
             return true;
         }
@@ -32,7 +32,7 @@ namespace LinkIt.Conventions.DefaultConventions
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
         {
-            loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLink(
+            loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLink<TLinkTargetProperty, TLinkedSourceModelProperty, bool>(
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty,
                 link => true,

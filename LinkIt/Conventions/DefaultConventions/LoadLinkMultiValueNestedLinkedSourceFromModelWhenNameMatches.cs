@@ -25,9 +25,9 @@ namespace LinkIt.Conventions.DefaultConventions
             var sourceListItemType = linkedSourceModelProperty.PropertyType.GenericTypeArguments.Single();
             var linkTargetListItemType = linkTargetProperty.PropertyType.GenericTypeArguments.Single();
 
-            if (!linkTargetListItemType.DoesImplementILinkedSourceOnceAndOnlyOnce()) return false;
+            if (!LinkedSourceTypeExtensions.DoesImplementILinkedSourceOnceAndOnlyOnce(linkTargetListItemType)) return false;
 
-            if (linkTargetListItemType.GetLinkedSourceModelType() != sourceListItemType) return false;
+            if (LinkedSourceTypeExtensions.GetLinkedSourceModelType(linkTargetListItemType) != sourceListItemType) return false;
 
             return true;
         }
@@ -39,7 +39,7 @@ namespace LinkIt.Conventions.DefaultConventions
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
         {
-            loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLinkForList(
+            loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLinkForList<TLinkTargetProperty, TLinkedSourceModelProperty, bool>(
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty,
                 link => true,
