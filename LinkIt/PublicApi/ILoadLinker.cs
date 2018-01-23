@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace LinkIt.PublicApi
 {
-    //Responsible for loading and linking root linked sources
+    /// <summary>
+    /// Responsible for loading and linking root linked sources
+    /// </summary>
     public interface ILoadLinker<TRootLinkedSource>
     {
         Task<TRootLinkedSource> FromModelAsync<TRootLinkedSourceModel>(
@@ -17,8 +19,8 @@ namespace LinkIt.PublicApi
             Action<TRootLinkedSource> initRootLinkedSource = null
         );
 
-        Task<List<TRootLinkedSource>> FromModelsAsync<TRootLinkedSourceModel>(
-            List<TRootLinkedSourceModel> models,
+        Task<IReadOnlyList<TRootLinkedSource>> FromModelsAsync<TRootLinkedSourceModel>(
+            IEnumerable<TRootLinkedSourceModel> models,
             Action<int, TRootLinkedSource> initRootLinkedSources = null
         );
 
@@ -27,8 +29,8 @@ namespace LinkIt.PublicApi
             Action<TRootLinkedSource> initRootLinkedSource = null
         );
 
-        Task<List<TRootLinkedSource>> ByIdsAsync<TRootLinkedSourceModelId>(
-            List<TRootLinkedSourceModelId> modelIds,
+        Task<IReadOnlyList<TRootLinkedSource>> ByIdsAsync<TRootLinkedSourceModelId>(
+            IEnumerable<TRootLinkedSourceModelId> modelIds,
             Action<int, TRootLinkedSource> initRootLinkedSources = null
         );
     }

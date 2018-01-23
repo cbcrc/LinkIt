@@ -40,12 +40,7 @@ namespace LinkIt.Conventions
             catch (TargetInvocationException ex)
             {
                 throw new Exception(
-                    string.Format(
-                        "The convention \"{0}\" failed for Apply. Link target id: {1}, linked source model property: {2}",
-                        match.Convention.Name,
-                        match.LinkTargetProperty.GetFullName(),
-                        match.LinkedSourceModelProperty.Name
-                    ),
+                    $"The convention \"{match.Convention.Name}\" failed for Apply. Link target id: {match.LinkTargetProperty.GetFullName()}, linked source model property: {match.LinkedSourceModelProperty.Name}",
                     ex.InnerException
                 );
             }

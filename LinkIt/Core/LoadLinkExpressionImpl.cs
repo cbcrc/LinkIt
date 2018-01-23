@@ -16,14 +16,14 @@ using LinkIt.Shared;
 namespace LinkIt.Core
 {
     //See ILoadLinkExpression
-    public class LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> : ILoadLinkExpression
+    internal class LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> : ILoadLinkExpression
     {
-        private readonly Func<TLinkedSource, List<TLink>> _getLinks;
+        private readonly Func<TLinkedSource, IEnumerable<TLink>> _getLinks;
         private readonly IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeSet;
         private readonly ILinkTarget<TLinkedSource, TAbstractLinkTarget> _linkTarget;
 
         internal LoadLinkExpressionImpl(
-            Func<TLinkedSource, List<TLink>> getLinks,
+            Func<TLinkedSource, IEnumerable<TLink>> getLinks,
             ILinkTarget<TLinkedSource, TAbstractLinkTarget> linkTarget,
             IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeset)
         {
@@ -165,22 +165,14 @@ namespace LinkIt.Core
         {
             var links = _getLinks(linkedSource);
 
-            if (links == null) return new List<TLink>();
-
-            return links;
+            return links?.ToList() ?? new List<TLink>();
         }
 
         private static void AssumeLinkedSourceIsOfTLinkedSource(object linkedSource)
         {
             if (!(linkedSource is TLinkedSource))
                 throw new AssumptionFailed(
-                    string.Format(
-                        "Cannot invoke load-link expression for {0} with linked source of type {1}",
-                        typeof(TLinkedSource),
-                        linkedSource != null
-                            ? linkedSource.GetType().ToString()
-                            : "Null"
-                    )
+                    $"Cannot invoke load-link expression for {typeof(TLinkedSource)} with linked source of type {linkedSource?.GetType()}"
                 );
         }
 
@@ -188,12 +180,7 @@ namespace LinkIt.Core
         {
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType))
                 throw new AssumptionFailed(
-                    string.Format(
-                        "Cannot invoke this load link expression for reference type {0}. Supported reference types are {1}. This load link expression is for {2}.",
-                        referenceType,
-                        string.Join(",", loadLinkExpression.ReferenceTypes),
-                        loadLinkExpression.LinkedSourceType
-                    )
+                    $"Cannot invoke this load link expression for reference type {referenceType}. Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}. This load link expression is for {loadLinkExpression.LinkedSourceType}."
                 );
         }
 

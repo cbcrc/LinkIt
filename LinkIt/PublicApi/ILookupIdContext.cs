@@ -8,10 +8,21 @@ using System.Collections.Generic;
 
 namespace LinkIt.PublicApi
 {
-    //Responsible for giving access to the lookup ids of a loading level.
+    /// <summary>
+    /// Responsible for giving access to the lookup ids of a loading level.
+    /// </summary>
     public interface ILookupIdContext
     {
-        List<Type> GetReferenceTypes();
-        List<TId> GetReferenceIds<TReference, TId>();
+        /// <summary>
+        /// Get reference types to be loaded.
+        /// </summary>
+        IReadOnlyList<Type> GetReferenceTypes();
+
+        /// <summary>
+        /// Get the IDs of the references to be loaded.
+        /// </summary>
+        /// <typeparam name="TReference">Type of reference</typeparam>
+        /// <typeparam name="TId">Type of the ID</typeparam>
+        IReadOnlyList<TId> GetReferenceIds<TReference, TId>();
     }
 }

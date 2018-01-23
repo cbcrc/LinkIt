@@ -8,7 +8,7 @@ using LinkIt.ReferenceTrees;
 
 namespace LinkIt.Core.Includes.Interfaces
 {
-    public interface IIncludeWithAddLookupId<TLink> : IInclude
+    internal interface IIncludeWithAddLookupId<TLink> : IInclude
     {
         Type ReferenceType { get; }
         void AddLookupId(TLink link, LookupIdContext lookupIdContext);

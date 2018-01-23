@@ -8,11 +8,14 @@ using System.Threading.Tasks;
 
 namespace LinkIt.PublicApi
 {
-    //Responsible for loading references of a loading level.
-    public interface IReferenceLoader
-        //Dispose will always be invoked as soon as the load phase is completed or
-        //if an exception is thrown
-        : IDisposable
+    /// <summary>
+    /// Responsible for loading references of a loading level.
+    /// </summary>
+    /// <remarks>
+    /// Dispose will always be invoked as soon as the load phase is completed or
+    /// if an exception is thrown
+    /// </remarks>
+    public interface IReferenceLoader : IDisposable
     {
         Task LoadReferencesAsync(
             ILookupIdContext lookupIdContext,

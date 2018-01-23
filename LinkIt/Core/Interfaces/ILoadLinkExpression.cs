@@ -9,9 +9,11 @@ using LinkIt.ReferenceTrees;
 
 namespace LinkIt.Core.Interfaces
 {
-    //Responsible for loading and linking a specific link target.
-    //Responsible for creating the reference trees related to a specific link target.
-    public interface ILoadLinkExpression
+    /// <summary>
+    /// Responsible for loading and linking a specific link target.
+    /// Responsible for creating the reference trees related to a specific link target.
+    /// </summary>
+    internal interface ILoadLinkExpression
     {
         string LinkTargetId { get; }
 

@@ -40,12 +40,7 @@ namespace LinkIt.ReferenceTrees
             var nodeThatCreatesCycle = GetNodeThatCreatesCycle(parent);
             if (nodeThatCreatesCycle != null)
                 throw new NotSupportedException(
-                    string.Format(
-                        "Recursive load link is not supported. The cycle occurs between {0} and {1} for the reference of type {2}.",
-                        nodeThatCreatesCycle.LinkTargetId,
-                        Node.LinkTargetId,
-                        Node.ReferenceType
-                    )
+                    $"Recursive load link is not supported. The cycle occurs between {nodeThatCreatesCycle.LinkTargetId} and {Node.LinkTargetId} for the reference of type {Node.ReferenceType}."
                 );
         }
 

@@ -101,11 +101,7 @@ namespace LinkIt.Core
 
             if (!abstractType.IsAssignableFrom(concreteType))
                 throw new AssumptionFailed(
-                    string.Format(
-                        "{0} is not assignable from {1}.",
-                        abstractType,
-                        concreteType
-                    )
+                    $"{abstractType} is not assignable from {concreteType}."
                 );
         }
 
@@ -113,12 +109,7 @@ namespace LinkIt.Core
         {
             if (!LinkedSourceModelType.IsAssignableFrom(typeof(TChildLinkedSourceModel)))
                 throw new ArgumentException(
-                    string.Format(
-                        "{0}: getNestedLinkedSourceModel returns an invalid type. {1} is not assignable from {2}.",
-                        linkTarget.Id,
-                        LinkedSourceModelType,
-                        typeof(TChildLinkedSourceModel)
-                    )
+                    $"{linkTarget.Id}: getNestedLinkedSourceModel returns an invalid type. {LinkedSourceModelType} is not assignable from {typeof(TChildLinkedSourceModel)}."
                 );
         }
     }

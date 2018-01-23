@@ -10,12 +10,12 @@ namespace LinkIt.TestHelpers
 {
     public class PersonRepository
     {
-        public List<Person> GetByIds(List<string> ids)
+        public List<Person> GetByIds(IEnumerable<string> ids)
         {
             return ids
                 .Where(id => id != "cannot-be-resolved")
                 .Select(id => new Person {
-                    Id = id, 
+                    Id = id,
                     Name = "name-" + id,
                     SummaryImageId = "person-img-" + id
                 })

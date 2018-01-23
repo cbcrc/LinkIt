@@ -31,11 +31,16 @@ namespace LinkIt.TestHelpers
 
         public bool IsDisposed { get; private set; }
 
-        public async Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        public Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             RecordedLookupIdContexts.Add(lookupIdContext);
 
-            foreach (var referenceType in lookupIdContext.GetReferenceTypes()) LoadReference(referenceType, lookupIdContext, loadedReferenceContext);
+            foreach (var referenceType in lookupIdContext.GetReferenceTypes())
+            {
+                LoadReference(referenceType, lookupIdContext, loadedReferenceContext);
+            }
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()
@@ -66,7 +71,7 @@ namespace LinkIt.TestHelpers
         {
             if (!_referenceTypeConfigByReferenceType.ContainsKey(referenceType))
                 throw new NotImplementedException(
-                    string.Format("There is no loader for reference of type {0}.", referenceType.Name)
+                    $"There is no loader for reference of type {referenceType.Name}."
                 );
             var referenceTypeConfig = _referenceTypeConfigByReferenceType[referenceType];
             referenceTypeConfig.Load(lookupIdContext, loadedReferenceContext);

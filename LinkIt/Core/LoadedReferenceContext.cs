@@ -10,16 +10,18 @@ using LinkIt.PublicApi;
 
 namespace LinkIt.Core
 {
-    //In addition to the responsiblies of ILoadedReferenceContext,
-    //responsible for giving access to the loaded references of a root linked source.
+    /// <summary>
+    /// In addition to the responsiblies of ILoadedReferenceContext,
+    /// responsible for giving access to the loaded references of a root linked source.
+    /// </summary>
     public class LoadedReferenceContext : ILoadedReferenceContext
     {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly Dictionary<Type, object> _referenceDictionaryByReferenceType = new Dictionary<Type, object>();
 
-        public List<object> LinkedSourcesToBeBuilt => _linkedSourcesToBeBuilt.ToList();
+        internal IEnumerable<object> GetLinkedSourcesToBeBuilt() => _linkedSourcesToBeBuilt.ToList();
 
-        public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference, TId> getReferenceId)
+        public void AddReferences<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId)
         {
             if (references == null) throw new ArgumentNullException(nameof(references));
             if (getReferenceId == null) throw new ArgumentNullException(nameof(getReferenceId));
@@ -38,31 +40,26 @@ namespace LinkIt.Core
 
             var tReference = typeof(TReference);
             if (_referenceDictionaryByReferenceType.ContainsKey(tReference))
+            {
                 throw new InvalidOperationException(
-                    string.Format(
-                        "All references of the same type ({0}) must be loaded at the same time.",
-                        tReference.Name)
+                    $"All references of the same type ({tReference.Name}) must be loaded at the same time."
                 );
+            }
 
-            var referenceDictionary = referencesById.ToDictionary(
-                referenceById => referenceById.Key,
-                referenceById => referenceById.Value
-            );
-
-            _referenceDictionaryByReferenceType.Add(tReference, referenceDictionary);
+            _referenceDictionaryByReferenceType.Add(tReference, referencesById);
         }
 
-        private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>()
+        private IDictionary<TId, TReference> GetReferenceDictionary<TReference, TId>()
         {
             var tReference = typeof(TReference);
             if (!_referenceDictionaryByReferenceType.ContainsKey(tReference))
+            {
                 throw new InvalidOperationException(
-                    string.Format(
-                        "References of type {0} were not loaded. Note that the implementation of IReferenceLoader must invoke LoadedReferenceContext.AddReferences with an empty set if none of the ids provided in the LookupIdContext for a specific reference type can be loaded.",
-                        tReference.Name)
+                    $"References of type {tReference.Name} were not loaded. Note that the implementation of IReferenceLoader must invoke LoadedReferenceContext.AddReferences with an empty set if none of the ids provided in the LookupIdContext for a specific reference type can be loaded."
                 );
+            }
 
-            return (Dictionary<TId, TReference>) _referenceDictionaryByReferenceType[tReference];
+            return (IDictionary<TId, TReference>) _referenceDictionaryByReferenceType[tReference];
         }
 
         public TReference GetOptionalReference<TReference, TId>(TId lookupId)
@@ -71,12 +68,10 @@ namespace LinkIt.Core
 
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
 
-            if (!referenceDictionnary.ContainsKey(lookupId)) return default;
-
-            return referenceDictionnary[lookupId];
+            return referenceDictionnary.ContainsKey(lookupId) ? referenceDictionnary[lookupId] : default;
         }
 
-        public List<TReference> GetOptionalReferences<TReference, TId>(List<TId> lookupIds)
+        public IReadOnlyList<TReference> GetOptionalReferences<TReference, TId>(IEnumerable<TId> lookupIds)
         {
             return lookupIds
                 .Select(GetOptionalReference<TReference, TId>)

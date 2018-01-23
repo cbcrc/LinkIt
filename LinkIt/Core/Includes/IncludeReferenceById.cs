@@ -9,10 +9,12 @@ using LinkIt.ReferenceTrees;
 
 namespace LinkIt.Core.Includes
 {
-    //For a reference loaded by id (configured for specific discriminant of a link target):
-    //responsible for loading and linking the link target for a specific discriminant
-    //responsible for creating the reference tree for a specific discriminant
-    public class IncludeReferenceById<TIReference, TLink, TReference, TId> :
+    /// <summary>
+    /// For a reference loaded by id (configured for specific discriminant of a link target):
+    /// responsible for loading and linking the link target for a specific discriminant
+    /// responsible for creating the reference tree for a specific discriminant
+    /// </summary>
+    internal class IncludeReferenceById<TIReference, TLink, TReference, TId> :
         IIncludeWithGetReference<TIReference, TLink>,
         IIncludeWithAddLookupId<TLink>
         where TReference : TIReference

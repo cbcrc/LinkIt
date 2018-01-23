@@ -88,10 +88,7 @@ namespace LinkIt.LinkTargets
         {
             if (!property.IsPublicReadWrite())
                 throw new ArgumentException(
-                    string.Format(
-                        "{0}: Only read-write property are supported",
-                        property.GetFullName()
-                    )
+                    $"{property.GetFullName()}: Only read-write property are supported"
                 );
         }
 
@@ -114,10 +111,7 @@ namespace LinkIt.LinkTargets
         private static ArgumentException OnlyDirectGetterAreSupported<TLinkedSource>()
         {
             return new ArgumentException(
-                string.Format(
-                    "{0}: Only direct getter are supported. Ex: p => p.Property",
-                    typeof(TLinkedSource)
-                )
+                $"{typeof(TLinkedSource)}: Only direct getter are supported. Ex: p => p.Property"
             );
         }
 

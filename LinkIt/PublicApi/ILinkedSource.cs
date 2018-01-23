@@ -5,7 +5,9 @@
 
 namespace LinkIt.PublicApi
 {
-    //Responsible for defining the link targets of a model
+    /// <summary>
+    /// Responsible for defining the link targets of a model
+    /// </summary>
     public interface ILinkedSource<TModel>
     {
         TModel Model { get; set; }

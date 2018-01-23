@@ -9,23 +9,22 @@ using LinkIt.PublicApi;
 
 namespace LinkIt.TestHelpers
 {
-    public class ReferenceTypeConfig<TReference, TId> : IReferenceTypeConfig {
-        private readonly Func<List<TId>, List<TReference>> _loadReferences;
+    public class ReferenceTypeConfig<TReference, TId> : IReferenceTypeConfig
+    {
+        private readonly Func<IEnumerable<TId>, IEnumerable<TReference>> _loadReferences;
         //the necessity of this function could be generalized
         private readonly Func<TReference, TId> _getReferenceId;
 
-        public ReferenceTypeConfig(Func<List<TId>, List<TReference>> loadReferences, Func<TReference, TId> getReferenceId)
+        public ReferenceTypeConfig(Func<IEnumerable<TId>, IEnumerable<TReference>> loadReferences, Func<TReference, TId> getReferenceId)
         {
             _loadReferences = loadReferences;
             _getReferenceId = getReferenceId;
         }
 
-        public Type ReferenceType
-        {
-            get { return typeof (TReference); }
-        }
+        public Type ReferenceType => typeof (TReference);
 
-        public void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext) {
+        public void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        {
             var lookupIds = lookupIdContext.GetReferenceIds<TReference, TId>();
             var references = _loadReferences(lookupIds);
             loadedReferenceContext.AddReferences(references, reference => _getReferenceId(reference));

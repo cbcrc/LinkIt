@@ -10,11 +10,11 @@ namespace LinkIt.TestHelpers
 {
     public class MediaRepository
     {
-        public List<Media> GetByIds(List<int> ids)
+        public List<Media> GetByIds(IEnumerable<int> ids)
         {
             return ids
                 .Select(id => new Media{
-                    Id = id, 
+                    Id = id,
                     Title = "title-" + id,
                     SummaryImageId = "img" + id
                 })

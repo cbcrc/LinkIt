@@ -19,11 +19,7 @@ namespace LinkIt.Shared
 
         public static string GetFullName(this PropertyInfo property)
         {
-            return string.Format(
-                "{0}/{1}",
-                property.DeclaringType,
-                property.Name
-            );
+            return $"{property.DeclaringType}/{property.Name}";
         }
     }
 }

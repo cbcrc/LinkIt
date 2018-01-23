@@ -21,7 +21,9 @@ namespace LinkIt.Tests.Core
                     linkedSource =>
                     {
                         throw new Exception("Not overridden!");
+#pragma warning disable 162
                         return linkedSource.Model.SummaryImageId;
+#pragma warning restore 162
                     },
                     linkedSource => linkedSource.SummaryImage
                 );

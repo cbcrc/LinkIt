@@ -72,10 +72,7 @@ namespace LinkIt.Conventions
 
             if (notUniqueConventionNames.Any<string>())
                 throw new ArgumentException(
-                    string.Format(
-                        "Cannot have many conventions with the same name: {0}",
-                        string.Join(",", notUniqueConventionNames)
-                    )
+                    $"Cannot have many conventions with the same name: {string.Join(",", notUniqueConventionNames)}"
                 );
         }
     }

@@ -10,27 +10,27 @@ using LinkIt.PublicApi;
 
 namespace LinkIt.Core
 {
-    //In addition to the responsiblies of ILookupIdContext,
-    //responsible for gathering the lookup ids of a loading level.
-    public class LookupIdContext : ILookupIdContext
+    /// <summary>
+    /// In addition to the responsiblies of ILookupIdContext,
+    /// responsible for gathering the lookup ids of a loading level.
+    /// </summary>I
+    internal class LookupIdContext : ILookupIdContext
     {
         private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
 
-        public List<Type> GetReferenceTypes()
+        public IReadOnlyList<Type> GetReferenceTypes()
         {
             return _lookupIdsByReferenceType
                 .Keys
                 .ToList();
         }
 
-        public List<TId> GetReferenceIds<TReference, TId>()
+        public IReadOnlyList<TId> GetReferenceIds<TReference, TId>()
         {
             var tReference = typeof(TReference);
             if (!_lookupIdsByReferenceType.ContainsKey(tReference))
                 throw new InvalidOperationException(
-                    string.Format(
-                        "There are no reference ids for this the type {0}.",
-                        tReference.Name)
+                    $"There are no reference ids for this the type {tReference.Name}."
                 );
 
             var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
@@ -51,7 +51,7 @@ namespace LinkIt.Core
             currentLookupIds.Add(lookupId);
         }
 
-        public void AddMulti<TReference, TId>(List<TId> lookupIds)
+        public void AddMulti<TReference, TId>(IEnumerable<TId> lookupIds)
         {
             if (lookupIds == null) throw new ArgumentNullException(nameof(lookupIds));
 

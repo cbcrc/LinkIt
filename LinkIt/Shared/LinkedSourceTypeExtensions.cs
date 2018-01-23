@@ -40,10 +40,7 @@ namespace LinkIt.Shared
         {
             if (!linkedSourceType.DoesImplementILinkedSourceOnceAndOnlyOnce())
                 throw new ArgumentException(
-                    string.Format(
-                        "{0} must implement ILinkedSource<> once and only once.",
-                        linkedSourceType
-                    ),
+                    $"{linkedSourceType} must implement ILinkedSource<> once and only once.",
                     "TLinkedSource"
                 );
         }

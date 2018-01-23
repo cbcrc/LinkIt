@@ -72,10 +72,7 @@ namespace LinkIt.Core
             var rootLinkedSourceType = typeof(TRootLinkedSource);
             if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType))
                 throw new InvalidOperationException(
-                    string.Format(
-                        "The type {0} cannot be used as root linked source because there are no load link expression associated with this linked source.",
-                        rootLinkedSourceType
-                    )
+                    $"The type {rootLinkedSourceType} cannot be used as root linked source because there are no load link expression associated with this linked source."
                 );
 
             return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
@@ -138,10 +135,7 @@ namespace LinkIt.Core
             catch (NotSupportedException ex)
             {
                 throw new NotSupportedException(
-                    string.Format(
-                        "Unable to create the load link protocol for {0}. For more details, see inner exception.",
-                        rootLinkedSourceConfig.LinkedSourceType
-                    ),
+                    $"Unable to create the load link protocol for {rootLinkedSourceConfig.LinkedSourceType}. For more details, see inner exception.",
                     ex
                 );
             }

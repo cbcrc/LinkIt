@@ -8,10 +8,12 @@ using System.Collections.Generic;
 
 namespace LinkIt.PublicApi
 {
-    //Responsible for gathering all loaded references of a root linked source.
+    /// <summary>
+    /// Responsible for gathering all loaded references of a root linked source.
+    /// </summary>
     public interface ILoadedReferenceContext
     {
-        void AddReferences<TReference, TId>(List<TReference> references, Func<TReference, TId> getReferenceId);
+        void AddReferences<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId);
         void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById);
     }
 }

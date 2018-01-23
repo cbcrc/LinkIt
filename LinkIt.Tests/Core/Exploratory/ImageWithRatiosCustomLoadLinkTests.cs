@@ -123,7 +123,7 @@ namespace LinkIt.Tests.Core.Exploratory
                     item => item.Image);
         }
 
-        public List<ImageWithRatios> GetByDeclinaisonUrl(List<string> declinaisonUrls)
+        public List<ImageWithRatios> GetByDeclinaisonUrl(IEnumerable<string> declinaisonUrls)
         {
             return declinaisonUrls.Where(declinaisonUrl => _imagesByRatioUrl.ContainsKey(declinaisonUrl))
                 .Select(declinaisonUrl => _imagesByRatioUrl[declinaisonUrl])

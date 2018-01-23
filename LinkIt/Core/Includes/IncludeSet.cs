@@ -11,8 +11,10 @@ using LinkIt.Shared;
 
 namespace LinkIt.Core.Includes
 {
-    //Responsible for giving access to the includes of a specific link target.
-    public class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
+    /// <summary>
+    /// Responsible for giving access to the includes of a specific link target.
+    /// </summary>
+    internal class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {
         private readonly Func<TLink, TDiscriminant> _getDiscriminant;
         private readonly Dictionary<TDiscriminant, IInclude> _includes;
@@ -60,37 +62,34 @@ namespace LinkIt.Core.Includes
         private TInclude GetInclude<TInclude>(TLink link)
             where TInclude : class
         {
-            AssumeNotNullLink<TInclude>(link);
+            AssumeNotNullLink(link);
 
             var discriminant = _getDiscriminant(link);
-            AssumeIncludeExistsForDiscriminant<TInclude>(discriminant);
+            AssumeIncludeExistsForDiscriminant(discriminant);
 
             var include = _includes[discriminant];
 
             return include as TInclude;
         }
 
-        private void AssumeIncludeExistsForDiscriminant<TInclude>(TDiscriminant discriminant) where TInclude : class
+        private void AssumeIncludeExistsForDiscriminant(TDiscriminant discriminant)
         {
             if (!_includes.ContainsKey(discriminant))
+            {
                 throw new AssumptionFailed(
-                    string.Format(
-                        "{0}: Cannot invoke GetInclude for discriminant={1}",
-                        typeof(TLinkedSource),
-                        discriminant
-                    )
+                    $"{typeof(TLinkedSource)}: Cannot invoke GetInclude for discriminant={discriminant}"
                 );
+            }
         }
 
-        private static void AssumeNotNullLink<TInclude>(TLink link) where TInclude : class
+        private static void AssumeNotNullLink(TLink link)
         {
             if (link == null)
+            {
                 throw new AssumptionFailed(
-                    string.Format(
-                        "{0}: Cannot invoke GetInclude with a null link",
-                        typeof(TLinkedSource)
-                    )
+                    $"{typeof(TLinkedSource)}: Cannot invoke GetInclude with a null link"
                 );
+            }
         }
 
         public List<TInclude> GetIncludes<TInclude>()

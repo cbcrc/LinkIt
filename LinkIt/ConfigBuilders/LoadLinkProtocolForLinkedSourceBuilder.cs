@@ -20,7 +20,7 @@ namespace LinkIt.ConfigBuilders
     {
         private readonly Action<ILoadLinkExpression> _addLoadLinkExpression;
 
-        public LoadLinkProtocolForLinkedSourceBuilder(Action<ILoadLinkExpression> addLoadLinkExpression)
+        internal LoadLinkProtocolForLinkedSourceBuilder(Action<ILoadLinkExpression> addLoadLinkExpression)
         {
             _addLoadLinkExpression = addLoadLinkExpression;
         }
@@ -203,7 +203,7 @@ namespace LinkIt.ConfigBuilders
             TLinkedSource linkedsource,
             TChildLinkedSource childLinkedSource)
         {
-            //using null causes problem with generic type inference, 
+            //using null causes problem with generic type inference,
             //using a special value work around this limitation of generics
         }
 
@@ -212,7 +212,7 @@ namespace LinkIt.ConfigBuilders
             int referenceIndex,
             TChildLinkedSource childLinkedSource)
         {
-            //using null causes problem with generic type inference, 
+            //using null causes problem with generic type inference,
             //using a special value work around this limitation of generics
         }
 

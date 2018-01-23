@@ -33,11 +33,7 @@ namespace LinkIt.ConfigBuilders
         {
             if (_includeByDiscriminantValue.ContainsKey(discriminant))
                 throw new ArgumentException(
-                    string.Format(
-                        "{0}: cannot have many includes for the same discriminant ({1}).",
-                        LinkTarget.Id,
-                        discriminant
-                    )
+                    $"{LinkTarget.Id}: cannot have many includes for the same discriminant ({discriminant})."
                 );
 
             _includeByDiscriminantValue.Add(discriminant, include);

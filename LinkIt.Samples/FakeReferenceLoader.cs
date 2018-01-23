@@ -14,12 +14,14 @@ namespace LinkIt.Samples
 {
     public class FakeReferenceLoader : IReferenceLoader
     {
-        public async Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        public Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
         {
             foreach (var referenceType in lookupIdContext.GetReferenceTypes())
             {
                 LoadReference(referenceType, lookupIdContext, loadedReferenceContext);
             }
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()

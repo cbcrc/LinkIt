@@ -38,8 +38,8 @@ namespace LinkIt.Core
             return linkedSources.SingleOrDefault();
         }
 
-        public async Task<List<TRootLinkedSource>> FromModelsAsync<TRootLinkedSourceModel>(
-            List<TRootLinkedSourceModel> models,
+        public async Task<IReadOnlyList<TRootLinkedSource>> FromModelsAsync<TRootLinkedSourceModel>(
+            IEnumerable<TRootLinkedSourceModel> models,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
             if (models == null) throw new ArgumentNullException(nameof(models));
@@ -75,8 +75,8 @@ namespace LinkIt.Core
             return linkedSources.SingleOrDefault();
         }
 
-        public async Task<List<TRootLinkedSource>> ByIdsAsync<TRootLinkedSourceModelId>(
-            List<TRootLinkedSourceModelId> modelIds,
+        public async Task<IReadOnlyList<TRootLinkedSource>> ByIdsAsync<TRootLinkedSourceModelId>(
+            IEnumerable<TRootLinkedSourceModelId> modelIds,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
             if (modelIds == null) throw new ArgumentNullException(nameof(modelIds));
@@ -91,18 +91,14 @@ namespace LinkIt.Core
             }
         }
 
-        private void EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>()
+        private static void EnsureValidRootLinkedSourceModelType<TRootLinkedSourceModel>()
         {
             var rootLinkedSourceModelType1 = typeof(TRootLinkedSourceModel);
             var rootLinkedSourceModelType = typeof(TExpectedRootLinkedSourceModel);
 
             if (rootLinkedSourceModelType1 != rootLinkedSourceModelType)
                 throw new ArgumentException(
-                    string.Format(
-                        "Invalid root linked source model type. Expected {0} but was {1}.",
-                        rootLinkedSourceModelType,
-                        rootLinkedSourceModelType1
-                    ),
+                    $"Invalid root linked source model type. Expected {rootLinkedSourceModelType} but was {rootLinkedSourceModelType1}.",
                     "TRootLinkedSourceModel"
                 );
         }
@@ -120,7 +116,7 @@ namespace LinkIt.Core
                 );
         }
 
-        private Action<TRootLinkedSource> CreateInitChildLinkedSourceAction(Action<int, TRootLinkedSource> initRootLinkedSources, int index)
+        private static Action<TRootLinkedSource> CreateInitChildLinkedSourceAction(Action<int, TRootLinkedSource> initRootLinkedSources, int index)
         {
             if (initRootLinkedSources == null) return null;
 
@@ -134,7 +130,7 @@ namespace LinkIt.Core
             return (referenceIndex, rootLinkedSource) => initRootLinkedSource(rootLinkedSource);
         }
 
-        private async Task<List<TExpectedRootLinkedSourceModel>> LoadRootLinkedSourceModelAsync<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds)
+        private async Task<IEnumerable<TExpectedRootLinkedSourceModel>> LoadRootLinkedSourceModelAsync<TRootLinkedSourceModelId>(IEnumerable<TRootLinkedSourceModelId> modelIds)
         {
             var lookupIdContext = new LookupIdContext();
             lookupIdContext.AddMulti<TExpectedRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
@@ -180,7 +176,7 @@ namespace LinkIt.Core
             var lookupIdContext = new LookupIdContext();
 
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded)
-            foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt)
+            foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourcesToBeBuilt())
             {
                 var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                 foreach (var loadLinkExpression in loadLinkExpressions) loadLinkExpression.AddLookupIds(linkedSource, lookupIdContext, referenceTypeToBeLoaded);
@@ -192,7 +188,7 @@ namespace LinkIt.Core
         private void LinkNestedLinkedSourcesById(List<Type> referenceTypesToBeLoaded)
         {
             foreach (var referenceTypeToBeLoaded in referenceTypesToBeLoaded)
-            foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt)
+            foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourcesToBeBuilt())
             {
                 var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource, referenceTypeToBeLoaded);
                 foreach (var loadLinkExpression in loadLinkExpressions) loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, _loadedReferenceContext, referenceTypeToBeLoaded, _loadLinkProtocol);
@@ -201,7 +197,7 @@ namespace LinkIt.Core
 
         private void LinkReferences()
         {
-            foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt)
+            foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourcesToBeBuilt())
             {
                 var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource);
                 foreach (var loadLinkExpression in loadLinkExpressions)
@@ -214,7 +210,7 @@ namespace LinkIt.Core
 
         private void FilterOutNullValues()
         {
-            foreach (var linkedSource in _loadedReferenceContext.LinkedSourcesToBeBuilt)
+            foreach (var linkedSource in _loadedReferenceContext.GetLinkedSourcesToBeBuilt())
             {
                 var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource);
                 foreach (var loadLinkExpression in loadLinkExpressions) loadLinkExpression.FilterOutNullValues(linkedSource);
