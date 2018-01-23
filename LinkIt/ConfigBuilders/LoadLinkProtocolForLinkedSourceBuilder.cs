@@ -31,8 +31,8 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, TId> getLookupId,
             Expression<Func<TLinkedSource, TReference>> getLinkTarget)
         {
-            if (getLookupId == null) throw new ArgumentNullException("getLookupId");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getLookupId == null) throw new ArgumentNullException(nameof(getLookupId));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkReferenceById(
                 ToGetLookupIdsForSingleValue(getLookupId),
@@ -44,8 +44,8 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, List<TId>> getLookupIds,
             Expression<Func<TLinkedSource, List<TReference>>> getLinkTarget)
         {
-            if (getLookupIds == null) throw new ArgumentNullException("getLookupIds");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getLookupIds == null) throw new ArgumentNullException(nameof(getLookupIds));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkReferenceById(
                 getLookupIds,
@@ -59,8 +59,8 @@ namespace LinkIt.ConfigBuilders
         )
             where TId : struct
         {
-            if (getOptionalLookupId == null) throw new ArgumentNullException("getOptionalLookupId");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getOptionalLookupId == null) throw new ArgumentNullException(nameof(getOptionalLookupId));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkReferenceById(
                 ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
@@ -89,8 +89,8 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, TId> getLookupId,
             Expression<Func<TLinkedSource, TChildLinkedSource>> getLinkTarget)
         {
-            if (getLookupId == null) throw new ArgumentNullException("getLookupId");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getLookupId == null) throw new ArgumentNullException(nameof(getLookupId));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkNestedLinkedSourceById(
                 getLookupId,
@@ -104,9 +104,9 @@ namespace LinkIt.ConfigBuilders
             Expression<Func<TLinkedSource, TChildLinkedSource>> getLinkTarget,
             Action<TLinkedSource, TChildLinkedSource> initChildLinkedSource)
         {
-            if (getLookupId == null) throw new ArgumentNullException("getLookupId");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
-            if (initChildLinkedSource == null) throw new ArgumentNullException("initChildLinkedSource");
+            if (getLookupId == null) throw new ArgumentNullException(nameof(getLookupId));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
+            if (initChildLinkedSource == null) throw new ArgumentNullException(nameof(initChildLinkedSource));
 
             return LoadLinkNestedLinkedSourceById(
                 ToGetLookupIdsForSingleValue(getLookupId),
@@ -122,8 +122,8 @@ namespace LinkIt.ConfigBuilders
         )
             where TId : struct
         {
-            if (getOptionalLookupId == null) throw new ArgumentNullException("getOptionalLookupId");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getOptionalLookupId == null) throw new ArgumentNullException(nameof(getOptionalLookupId));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkNestedLinkedSourceById(
                 ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
@@ -139,9 +139,9 @@ namespace LinkIt.ConfigBuilders
         )
             where TId : struct
         {
-            if (getOptionalLookupId == null) throw new ArgumentNullException("getOptionalLookupId");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
-            if (initChildLinkedSource == null) throw new ArgumentNullException("initChildLinkedSource");
+            if (getOptionalLookupId == null) throw new ArgumentNullException(nameof(getOptionalLookupId));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
+            if (initChildLinkedSource == null) throw new ArgumentNullException(nameof(initChildLinkedSource));
 
             return LoadLinkNestedLinkedSourceById(
                 ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
@@ -155,8 +155,8 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, List<TId>> getLookupIds,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget)
         {
-            if (getLookupIds == null) throw new ArgumentNullException("getLookupIds");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getLookupIds == null) throw new ArgumentNullException(nameof(getLookupIds));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkNestedLinkedSourceById(
                 getLookupIds,
@@ -170,9 +170,9 @@ namespace LinkIt.ConfigBuilders
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource)
         {
-            if (getLookupIds == null) throw new ArgumentNullException("getLookupIds");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
-            if (initChildLinkedSource == null) throw new ArgumentNullException("initChildLinkedSource");
+            if (getLookupIds == null) throw new ArgumentNullException(nameof(getLookupIds));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
+            if (initChildLinkedSource == null) throw new ArgumentNullException(nameof(initChildLinkedSource));
 
             return LoadLinkNestedLinkedSourceById(
                 getLookupIds,
@@ -226,8 +226,8 @@ namespace LinkIt.ConfigBuilders
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
-            if (getNestedLinkedSourceModel == null) throw new ArgumentNullException("getNestedLinkedSourceModel");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getNestedLinkedSourceModel == null) throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkNestedLinkedSourceFromModel(
                 getNestedLinkedSourceModel,
@@ -242,9 +242,9 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, TChildLinkedSource> initChildLinkedSource
         ) where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
-            if (getNestedLinkedSourceModel == null) throw new ArgumentNullException("getNestedLinkedSourceModel");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
-            if (initChildLinkedSource == null) throw new ArgumentNullException("initChildLinkedSource");
+            if (getNestedLinkedSourceModel == null) throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
+            if (initChildLinkedSource == null) throw new ArgumentNullException(nameof(initChildLinkedSource));
 
             return LoadLinkNestedLinkedSourceFromModel(
                 ToGetLookupIdsForSingleValue(getNestedLinkedSourceModel),
@@ -260,8 +260,8 @@ namespace LinkIt.ConfigBuilders
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
-            if (getNestedLinkedSourceModels == null) throw new ArgumentNullException("getNestedLinkedSourceModels");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
+            if (getNestedLinkedSourceModels == null) throw new ArgumentNullException(nameof(getNestedLinkedSourceModels));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
 
             return LoadLinkNestedLinkedSourceFromModel(
                 getNestedLinkedSourceModels,
@@ -277,9 +277,9 @@ namespace LinkIt.ConfigBuilders
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
-            if (getNestedLinkedSourceModels == null) throw new ArgumentNullException("getNestedLinkedSourceModels");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
-            if (initChildLinkedSource == null) throw new ArgumentNullException("initChildLinkedSource");
+            if (getNestedLinkedSourceModels == null) throw new ArgumentNullException(nameof(getNestedLinkedSourceModels));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
+            if (initChildLinkedSource == null) throw new ArgumentNullException(nameof(initChildLinkedSource));
 
             return LoadLinkNestedLinkedSourceFromModel(
                 getNestedLinkedSourceModels,
@@ -318,10 +318,10 @@ namespace LinkIt.ConfigBuilders
             Action<IncludeSetBuilder<TLinkedSource,
                 TAbstractLinkTarget, TLink, TDiscriminant>> includes)
         {
-            if (getLink == null) throw new ArgumentNullException("getLink");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
-            if (getDiscriminant == null) throw new ArgumentNullException("getDiscriminant");
-            if (includes == null) throw new ArgumentNullException("includes");
+            if (getLink == null) throw new ArgumentNullException(nameof(getLink));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
+            if (getDiscriminant == null) throw new ArgumentNullException(nameof(getDiscriminant));
+            if (includes == null) throw new ArgumentNullException(nameof(includes));
 
             return PolymorphicLoadLink(
                 ToGetLookupIdsForSingleValue(getLink),
@@ -337,10 +337,10 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
         {
-            if (getLinks == null) throw new ArgumentNullException("getLinks");
-            if (getLinkTarget == null) throw new ArgumentNullException("getLinkTarget");
-            if (getDiscriminant == null) throw new ArgumentNullException("getDiscriminant");
-            if (includes == null) throw new ArgumentNullException("includes");
+            if (getLinks == null) throw new ArgumentNullException(nameof(getLinks));
+            if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
+            if (getDiscriminant == null) throw new ArgumentNullException(nameof(getDiscriminant));
+            if (includes == null) throw new ArgumentNullException(nameof(includes));
 
             return PolymorphicLoadLink(
                 getLinks,

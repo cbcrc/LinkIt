@@ -21,8 +21,8 @@ namespace LinkIt.Core
 
         public void AddReferences<TReference, TId>(List<TReference> references, Func<TReference, TId> getReferenceId)
         {
-            if (references == null) throw new ArgumentNullException("references");
-            if (getReferenceId == null) throw new ArgumentNullException("getReferenceId");
+            if (references == null) throw new ArgumentNullException(nameof(references));
+            if (getReferenceId == null) throw new ArgumentNullException(nameof(getReferenceId));
 
             var referenceDictionary = references.ToDictionary(
                 getReferenceId,
@@ -34,7 +34,7 @@ namespace LinkIt.Core
 
         public void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById)
         {
-            if (referencesById == null) throw new ArgumentNullException("referencesById");
+            if (referencesById == null) throw new ArgumentNullException(nameof(referencesById));
 
             var tReference = typeof(TReference);
             if (_referenceDictionaryByReferenceType.ContainsKey(tReference))

@@ -36,9 +36,9 @@ namespace LinkIt.Conventions
             IEnumerable<Assembly> assemblies,
             List<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException("loadLinkProtocolBuilder");
-            if (assemblies == null) throw new ArgumentNullException("assemblies");
-            if (conventions == null) throw new ArgumentNullException("conventions");
+            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
+            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
+            if (conventions == null) throw new ArgumentNullException(nameof(conventions));
 
             var types = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
@@ -56,9 +56,9 @@ namespace LinkIt.Conventions
             List<Type> types,
             List<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException("loadLinkProtocolBuilder");
-            if (types == null) throw new ArgumentNullException("types");
-            if (conventions == null) throw new ArgumentNullException("conventions");
+            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
+            if (types == null) throw new ArgumentNullException(nameof(types));
+            if (conventions == null) throw new ArgumentNullException(nameof(conventions));
             EnsureConventionNamesAreUnique(conventions);
 
             var matches = new FindAllConventionMatchesQuery(types, conventions).Execute();
@@ -68,7 +68,7 @@ namespace LinkIt.Conventions
 
         private static void EnsureConventionNamesAreUnique(List<ILoadLinkExpressionConvention> conventions)
         {
-            var notUniqueConventionNames = EnumerableExtensions.GetNotUniqueKey(conventions, convention => convention.Name);
+            var notUniqueConventionNames = conventions.GetNotUniqueKey(convention => convention.Name);
 
             if (notUniqueConventionNames.Any<string>())
                 throw new ArgumentException(

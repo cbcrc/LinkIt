@@ -23,7 +23,7 @@ namespace LinkIt.Conventions.DefaultConventions
 
         public static List<ILoadLinkExpressionConvention> DefaultAnd(params ILoadLinkExpressionConvention[] customConventions)
         {
-            if (customConventions == null) throw new ArgumentNullException("customConventions");
+            if (customConventions == null) throw new ArgumentNullException(nameof(customConventions));
 
             return Default
                 .Concat(customConventions)

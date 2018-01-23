@@ -42,7 +42,7 @@ namespace LinkIt.Core
             List<TRootLinkedSourceModel> models,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
-            if (models == null) throw new ArgumentNullException("models");
+            if (models == null) throw new ArgumentNullException(nameof(models));
 
             using (_referenceLoader)
             {
@@ -79,7 +79,7 @@ namespace LinkIt.Core
             List<TRootLinkedSourceModelId> modelIds,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
-            if (modelIds == null) throw new ArgumentNullException("modelIds");
+            if (modelIds == null) throw new ArgumentNullException(nameof(modelIds));
 
             using (_referenceLoader)
             {

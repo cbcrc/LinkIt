@@ -20,7 +20,7 @@ namespace LinkIt.ConfigBuilders
 
         public void ApplyLoadLinkProtocolConfigs(IEnumerable<Assembly> assemblies)
         {
-            if (assemblies == null) throw new ArgumentNullException("assemblies");
+            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
             var loadLinkProtocolConfigTypes = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
@@ -47,7 +47,7 @@ namespace LinkIt.ConfigBuilders
 
         public ILoadLinkProtocol Build(Func<IReferenceLoader> createReferenceLoader)
         {
-            if (createReferenceLoader == null) throw new ArgumentNullException("createReferenceLoader");
+            if (createReferenceLoader == null) throw new ArgumentNullException(nameof(createReferenceLoader));
 
             return new LoadLinkProtocol(
                 _loadLinkExpressionsById.Values.ToList(),

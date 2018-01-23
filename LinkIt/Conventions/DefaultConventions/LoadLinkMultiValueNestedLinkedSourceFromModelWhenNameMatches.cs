@@ -25,9 +25,9 @@ namespace LinkIt.Conventions.DefaultConventions
             var sourceListItemType = linkedSourceModelProperty.PropertyType.GenericTypeArguments.Single();
             var linkTargetListItemType = linkTargetProperty.PropertyType.GenericTypeArguments.Single();
 
-            if (!LinkedSourceTypeExtensions.DoesImplementILinkedSourceOnceAndOnlyOnce(linkTargetListItemType)) return false;
+            if (!linkTargetListItemType.DoesImplementILinkedSourceOnceAndOnlyOnce()) return false;
 
-            if (LinkedSourceTypeExtensions.GetLinkedSourceModelType(linkTargetListItemType) != sourceListItemType) return false;
+            if (linkTargetListItemType.GetLinkedSourceModelType() != sourceListItemType) return false;
 
             return true;
         }
