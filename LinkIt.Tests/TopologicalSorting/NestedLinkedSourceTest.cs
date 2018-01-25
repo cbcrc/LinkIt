@@ -6,17 +6,16 @@ using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.Core;
 using LinkIt.PublicApi;
-using LinkIt.ReferenceTrees;
-using LinkIt.Shared;
 using LinkIt.TestHelpers;
+using LinkIt.TopologicalSorting;
 using Xunit;
 
-namespace LinkIt.Tests.ReferenceTrees
+namespace LinkIt.Tests.TopologicalSorting
 {
-    public class ReferenceTree_NestedLinkedSourceTest
+    public class NestedLinkedSourceTest
     {
         private LoadLinkProtocol _sut;
-        public ReferenceTree_NestedLinkedSourceTest()
+        public NestedLinkedSourceTest()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
@@ -38,32 +37,11 @@ namespace LinkIt.Tests.ReferenceTrees
         }
 
         [Fact]
-        public void CreateRootReferenceTree()
-        {
-            var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
-
-            var expected = GetExpectedReferenceTree();
-
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        private static ReferenceTree GetExpectedReferenceTree()
-        {
-            var expected = new ReferenceTree(typeof(Model), $"root of {typeof(LinkedSource)}", null);
-            new ReferenceTree(typeof(Image), $"{typeof(LinkedSource)}/{nameof(LinkedSource.PreImage)}", expected);
-            var child2 = new ReferenceTree(typeof(Person), $"{typeof(LinkedSource)}/{nameof(LinkedSource.Person)}", expected);
-            new ReferenceTree(typeof(Image), $"{typeof(PersonLinkedSource)}/{nameof(PersonLinkedSource.SummaryImage)}", child2);
-            new ReferenceTree(typeof(Image), $"{typeof(LinkedSource)}/{nameof(LinkedSource.PostImage)}", expected);
-
-            return expected;
-        }
-
-        [Fact]
         public void ParseLoadingLevels()
         {
-            var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
+            var dependencyGraph = _sut.CreateDependencyGraph(typeof(LinkedSource));
 
-            var actual = rootReferenceTree.ParseLoadingLevels();
+            var actual = TopologicalSort.For(dependencyGraph).GetLoadingLevels();
 
             Type[][] expected = { new[] { typeof(Model) }, new[] { typeof(Person) }, new[] { typeof(Image) } };
 

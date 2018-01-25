@@ -3,11 +3,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
-using LinkIt.ReferenceTrees;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core.Includes.Interfaces
 {
-    public interface IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink> : IInclude
+    internal interface IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink> : IInclude
     {
         TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(
             TLink link,
@@ -17,6 +17,6 @@ namespace LinkIt.Core.Includes.Interfaces
             LoadLinkProtocol loadLinkProtocol
         );
 
-        void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol);
+        void AddDependenciesForAllLinkTargets(Dependency predecessor, LoadLinkProtocol loadLinkProtocol);
     }
 }

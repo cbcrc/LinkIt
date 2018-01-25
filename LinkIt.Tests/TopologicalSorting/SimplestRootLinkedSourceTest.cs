@@ -3,20 +3,21 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 #endregion
 
+using System.Linq;
 using LinkIt.ConfigBuilders;
 using LinkIt.Core;
 using LinkIt.PublicApi;
-using LinkIt.ReferenceTrees;
 using LinkIt.TestHelpers;
+using LinkIt.TopologicalSorting;
 using Xunit;
 
-namespace LinkIt.Tests.ReferenceTrees
+namespace LinkIt.Tests.TopologicalSorting
 {
-    public class ReferenceTree_SimplestRootLinkedSourceTest
+    public class SimplestRootLinkedSourceTest
     {
         private LoadLinkProtocol _sut;
 
-        public ReferenceTree_SimplestRootLinkedSourceTest()
+        public SimplestRootLinkedSourceTest()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>();
@@ -24,20 +25,23 @@ namespace LinkIt.Tests.ReferenceTrees
         }
 
         [Fact]
-        public void CreateRootReferenceTree()
+        public void CreateDependencyGraph()
         {
-            var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
+            var actual = _sut.CreateDependencyGraph(typeof(LinkedSource));
 
-            Assert.Equal(typeof(Model), actual.Node.ReferenceType);
-            Assert.Equal($"root of {typeof(LinkedSource)}", actual.Node.LinkTargetId);
+            Assert.Equal(1, actual.DependencyCount);
+
+            var dependency = actual.Dependencies.First();
+            Assert.Equal(typeof(LinkedSource), dependency.LinkedSourceType);
+            Assert.Equal(typeof(Model), dependency.Type);
         }
 
         [Fact]
         public void ParseLoadingLevels()
         {
-            var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
+            var dependencyGraph = _sut.CreateDependencyGraph(typeof(LinkedSource));
 
-            var actual = rootReferenceTree.ParseLoadingLevels();
+            var actual = TopologicalSort.For(dependencyGraph).GetLoadingLevels();;
 
             Assert.Equal(typeof(Model), actual[0][0]);
         }

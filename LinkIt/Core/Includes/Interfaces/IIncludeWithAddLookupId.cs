@@ -4,7 +4,7 @@
 #endregion
 
 using System;
-using LinkIt.ReferenceTrees;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core.Includes.Interfaces
 {
@@ -12,6 +12,6 @@ namespace LinkIt.Core.Includes.Interfaces
     {
         Type ReferenceType { get; }
         void AddLookupId(TLink link, LookupIdContext lookupIdContext);
-        void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkProtocol loadLinkProtocol);
+        void AddDependency(string linkTargetId, Dependency predecessor, LoadLinkProtocol loadLinkProtocol);
     }
 }

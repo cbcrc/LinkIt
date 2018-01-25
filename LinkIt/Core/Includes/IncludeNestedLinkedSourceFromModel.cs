@@ -6,14 +6,16 @@
 using System;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.ReferenceTrees;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core.Includes
 {
-    //For a nested linked source obtained from the model (configured for specific discriminant of a link target):
-    //responsible for loading and linking the link target for a specific discriminant
-    //responsible for creating the reference tree for a specific discriminant
-    public class IncludeNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel> :
+    /// <summary>
+    /// For a nested linked source obtained from the model (configured for specific discriminant of a link target):
+    /// responsible for loading and linking the link target for a specific discriminant
+    /// responsible for creating the reference tree for a specific discriminant
+    /// </summary>
+    internal class IncludeNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink, TChildLinkedSource, TChildLinkedSourceModel> :
         IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink>,
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
@@ -62,9 +64,9 @@ namespace LinkIt.Core.Includes
         }
 
 
-        public void AddReferenceTreeForEachLinkTarget(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        public void AddDependenciesForAllLinkTargets(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            loadLinkProtocol.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, parent);
+            loadLinkProtocol.AddDependenciesForAllLinkTargets(ChildLinkedSourceType, predecessor);
         }
 
         private Action<TChildLinkedSource> CreateInitChildLinkedSourceAction(TLinkedSource linkedSource, int referenceIndex, TLink link)

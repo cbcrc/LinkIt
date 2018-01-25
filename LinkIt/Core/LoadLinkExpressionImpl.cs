@@ -10,8 +10,8 @@ using LinkIt.Core.Includes;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.Core.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
-using LinkIt.ReferenceTrees;
 using LinkIt.Shared;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core
 {
@@ -116,10 +116,10 @@ namespace LinkIt.Core
             _linkTarget.FilterOutNullValues((TLinkedSource) linkedSource);
         }
 
-        public void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        public void AddDependencyForEachInclude(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            AddReferenceTreeForEachIncludeWithAddLookupId(parent, loadLinkProtocol);
-            AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(parent, loadLinkProtocol);
+            AddDependenciesForAllReferences(predecessor, loadLinkProtocol);
+            AddDependenciesForAllNestedLinkedSources(predecessor, loadLinkProtocol);
         }
 
         private void SetLinkTargetValues<TInclude>(
@@ -184,24 +184,20 @@ namespace LinkIt.Core
                 );
         }
 
-        private void AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        private void AddDependenciesForAllNestedLinkedSources(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            _includeSet
-                .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractLinkTarget, TLink>>()
-                .ToList()
-                .ForEach(include =>
-                    include.AddReferenceTreeForEachLinkTarget(parent, loadLinkProtocol)
-                );
+            foreach (var include in _includeSet.GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractLinkTarget, TLink>>())
+            {
+                include.AddDependenciesForAllLinkTargets(predecessor, loadLinkProtocol);
+            }
         }
 
-        private void AddReferenceTreeForEachIncludeWithAddLookupId(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        private void AddDependenciesForAllReferences(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            _includeSet
-                .GetIncludes<IIncludeWithAddLookupId<TLink>>()
-                .ToList()
-                .ForEach(include =>
-                    include.AddReferenceTree(LinkTargetId, parent, loadLinkProtocol)
-                );
+            foreach (var include in _includeSet.GetIncludes<IIncludeWithAddLookupId<TLink>>())
+            {
+                include.AddDependency(LinkTargetId, predecessor, loadLinkProtocol);
+            }
         }
     }
 }

@@ -8,19 +8,19 @@ using System.Collections.Generic;
 using System.Linq;
 using LinkIt.Core.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.ReferenceTrees;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core
 {
-    //In addition to the responsiblies of ILoadLinkProtocol,
-    //responsible for gathering and giving access to the load link expressions
-    //responsible to infer loading levels for each possible root linked source
+    /// <summary>
+    /// In addition to the responsiblies of ILoadLinkProtocol,
+    /// responsible for gathering and giving access to the load link expressions
+    /// responsible to infer loading levels for each possible root linked source
+    /// </summary>
     public class LoadLinkProtocol : ILoadLinkProtocol
     {
         private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
         private readonly Func<IReferenceLoader> _createReferenceLoader;
-
-        #region Initialization
 
         internal LoadLinkProtocol(
             List<ILoadLinkExpression> loadLinkExpressions,
@@ -30,8 +30,6 @@ namespace LinkIt.Core
             _createReferenceLoader = createReferenceLoader;
             InitLoadingLevelsForEachPossibleRootLinkedSourceType();
         }
-
-        #endregion
 
         public ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>()
         {
@@ -63,8 +61,6 @@ namespace LinkIt.Core
                 .ToList();
         }
 
-        #region Loading Levels
-
         private Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType;
 
         private List<List<Type>> GetLoadingLevelsFor<TRootLinkedSource>()
@@ -83,21 +79,14 @@ namespace LinkIt.Core
             _loadingLevelsByRootLinkedSourceType = new Dictionary<Type, List<List<Type>>>();
             foreach (var rootLinkedSourceType in GetAllPossibleRootLinkedSourceTypes())
             {
-                var rootReferenceTree = CreateRootReferenceTree(rootLinkedSourceType);
-
-                List<List<Type>> loadingLevels;
-                try
+                var dependencyGraph = CreateDependencyGraph(rootLinkedSourceType);
+                var sort = TopologicalSort.For(dependencyGraph);
+                if (sort == null)
                 {
-                    loadingLevels = rootReferenceTree.ParseLoadingLevels();
-                }
-                catch (NotSupportedException ex)
-                {
-                    throw new NotSupportedException(
-                        $"Unable to create the load link protocol for {rootLinkedSourceType}. For more details, see inner exception.",
-                        ex
-                    );
+                    throw new InvalidOperationException($"Cannot create the load link protocol for {rootLinkedSourceType}.");
                 }
 
+                var loadingLevels = sort.GetLoadingLevels();
                 _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
             }
         }
@@ -110,27 +99,24 @@ namespace LinkIt.Core
                 .ToList();
         }
 
-        #endregion
-
-        #region Reference Trees
-
-        internal void AddReferenceTreeForEachLinkTarget(Type linkedSourceType, ReferenceTree parent)
+        internal void AddDependenciesForAllLinkTargets(Type linkedSourceType, Dependency predecessor)
         {
-            foreach (var loadLinkExpression in GetLoadLinkExpressions(linkedSourceType)) loadLinkExpression.AddReferenceTreeForEachInclude(parent, this);
+            foreach (var loadLinkExpression in GetLoadLinkExpressions(linkedSourceType))
+            {
+                loadLinkExpression.AddDependencyForEachInclude(predecessor, this);
+            }
         }
 
-        internal ReferenceTree CreateRootReferenceTree(Type rootLinkedSourceType)
+        internal DependencyGraph CreateDependencyGraph(Type rootLinkedSourceType)
         {
+            var dependencyGraph = new DependencyGraph();
+
             var rootLinkedSourceConfig = LinkedSourceConfigs.GetConfigFor(rootLinkedSourceType);
-            var rootReferenceTree = new ReferenceTree(
-                rootLinkedSourceConfig.LinkedSourceModelType,
-                $"root of {rootLinkedSourceType}",
-                null
-            );
+            var rootDependency = dependencyGraph.GetOrAdd(rootLinkedSourceConfig.LinkedSourceModelType, rootLinkedSourceConfig.LinkedSourceType);
 
             try
             {
-                AddReferenceTreeForEachLinkTarget(rootLinkedSourceConfig.LinkedSourceType, rootReferenceTree);
+                AddDependenciesForAllLinkTargets(rootLinkedSourceConfig.LinkedSourceType, rootDependency);
             }
             catch (NotSupportedException ex)
             {
@@ -140,9 +126,7 @@ namespace LinkIt.Core
                 );
             }
 
-            return rootReferenceTree;
+            return dependencyGraph;
         }
-
-        #endregion
     }
 }

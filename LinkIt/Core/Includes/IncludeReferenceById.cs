@@ -5,7 +5,7 @@
 
 using System;
 using LinkIt.Core.Includes.Interfaces;
-using LinkIt.ReferenceTrees;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core.Includes
 {
@@ -35,13 +35,10 @@ namespace LinkIt.Core.Includes
             lookupIdContext.AddSingle<TReference, TId>(lookupId);
         }
 
-        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        public void AddDependency(string linkTargetId, Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            new ReferenceTree(
-                ReferenceType,
-                linkTargetId,
-                parent
-            );
+            var dependency = predecessor.Graph.GetOrAdd(ReferenceType);
+            predecessor.Before(dependency);
         }
 
         public TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext)
