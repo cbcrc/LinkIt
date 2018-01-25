@@ -4,6 +4,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LinkIt.PublicApi;
@@ -16,7 +17,7 @@ namespace LinkIt.Core
     /// </summary>I
     internal class LookupIdContext : ILookupIdContext
     {
-        private readonly Dictionary<Type, object> _lookupIdsByReferenceType = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, IEnumerable> _lookupIdsByReferenceType = new Dictionary<Type, IEnumerable>();
 
         public IReadOnlyList<Type> GetReferenceTypes()
         {
@@ -27,35 +28,75 @@ namespace LinkIt.Core
 
         public IReadOnlyList<TId> GetReferenceIds<TReference, TId>()
         {
-            var tReference = typeof(TReference);
-            if (!_lookupIdsByReferenceType.ContainsKey(tReference))
-                throw new InvalidOperationException(
-                    $"There are no reference ids for this the type {tReference.Name}."
-                );
+            return GetReferenceIds<TId>(typeof(TReference));
+        }
 
-            var casted = (List<TId>) _lookupIdsByReferenceType[tReference];
+        public IReadOnlyList<TId> GetReferenceIds<TId>(Type referenceType)
+        {
+            return (IReadOnlyList<TId>) GetLookupIds<TId>(referenceType)?.ToList() ?? new TId[0];
+        }
 
-            return casted
-                .Distinct()
-                .ToList();
+        public IDictionary<Type, IEnumerable> GetReferenceIds()
+        {
+            return new Dictionary<Type, IEnumerable>(_lookupIdsByReferenceType);
+        }
+
+        private HashSet<TId> GetLookupIds<TId>(Type referenceType)
+        {
+            return _lookupIdsByReferenceType.ContainsKey(referenceType)
+                ? (HashSet<TId>) _lookupIdsByReferenceType[referenceType]
+                : null;
         }
 
         public void AddSingle<TReference, TId>(TId lookupId)
         {
+            AddSingle(typeof(TReference), lookupId);
+        }
+
+        private void AddSingle<TId>(Type referenceType, TId lookupId)
+        {
             if (lookupId == null) return;
 
-            var tReference = typeof(TReference);
-            if (!_lookupIdsByReferenceType.ContainsKey(tReference)) _lookupIdsByReferenceType.Add(tReference, new List<TId>());
-
-            var currentLookupIds = (List<TId>) _lookupIdsByReferenceType[tReference];
+            var currentLookupIds = GetOrAddLookupIdsFor<TId>(referenceType);
             currentLookupIds.Add(lookupId);
+        }
+
+        private HashSet<TId> GetOrAddLookupIdsFor<TId>(Type referenceType)
+        {
+            var lookupIds = GetLookupIds<TId>(referenceType);
+            if (lookupIds != null)
+            {
+                return lookupIds;
+            }
+
+            var set = new HashSet<TId>();
+            _lookupIdsByReferenceType.Add(referenceType, set);
+            return set;
         }
 
         public void AddMulti<TReference, TId>(IEnumerable<TId> lookupIds)
         {
-            if (lookupIds == null) throw new ArgumentNullException(nameof(lookupIds));
+            AddMulti(typeof(TReference), lookupIds);
+        }
 
-            foreach (var lookupId in lookupIds) AddSingle<TReference, TId>(lookupId);
+        private void AddMulti<TId>(Type referenceType, IEnumerable<TId> lookupIds)
+        {
+            if (lookupIds == null)
+            {
+                throw new ArgumentNullException(nameof(lookupIds));
+            }
+
+            var nonNullIds = lookupIds.Where(id => id != null).ToList();
+            if (!nonNullIds.Any())
+            {
+                return;
+            }
+
+            var currentLookupIds = GetOrAddLookupIdsFor<TId>(referenceType);
+            foreach (var id in nonNullIds)
+            {
+                currentLookupIds.Add(id);
+            }
         }
     }
 }

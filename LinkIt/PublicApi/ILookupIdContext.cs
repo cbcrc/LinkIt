@@ -4,6 +4,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace LinkIt.PublicApi
@@ -19,10 +20,22 @@ namespace LinkIt.PublicApi
         IReadOnlyList<Type> GetReferenceTypes();
 
         /// <summary>
+        /// Get reference types with their IDs to be loaded.
+        /// </summary>
+        IDictionary<Type, IEnumerable> GetReferenceIds();
+
+        /// <summary>
         /// Get the IDs of the references to be loaded.
         /// </summary>
         /// <typeparam name="TReference">Type of reference</typeparam>
         /// <typeparam name="TId">Type of the ID</typeparam>
         IReadOnlyList<TId> GetReferenceIds<TReference, TId>();
+
+        /// <summary>
+        /// Get the IDs of the references to be loaded.
+        /// </summary>
+        /// <param name="referenceType">Type of reference</param>
+        /// <typeparam name="TId">Type of the ID</typeparam>
+        IReadOnlyList<TId> GetReferenceIds<TId>(Type referenceType);
     }
 }
