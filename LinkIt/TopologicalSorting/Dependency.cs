@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LinkIt.TopologicalSorting
 {
@@ -71,7 +72,7 @@ namespace LinkIt.TopologicalSorting
         {
             DependencyGraph.CheckGraph(this, follower);
 
-            if (this == follower || _predecessors.Contains(follower))
+            if (this == follower || HasPredecessor(follower))
             {
                 throw new InvalidOperationException($"Recursive dependency detected for {follower}.");
             }
@@ -82,6 +83,11 @@ namespace LinkIt.TopologicalSorting
             }
 
             return this;
+        }
+
+        public bool HasPredecessor(Dependency dependency)
+        {
+            return _predecessors.Contains(dependency) || _predecessors.Any(p => p.HasPredecessor(dependency));
         }
 
         /// <summary>
@@ -117,7 +123,7 @@ namespace LinkIt.TopologicalSorting
         {
             DependencyGraph.CheckGraph(this, predecessor);
 
-            if (this == predecessor || _followers.Contains(predecessor))
+            if (this == predecessor || HasFollower(predecessor))
             {
                 throw new InvalidOperationException($"Recursive dependency detected for {predecessor}.");
             }
@@ -128,6 +134,11 @@ namespace LinkIt.TopologicalSorting
             }
 
             return this;
+        }
+
+        public bool HasFollower(Dependency dependency)
+        {
+            return _followers.Contains(dependency) || _followers.Any(p => p.HasFollower(dependency));
         }
 
         /// <summary>
