@@ -80,7 +80,7 @@ namespace LinkIt.Core
             foreach (var rootLinkedSourceType in GetAllPossibleRootLinkedSourceTypes())
             {
                 var dependencyGraph = CreateDependencyGraph(rootLinkedSourceType);
-                var sort = TopologicalSort.For(dependencyGraph);
+                var sort = dependencyGraph.Sort();
                 if (sort == null)
                 {
                     throw new InvalidOperationException($"Cannot create the load link protocol for {rootLinkedSourceType}.");

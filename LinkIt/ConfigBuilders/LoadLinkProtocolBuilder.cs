@@ -10,6 +10,7 @@ using System.Reflection;
 using LinkIt.Core;
 using LinkIt.Core.Interfaces;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 
 namespace LinkIt.ConfigBuilders
 {
@@ -24,7 +25,7 @@ namespace LinkIt.ConfigBuilders
 
             var loadLinkProtocolConfigTypes = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => type.GetInterface("LinkIt.ConfigBuilders.ILoadLinkProtocolConfig") != null)
+                .Where(type => type.GetInterface(typeof(ILoadLinkProtocolConfig).FullName) != null)
                 .ToList();
 
             var loadLinkProtocolConfigs = loadLinkProtocolConfigTypes
@@ -37,6 +38,11 @@ namespace LinkIt.ConfigBuilders
 
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> For<TLinkedSource>()
         {
+            if (!typeof(TLinkedSource).IsLinkedSource())
+            {
+                throw new ArgumentException($"Generic type parameter {typeof(TLinkedSource).Name} must implement ILinkedSource<>.", nameof(TLinkedSource));
+            }
+
             return new LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>(AddLoadLinkExpression);
         }
 

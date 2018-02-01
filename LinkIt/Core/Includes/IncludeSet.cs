@@ -76,7 +76,7 @@ namespace LinkIt.Core.Includes
         {
             if (!_includes.ContainsKey(discriminant))
             {
-                throw new AssumptionFailed(
+                throw new LinkItException(
                     $"{typeof(TLinkedSource)}: Cannot invoke GetInclude for discriminant={discriminant}"
                 );
             }
@@ -86,7 +86,7 @@ namespace LinkIt.Core.Includes
         {
             if (link == null)
             {
-                throw new AssumptionFailed(
+                throw new LinkItException(
                     $"{typeof(TLinkedSource)}: Cannot invoke GetInclude with a null link"
                 );
             }

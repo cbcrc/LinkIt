@@ -15,7 +15,7 @@ namespace LinkIt.TopologicalSorting
         {
             return sort.DependencySets
                 .Select(set => set
-                    .Select(dep => dep.Type)
+                    .Select(dep => dep.Type.ModelType)
                     .ToList())
                 .ToList();
         }

@@ -4,45 +4,34 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using LinkIt.PublicApi;
 
 namespace LinkIt.Shared
 {
-    public static class LinkedSourceTypeExtensions
+    internal static class LinkedSourceTypeExtensions
     {
-        public static bool DoesImplementILinkedSourceOnceAndOnlyOnce(this Type type)
+        public static bool IsLinkedSource(this Type type)
         {
-            return GetILinkedSourceTypes(type).Count == 1;
+            return GetLinkedSourceInterface(type) != null;
         }
 
-        public static List<Type> GetILinkedSourceTypes(this Type type)
+        private static Type GetLinkedSourceInterface(this Type type)
         {
-            var iLinkedSourceTypes = type.GetInterfaces()
-                .Where(interfaceType =>
-                    interfaceType.IsGenericType &&
-                    interfaceType.GetGenericTypeDefinition() == typeof(ILinkedSource<>))
-                .ToList();
-            return iLinkedSourceTypes;
+            return type.GetInterfaces()
+                .Where(i => i.IsGenericType)
+                .FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(ILinkedSource<>));
         }
 
         public static Type GetLinkedSourceModelType(this Type type)
         {
-            EnsureImplementsILinkedSourceOnceAndOnlyOnce(type);
+            var iLinkedSourceType = type.GetLinkedSourceInterface();
+            if (iLinkedSourceType == null)
+            {
+                throw new ArgumentException($"{type.Name} must implement ILinkedSource<>.", nameof(type));
+            }
 
-            var iLinkedSourceTypes = type.GetILinkedSourceTypes();
-            var iLinkedSourceType = iLinkedSourceTypes.Single();
             return iLinkedSourceType.GenericTypeArguments.Single();
-        }
-
-        private static void EnsureImplementsILinkedSourceOnceAndOnlyOnce(Type linkedSourceType)
-        {
-            if (!linkedSourceType.DoesImplementILinkedSourceOnceAndOnlyOnce())
-                throw new ArgumentException(
-                    $"{linkedSourceType} must implement ILinkedSource<> once and only once.",
-                    "TLinkedSource"
-                );
         }
     }
 }

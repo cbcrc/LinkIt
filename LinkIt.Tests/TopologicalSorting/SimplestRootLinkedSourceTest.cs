@@ -32,8 +32,8 @@ namespace LinkIt.Tests.TopologicalSorting
             Assert.Equal(1, actual.DependencyCount);
 
             var dependency = actual.Dependencies.First();
-            Assert.Equal(typeof(LinkedSource), dependency.LinkedSourceType);
-            Assert.Equal(typeof(Model), dependency.Type);
+            Assert.Equal(typeof(LinkedSource), dependency.Type.LinkedSourceType);
+            Assert.Equal(typeof(Model), dependency.Type.ModelType);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace LinkIt.Tests.TopologicalSorting
         {
             var dependencyGraph = _sut.CreateDependencyGraph(typeof(LinkedSource));
 
-            var actual = TopologicalSort.For(dependencyGraph).GetLoadingLevels();;
+            var actual = dependencyGraph.Sort().GetLoadingLevels();
 
             Assert.Equal(typeof(Model), actual[0][0]);
         }

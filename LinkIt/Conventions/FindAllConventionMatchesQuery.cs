@@ -45,7 +45,7 @@ namespace LinkIt.Conventions
         private List<Type> GetLinkedSourceTypes()
         {
             return _types
-                .Where(LinkedSourceTypeExtensions.DoesImplementILinkedSourceOnceAndOnlyOnce)
+                .Where(LinkedSourceTypeExtensions.IsLinkedSource)
                 .ToList();
         }
 

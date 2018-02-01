@@ -37,7 +37,7 @@ namespace LinkIt.Tests.TopologicalSorting
         {
             var dependencyGraph = _sut.CreateDependencyGraph(typeof(LinkedSource));
 
-            var actual = TopologicalSort.For(dependencyGraph).GetLoadingLevels();
+            var actual = dependencyGraph.Sort().GetLoadingLevels();
 
             Type[][] expected = { new[] { typeof(Model) }, new[] { typeof(Person) } };
 

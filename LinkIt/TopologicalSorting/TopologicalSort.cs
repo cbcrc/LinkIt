@@ -17,7 +17,7 @@ namespace LinkIt.TopologicalSorting
         /// <summary>
         /// Initializes a new instance of the <see cref="TopologicalSort"/> class.
         /// </summary>
-        private TopologicalSort(List<ISet<Dependency>> collections)
+        private TopologicalSort(IReadOnlyList<ISet<Dependency>> collections)
         {
             _collections = collections;
         }
@@ -31,7 +31,7 @@ namespace LinkIt.TopologicalSorting
                 // select dependencies which have no predecessors in the unused set,
                 // which means that all their predecessors must either be used, or not exist, either way is fine
                 var set = new HashSet<Dependency>(
-                    unused.Where(p => !unused.Overlaps(p.Predecessors))
+                    unused.Where(p => !unused.Overlaps(p.DirectPredecessors))
                 );
 
                 if (set.Count == 0)

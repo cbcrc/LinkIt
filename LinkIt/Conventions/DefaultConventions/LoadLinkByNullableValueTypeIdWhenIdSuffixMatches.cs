@@ -30,7 +30,7 @@ namespace LinkIt.Conventions.DefaultConventions
         )
             where TLinkedSourceModelProperty : struct
         {
-            if (typeof(TLinkTargetProperty).DoesImplementILinkedSourceOnceAndOnlyOnce())
+            if (typeof(TLinkTargetProperty).IsLinkedSource())
                 loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty

@@ -11,56 +11,33 @@ namespace LinkIt.TopologicalSorting
     /// <summary>
     /// A dependency in an object graph to load.
     /// </summary>
-    internal class Dependency
+    internal class Dependency : IEquatable<Dependency>
     {
         /// <summary>
-        /// The object type of this dependency.
+        /// The type of this dependency.
         /// </summary>
-        public Type Type { get; }
-
-        /// <summary>
-        /// The linked sourc type of this dependency.
-        /// </summary>
-        public Type LinkedSourceType { get; }
+        public DependencyType Type { get; }
 
         /// <summary>
         /// The graph this dependency is part of
         /// </summary>
         public DependencyGraph Graph { get; }
 
-        private readonly HashSet<Dependency> _predecessors = new HashSet<Dependency>();
-        /// <summary>
-        /// Gets the predecessors of this dependency
-        /// </summary>
-        /// <value>The predecessors.</value>
-        public IEnumerable<Dependency> Predecessors => _predecessors;
+        private readonly HashSet<Dependency> _directPredecessors = new HashSet<Dependency>();
+        public IEnumerable<Dependency> DirectPredecessors => _directPredecessors;
 
-        private readonly HashSet<Dependency> _followers = new HashSet<Dependency>();
-        /// <summary>
-        /// Gets the followers of this dependency
-        /// </summary>
-        public IEnumerable<Dependency> Followers => _followers;
+        private readonly HashSet<Dependency> _directFollowers = new HashSet<Dependency>();
+        public IEnumerable<Dependency> DirectFollowers => _directFollowers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Dependency"/> class.
         /// </summary>
         /// <param name="graph">The graph which this dependency is part of</param>
         /// <param name="type">The type of this dependency</param>
-        public Dependency(DependencyGraph graph, Type type)
+        public Dependency(DependencyGraph graph, DependencyType type)
         {
-            Graph = graph;
-            Type = type;
-
-            Graph.Add(this);
-        }
-
-        public Dependency(DependencyGraph graph, Type linkedSourceModelType, Type linkedSourceType)
-        {
-            Graph = graph;
-            Type = linkedSourceModelType;
-            LinkedSourceType = linkedSourceType;
-
-            Graph.Add(this);
+            Graph = graph ?? throw new ArgumentNullException(nameof(graph));
+            Type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
         /// <summary>
@@ -77,7 +54,7 @@ namespace LinkIt.TopologicalSorting
                 throw new InvalidOperationException($"Recursive dependency detected for {follower}.");
             }
 
-            if (_followers.Add(follower))
+            if (_directFollowers.Add(follower))
             {
                 follower.After(this);
             }
@@ -85,9 +62,21 @@ namespace LinkIt.TopologicalSorting
             return this;
         }
 
+        private IEnumerable<Dependency> Predecessors()
+        {
+            foreach (var directPredecessor in _directPredecessors)
+            {
+                yield return directPredecessor;
+                foreach (var predecessor in directPredecessor.Predecessors())
+                {
+                    yield return predecessor;
+                }
+            }
+        }
+
         public bool HasPredecessor(Dependency dependency)
         {
-            return _predecessors.Contains(dependency) || _predecessors.Any(p => p.HasPredecessor(dependency));
+            return _directPredecessors.Contains(dependency) || _directPredecessors.Any(p => p.HasPredecessor(dependency));
         }
 
         /// <summary>
@@ -123,12 +112,17 @@ namespace LinkIt.TopologicalSorting
         {
             DependencyGraph.CheckGraph(this, predecessor);
 
+            if (_directPredecessors.Contains(predecessor))
+            {
+                return this;
+            }
+
             if (this == predecessor || HasFollower(predecessor))
             {
                 throw new InvalidOperationException($"Recursive dependency detected for {predecessor}.");
             }
 
-            if (_predecessors.Add(predecessor))
+            if (_directPredecessors.Add(predecessor))
             {
                 predecessor.Before(this);
             }
@@ -138,7 +132,19 @@ namespace LinkIt.TopologicalSorting
 
         public bool HasFollower(Dependency dependency)
         {
-            return _followers.Contains(dependency) || _followers.Any(p => p.HasFollower(dependency));
+            return _directFollowers.Contains(dependency) || _directFollowers.Any(p => p.HasFollower(dependency));
+        }
+
+        private IEnumerable<Dependency> Followers()
+        {
+            foreach (var directFollower in _directFollowers)
+            {
+                yield return directFollower;
+                foreach (var follower in directFollower.Followers())
+                {
+                    yield return follower;
+                }
+            }
         }
 
         /// <summary>
@@ -164,7 +170,63 @@ namespace LinkIt.TopologicalSorting
             return this;
         }
 
+        public Dependency Merge(Dependency other)
+        {
+            foreach (var predecessor in other.DirectPredecessors)
+            {
+                After(predecessor);
+            }
+
+            foreach (var follower in other.DirectFollowers)
+            {
+                Before(follower);
+            }
+
+            other.Unlink();
+
+            Graph.Remove(other);
+
+            return this;
+        }
+
+        private void Unlink()
+        {
+            foreach (var dependency in DirectPredecessors.Concat(DirectFollowers))
+            {
+                dependency.Remove(this);
+            }
+        }
+
+        private void Remove(Dependency other)
+        {
+            _directPredecessors.Remove(other);
+            _directFollowers.Remove(other);
+        }
+
         /// <inheritdoc />
-        public override string ToString() => $"type {{ {LinkedSourceType?.Name ?? Type.Name} }}";
+        public override string ToString() => Type.ToString();
+
+        public bool Equals(Dependency other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Type.Equals(other.Type) && Graph.Equals(other.Graph);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Dependency) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Type.GetHashCode() * 397) ^ Graph.GetHashCode();
+            }
+        }
     }
 }

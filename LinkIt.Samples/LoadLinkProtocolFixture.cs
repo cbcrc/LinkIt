@@ -4,7 +4,6 @@ using LinkIt.ConfigBuilders;
 using LinkIt.Conventions;
 using LinkIt.Conventions.DefaultConventions;
 using LinkIt.PublicApi;
-using LinkIt.Shared;
 using Xunit;
 
 namespace LinkIt.Samples
@@ -18,7 +17,7 @@ namespace LinkIt.Samples
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             LoadLinkProtocol = loadLinkProtocolBuilder.Build(
                 () => new FakeReferenceLoader(),
-                Assembly.GetExecutingAssembly().Yield(),
+                new [] { Assembly.GetExecutingAssembly() },
                 LoadLinkExpressionConvention.Default);
             }
             catch (Exception e)

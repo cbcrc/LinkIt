@@ -171,7 +171,7 @@ namespace LinkIt.Core
         private static void AssumeLinkedSourceIsOfTLinkedSource(object linkedSource)
         {
             if (!(linkedSource is TLinkedSource))
-                throw new AssumptionFailed(
+                throw new LinkItException(
                     $"Cannot invoke load-link expression for {typeof(TLinkedSource)} with linked source of type {linkedSource?.GetType()}"
                 );
         }
@@ -179,8 +179,10 @@ namespace LinkIt.Core
         private static void AssumeIsOfReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType)
         {
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType))
-                throw new AssumptionFailed(
-                    $"Cannot invoke this load link expression for reference type {referenceType}. Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}. This load link expression is for {loadLinkExpression.LinkedSourceType}."
+                throw new LinkItException(
+                    $"Cannot invoke this load link expression for reference type {referenceType}." +
+                    $"Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}." +
+                    $"This load link expression is for {loadLinkExpression.LinkedSourceType}."
                 );
         }
 
