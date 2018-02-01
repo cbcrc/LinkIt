@@ -5,8 +5,14 @@
 
 namespace LinkIt.ConfigBuilders
 {
+    /// <summary>
+    /// Interface for classes to configure a LoadLinkProtocol.
+    /// </summary>
     public interface ILoadLinkProtocolConfig
     {
+        /// <summary>
+        /// Configure the LoadLinkProtocol using a builder
+        /// </summary>
         void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder);
     }
 }

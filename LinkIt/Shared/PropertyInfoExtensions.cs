@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace LinkIt.Shared
 {
-    public static class PropertyInfoExtensions
+    internal static class PropertyInfoExtensions
     {
         public static bool IsPublicReadWrite(this PropertyInfo property)
         {

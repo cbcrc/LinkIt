@@ -26,13 +26,8 @@ namespace LinkIt.Tests.Core
 
             Action act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
-            var exception = Assert.Throws<NotSupportedException>(act);
-            Assert.Contains("DirectCycleInNestedLinkedSource", exception.Message);
-            Assert.IsType<NotSupportedException>(exception.InnerException);
-            Assert.StartsWith("Recursive load link", exception.InnerException.Message);
-            Assert.Contains("root", exception.InnerException.Message);
-            Assert.Contains("Parent", exception.InnerException.Message);
-            Assert.Contains("DirectCycle", exception.InnerException.Message);
+            var exception = Assert.Throws<InvalidOperationException>(act);
+            Assert.Equal($"Recursive dependency detected for type {{ {typeof(DirectCycleInNestedLinkedSource).Name} }}.", exception.Message);
         }
 
         [Fact]
@@ -52,17 +47,12 @@ namespace LinkIt.Tests.Core
 
             Action act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
-            var exception = Assert.Throws<NotSupportedException>(act);
-            Assert.Contains("IndirectCycleLevel0LinkedSource", exception.Message);
-            Assert.IsType<NotSupportedException>(exception.InnerException);
-            Assert.StartsWith("Recursive load link", exception.InnerException.Message);
-            Assert.Contains("root", exception.InnerException.Message);
-            Assert.Contains("Level0", exception.InnerException.Message);
-            Assert.Contains("IndirectCycleLevel0", exception.InnerException.Message);
+            var exception = Assert.Throws<InvalidOperationException>(act);
+            Assert.Equal($"Recursive dependency detected for type {{ {typeof(IndirectCycleLevel0LinkedSource).Name} }}.", exception.Message);
         }
 
         [Fact]
-        public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldThrow()
+        public void CreateLoadLinkConfig_WithCycleCausedByReference_ShouldNotThrow()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<CycleInReferenceLinkedSource>()
@@ -70,15 +60,9 @@ namespace LinkIt.Tests.Core
                     linkedSource => linkedSource.Model.ParentId,
                     linkedSource => linkedSource.Parent);
 
-            Action act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
+            var loadLinkProtocol = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
-            var exception = Assert.Throws<NotSupportedException>(act);
-            Assert.Contains("CycleInReferenceLinkedSource", exception.Message);
-            Assert.IsType<NotSupportedException>(exception.InnerException);
-            Assert.StartsWith("Recursive load link", exception.InnerException.Message);
-            Assert.Contains("root", exception.InnerException.Message);
-            Assert.Contains("Parent", exception.InnerException.Message);
-            Assert.Contains("DirectCycle", exception.InnerException.Message);
+            Assert.NotNull(loadLinkProtocol);
         }
 
         public class CycleInReferenceLinkedSource : ILinkedSource<DirectCycle>

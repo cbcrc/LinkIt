@@ -100,7 +100,7 @@ namespace LinkIt.Core
             var concreteType = typeof(TConcrete);
 
             if (!abstractType.IsAssignableFrom(concreteType))
-                throw new AssumptionFailed(
+                throw new LinkItException(
                     $"{abstractType} is not assignable from {concreteType}."
                 );
         }

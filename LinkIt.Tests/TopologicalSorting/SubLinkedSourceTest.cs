@@ -9,17 +9,17 @@ using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.Core;
 using LinkIt.PublicApi;
-using LinkIt.ReferenceTrees;
 using LinkIt.TestHelpers;
+using LinkIt.TopologicalSorting;
 using Xunit;
 
-namespace LinkIt.Tests.ReferenceTrees
+namespace LinkIt.Tests.TopologicalSorting
 {
-    public class ReferenceTree_SubLinkedSourceTest
+    public class SubLinkedSourceTest
     {
         private LoadLinkProtocol _sut;
 
-        public ReferenceTree_SubLinkedSourceTest()
+        public SubLinkedSourceTest()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
@@ -43,30 +43,11 @@ namespace LinkIt.Tests.ReferenceTrees
         }
 
         [Fact]
-        public void CreateRootReferenceTree()
-        {
-            var actual = _sut.CreateRootReferenceTree(typeof(LinkedSource));
-
-            var expected = GetExpectedReferenceTree();
-
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        private static ReferenceTree GetExpectedReferenceTree()
-        {
-            var expected = new ReferenceTree(typeof(Model), $"root of {typeof(LinkedSource)}", null);
-            new ReferenceTree(typeof(Image), $"{typeof(PostLinkedSource)}/{nameof(PostLinkedSource.SummaryImage)}", expected);
-            new ReferenceTree(typeof(Person), $"{typeof(PostThreadLinkedSource)}/{nameof(PostThreadLinkedSource.Author)}", expected);
-
-            return expected;
-        }
-
-        [Fact]
         public void ParseLoadingLevels()
         {
-            var rootReferenceTree = _sut.CreateRootReferenceTree(typeof(LinkedSource));
+            var dependencyGraph = _sut.CreateDependencyGraph(typeof(LinkedSource));
 
-            var actual = rootReferenceTree.ParseLoadingLevels();
+            var actual = dependencyGraph.Sort().GetLoadingLevels();
 
             Type[][] expected =
             {

@@ -7,9 +7,12 @@ using System;
 
 namespace LinkIt.Shared
 {
-    public class AssumptionFailed : Exception
+    /// <summary>
+    /// Represents errors that occured within LinkIt.
+    /// </summary>
+    public class LinkItException : Exception
     {
-        public AssumptionFailed(string message)
+        internal LinkItException(string message)
             : base(message)
         {
         }

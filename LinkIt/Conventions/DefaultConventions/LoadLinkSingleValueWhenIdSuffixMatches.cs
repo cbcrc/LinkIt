@@ -28,7 +28,7 @@ namespace LinkIt.Conventions.DefaultConventions
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
         {
-            if (typeof(TLinkTargetProperty).DoesImplementILinkedSourceOnceAndOnlyOnce())
+            if (typeof(TLinkTargetProperty).IsLinkedSource())
                 loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty

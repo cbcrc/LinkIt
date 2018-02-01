@@ -5,7 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using LinkIt.ReferenceTrees;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core.Interfaces
 {
@@ -26,6 +26,6 @@ namespace LinkIt.Core.Interfaces
         void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
         void FilterOutNullValues(object linkedSource);
 
-        void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol);
+        void AddDependencyForEachInclude(Dependency predecessor, LoadLinkProtocol loadLinkProtocol);
     }
 }

@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace LinkIt.Shared
 {
-    public static class EnumerableExtensions
+    internal static class EnumerableExtensions
     {
         public static List<TKey> GetNotUniqueKey<TItem, TKey>(this IEnumerable<TItem> items, Func<TItem, TKey> keySelector)
         {

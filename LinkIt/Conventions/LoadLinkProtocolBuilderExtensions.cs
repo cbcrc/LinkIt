@@ -70,7 +70,7 @@ namespace LinkIt.Conventions
         {
             var notUniqueConventionNames = conventions.GetNotUniqueKey(convention => convention.Name);
 
-            if (notUniqueConventionNames.Any<string>())
+            if (notUniqueConventionNames.Any())
                 throw new ArgumentException(
                     $"Cannot have many conventions with the same name: {string.Join(",", notUniqueConventionNames)}"
                 );

@@ -10,8 +10,8 @@ using LinkIt.Core.Includes;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.Core.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
-using LinkIt.ReferenceTrees;
 using LinkIt.Shared;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core
 {
@@ -116,10 +116,10 @@ namespace LinkIt.Core
             _linkTarget.FilterOutNullValues((TLinkedSource) linkedSource);
         }
 
-        public void AddReferenceTreeForEachInclude(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        public void AddDependencyForEachInclude(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            AddReferenceTreeForEachIncludeWithAddLookupId(parent, loadLinkProtocol);
-            AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(parent, loadLinkProtocol);
+            AddDependenciesForAllReferences(predecessor, loadLinkProtocol);
+            AddDependenciesForAllNestedLinkedSources(predecessor, loadLinkProtocol);
         }
 
         private void SetLinkTargetValues<TInclude>(
@@ -171,7 +171,7 @@ namespace LinkIt.Core
         private static void AssumeLinkedSourceIsOfTLinkedSource(object linkedSource)
         {
             if (!(linkedSource is TLinkedSource))
-                throw new AssumptionFailed(
+                throw new LinkItException(
                     $"Cannot invoke load-link expression for {typeof(TLinkedSource)} with linked source of type {linkedSource?.GetType()}"
                 );
         }
@@ -179,29 +179,27 @@ namespace LinkIt.Core
         private static void AssumeIsOfReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType)
         {
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType))
-                throw new AssumptionFailed(
-                    $"Cannot invoke this load link expression for reference type {referenceType}. Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}. This load link expression is for {loadLinkExpression.LinkedSourceType}."
+                throw new LinkItException(
+                    $"Cannot invoke this load link expression for reference type {referenceType}." +
+                    $"Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}." +
+                    $"This load link expression is for {loadLinkExpression.LinkedSourceType}."
                 );
         }
 
-        private void AddReferenceTreeForEachIncludeWithCreateNestedLinkedSourceFromModel(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        private void AddDependenciesForAllNestedLinkedSources(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            _includeSet
-                .GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractLinkTarget, TLink>>()
-                .ToList()
-                .ForEach(include =>
-                    include.AddReferenceTreeForEachLinkTarget(parent, loadLinkProtocol)
-                );
+            foreach (var include in _includeSet.GetIncludes<IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractLinkTarget, TLink>>())
+            {
+                include.AddDependenciesForAllLinkTargets(predecessor, loadLinkProtocol);
+            }
         }
 
-        private void AddReferenceTreeForEachIncludeWithAddLookupId(ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        private void AddDependenciesForAllReferences(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            _includeSet
-                .GetIncludes<IIncludeWithAddLookupId<TLink>>()
-                .ToList()
-                .ForEach(include =>
-                    include.AddReferenceTree(LinkTargetId, parent, loadLinkProtocol)
-                );
+            foreach (var include in _includeSet.GetIncludes<IIncludeWithAddLookupId<TLink>>())
+            {
+                include.AddDependency(LinkTargetId, predecessor, loadLinkProtocol);
+            }
         }
     }
 }

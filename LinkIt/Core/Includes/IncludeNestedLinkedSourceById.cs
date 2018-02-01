@@ -6,7 +6,7 @@
 using System;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.PublicApi;
-using LinkIt.ReferenceTrees;
+using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core.Includes
 {
@@ -24,6 +24,10 @@ namespace LinkIt.Core.Includes
         private readonly Func<TLink, TId> _getLookupId;
         private readonly Action<TLink, TChildLinkedSource> _initChildLinkedSourceWithLink;
         private readonly Action<TLinkedSource, int, TChildLinkedSource> _initChildLinkedSourceWithParentAndReferenceIndex;
+
+        public Type ChildLinkedSourceType { get; }
+
+        public Type ReferenceType { get; }
 
         public IncludeNestedLinkedSourceById(
             Func<TLink, TId> getLookupId,
@@ -53,20 +57,13 @@ namespace LinkIt.Core.Includes
             lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
-        public void AddReferenceTree(string linkTargetId, ReferenceTree parent, LoadLinkProtocol loadLinkProtocol)
+        public void AddDependency(string linkTargetId, Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            var referenceTree = new ReferenceTree(
-                ReferenceType,
-                linkTargetId,
-                parent
-            );
+            var dependency = predecessor.Graph.GetOrAdd(ReferenceType, ChildLinkedSourceType);
+            predecessor.Before(dependency);
 
-            loadLinkProtocol.AddReferenceTreeForEachLinkTarget(ChildLinkedSourceType, referenceTree);
+            loadLinkProtocol.AddDependenciesForAllLinkTargets(ChildLinkedSourceType, dependency);
         }
-
-        public Type ChildLinkedSourceType { get; }
-
-        public Type ReferenceType { get; }
 
         public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex, LoadLinkProtocol loadLinkProtocol)
         {

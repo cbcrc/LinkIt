@@ -19,7 +19,7 @@ namespace LinkIt.Conventions.DefaultConventions
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
         {
             if (linkTargetProperty.Name != linkedSourceModelProperty.Name) return false;
-            if (!linkTargetProperty.PropertyType.DoesImplementILinkedSourceOnceAndOnlyOnce()) return false;
+            if (!linkTargetProperty.PropertyType.IsLinkedSource()) return false;
             if (linkTargetProperty.PropertyType.GetLinkedSourceModelType() != linkedSourceModelProperty.PropertyType) return false;
 
             return true;
