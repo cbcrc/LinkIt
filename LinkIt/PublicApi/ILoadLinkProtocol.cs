@@ -10,7 +10,7 @@ namespace LinkIt.PublicApi
     /// </summary>
     public interface ILoadLinkProtocol
     {
-        LoadLinkProtocolStatistics Statistics { get; }
         ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>();
+        LoadLinkProtocolStatistics Statistics { get; }
     }
 }

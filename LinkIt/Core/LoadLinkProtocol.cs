@@ -17,16 +17,19 @@ namespace LinkIt.Core
     /// responsible for gathering and giving access to the load link expressions
     /// responsible to infer loading levels for each possible root linked source
     /// </summary>
-    public class LoadLinkProtocol : ILoadLinkProtocol
+    internal class LoadLinkProtocol : ILoadLinkProtocol
     {
-        private readonly List<ILoadLinkExpression> _allLoadLinkExpressions;
+        private readonly Dictionary<Type, List<ILoadLinkExpression>> _allLoadLinkExpressions;
         private readonly Func<IReferenceLoader> _createReferenceLoader;
 
         internal LoadLinkProtocol(
             List<ILoadLinkExpression> loadLinkExpressions,
             Func<IReferenceLoader> createReferenceLoader)
         {
-            _allLoadLinkExpressions = loadLinkExpressions;
+            _allLoadLinkExpressions = loadLinkExpressions
+                .GroupBy(e => e.LinkedSourceType)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
             _createReferenceLoader = createReferenceLoader;
             InitLoadingLevelsForEachPossibleRootLinkedSourceType();
         }
@@ -34,7 +37,7 @@ namespace LinkIt.Core
         public ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>()
         {
             return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
-                _createReferenceLoader(),
+                _createReferenceLoader,
                 GetLoadingLevelsFor<TRootLinkedSource>(),
                 this
             );
@@ -56,9 +59,9 @@ namespace LinkIt.Core
 
         private List<ILoadLinkExpression> GetLoadLinkExpressions(Type linkedSourceType)
         {
-            return _allLoadLinkExpressions
-                .Where(loadLinkExpression => loadLinkExpression.LinkedSourceType == linkedSourceType)
-                .ToList();
+            return _allLoadLinkExpressions.ContainsKey(linkedSourceType)
+                ? _allLoadLinkExpressions[linkedSourceType]
+                : new List<ILoadLinkExpression>();
         }
 
         private Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType;
@@ -77,7 +80,7 @@ namespace LinkIt.Core
         private void InitLoadingLevelsForEachPossibleRootLinkedSourceType()
         {
             _loadingLevelsByRootLinkedSourceType = new Dictionary<Type, List<List<Type>>>();
-            foreach (var rootLinkedSourceType in GetAllPossibleRootLinkedSourceTypes())
+            foreach (var rootLinkedSourceType in _allLoadLinkExpressions.Keys)
             {
                 var dependencyGraph = CreateDependencyGraph(rootLinkedSourceType);
                 var sort = dependencyGraph.Sort();
@@ -89,14 +92,6 @@ namespace LinkIt.Core
                 var loadingLevels = sort.GetLoadingLevels();
                 _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
             }
-        }
-
-        private List<Type> GetAllPossibleRootLinkedSourceTypes()
-        {
-            return _allLoadLinkExpressions
-                .Select(loadLinkExpression => loadLinkExpression.LinkedSourceType)
-                .Distinct()
-                .ToList();
         }
 
         internal void AddDependenciesForAllLinkTargets(Type linkedSourceType, Dependency predecessor)

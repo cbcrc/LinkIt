@@ -17,9 +17,10 @@ namespace LinkIt.PublicApi
     /// </remarks>
     public interface IReferenceLoader : IDisposable
     {
-        Task LoadReferencesAsync(
-            ILookupIdContext lookupIdContext,
-            ILoadedReferenceContext loadedReferenceContext
-        );
+        /// <summary>
+        /// Load references for the current load phase.
+        /// </summary>
+        /// <param name="context">Loading context</param>
+        Task LoadReferencesAsync(ILoadingContext context);
     }
 }

@@ -12,12 +12,18 @@ using LinkIt.PublicApi;
 namespace LinkIt.Core
 {
     /// <summary>
-    /// In addition to the responsiblies of ILookupIdContext,
+    /// In addition to the responsiblies of ILoadingContext,
     /// responsible for gathering the lookup ids of a loading level.
     /// </summary>I
-    internal class LookupIdContext : ILookupIdContext
+    internal class LoadingContext : ILoadingContext
     {
+        private readonly Linker _linker;
         private readonly Dictionary<Type, IEnumerable> _lookupIdsByReferenceType = new Dictionary<Type, IEnumerable>();
+
+        public LoadingContext(Linker linker)
+        {
+            _linker = linker;
+        }
 
         public IReadOnlyList<Type> GetReferenceTypes()
         {
@@ -46,6 +52,24 @@ namespace LinkIt.Core
             return _lookupIdsByReferenceType.ContainsKey(referenceType)
                 ? (HashSet<TId>) _lookupIdsByReferenceType[referenceType]
                 : null;
+        }
+
+        public void AddReferences<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId)
+        {
+            if (references == null) throw new ArgumentNullException(nameof(references));
+            if (getReferenceId == null) throw new ArgumentNullException(nameof(getReferenceId));
+
+            var referenceDictionary = references.ToDictionary(
+                getReferenceId,
+                reference => reference
+            );
+
+            _linker.AddReferences(referenceDictionary);
+        }
+
+        public void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById)
+        {
+            _linker.AddReferences(referencesById);
         }
 
         public void AddSingle<TReference, TId>(TId lookupId)

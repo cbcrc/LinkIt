@@ -23,11 +23,11 @@ namespace LinkIt.TestHelpers
 
         public Type ReferenceType => typeof (TReference);
 
-        public void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        public void Load(ILoadingContext loadingContext)
         {
-            var lookupIds = lookupIdContext.GetReferenceIds<TReference, TId>();
+            var lookupIds = loadingContext.GetReferenceIds<TReference, TId>();
             var references = _loadReferences(lookupIds);
-            loadedReferenceContext.AddReferences(references, reference => _getReferenceId(reference));
+            loadingContext.AddReferences(references, reference => _getReferenceId(reference));
         }
     }
 }

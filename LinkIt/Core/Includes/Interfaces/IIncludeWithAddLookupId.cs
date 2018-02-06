@@ -11,7 +11,7 @@ namespace LinkIt.Core.Includes.Interfaces
     internal interface IIncludeWithAddLookupId<TLink> : IInclude
     {
         Type ReferenceType { get; }
-        void AddLookupId(TLink link, LookupIdContext lookupIdContext);
+        void AddLookupId(TLink link, LoadingContext loadingContext);
         void AddDependency(string linkTargetId, Dependency predecessor, LoadLinkProtocol loadLinkProtocol);
     }
 }

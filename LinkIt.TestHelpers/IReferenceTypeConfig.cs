@@ -11,6 +11,6 @@ namespace LinkIt.TestHelpers
     public interface IReferenceTypeConfig
     {
         Type ReferenceType { get; }
-        void Load(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext);
+        void Load(ILoadingContext loadingContext);
     }
 }

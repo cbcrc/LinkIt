@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt", "LinkIt\LinkIt.csproj", "{1D04364E-18C2-4146-A46D-97C92E0E2546}"
 EndProject
@@ -11,6 +11,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt.Samples", "LinkIt.Samples\LinkIt.Samples.csproj", "{6AACAD49-8DDE-44F5-88F8-73E13684B285}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkIt.TestHelpers", "LinkIt.TestHelpers\LinkIt.TestHelpers.csproj", "{542CCDDC-59EF-45C7-973B-FDD4A1F30A7E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{90C051DF-E647-4D9E-A9F0-647F2C2958CD}"
+	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

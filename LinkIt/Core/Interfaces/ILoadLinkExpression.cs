@@ -20,10 +20,10 @@ namespace LinkIt.Core.Interfaces
         Type LinkedSourceType { get; }
         List<Type> ReferenceTypes { get; }
 
-        void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded);
-        void LinkNestedLinkedSourceById(object linkedSource, LoadedReferenceContext loadedReferenceContext, Type referenceTypeToBeLinked, LoadLinkProtocol loadLinkProtocol);
-        void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol);
-        void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext);
+        void AddLookupIds(object linkedSource, LoadingContext loadingContext, Type referenceTypeToBeLoaded);
+        void LinkNestedLinkedSourceById(object linkedSource, Linker linker, Type referenceTypeToBeLinked, LoadLinkProtocol loadLinkProtocol);
+        void LinkNestedLinkedSourceFromModel(object linkedSource, Linker linker, LoadLinkProtocol loadLinkProtocol);
+        void LinkReference(object linkedSource, Linker linker);
         void FilterOutNullValues(object linkedSource);
 
         void AddDependencyForEachInclude(Dependency predecessor, LoadLinkProtocol loadLinkProtocol);

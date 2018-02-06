@@ -29,10 +29,10 @@ namespace LinkIt.Core.Includes
 
         public Type ReferenceType { get; }
 
-        public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
+        public void AddLookupId(TLink link, LoadingContext loadingContext)
         {
             var lookupId = _getLookupId(link);
-            lookupIdContext.AddSingle<TReference, TId>(lookupId);
+            loadingContext.AddSingle<TReference, TId>(lookupId);
         }
 
         public void AddDependency(string linkTargetId, Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
@@ -41,10 +41,10 @@ namespace LinkIt.Core.Includes
             predecessor.Before(dependency);
         }
 
-        public TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext)
+        public TIReference GetReference(TLink link, Linker linker)
         {
             var lookupId = _getLookupId(link);
-            return loadedReferenceContext.GetOptionalReference<TReference, TId>(lookupId);
+            return linker.GetOptionalReference<TReference, TId>(lookupId);
         }
     }
 }

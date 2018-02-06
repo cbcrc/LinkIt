@@ -14,11 +14,11 @@ namespace LinkIt.Samples
 {
     public class FakeReferenceLoader : IReferenceLoader
     {
-        public Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        public Task LoadReferencesAsync(ILoadingContext loadingContext)
         {
-            foreach (var referenceType in lookupIdContext.GetReferenceTypes())
+            foreach (var referenceType in loadingContext.GetReferenceTypes())
             {
-                LoadReference(referenceType, lookupIdContext, loadedReferenceContext);
+                LoadReference(referenceType, loadingContext);
             }
 
             return Task.CompletedTask;
@@ -32,17 +32,17 @@ namespace LinkIt.Samples
             //if an exception is thrown
         }
 
-        private void LoadReference(Type referenceType, ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        private void LoadReference(Type referenceType, ILoadingContext loadingContext)
         {
-            if (referenceType == typeof(Media)) LoadMedia(lookupIdContext, loadedReferenceContext);
-            if (referenceType == typeof(Tag)) LoadTags(lookupIdContext, loadedReferenceContext);
-            if (referenceType == typeof(BlogPost)) LoadBlogPosts(lookupIdContext, loadedReferenceContext);
-            if (referenceType == typeof(Image)) LoadImages(lookupIdContext, loadedReferenceContext);
+            if (referenceType == typeof(Media)) LoadMedia(loadingContext);
+            if (referenceType == typeof(Tag)) LoadTags(loadingContext);
+            if (referenceType == typeof(BlogPost)) LoadBlogPosts(loadingContext);
+            if (referenceType == typeof(Image)) LoadImages(loadingContext);
         }
 
-        private void LoadMedia(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        private void LoadMedia(ILoadingContext loadingContext)
         {
-            var lookupIds = lookupIdContext.GetReferenceIds<Media, int>();
+            var lookupIds = loadingContext.GetReferenceIds<Media, int>();
             var references = lookupIds.Select(id =>
                     new Media{
                         Id = id,
@@ -56,15 +56,15 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadedReferenceContext.AddReferences(
+            loadingContext.AddReferences(
                 references,
                 reference => reference.Id
             );
         }
 
-        private void LoadTags(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        private void LoadTags(ILoadingContext loadingContext)
         {
-            var lookupIds = lookupIdContext.GetReferenceIds<Tag, int>();
+            var lookupIds = loadingContext.GetReferenceIds<Tag, int>();
             var references = lookupIds
                 .Select(id =>
                     new Tag
@@ -75,15 +75,15 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadedReferenceContext.AddReferences(
+            loadingContext.AddReferences(
                 references,
                 reference => reference.Id
             );
         }
 
-        private void LoadBlogPosts(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        private void LoadBlogPosts(ILoadingContext loadingContext)
         {
-            var lookupIds = lookupIdContext.GetReferenceIds<BlogPost, int>();
+            var lookupIds = loadingContext.GetReferenceIds<BlogPost, int>();
             var references = lookupIds
                 .Select(id =>
                     new BlogPost
@@ -114,15 +114,15 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadedReferenceContext.AddReferences(
+            loadingContext.AddReferences(
                 references,
                 reference => reference.Id
             );
         }
 
-        private void LoadImages(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        private void LoadImages(ILoadingContext loadingContext)
         {
-            var lookupIds = lookupIdContext.GetReferenceIds<Image, string>();
+            var lookupIds = loadingContext.GetReferenceIds<Image, string>();
             var references = lookupIds
                 .Select(id =>
                     new Image
@@ -134,7 +134,7 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadedReferenceContext.AddReferences(
+            loadingContext.AddReferences(
                 references,
                 reference => reference.Id
             );

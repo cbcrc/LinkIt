@@ -51,10 +51,10 @@ namespace LinkIt.Core.Includes
             ChildLinkedSourceType = typeof(TChildLinkedSource);
         }
 
-        public void AddLookupId(TLink link, LookupIdContext lookupIdContext)
+        public void AddLookupId(TLink link, LoadingContext loadingContext)
         {
             var lookupId = _getLookupId(link);
-            lookupIdContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
+            loadingContext.AddSingle<TChildLinkedSourceModel, TId>(lookupId);
         }
 
         public void AddDependency(string linkTargetId, Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
@@ -65,11 +65,11 @@ namespace LinkIt.Core.Includes
             loadLinkProtocol.AddDependenciesForAllLinkTargets(ChildLinkedSourceType, dependency);
         }
 
-        public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, LoadedReferenceContext loadedReferenceContext, TLinkedSource linkedSource, int referenceIndex, LoadLinkProtocol loadLinkProtocol)
+        public TAbstractChildLinkedSource CreateNestedLinkedSourceById(TLink link, Linker linker, TLinkedSource linkedSource, int referenceIndex, LoadLinkProtocol loadLinkProtocol)
         {
             var lookupId = _getLookupId(link);
-            var reference = loadedReferenceContext.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
-            var childLinkedSource = loadedReferenceContext
+            var reference = linker.GetOptionalReference<TChildLinkedSourceModel, TId>(lookupId);
+            var childLinkedSource = linker
                 .CreatePartiallyBuiltLinkedSource(
                     reference,
                     loadLinkProtocol,

@@ -11,7 +11,7 @@ namespace LinkIt.Core.Includes.Interfaces
     {
         TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(
             TLink link,
-            LoadedReferenceContext loadedReferenceContext,
+            Linker linker,
             TLinkedSource linkedSource,
             int referenceIndex,
             LoadLinkProtocol loadLinkProtocol

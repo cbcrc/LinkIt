@@ -9,13 +9,13 @@ using Xunit;
 
 namespace LinkIt.Tests.Core
 {
-    public class LookupIdContextTests
+    public class LoadingContextTests
     {
-        private LookupIdContext _sut;
+        private readonly LoadingContext _sut;
 
-        public LookupIdContextTests()
+        public LoadingContextTests()
         {
-            _sut = new LookupIdContext();
+            _sut = new LoadingContext(null);
         }
 
         [Fact]

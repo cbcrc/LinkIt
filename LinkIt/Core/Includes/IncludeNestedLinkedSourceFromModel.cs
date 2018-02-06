@@ -48,14 +48,14 @@ namespace LinkIt.Core.Includes
 
         public TAbstractChildLinkedSource CreateNestedLinkedSourceFromModel(
             TLink link,
-            LoadedReferenceContext loadedReferenceContext,
+            Linker linker,
             TLinkedSource linkedSource,
             int referenceIndex,
             LoadLinkProtocol loadLinkProtocol)
         {
             var childLinkSourceModel = _getNestedLinkedSourceModel(link);
 
-            return (TAbstractChildLinkedSource) (object) loadedReferenceContext
+            return (TAbstractChildLinkedSource) (object) linker
                 .CreatePartiallyBuiltLinkedSource(
                     childLinkSourceModel,
                     loadLinkProtocol,

@@ -14,7 +14,7 @@ namespace LinkIt.LinkTargets
 {
     //Simplification of the solution shown at:
     //http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette
-    public static class LinkTargetFactory
+    internal static class LinkTargetFactory
     {
         #region Single Value
 

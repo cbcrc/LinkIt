@@ -11,10 +11,12 @@ using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
-    //Responsible for giving access to any linked source config
-    //Responsible for creating linked source config
-    //Responsible for inferring the linked source model type
-    public static class LinkedSourceConfigs
+    /// <summary>
+    /// Responsible for giving access to any linked source config.
+    /// Responsible for creating linked source config.
+    /// Responsible for inferring the linked source model type.
+    /// </summary>
+    internal static class LinkedSourceConfigs
     {
         private static readonly ConcurrentDictionary<Type, ILinkedSourceConfig> LinkedSourceConfigByType = new ConcurrentDictionary<Type, ILinkedSourceConfig>();
 

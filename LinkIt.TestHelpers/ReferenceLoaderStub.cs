@@ -15,7 +15,7 @@ namespace LinkIt.TestHelpers
     {
         private readonly Dictionary<Type, IReferenceTypeConfig> _referenceTypeConfigByReferenceType;
 
-        public readonly List<ILookupIdContext> RecordedLookupIdContexts = new List<ILookupIdContext>();
+        public readonly List<ILoadingContext> RecordedLookupIdContexts = new List<ILoadingContext>();
 
         public ReferenceLoaderStub(params IReferenceTypeConfig[] customReferenceTypeConfigs)
         {
@@ -31,13 +31,13 @@ namespace LinkIt.TestHelpers
 
         public bool IsDisposed { get; private set; }
 
-        public Task LoadReferencesAsync(ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        public Task LoadReferencesAsync(ILoadingContext loadingContext)
         {
-            RecordedLookupIdContexts.Add(lookupIdContext);
+            RecordedLookupIdContexts.Add(loadingContext);
 
-            foreach (var referenceType in lookupIdContext.GetReferenceTypes())
+            foreach (var referenceType in loadingContext.GetReferenceTypes())
             {
-                LoadReference(referenceType, lookupIdContext, loadedReferenceContext);
+                LoadReference(referenceType, loadingContext);
             }
 
             return Task.CompletedTask;
@@ -67,14 +67,14 @@ namespace LinkIt.TestHelpers
             };
         }
 
-        private void LoadReference(Type referenceType, ILookupIdContext lookupIdContext, ILoadedReferenceContext loadedReferenceContext)
+        private void LoadReference(Type referenceType, ILoadingContext loadingContext)
         {
             if (!_referenceTypeConfigByReferenceType.ContainsKey(referenceType))
                 throw new NotImplementedException(
                     $"There is no loader for reference of type {referenceType.Name}."
                 );
             var referenceTypeConfig = _referenceTypeConfigByReferenceType[referenceType];
-            referenceTypeConfig.Load(lookupIdContext, loadedReferenceContext);
+            referenceTypeConfig.Load(loadingContext);
         }
     }
 }

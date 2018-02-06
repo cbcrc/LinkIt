@@ -47,10 +47,10 @@ namespace LinkIt.Core
         public Type LinkedSourceType { get; }
         public List<Type> ReferenceTypes { get; }
 
-        public void AddLookupIds(object linkedSource, LookupIdContext lookupIdContext, Type referenceTypeToBeLoaded)
+        public void AddLookupIds(object linkedSource, LoadingContext loadingContext, Type referenceTypeToBeLoaded)
         {
-            AssumeLinkedSourceIsOfTLinkedSource(linkedSource);
-            AssumeIsOfReferenceType(this, referenceTypeToBeLoaded);
+            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
+            EnsureIsReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource) linkedSource)
                 .Where(link => link != null)
@@ -60,18 +60,18 @@ namespace LinkIt.Core
             {
                 var include = _includeSet.GetIncludeWithAddLookupId(link);
 
-                if (include != null && include.ReferenceType == referenceTypeToBeLoaded) include.AddLookupId(link, lookupIdContext);
+                if (include != null && include.ReferenceType == referenceTypeToBeLoaded) include.AddLookupId(link, loadingContext);
             }
         }
 
-        public void LinkNestedLinkedSourceFromModel(object linkedSource, LoadedReferenceContext loadedReferenceContext, LoadLinkProtocol loadLinkProtocol)
+        public void LinkNestedLinkedSourceFromModel(object linkedSource, Linker linker, LoadLinkProtocol loadLinkProtocol)
         {
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithCreateNestedLinkedSourceFromModel,
                 (link, include, linkIndex) => include.CreateNestedLinkedSourceFromModel(
                     link,
-                    loadedReferenceContext,
+                    linker,
                     (TLinkedSource) linkedSource,
                     linkIndex,
                     loadLinkProtocol
@@ -79,18 +79,18 @@ namespace LinkIt.Core
             );
         }
 
-        public void LinkReference(object linkedSource, LoadedReferenceContext loadedReferenceContext)
+        public void LinkReference(object linkedSource, Linker linker)
         {
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithGetReference,
-                (link, include, linkIndex) => include.GetReference(link, loadedReferenceContext)
+                (link, include, linkIndex) => include.GetReference(link, linker)
             );
         }
 
         public void LinkNestedLinkedSourceById(
             object linkedSource,
-            LoadedReferenceContext loadedReferenceContext,
+            Linker linker,
             Type referenceTypeToBeLinked,
             LoadLinkProtocol loadLinkProtocol
         )
@@ -101,7 +101,7 @@ namespace LinkIt.Core
                 (link, include, linkIndex) =>
                     include.CreateNestedLinkedSourceById(
                         link,
-                        loadedReferenceContext,
+                        linker,
                         (TLinkedSource) linkedSource,
                         linkIndex,
                         loadLinkProtocol
@@ -111,7 +111,7 @@ namespace LinkIt.Core
 
         public void FilterOutNullValues(object linkedSource)
         {
-            AssumeLinkedSourceIsOfTLinkedSource(linkedSource);
+            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
 
             _linkTarget.FilterOutNullValues((TLinkedSource) linkedSource);
         }
@@ -127,7 +127,7 @@ namespace LinkIt.Core
             Func<TLink, TInclude> getInclude,
             Func<TLink, TInclude, int, TAbstractLinkTarget> getLinkTargetValue)
         {
-            AssumeLinkedSourceIsOfTLinkedSource(linkedSource);
+            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
 
             SetLinkTargetValues(
                 (TLinkedSource) linkedSource,
@@ -168,7 +168,7 @@ namespace LinkIt.Core
             return links?.ToList() ?? new List<TLink>();
         }
 
-        private static void AssumeLinkedSourceIsOfTLinkedSource(object linkedSource)
+        private static void EnsureLinkedSourceIsOfTLinkedSource(object linkedSource)
         {
             if (!(linkedSource is TLinkedSource))
                 throw new LinkItException(
@@ -176,7 +176,7 @@ namespace LinkIt.Core
                 );
         }
 
-        private static void AssumeIsOfReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType)
+        private static void EnsureIsReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType)
         {
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType))
                 throw new LinkItException(

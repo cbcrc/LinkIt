@@ -5,8 +5,8 @@
 
 namespace LinkIt.Core.Includes.Interfaces
 {
-    public interface IIncludeWithGetReference<TIReference, TLink>
+    internal interface IIncludeWithGetReference<TIReference, TLink>
     {
-        TIReference GetReference(TLink link, LoadedReferenceContext loadedReferenceContext);
+        TIReference GetReference(TLink link, Linker linker);
     }
 }
