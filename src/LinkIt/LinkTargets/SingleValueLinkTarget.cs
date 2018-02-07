@@ -6,7 +6,7 @@ using LinkIt.LinkTargets.Interfaces;
 
 namespace LinkIt.LinkTargets
 {
-    public class SingleValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
+    internal class SingleValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
     {
         private readonly Action<TLinkedSource, TTargetProperty> _set;
 

@@ -5,8 +5,10 @@ using System;
 
 namespace LinkIt.Core.Interfaces
 {
-    //Responsible to known the LinkedSourceModelType without using reflection
-    public interface ILinkedSourceConfig
+    /// <summary>
+    /// Responsible to know the LinkedSourceModelType without using reflection every time.
+    /// </summary>
+    internal interface ILinkedSourceConfig
     {
         Type LinkedSourceType { get; }
         Type LinkedSourceModelType { get; }

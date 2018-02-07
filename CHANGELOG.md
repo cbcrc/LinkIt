@@ -11,6 +11,11 @@
     It is now the only parameter for `LoadReferencesAsync` and is used for both
     getting the IDs to lookup and for adding loading references.
 * Reference types that are part of a cycle are loaded in multiple batches.
+* The overload of `LoadLinkProtocolForLinkedSourceBuilder.LoadLinkReferenceById` for lists has been renamed `LoadLinkReferencesByIds`. 
+* The overload of `LoadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById` for lists has been renamed `LoadLinkNestedLinkedSourcesByIds`. 
+* The overload of `LoadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceFromModel` for lists has been renamed `LoadLinkNestedLinkedSourcesFromModels`. 
+* `LoadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLink` has been renamed `LoadLinkPolymorphic`. 
+* `LoadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLinkForList` has been renamed `LoadLinkPolymorphicList`. 
  
  
 ### Features

@@ -7,7 +7,7 @@ using LinkIt.Conventions.Interfaces;
 
 namespace LinkIt.Conventions
 {
-    public class ConventionMatch
+    internal class ConventionMatch
     {
         public ConventionMatch(ILoadLinkExpressionConvention convention, Type linkedSourceType, PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty)
         {

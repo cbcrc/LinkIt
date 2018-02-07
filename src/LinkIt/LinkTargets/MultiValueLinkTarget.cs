@@ -8,7 +8,7 @@ using LinkIt.LinkTargets.Interfaces;
 
 namespace LinkIt.LinkTargets
 {
-    public class MultiValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
+    internal class MultiValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
     {
         private readonly Func<TLinkedSource, List<TTargetProperty>> _get;
         private readonly Action<TLinkedSource, List<TTargetProperty>> _set;

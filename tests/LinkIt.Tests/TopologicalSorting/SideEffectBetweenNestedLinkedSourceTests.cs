@@ -30,7 +30,7 @@ namespace LinkIt.Tests.TopologicalSorting
                     linkedSource => linkedSource.PersonGroup
                 );
             loadLinkProtocolBuilder.For<PersonGroupLinkedSource>()
-                .LoadLinkReferenceById(
+                .LoadLinkReferencesByIds(
                     linkedSource => linkedSource.Model.PersonIds,
                     linkedSource => linkedSource.People);
 

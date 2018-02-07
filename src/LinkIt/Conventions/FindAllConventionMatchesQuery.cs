@@ -10,12 +10,12 @@ using LinkIt.Shared;
 
 namespace LinkIt.Conventions
 {
-    public class FindAllConventionMatchesQuery
+    internal class FindAllConventionMatchesQuery
     {
-        private readonly List<ILoadLinkExpressionConvention> _conventions;
-        private readonly List<Type> _types;
+        private readonly IList<ILoadLinkExpressionConvention> _conventions;
+        private readonly IList<Type> _types;
 
-        public FindAllConventionMatchesQuery(List<Type> types, List<ILoadLinkExpressionConvention> conventions)
+        public FindAllConventionMatchesQuery(IList<Type> types, IList<ILoadLinkExpressionConvention> conventions)
         {
             _types = types;
             _conventions = conventions;

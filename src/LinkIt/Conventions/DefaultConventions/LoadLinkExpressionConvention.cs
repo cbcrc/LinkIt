@@ -8,8 +8,14 @@ using LinkIt.Conventions.Interfaces;
 
 namespace LinkIt.Conventions.DefaultConventions
 {
+    /// <summary>
+    /// Helper class to get the built-in conventions of LinkIt.
+    /// </summary>
     public static class LoadLinkExpressionConvention
     {
+        /// <summary>
+        /// List of built-in conventions.
+        /// </summary>
         public static List<ILoadLinkExpressionConvention> Default => new List<ILoadLinkExpressionConvention>
         {
             new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches(),
@@ -19,6 +25,9 @@ namespace LinkIt.Conventions.DefaultConventions
             new LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches()
         };
 
+        /// <summary>
+        /// Get the default LinkIt conventions and some custom conventions.
+        /// </summary>
         public static List<ILoadLinkExpressionConvention> DefaultAnd(params ILoadLinkExpressionConvention[] customConventions)
         {
             if (customConventions == null) throw new ArgumentNullException(nameof(customConventions));

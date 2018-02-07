@@ -20,14 +20,14 @@ namespace LinkIt.Tests.Core
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<SubContentsOwnerLinkedSource>()
-                .LoadLinkNestedLinkedSourceFromModel(
+                .LoadLinkNestedLinkedSourcesFromModels(
                     linkedSource => linkedSource.Model.SubContents,
                     linkedSource => linkedSource.SubContents)
-                .LoadLinkNestedLinkedSourceFromModel(
+                .LoadLinkNestedLinkedSourcesFromModels(
                     linkedSource => linkedSource.Model.SubSubContents,
                     linkedSource => linkedSource.SubSubContents);
             loadLinkProtocolBuilder.For<SubContentWithManySubSubContentsLinkedSource>()
-                .LoadLinkNestedLinkedSourceFromModel(
+                .LoadLinkNestedLinkedSourcesFromModels(
                     linkedSource => linkedSource.Model.SubSubContents,
                     linkedSource => linkedSource.SubSubContents);
             loadLinkProtocolBuilder.For<SubSubContentLinkedSource>()

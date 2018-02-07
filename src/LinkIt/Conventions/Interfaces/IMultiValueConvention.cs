@@ -9,8 +9,14 @@ using LinkIt.ConfigBuilders;
 
 namespace LinkIt.Conventions.Interfaces
 {
+    /// <summary>
+    /// Convention for loading references or linked sources using IDs from the model.
+    /// </summary>
     public interface IMultiValueConvention : ILoadLinkExpressionConvention
     {
+        /// <summary>
+        /// Apply the convention for a property of the model and a link.
+        /// </summary>
         void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
             Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,

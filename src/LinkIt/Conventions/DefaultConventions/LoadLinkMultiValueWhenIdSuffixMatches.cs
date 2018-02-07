@@ -11,15 +11,21 @@ using LinkIt.Shared;
 
 namespace LinkIt.Conventions.DefaultConventions
 {
+    /// <summary>
+    /// Load link the property of a linked source if there is a property from the model with the same name suffixed by "Id[s]".
+    /// </summary>
     public class LoadLinkMultiValueWhenIdSuffixMatches : IMultiValueConvention
     {
+        /// <inheritdoc />
         public string Name => "Load link multi value when id suffix matches";
 
+        /// <inheritdoc />
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
         {
             return linkTargetProperty.MatchLinkedSourceModelPropertyName(linkedSourceModelProperty, "Id", "s");
         }
 
+        /// <inheritdoc />
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
             Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
@@ -28,12 +34,12 @@ namespace LinkIt.Conventions.DefaultConventions
             PropertyInfo linkTargetProperty)
         {
             if (typeof(TLinkTargetProperty).IsLinkedSource())
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
+                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourcesByIds(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty
                 );
             else
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferenceById(
+                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferencesByIds(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty
                 );

@@ -17,26 +17,31 @@ namespace LinkIt.ConfigBuilders
     /// </summary>
     public class LoadLinkProtocolBuilder
     {
-        private readonly Dictionary<string, ILoadLinkExpression> _loadLinkExpressionsById =
-            new Dictionary<string, ILoadLinkExpression>();
+        private readonly Dictionary<string, ILoadLinkExpression> _loadLinkExpressionsById = new Dictionary<string, ILoadLinkExpression>();
 
+        /// <summary>
+        /// Apply all the configurations from <see cref="ILoadLinkProtocolConfig"/> classes in the specified assemblies.
+        /// </summary>
         public void ApplyLoadLinkProtocolConfigs(IEnumerable<Assembly> assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
 
-            var loadLinkProtocolConfigTypes = assemblies
+            var loadLinkProtocolConfigs = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
                 .Where(type => type.GetInterface(typeof(ILoadLinkProtocolConfig).FullName) != null)
-                .ToList();
-
-            var loadLinkProtocolConfigs = loadLinkProtocolConfigTypes
                 .Select(Activator.CreateInstance)
                 .Cast<ILoadLinkProtocolConfig>()
                 .ToList();
 
-            foreach (var loadLinkProtocolConfig in loadLinkProtocolConfigs) loadLinkProtocolConfig.ConfigureLoadLinkProtocol(this);
+            foreach (var loadLinkProtocolConfig in loadLinkProtocolConfigs)
+            {
+                loadLinkProtocolConfig.ConfigureLoadLinkProtocol(this);
+            }
         }
 
+        /// <summary>
+        /// Configure a linked source type.
+        /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> For<TLinkedSource>()
         {
             if (!typeof(TLinkedSource).IsLinkedSource())
@@ -52,6 +57,10 @@ namespace LinkIt.ConfigBuilders
             _loadLinkExpressionsById[loadLinkExpression.LinkTargetId] = loadLinkExpression;
         }
 
+        /// <summary>
+        /// Build the <see cref="ILoadLinkProtocol"/>.
+        /// </summary>
+        /// <param name="createReferenceLoader">Factory method to create a new instance of the reference loader</param>
         public ILoadLinkProtocol Build(Func<IReferenceLoader> createReferenceLoader)
         {
             if (createReferenceLoader == null) throw new ArgumentNullException(nameof(createReferenceLoader));

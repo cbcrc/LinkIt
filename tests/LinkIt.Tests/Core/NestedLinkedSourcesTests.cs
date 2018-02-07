@@ -18,7 +18,7 @@ namespace LinkIt.Tests.Core
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<NestedLinkedSources>()
-                .LoadLinkNestedLinkedSourceById(
+                .LoadLinkNestedLinkedSourcesByIds(
                     linkedSource => linkedSource.Model.AuthorIds,
                     linkedSource => linkedSource.Authors);
             loadLinkProtocolBuilder.For<PersonLinkedSource>()

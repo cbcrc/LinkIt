@@ -11,7 +11,7 @@ namespace LinkIt.Samples.LinkedSources
         public void ConfigureLoadLinkProtocol(LoadLinkProtocolBuilder loadLinkProtocolBuilder)
         {
             loadLinkProtocolBuilder.For<BlogPostLinkedSource>()
-                .PolymorphicLoadLink(
+                .LoadLinkPolymorphic(
                     linkedSource => linkedSource.Model.MultimediaContentRef,
                     linkedSource => linkedSource.MultimediaContent,
                     link => link.Type,

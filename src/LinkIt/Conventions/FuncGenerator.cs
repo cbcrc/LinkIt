@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace LinkIt.Conventions
 {
-    public static class FuncGenerator
+    internal static class FuncGenerator
     {
         public static Func<TPropertyOwner, TProperty> GenerateFromGetter<TPropertyOwner, TProperty>(string propertyInDotNotation)
         {

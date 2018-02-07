@@ -7,77 +7,51 @@ using System.Linq;
 
 namespace LinkIt.PublicApi
 {
+    /// <summary>
+    /// Represents stats for a <see cref="ILoadLinkProtocol"/>.
+    /// </summary>
     public class LoadLinkProtocolStatistics
     {
         private readonly Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType;
 
-        public LoadLinkProtocolStatistics(Dictionary<Type, List<List<Type>>> loadingLevelsByRootLinkedSourceType)
+        internal LoadLinkProtocolStatistics(Dictionary<Type, List<List<Type>>> loadingLevelsByRootLinkedSourceType)
         {
             _loadingLevelsByRootLinkedSourceType = loadingLevelsByRootLinkedSourceType;
         }
 
+        /// <summary>
+        /// Number of root linked source types configured.
+        /// </summary>
         public int NumberOfLinkedSources => _loadingLevelsByRootLinkedSourceType.Count;
 
-        public int MaxLoadingLevelDepth => LoadingLevelDepthForEachLinkedSource.First().Value;
+        /// <summary>
+        /// Number of loading steps for each linked source type.
+        /// </summary>
+        public Dictionary<Type, int> LoadingLevelDepthForEachLinkedSource
+            => _loadingLevelsByRootLinkedSourceType.ToDictionary(
+                item => item.Key,
+                item => item.Value.Count);
 
-        public int MaxNumberOfReferenceTypeInOneLinkedSource => NumberOfReferenceTypeForEachLinkedSource.First().Value;
+        /// <summary>
+        /// Number of reference types to be loaded for each linked source type.
+        /// </summary>
+        public Dictionary<Type, int> NumberOfReferenceTypeForEachLinkedSource
+            => _loadingLevelsByRootLinkedSourceType.ToDictionary(
+                    item => item.Key,
+                    item => item.Value.Sum(referencesForOneLoadingLevel => referencesForOneLoadingLevel.Count));
 
-        public List<KeyValuePair<Type, int>> LoadingLevelDepthForEachLinkedSource
+        /// <summary>
+        /// List of loading levels for the linked source types.
+        /// </summary>
+        public Dictionary<Type, List<List<Type>>> LoadingLevelsForEachLinkedSource
+          => _loadingLevelsByRootLinkedSourceType.ToDictionary(item => item.Key, CloneLoadingLevels);
+
+        //Ensure statistics cannot have side effect on load link protocol
+        private static List<List<Type>> CloneLoadingLevels(KeyValuePair<Type, List<List<Type>>> item)
         {
-            get
-            {
-                return _loadingLevelsByRootLinkedSourceType
-                    .Select(item =>
-                        new KeyValuePair<Type, int>(
-                            item.Key,
-                            item.Value.Count
-                        )
-                    )
-                    .OrderByDescending(item => item.Value)
-                    .ThenBy(item => item.Key.FullName)
-                    .ToList();
-            }
-        }
-
-        public List<KeyValuePair<Type, int>> NumberOfReferenceTypeForEachLinkedSource
-        {
-            get
-            {
-                return _loadingLevelsByRootLinkedSourceType
-                    .Select(item =>
-                        new KeyValuePair<Type, int>(
-                            item.Key,
-                            item.Value
-                                .SelectMany(referencesForOneLoadingLevel => referencesForOneLoadingLevel)
-                                .Count()
-                        )
-                    )
-                    .OrderByDescending(item => item.Value)
-                    .ThenBy(item => item.Key.FullName)
-                    .ToList();
-            }
-        }
-
-        public List<KeyValuePair<Type, List<List<Type>>>> LoadingLevelsForEachLinkedSource
-        {
-            get
-            {
-                return _loadingLevelsByRootLinkedSourceType
-                    //Ensure statistics cannot have side effect on load link protocol
-                    .Select(CloneLoadingLevels)
-                    .OrderBy(item => item.Key.FullName)
-                    .ToList();
-            }
-        }
-
-        private static KeyValuePair<Type, List<List<Type>>> CloneLoadingLevels(KeyValuePair<Type, List<List<Type>>> item)
-        {
-            return new KeyValuePair<Type, List<List<Type>>>(
-                item.Key,
-                item.Value
+            return item.Value
                     .Select(CloneLoadingLevel)
-                    .ToList()
-            );
+                    .ToList();
         }
 
         private static List<Type> CloneLoadingLevel(List<Type> referenceTypes)

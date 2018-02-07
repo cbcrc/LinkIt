@@ -9,18 +9,24 @@ using LinkIt.LinkTargets.Interfaces;
 
 namespace LinkIt.ConfigBuilders
 {
+    /// <summary>
+    /// Builder to configure a polymorphic link.
+    /// </summary>
     public class IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue =
             new Dictionary<TDiscriminant, IInclude>();
 
-        public IncludeSetBuilder(ILinkTarget linkTarget)
+        internal IncludeSetBuilder(ILinkTarget linkTarget)
         {
             LinkTarget = linkTarget;
         }
 
-        public ILinkTarget LinkTarget { get; }
+        internal ILinkTarget LinkTarget { get; }
 
+        /// <summary>
+        /// Include a polymorphic link.
+        /// </summary>
         public IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget> Include<TLinkTarget>()
             where TLinkTarget : TAbstractLinkTarget
         {

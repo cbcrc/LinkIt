@@ -24,7 +24,7 @@ namespace LinkIt.Tests.Core
                 .LoadLinkReferenceById(
                     linkedSource => linkedSource.Model.AuthorImageId,
                     linkedSource => linkedSource.AuthorImage)
-                .LoadLinkReferenceById(
+                .LoadLinkReferencesByIds(
                     linkedSource => linkedSource.Model.FavoriteImageIds,
                     linkedSource => linkedSource.FavoriteImages);
 

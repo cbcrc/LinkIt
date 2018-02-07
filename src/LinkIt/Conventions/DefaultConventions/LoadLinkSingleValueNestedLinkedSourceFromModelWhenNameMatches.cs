@@ -10,10 +10,15 @@ using LinkIt.Shared;
 
 namespace LinkIt.Conventions.DefaultConventions
 {
+    /// <summary>
+    /// Load link a linked source property of a linked source if there is a property from the model with the same name.
+    /// </summary>
     public class LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches : ISingleValueConvention
     {
+        /// <inheritdoc />
         public string Name => "Load link single value nested linked source from model source when name matches";
 
+        /// <inheritdoc />
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
         {
             if (linkTargetProperty.Name != linkedSourceModelProperty.Name) return false;
@@ -23,6 +28,7 @@ namespace LinkIt.Conventions.DefaultConventions
             return true;
         }
 
+        /// <inheritdoc />
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
             Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty,
@@ -30,7 +36,7 @@ namespace LinkIt.Conventions.DefaultConventions
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
         {
-            loadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLink<TLinkTargetProperty, TLinkedSourceModelProperty, bool>(
+            loadLinkProtocolForLinkedSourceBuilder.LoadLinkPolymorphic<TLinkTargetProperty, TLinkedSourceModelProperty, bool>(
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty,
                 link => true,

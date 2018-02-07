@@ -8,6 +8,9 @@ namespace LinkIt.PublicApi
     /// </summary>
     public interface ILinkedSource<TModel>
     {
+        /// <summary>
+        /// Model for the linked source
+        /// </summary>
         TModel Model { get; set; }
     }
 }

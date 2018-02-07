@@ -26,7 +26,7 @@ namespace LinkIt.Tests.TopologicalSorting
                     linkedSource => linkedSource.PostThread
                 );
             loadLinkProtocolBuilder.For<PostThreadLinkedSource>()
-                .LoadLinkNestedLinkedSourceFromModel(
+                .LoadLinkNestedLinkedSourcesFromModels(
                     linkedSource => linkedSource.Model.Posts,
                     linkedSource => linkedSource.Posts)
                 .LoadLinkReferenceById(

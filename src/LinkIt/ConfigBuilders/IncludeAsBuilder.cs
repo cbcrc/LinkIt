@@ -7,16 +7,22 @@ using LinkIt.Core.Includes;
 
 namespace LinkIt.ConfigBuilders
 {
+    /// <summary>
+    /// Builder to configure a linked source by specifying nested linked sources and reference.
+    /// </summary>
     public class IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget>
         where TLinkTarget : TAbstractLinkTarget
     {
         private readonly IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeSetBuilder;
 
-        public IncludeAsBuilder(IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeSetBuilder)
+        internal IncludeAsBuilder(IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> includeSetBuilder)
         {
             _includeSetBuilder = includeSetBuilder;
         }
 
+        /// <summary>
+        /// Load and link a nested linked source by ID when the polymorphic link matches the <paramref name="discriminantValue"/>.
+        /// </summary>
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupId,
@@ -38,7 +44,9 @@ namespace LinkIt.ConfigBuilders
             return _includeSetBuilder;
         }
 
-
+        /// <summary>
+        /// Load and link a nested linked source by ID when the polymorphic link matches the <paramref name="discriminantValue"/>.
+        /// </summary>
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupId,
@@ -61,6 +69,9 @@ namespace LinkIt.ConfigBuilders
             return _includeSetBuilder;
         }
 
+        /// <summary>
+        /// Load and link a nested linked source using a model from the parent linked source when the polymorphic link matches the <paramref name="discriminantValue"/>.
+        /// </summary>
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
@@ -83,6 +94,9 @@ namespace LinkIt.ConfigBuilders
             return _includeSetBuilder;
         }
 
+        /// <summary>
+        /// Load and link a nested linked source using a model from the parent linked source when the polymorphic link matches the <paramref name="discriminantValue"/>.
+        /// </summary>
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
@@ -105,6 +119,9 @@ namespace LinkIt.ConfigBuilders
             return _includeSetBuilder;
         }
 
+        /// <summary>
+        /// Load and link a reference by ID when the polymorphic link matches the <paramref name="discriminantValue"/>.
+        /// </summary>
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsReferenceById<TId>(
             TDiscriminant discriminantValue,
             Func<TLink, TId> getLookupId

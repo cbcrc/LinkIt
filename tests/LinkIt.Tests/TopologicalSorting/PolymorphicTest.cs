@@ -20,7 +20,7 @@ namespace LinkIt.Tests.TopologicalSorting
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<LinkedSource>()
-                .PolymorphicLoadLink(
+                .LoadLinkPolymorphic(
                     linkedSource => linkedSource.Model.PolyRef,
                     linkedSource => linkedSource.Poly,
                     link => link.Kind,

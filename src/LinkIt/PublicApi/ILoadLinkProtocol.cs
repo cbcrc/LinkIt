@@ -8,7 +8,14 @@ namespace LinkIt.PublicApi
     /// </summary>
     public interface ILoadLinkProtocol
     {
+        /// <summary>
+        /// Create a load linker for a linked source type.
+        /// </summary>
         ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>();
+
+        /// <summary>
+        /// Stats for the <see cref="ILoadLinkProtocol"/>.
+        /// </summary>
         LoadLinkProtocolStatistics Statistics { get; }
     }
 }

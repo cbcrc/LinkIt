@@ -17,7 +17,7 @@ namespace LinkIt.Core
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
         private readonly Dictionary<Type, object> _loadedReferencesByType = new Dictionary<Type, object>();
 
-        internal IReadOnlyList<object> LinkedSourcesToBeBuilt => _linkedSourcesToBeBuilt;
+        internal IReadOnlyList<object> LinkedSourcesToBeBuilt => _linkedSourcesToBeBuilt.ToList();
 
         private IDictionary<TId, TReference> GetReferenceDictionary<TId, TReference>()
         {

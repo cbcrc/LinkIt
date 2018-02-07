@@ -12,13 +12,20 @@ using LinkIt.Shared;
 
 namespace LinkIt.Conventions
 {
+    /// <summary>
+    /// Extensions to build a <see cref="ILoadLinkProtocol"/> more easily.
+    /// </summary>
     public static class LoadLinkProtocolBuilderExtensions
     {
+        /// <summary>
+        /// Build a new <see cref="ILoadLinkProtocol"/> using assemblies as an entry point
+        /// to find <see cref="ILoadLinkProtocolConfig"/> and types for which to apply the <paramref name="conventions"/>.
+        /// </summary>
         public static ILoadLinkProtocol Build(
             this LoadLinkProtocolBuilder loadLinkProtocolBuilder,
             Func<IReferenceLoader> createReferenceLoader,
             IEnumerable<Assembly> assemblies,
-            List<ILoadLinkExpressionConvention> conventions)
+            IList<ILoadLinkExpressionConvention> conventions)
         {
             loadLinkProtocolBuilder.ApplyConventions(
                 assemblies,
@@ -29,10 +36,14 @@ namespace LinkIt.Conventions
             return loadLinkProtocolBuilder.Build(createReferenceLoader);
         }
 
+        /// <summary>
+        /// Build a new <see cref="ILoadLinkProtocol"/> using assemblies as an entry point
+        /// to find <see cref="ILoadLinkProtocolConfig"/> and types for which to apply the <paramref name="conventions"/>.
+        /// </summary>
         public static void ApplyConventions(
             this LoadLinkProtocolBuilder loadLinkProtocolBuilder,
             IEnumerable<Assembly> assemblies,
-            List<ILoadLinkExpressionConvention> conventions)
+            IList<ILoadLinkExpressionConvention> conventions)
         {
             if (loadLinkProtocolBuilder == null) throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
@@ -49,10 +60,13 @@ namespace LinkIt.Conventions
             );
         }
 
+        /// <summary>
+        /// Build a new <see cref="ILoadLinkProtocol"/> and apply the <paramref name="conventions"/> to the specified <paramref name="types"/>.
+        /// </summary>
         public static void ApplyConventions(
             this LoadLinkProtocolBuilder loadLinkProtocolBuilder,
-            List<Type> types,
-            List<ILoadLinkExpressionConvention> conventions)
+            IList<Type> types,
+            IList<ILoadLinkExpressionConvention> conventions)
         {
             if (loadLinkProtocolBuilder == null) throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
             if (types == null) throw new ArgumentNullException(nameof(types));
@@ -64,7 +78,7 @@ namespace LinkIt.Conventions
             command.Execute();
         }
 
-        private static void EnsureConventionNamesAreUnique(List<ILoadLinkExpressionConvention> conventions)
+        private static void EnsureConventionNamesAreUnique(IList<ILoadLinkExpressionConvention> conventions)
         {
             var notUniqueConventionNames = conventions.GetNotUniqueKey(convention => convention.Name);
 

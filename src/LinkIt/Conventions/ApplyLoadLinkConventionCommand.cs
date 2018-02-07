@@ -11,7 +11,7 @@ using LinkIt.Shared;
 
 namespace LinkIt.Conventions
 {
-    public class ApplyLoadLinkConventionCommand
+    internal class ApplyLoadLinkConventionCommand
     {
         private readonly LoadLinkProtocolBuilder _loadLinkProtocolBuilder;
         private readonly List<ConventionMatch> _matches;

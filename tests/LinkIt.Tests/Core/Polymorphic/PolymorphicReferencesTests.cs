@@ -18,7 +18,7 @@ namespace LinkIt.Tests.Core.Polymorphic
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
             loadLinkProtocolBuilder.For<LinkedSource>()
-                .PolymorphicLoadLinkForList(
+                .LoadLinkPolymorphicList(
                     linkedSource => linkedSource.Model.Target,
                     linkedSource => linkedSource.Target,
                     link => link.Type,

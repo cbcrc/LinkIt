@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace LinkIt.Conventions
 {
-    public static class PropertyInfoExtensionsForLoadLinkExpressionConventions
+    internal static class PropertyInfoExtensionsForLoadLinkExpressionConventions
     {
         public static bool MatchLinkedSourceModelPropertyName(this PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, string suffix)
         {
