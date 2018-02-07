@@ -80,7 +80,7 @@ namespace LinkIt.Tests.Core
 
             var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
-                .GetReferenceTypes();
+                .ReferenceTypes;
 
             Assert.Empty(loadedReferenceTypes);
         }
@@ -118,7 +118,7 @@ namespace LinkIt.Tests.Core
 
             var loadedPersonIds = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
-                .GetReferenceIds<Person, string>();
+                .ReferenceIds<Person, string>();
 
             Assert.Equal(new[] { "a" }, loadedPersonIds);
         }
@@ -131,7 +131,7 @@ namespace LinkIt.Tests.Core
             Assert.Empty(actual);
             var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
                 .First()
-                .GetReferenceTypes();
+                .ReferenceTypes;
             Assert.Empty(loadedReferenceTypes);
         }
 

@@ -50,7 +50,7 @@ namespace LinkIt.Core
             var referenceDictionnary = GetReferenceDictionary<TId, TReference>();
             if (referenceDictionnary == null) {
                 throw new InvalidOperationException(
-                    $"References of type {typeof(TReference).Name} were not loaded. Note that the implementation of IReferenceLoader must invoke {nameof(ILoadingContext)}.{nameof(ILoadingContext.AddReferences)} with an empty set if none of the ids provided in the LoadingContext for a specific reference type can be loaded."
+                    $"References of type {typeof(TReference).Name} were not loaded. Note that the implementation of IReferenceLoader must invoke {nameof(ILoadingContext)}.{nameof(ILoadingContext.AddResults)} with an empty set if none of the ids provided in the LoadingContext for a specific reference type can be loaded."
                 );
             }
 

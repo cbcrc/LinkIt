@@ -136,7 +136,7 @@ namespace LinkIt.Tests.Core.Exploratory
 
         public void Load(ILoadingContext loadingContext)
         {
-            var lookupIds = loadingContext.GetReferenceIds<ImageWithRatios, string>();
+            var lookupIds = loadingContext.ReferenceIds<ImageWithRatios, string>();
             var repository = new ImageWithRatioRepository();
             var images = repository.GetByDeclinaisonUrl(lookupIds);
 
@@ -151,7 +151,7 @@ namespace LinkIt.Tests.Core.Exploratory
                     imageByDeclinaisonUrl => imageByDeclinaisonUrl.DeclinaisonUrl,
                     imageByDeclinaisonUrl => imageByDeclinaisonUrl.Image);
 
-            loadingContext.AddReferences(imagesByDeclinaisonUrl);
+            loadingContext.AddResults(imagesByDeclinaisonUrl);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace LinkIt.TestHelpers
         {
             RecordedLookupIdContexts.Add(loadingContext);
 
-            foreach (var referenceType in loadingContext.GetReferenceTypes())
+            foreach (var referenceType in loadingContext.ReferenceTypes)
             {
                 LoadReference(referenceType, loadingContext);
             }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using LinkIt.PublicApi;
 
@@ -12,47 +13,40 @@ namespace LinkIt.Core
     /// <summary>
     /// In addition to the responsiblies of ILoadingContext,
     /// responsible for gathering the lookup ids of a loading level.
-    /// </summary>I
+    /// </summary>
     internal class LoadingContext : ILoadingContext
     {
         private readonly Linker _linker;
-        private readonly Dictionary<Type, IEnumerable> _lookupIdsByReferenceType = new Dictionary<Type, IEnumerable>();
+        private readonly Dictionary<Type, HashSet<object>> _lookupIdsByReferenceType = new Dictionary<Type, HashSet<object>>();
 
         public LoadingContext(Linker linker)
         {
             _linker = linker;
         }
 
-        public IReadOnlyList<Type> GetReferenceTypes()
+        public IReadOnlyList<Type> ReferenceTypes => _lookupIdsByReferenceType.Keys.ToList();
+
+        public IReadOnlyDictionary<Type, IReadOnlyList<object>> ReferenceIds()
+            => _lookupIdsByReferenceType.ToDictionary(p => p.Key, p => (IReadOnlyList<object>) p.Value.ToList());
+
+        public IReadOnlyList<TId> ReferenceIds<TReference, TId>()
         {
-            return _lookupIdsByReferenceType
-                .Keys
-                .ToList();
+            return ReferenceIds<TId>(typeof(TReference));
         }
 
-        public IReadOnlyList<TId> GetReferenceIds<TReference, TId>()
+        public IReadOnlyList<TId> ReferenceIds<TId>(Type referenceType)
         {
-            return GetReferenceIds<TId>(typeof(TReference));
+            return GetLookupIds(referenceType)?.OfType<TId>().ToArray() ?? new TId[0];
         }
 
-        public IReadOnlyList<TId> GetReferenceIds<TId>(Type referenceType)
-        {
-            return (IReadOnlyList<TId>) GetLookupIds<TId>(referenceType)?.ToList() ?? new TId[0];
-        }
-
-        public IDictionary<Type, IEnumerable> GetReferenceIds()
-        {
-            return new Dictionary<Type, IEnumerable>(_lookupIdsByReferenceType);
-        }
-
-        private HashSet<TId> GetLookupIds<TId>(Type referenceType)
+        private HashSet<object> GetLookupIds(Type referenceType)
         {
             return _lookupIdsByReferenceType.ContainsKey(referenceType)
-                ? (HashSet<TId>) _lookupIdsByReferenceType[referenceType]
+                ? _lookupIdsByReferenceType[referenceType]
                 : null;
         }
 
-        public void AddReferences<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId)
+        public void AddResults<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId)
         {
             if (references == null) throw new ArgumentNullException(nameof(references));
             if (getReferenceId == null) throw new ArgumentNullException(nameof(getReferenceId));
@@ -65,43 +59,43 @@ namespace LinkIt.Core
             _linker.AddReferences(referenceDictionary);
         }
 
-        public void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById)
+        public void AddResults<TReference, TId>(IDictionary<TId, TReference> referencesById)
         {
             _linker.AddReferences(referencesById);
         }
 
-        public void AddSingle<TReference, TId>(TId lookupId)
+        public void AddLookupId<TReference>(object lookupId)
         {
-            AddSingle(typeof(TReference), lookupId);
+            AddLookupId(typeof(TReference), lookupId);
         }
 
-        private void AddSingle<TId>(Type referenceType, TId lookupId)
+        private void AddLookupId(Type referenceType, object lookupId)
         {
             if (lookupId == null) return;
 
-            var currentLookupIds = GetOrAddLookupIdsFor<TId>(referenceType);
+            var currentLookupIds = GetOrAddLookupIdsFor(referenceType);
             currentLookupIds.Add(lookupId);
         }
 
-        private HashSet<TId> GetOrAddLookupIdsFor<TId>(Type referenceType)
+        private HashSet<object> GetOrAddLookupIdsFor(Type referenceType)
         {
-            var lookupIds = GetLookupIds<TId>(referenceType);
+            var lookupIds = GetLookupIds(referenceType);
             if (lookupIds != null)
             {
                 return lookupIds;
             }
 
-            var set = new HashSet<TId>();
+            var set = new HashSet<object>();
             _lookupIdsByReferenceType.Add(referenceType, set);
             return set;
         }
 
-        public void AddMulti<TReference, TId>(IEnumerable<TId> lookupIds)
+        public void AddLookupIds<TReference, TId>(IEnumerable<TId> lookupIds)
         {
-            AddMulti(typeof(TReference), lookupIds);
+            AddLookupIds(typeof(TReference), lookupIds);
         }
 
-        private void AddMulti<TId>(Type referenceType, IEnumerable<TId> lookupIds)
+        private void AddLookupIds<TId>(Type referenceType, IEnumerable<TId> lookupIds)
         {
             if (lookupIds == null)
             {
@@ -114,7 +108,7 @@ namespace LinkIt.Core
                 return;
             }
 
-            var currentLookupIds = GetOrAddLookupIdsFor<TId>(referenceType);
+            var currentLookupIds = GetOrAddLookupIdsFor(referenceType);
             foreach (var id in nonNullIds)
             {
                 currentLookupIds.Add(id);

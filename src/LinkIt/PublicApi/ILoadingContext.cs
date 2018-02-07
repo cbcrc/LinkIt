@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace LinkIt.PublicApi
@@ -14,28 +13,28 @@ namespace LinkIt.PublicApi
     public interface ILoadingContext
     {
         /// <summary>
-        /// Get reference types to be loaded.
+        /// Reference types to be loaded.
         /// </summary>
-        IReadOnlyList<Type> GetReferenceTypes();
+        IReadOnlyList<Type> ReferenceTypes { get; }
 
         /// <summary>
-        /// Get reference types with their IDs to be loaded.
+        /// Reference IDs to load for each type.
         /// </summary>
-        IDictionary<Type, IEnumerable> GetReferenceIds();
+        IReadOnlyDictionary<Type, IReadOnlyList<object>> ReferenceIds();
 
         /// <summary>
         /// Get the IDs of the references to be loaded.
         /// </summary>
         /// <typeparam name="TReference">Type of reference</typeparam>
         /// <typeparam name="TId">Type of the ID</typeparam>
-        IReadOnlyList<TId> GetReferenceIds<TReference, TId>();
+        IReadOnlyList<TId> ReferenceIds<TReference, TId>();
 
         /// <summary>
         /// Get the IDs of the references to be loaded.
         /// </summary>
         /// <param name="referenceType">Type of reference</param>
         /// <typeparam name="TId">Type of the ID</typeparam>
-        IReadOnlyList<TId> GetReferenceIds<TId>(Type referenceType);
+        IReadOnlyList<TId> ReferenceIds<TId>(Type referenceType);
 
         /// <summary>
         /// Add loaded references
@@ -44,7 +43,7 @@ namespace LinkIt.PublicApi
         /// <typeparam name="TId">Type of the ID</typeparam>
         /// <param name="references">Enumerable references</param>
         /// <param name="getReferenceId">Function to get the ID from a reference</param>
-        void AddReferences<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId);
+        void AddResults<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId);
 
         /// <summary>
         /// Add loaded references
@@ -52,6 +51,6 @@ namespace LinkIt.PublicApi
         /// <typeparam name="TReference">Type of reference</typeparam>
         /// <typeparam name="TId">Type of the ID</typeparam>
         /// <param name="referencesById">Dictionary of references with their ID as key</param>
-        void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById);
+        void AddResults<TReference, TId>(IDictionary<TId, TReference> referencesById);
     }
 }

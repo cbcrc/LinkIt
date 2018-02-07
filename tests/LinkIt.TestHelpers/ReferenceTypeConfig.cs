@@ -23,9 +23,9 @@ namespace LinkIt.TestHelpers
 
         public void Load(ILoadingContext loadingContext)
         {
-            var lookupIds = loadingContext.GetReferenceIds<TReference, TId>();
+            var lookupIds = loadingContext.ReferenceIds<TReference, TId>();
             var references = _loadReferences(lookupIds);
-            loadingContext.AddReferences(references, reference => _getReferenceId(reference));
+            loadingContext.AddResults(references, reference => _getReferenceId(reference));
         }
     }
 }

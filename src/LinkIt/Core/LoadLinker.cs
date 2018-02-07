@@ -92,7 +92,7 @@ namespace LinkIt.Core
         private async Task<IEnumerable<TRootLinkedSourceModel>> LoadRootLinkedSourceModelAsync<TRootLinkedSourceModelId>(List<TRootLinkedSourceModelId> modelIds)
         {
             var loadingContext = new LoadingContext(_linker);
-            loadingContext.AddMulti<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
+            loadingContext.AddLookupIds<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
 
             await _referenceLoader.LoadReferencesAsync(loadingContext);
 

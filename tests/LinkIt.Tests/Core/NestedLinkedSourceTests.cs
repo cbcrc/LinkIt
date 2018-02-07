@@ -63,7 +63,7 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            var imageLookupIds = _referenceLoaderStub.RecordedLookupIdContexts.Last().GetReferenceIds<Image, string>();
+            var imageLookupIds = _referenceLoaderStub.RecordedLookupIdContexts.Last().ReferenceIds<Image, string>();
 
             Assert.Equal(new [] { "person-img-author-id" }, imageLookupIds);
         }

@@ -19,28 +19,28 @@ namespace LinkIt.Tests.Core
         [Fact]
         public void Add_Distinct_ShouldAdd()
         {
-            _sut.AddSingle<Image, string>("a");
-            _sut.AddSingle<Image, string>("b");
+            _sut.AddLookupId<Image>("a");
+            _sut.AddLookupId<Image>("b");
 
-            Assert.Equal(new[] { "a", "b" }, _sut.GetReferenceIds<Image, string>());
+            Assert.Equal(new[] { "a", "b" }, _sut.ReferenceIds<Image, string>());
         }
 
         [Fact]
         public void Add_WithDuplicates_DuplicatesShouldNotBeAdded()
         {
-            _sut.AddSingle<Image, string>("a");
-            _sut.AddSingle<Image, string>("a");
-            _sut.AddSingle<Image, string>("b");
+            _sut.AddLookupId<Image>("a");
+            _sut.AddLookupId<Image>("a");
+            _sut.AddLookupId<Image>("b");
 
-            Assert.Equal(new[] { "a", "b" }, _sut.GetReferenceIds<Image, string>());
+            Assert.Equal(new[] { "a", "b" }, _sut.ReferenceIds<Image, string>());
         }
 
         [Fact]
         public void Add_NullId_ShouldIgnoreNullId()
         {
-            _sut.AddSingle<Image, string>(null);
+            _sut.AddLookupId<Image>(null);
 
-            var actual = _sut.GetReferenceTypes();
+            var actual = _sut.ReferenceTypes;
 
             Assert.Empty(actual);
         }

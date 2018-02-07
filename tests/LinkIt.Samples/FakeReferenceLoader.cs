@@ -14,9 +14,9 @@ namespace LinkIt.Samples
     {
         public Task LoadReferencesAsync(ILoadingContext loadingContext)
         {
-            foreach (var referenceType in loadingContext.GetReferenceTypes())
+            foreach (var referenceIds in loadingContext.ReferenceIds())
             {
-                LoadReference(referenceType, loadingContext);
+                LoadReference(referenceIds.Key, referenceIds.Value, loadingContext);
             }
 
             return Task.CompletedTask;
@@ -30,17 +30,17 @@ namespace LinkIt.Samples
             //if an exception is thrown
         }
 
-        private void LoadReference(Type referenceType, ILoadingContext loadingContext)
+        private void LoadReference(Type referenceType, IReadOnlyList<object> referenceIds, ILoadingContext loadingContext)
         {
-            if (referenceType == typeof(Media)) LoadMedia(loadingContext);
-            if (referenceType == typeof(Tag)) LoadTags(loadingContext);
+            if (referenceType == typeof(Media)) LoadMedia(referenceIds, loadingContext);
+            if (referenceType == typeof(Tag)) LoadTags(referenceIds, loadingContext);
             if (referenceType == typeof(BlogPost)) LoadBlogPosts(loadingContext);
             if (referenceType == typeof(Image)) LoadImages(loadingContext);
         }
 
-        private void LoadMedia(ILoadingContext loadingContext)
+        private void LoadMedia(IReadOnlyList<object> referenceIds, ILoadingContext loadingContext)
         {
-            var lookupIds = loadingContext.GetReferenceIds<Media, int>();
+            var lookupIds = referenceIds.OfType<int>();
             var references = lookupIds.Select(id =>
                     new Media{
                         Id = id,
@@ -54,15 +54,15 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadingContext.AddReferences(
+            loadingContext.AddResults(
                 references,
                 reference => reference.Id
             );
         }
 
-        private void LoadTags(ILoadingContext loadingContext)
+        private void LoadTags(IReadOnlyList<object> referenceIds, ILoadingContext loadingContext)
         {
-            var lookupIds = loadingContext.GetReferenceIds<Tag, int>();
+            var lookupIds = referenceIds.OfType<int>();
             var references = lookupIds
                 .Select(id =>
                     new Tag
@@ -73,7 +73,7 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadingContext.AddReferences(
+            loadingContext.AddResults(
                 references,
                 reference => reference.Id
             );
@@ -81,7 +81,7 @@ namespace LinkIt.Samples
 
         private void LoadBlogPosts(ILoadingContext loadingContext)
         {
-            var lookupIds = loadingContext.GetReferenceIds<BlogPost, int>();
+            var lookupIds = loadingContext.ReferenceIds<BlogPost, int>();
             var references = lookupIds
                 .Select(id =>
                     new BlogPost
@@ -112,7 +112,7 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadingContext.AddReferences(
+            loadingContext.AddResults(
                 references,
                 reference => reference.Id
             );
@@ -120,7 +120,7 @@ namespace LinkIt.Samples
 
         private void LoadImages(ILoadingContext loadingContext)
         {
-            var lookupIds = loadingContext.GetReferenceIds<Image, string>();
+            var lookupIds = loadingContext.ReferenceIds<Image, string>();
             var references = lookupIds
                 .Select(id =>
                     new Image
@@ -132,7 +132,7 @@ namespace LinkIt.Samples
                 )
                 .ToList();
 
-            loadingContext.AddReferences(
+            loadingContext.AddResults(
                 references,
                 reference => reference.Id
             );

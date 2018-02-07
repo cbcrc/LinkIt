@@ -7,7 +7,7 @@
  
 * `ILoadLinker` methods are now async ([#3](https://github.com/cbcrc/LinkIt/issues/3)) ([d97d67f](https://github.com/cbcrc/LinkIt/commit/d97d67fefc3c8b5434863baddb19c758b3af830e))
 * The signature of `IReferenceLoader.LoadReferencesAsync` has changed.
-  * `ILookupIdsContext` has been renamed `ILoadingContext`. 
+  * `ILookupIdsContext` has been replaced by `ILoadingContext`. 
     It is now the only parameter for `LoadReferencesAsync` and is used for both
     getting the IDs to lookup and for adding loading references.
 * Reference types that are part of a cycle are loaded in multiple batches.
