@@ -1,4 +1,5 @@
-![LinkIt](logo.png) 
+<img src="https://raw.githubusercontent.com/cbcrc/LinkIt/master/logo.png" width="250" title="LinkIt Logo">
+ 
 ===============
 LinkIt is an object-oriented data integration library that makes it easy to load different kinds of objects and link them together. 
 
@@ -14,10 +15,10 @@ LinkIt is not an object-relational mapping framework. It can be used for orchest
 - Perform complex projections easily with [LinkIt AutoMapper Extensions](https://github.com/cbcrc/LinkIt.AutoMapperExtensions)
 
 ### Read more
-- [Why Should I Use LinkIt?](why-without-how.md)
-- [Getting Started](getting-started.md)
-- [Slightly More Complex Example](slightly-more-complex-example.md)
-- [Known Limitations](known-limitations.md)
+- [Why Should I Use LinkIt?](docs/why-without-how.md)
+- [Getting Started](docs/getting-started.md)
+- [Slightly More Complex Example](docs/slightly-more-complex-example.md)
+- [Known Limitations](docs/known-limitations.md)
 - [License](LICENSE.txt)
 
 ### See also
