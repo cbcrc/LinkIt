@@ -95,11 +95,11 @@ namespace LinkIt.Conventions
 
         public void ApplyMultiValueConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match)
         {
-            var getLinkTargetProperty = FuncGenerator.GenerateFromGetterAsExpression<TLinkedSource, List<TLinkTargetProperty>>(
+            var getLinkTargetProperty = FuncGenerator.GenerateFromGetterAsExpression<TLinkedSource, IList<TLinkTargetProperty>>(
                 match.LinkTargetProperty.Name
             );
             var getLinkedSourceModelProperty = FuncGenerator
-                .GenerateFromGetter<TLinkedSource, List<TLinkedSourceModelProperty>>(
+                .GenerateFromGetter<TLinkedSource, IList<TLinkedSourceModelProperty>>(
                     $"Model.{match.LinkedSourceModelProperty.Name}"
                 );
 

@@ -4,23 +4,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using LinkIt.LinkTargets.Interfaces;
+using LinkIt.Shared;
 
 namespace LinkIt.LinkTargets
 {
     internal class MultiValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
     {
-        private readonly Func<TLinkedSource, List<TTargetProperty>> _get;
-        private readonly Action<TLinkedSource, List<TTargetProperty>> _set;
+        private readonly Func<TLinkedSource, IList<TTargetProperty>> _get;
+        private readonly PropertyInfo _property;
 
-        public MultiValueLinkTarget(
-            string id,
-            Func<TLinkedSource, List<TTargetProperty>> get,
-            Action<TLinkedSource, List<TTargetProperty>> set)
+        public MultiValueLinkTarget(PropertyInfo property, Func<TLinkedSource, IList<TTargetProperty>> get)
         {
-            Id = id;
+            _property = property;
+            Id = property.GetFullName();
             _get = get;
-            _set = set;
         }
 
         //See ILinkTarget.SetLinkTargetValue
@@ -33,8 +32,8 @@ namespace LinkIt.LinkTargets
         {
             if (_get(linkedSource) == null)
             {
-                var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValues].ToList();
-                _set(linkedSource, polymorphicListToBeBuilt);
+                var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValues];
+                SetTargetProperty(linkedSource, polymorphicListToBeBuilt);
             }
         }
 
@@ -43,9 +42,21 @@ namespace LinkIt.LinkTargets
             var values = _get(linkedSource);
             var valuesWithoutNull = values
                 .Where(value => value != null)
-                .ToList();
+                .ToArray();
 
-            _set(linkedSource, valuesWithoutNull);
+            SetTargetProperty(linkedSource, valuesWithoutNull);
+        }
+
+        private void SetTargetProperty(TLinkedSource linkedSource, TTargetProperty[] values)
+        {
+            if (_property.PropertyType.IsAssignableFrom(typeof(TTargetProperty[])))
+            {
+                _property.SetMethod.Invoke(linkedSource, new object[] { values });
+            }
+            else if (_property.PropertyType.IsAssignableFrom(typeof(List<TTargetProperty>)))
+            {
+                _property.SetMethod.Invoke(linkedSource, new object[] { values.ToList() });
+            }
         }
 
         public string Id { get; }

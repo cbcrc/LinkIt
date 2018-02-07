@@ -11,31 +11,65 @@ namespace LinkIt.Tests.LinkTargets
 {
     public class MultiValueLinkTargetTests
     {
-        private readonly LinkedSource _actual;
-        private readonly MultiValueLinkTarget<LinkedSource, Image> _sut;
-
-        public MultiValueLinkTargetTests()
+        [Fact]
+        public void SetListTargetProperty()
         {
-            _actual = new LinkedSource();
-
-            _sut = (MultiValueLinkTarget<LinkedSource, Image>) LinkTargetFactory.Create<LinkedSource, Image>(
+            var actual = new LinkedSourceWithList();
+            var sut = (MultiValueLinkTarget<LinkedSourceWithList, Image>) LinkTargetFactory.Create<LinkedSourceWithList, Image>(
                 linkedSource => linkedSource.Images);
+
+            sut.LazyInit(actual, 2);
+            sut.SetLinkTargetValue(actual, new Image { Alt = "the-alt1" }, 0);
+            sut.SetLinkTargetValue(actual, new Image { Alt = "the-alt2" }, 1);
+
+            Assert.Equal("the-alt1", actual.Images[0].Alt);
+            Assert.Equal("the-alt2", actual.Images[1].Alt);
         }
 
         [Fact]
-        public void SetTargetProperty()
+        public void SetArrayTargetProperty()
         {
-            _sut.LazyInit(_actual, 2);
-            _sut.SetLinkTargetValue(_actual, new Image { Alt = "the-alt1" }, 0);
-            _sut.SetLinkTargetValue(_actual, new Image { Alt = "the-alt2" }, 1);
+            var actual = new LinkedSourceWithArray();
+            var sut = (MultiValueLinkTarget<LinkedSourceWithArray, Image>) LinkTargetFactory.Create<LinkedSourceWithArray, Image>(
+                linkedSource => linkedSource.Images);
 
-            Assert.Equal("the-alt1", _actual.Images[0].Alt);
-            Assert.Equal("the-alt2", _actual.Images[1].Alt);
+            sut.LazyInit(actual, 2);
+            sut.SetLinkTargetValue(actual, new Image { Alt = "the-alt1" }, 0);
+            sut.SetLinkTargetValue(actual, new Image { Alt = "the-alt2" }, 1);
+
+            Assert.Equal("the-alt1", actual.Images[0].Alt);
+            Assert.Equal("the-alt2", actual.Images[1].Alt);
+        }
+        [Fact]
+        public void SetIListTargetProperty()
+        {
+            var actual = new LinkedSourceWithIList();
+            var sut = (MultiValueLinkTarget<LinkedSourceWithIList, Image>) LinkTargetFactory.Create<LinkedSourceWithIList, Image>(
+                linkedSource => linkedSource.Images);
+
+            sut.LazyInit(actual, 2);
+            sut.SetLinkTargetValue(actual, new Image { Alt = "the-alt1" }, 0);
+            sut.SetLinkTargetValue(actual, new Image { Alt = "the-alt2" }, 1);
+
+            Assert.Equal("the-alt1", actual.Images[0].Alt);
+            Assert.Equal("the-alt2", actual.Images[1].Alt);
         }
 
-        public class LinkedSource : ILinkedSource<Model>
+        public class LinkedSourceWithList : ILinkedSource<Model>
         {
             public List<Image> Images { get; set; }
+            public Model Model { get; set; }
+        }
+
+        public class LinkedSourceWithArray : ILinkedSource<Model>
+        {
+            public Image[] Images { get; set; }
+            public Model Model { get; set; }
+        }
+
+        public class LinkedSourceWithIList : ILinkedSource<Model>
+        {
+            public IList<Image> Images { get; set; }
             public Model Model { get; set; }
         }
 

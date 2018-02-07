@@ -21,19 +21,7 @@ namespace LinkIt.LinkTargets
         {
             var property = GetPropertyFromGetter(getLinkTarget);
 
-            return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(
-                property.GetFullName(),
-                CreateSingleValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
-            );
-        }
-
-        private static Action<TLinkedSource, TTargetProperty> CreateSingleValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(PropertyInfo property)
-        {
-            var setter = property.GetSetMethod();
-            return (Action<TLinkedSource, TTargetProperty>) Delegate.CreateDelegate(
-                typeof(Action<TLinkedSource, TTargetProperty>),
-                setter
-            );
+            return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(property);
         }
 
         #endregion
@@ -41,24 +29,21 @@ namespace LinkIt.LinkTargets
         #region Multi Value
 
         public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
-            Expression<Func<TLinkedSource, List<TTargetProperty>>> getLinkTarget)
+            Expression<Func<TLinkedSource, IList<TTargetProperty>>> getLinkTarget)
         {
             var property = GetPropertyFromGetter(getLinkTarget);
+            EnsureIsSupportedIListImplementation<TTargetProperty>(property);
 
-            return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(
-                property.GetFullName(),
-                getLinkTarget.Compile(),
-                CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(property)
-            );
+            return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(property, getLinkTarget.Compile());
         }
 
-        private static Action<TLinkedSource, List<TTargetProperty>> CreateMultiValueLinkTargetSetterAction<TLinkedSource, TTargetProperty>(PropertyInfo property)
+        private static void EnsureIsSupportedIListImplementation<TTargetProperty>(PropertyInfo property)
         {
-            var setter = property.GetSetMethod();
-            return (Action<TLinkedSource, List<TTargetProperty>>) Delegate.CreateDelegate(
-                typeof(Action<TLinkedSource, List<TTargetProperty>>),
-                setter
-            );
+            var propertyType = property.PropertyType;
+            if (!propertyType.IsAssignableFrom(typeof(TTargetProperty[])) && !propertyType.IsAssignableFrom(typeof(List<TTargetProperty>)))
+            {
+                throw new ArgumentException($"{property.GetFullName()}: Only lists that can be assigned from an array or a List<> are supported.");
+            }
         }
 
         #endregion
@@ -67,50 +52,47 @@ namespace LinkIt.LinkTargets
 
         private static PropertyInfo GetPropertyFromGetter<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter)
         {
-            EnsureNoFunctionOrAction(getter);
+            EnsureIsMember(getter);
 
             var getterBody = (MemberExpression) getter.Body;
-            EnsureNoNestedProperty<TLinkedSource>(getterBody);
-            EnsureNoMemberAccess<TLinkedSource>(getterBody);
+            EnsureIsPropertyOfLinkedSource<TLinkedSource>(getterBody);
 
             var property = (PropertyInfo) getterBody.Member;
 
-            EnsureNoReadOnlyProperty<TLinkedSource>(property);
+            EnsureIsReadWrite(property);
 
             //Impossible to have a write only property, since the setter is inferred from the getter
 
             return property;
         }
 
-        private static void EnsureNoReadOnlyProperty<TLinkedSource>(PropertyInfo property)
+        private static void EnsureIsMember<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter)
+        {
+            if (getter.Body.NodeType != ExpressionType.MemberAccess)
+            {
+                throw OnlyDirectGetterAreSupported<TLinkedSource>();
+            }
+        }
+
+        private static void EnsureIsPropertyOfLinkedSource<TLinkedSource>(MemberExpression getterBody)
+        {
+            if (getterBody.Member.MemberType != MemberTypes.Property || getterBody.Expression.NodeType != ExpressionType.Parameter)
+            {
+                throw OnlyDirectGetterAreSupported<TLinkedSource>();
+            }
+        }
+
+        private static void EnsureIsReadWrite(PropertyInfo property)
         {
             if (!property.IsPublicReadWrite())
-                throw new ArgumentException(
-                    $"{property.GetFullName()}: Only read-write property are supported"
-                );
-        }
-
-        private static void EnsureNoMemberAccess<TLinkedSource>(MemberExpression getterBody)
-        {
-            if (getterBody.Member.MemberType != MemberTypes.Property) throw OnlyDirectGetterAreSupported<TLinkedSource>();
-        }
-
-        private static void EnsureNoNestedProperty<TLinkedSource>(MemberExpression getterBody)
-        {
-            var getterBodyExpression = getterBody.Expression;
-            if (getterBodyExpression.NodeType != ExpressionType.Parameter) throw OnlyDirectGetterAreSupported<TLinkedSource>();
-        }
-
-        private static void EnsureNoFunctionOrAction<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter)
-        {
-            if (getter.Body.NodeType != ExpressionType.MemberAccess) throw OnlyDirectGetterAreSupported<TLinkedSource>();
+            {
+                throw new ArgumentException($"{property.GetFullName()}: Only read-write properties are supported.");
+            }
         }
 
         private static ArgumentException OnlyDirectGetterAreSupported<TLinkedSource>()
         {
-            return new ArgumentException(
-                $"{typeof(TLinkedSource)}: Only direct getter are supported. Ex: p => p.Property"
-            );
+            return new ArgumentException($"{typeof(TLinkedSource)}: Only direct getters are supported. Ex: p => p.Property");
         }
 
         #endregion

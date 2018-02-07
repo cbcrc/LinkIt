@@ -40,7 +40,7 @@ namespace LinkIt.Tests.Core
                     Id = 1,
                     SummaryImageId = "summary-image-id",
                     AuthorImageId = "author-image-id",
-                    FavoriteImageIds = new List<string> { "one", "two" }
+                    FavoriteImageIds = new [] { "one", "two" }
                 }
             );
 
@@ -68,7 +68,7 @@ namespace LinkIt.Tests.Core
                     Id = 1,
                     SummaryImageId = "dont-care",
                     AuthorImageId = "dont-care",
-                    FavoriteImageIds = new List<string> { "one", null, "two" }
+                    FavoriteImageIds = new [] { "one", null, "two" }
                 }
             );
 
@@ -100,7 +100,7 @@ namespace LinkIt.Tests.Core
                     Id = 1,
                     SummaryImageId = "dont-care",
                     AuthorImageId = "dont-care",
-                    FavoriteImageIds = new List<string> { "a", "a" }
+                    FavoriteImageIds = new [] { "a", "a" }
                 }
             );
 
@@ -118,7 +118,7 @@ namespace LinkIt.Tests.Core
                     Id = 1,
                     SummaryImageId = "dont-care",
                     AuthorImageId = "dont-care",
-                    FavoriteImageIds = new List<string> { "cannot-be-resolved", "cannot-be-resolved" }
+                    FavoriteImageIds = new [] { "cannot-be-resolved", "cannot-be-resolved" }
                 }
             );
 
@@ -139,6 +139,6 @@ namespace LinkIt.Tests.Core
         public int Id { get; set; }
         public string SummaryImageId { get; set; }
         public string AuthorImageId { get; set; }
-        public List<string> FavoriteImageIds { get; set; }
+        public string[] FavoriteImageIds { get; set; }
     }
 }

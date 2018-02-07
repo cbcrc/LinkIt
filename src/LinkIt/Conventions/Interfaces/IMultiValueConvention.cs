@@ -19,8 +19,8 @@ namespace LinkIt.Conventions.Interfaces
         /// </summary>
         void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
-            Func<TLinkedSource, List<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
-            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
+            Func<TLinkedSource, IEnumerable<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
+            Expression<Func<TLinkedSource, IList<TLinkTargetProperty>>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty
         );

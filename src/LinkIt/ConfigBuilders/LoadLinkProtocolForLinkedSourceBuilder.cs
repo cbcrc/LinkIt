@@ -48,8 +48,8 @@ namespace LinkIt.ConfigBuilders
         /// Load a reference by ID.
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferencesByIds<TReference, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIds,
-            Expression<Func<TLinkedSource, List<TReference>>> getLinkTarget)
+            Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
+            Expression<Func<TLinkedSource, IList<TReference>>> getLinkTarget)
         {
             if (getLookupIds == null) throw new ArgumentNullException(nameof(getLookupIds));
             if (getLinkTarget == null) throw new ArgumentNullException(nameof(getLinkTarget));
@@ -82,7 +82,7 @@ namespace LinkIt.ConfigBuilders
         /// Load a reference by ID.
         /// </summary>
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferencesByIds<TReference, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIds,
+            Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
             ILinkTarget<TLinkedSource, TReference> linkTarget)
         {
             return AddNonPolymorphicLoadLinkExpression(
@@ -138,8 +138,8 @@ namespace LinkIt.ConfigBuilders
         /// Load nested linked sources by IDs.
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourcesByIds<TChildLinkedSource, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIds,
-            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
+            Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
+            Expression<Func<TLinkedSource, IList<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null)
         {
             if (getLookupIds == null) throw new ArgumentNullException(nameof(getLookupIds));
@@ -153,7 +153,7 @@ namespace LinkIt.ConfigBuilders
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourcesByIds<TChildLinkedSource, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIds,
+            Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
             ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null)
         {
@@ -197,8 +197,8 @@ namespace LinkIt.ConfigBuilders
         /// Load nested linked sources using models from the parent linked source.
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourcesFromModels<TChildLinkedSource, TChildLinkedSourceModel>(
-            Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModels,
-            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
+            Func<TLinkedSource, IEnumerable<TChildLinkedSourceModel>> getNestedLinkedSourceModels,
+            Expression<Func<TLinkedSource, IList<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
@@ -214,7 +214,7 @@ namespace LinkIt.ConfigBuilders
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourcesFromModels<TChildLinkedSource, TChildLinkedSourceModel>(
-            Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModel,
+            Func<TLinkedSource, IEnumerable<TChildLinkedSourceModel>> getNestedLinkedSourceModels,
             ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource
         )
@@ -226,7 +226,7 @@ namespace LinkIt.ConfigBuilders
             );
 
             return AddNonPolymorphicLoadLinkExpression(
-                getNestedLinkedSourceModel,
+                getNestedLinkedSourceModels,
                 linkTarget,
                 include
             );
@@ -262,8 +262,8 @@ namespace LinkIt.ConfigBuilders
         /// Load and link polymorphic references or linked sources.
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkPolymorphicList<TAbstractLinkTarget, TLink, TDiscriminant>(
-            Func<TLinkedSource, List<TLink>> getLinks,
-            Expression<Func<TLinkedSource, List<TAbstractLinkTarget>>> getLinkTarget,
+            Func<TLinkedSource, IEnumerable<TLink>> getLinks,
+            Expression<Func<TLinkedSource, IList<TAbstractLinkTarget>>> getLinkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
         {
@@ -281,7 +281,7 @@ namespace LinkIt.ConfigBuilders
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkPolymorphic<TAbstractLinkTarget, TLink, TDiscriminant>(
-            Func<TLinkedSource, List<TLink>> getLinks,
+            Func<TLinkedSource, IEnumerable<TLink>> getLinks,
             ILinkTarget<TLinkedSource, TAbstractLinkTarget> linkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
@@ -332,7 +332,7 @@ namespace LinkIt.ConfigBuilders
         }
 
         private LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> AddNonPolymorphicLoadLinkExpression<TTargetProperty, TId>(
-            Func<TLinkedSource, List<TId>> getLookupIds,
+            Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
             ILinkTarget<TLinkedSource, TTargetProperty> linkTarget,
             IInclude include)
         {
