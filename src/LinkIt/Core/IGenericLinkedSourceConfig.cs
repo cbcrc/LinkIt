@@ -7,8 +7,9 @@ using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
 using LinkIt.PublicApi;
 
-namespace LinkIt.Core.Interfaces
+namespace LinkIt.Core
 {
+    /// <inheritdoc />
     /// <summary>
     /// Responsible for creating a load linker for a specific root linked source type
     /// Responsible for creating include with nested linked source

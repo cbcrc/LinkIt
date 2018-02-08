@@ -14,6 +14,11 @@ namespace LinkIt.PublicApi
         ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>();
 
         /// <summary>
+        /// Load a model by ID.
+        /// </summary>
+        IDataLoader<TModel> Load<TModel>();
+
+        /// <summary>
         /// Stats for the <see cref="ILoadLinkProtocol"/>.
         /// </summary>
         LoadLinkProtocolStatistics Statistics { get; }

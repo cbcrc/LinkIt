@@ -53,15 +53,11 @@ namespace LinkIt.Core.Includes
         {
             var childLinkSourceModel = _getNestedLinkedSourceModel(link);
 
-            return (TAbstractChildLinkedSource) (object) linker
-                .CreatePartiallyBuiltLinkedSource(
-                    childLinkSourceModel,
-                    loadLinkProtocol,
-                    CreateInitChildLinkedSourceAction(linkedSource, referenceIndex, link)
-                );
+            return (TAbstractChildLinkedSource) (object) linker.CreatePartiallyBuiltLinkedSource(
+                childLinkSourceModel,
+                CreateInitChildLinkedSourceAction(linkedSource, referenceIndex, link)
+            );
         }
-
-
         public void AddDependenciesForAllLinkTargets(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
             loadLinkProtocol.AddDependenciesForAllLinkTargets(ChildLinkedSourceType, predecessor);

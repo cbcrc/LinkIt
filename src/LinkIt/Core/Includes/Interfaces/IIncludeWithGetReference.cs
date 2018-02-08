@@ -5,6 +5,6 @@ namespace LinkIt.Core.Includes.Interfaces
 {
     internal interface IIncludeWithGetReference<TIReference, TLink>
     {
-        TIReference GetReference(TLink link, Linker linker);
+        TIReference GetReference(TLink link, DataStore dataStore);
     }
 }

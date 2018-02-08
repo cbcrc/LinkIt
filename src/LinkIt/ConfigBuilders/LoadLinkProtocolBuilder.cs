@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LinkIt.Core;
-using LinkIt.Core.Interfaces;
 using LinkIt.PublicApi;
 using LinkIt.Shared;
 

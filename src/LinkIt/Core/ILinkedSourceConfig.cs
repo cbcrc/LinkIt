@@ -3,7 +3,7 @@
 
 using System;
 
-namespace LinkIt.Core.Interfaces
+namespace LinkIt.Core
 {
     /// <summary>
     /// Responsible to know the LinkedSourceModelType without using reflection every time.

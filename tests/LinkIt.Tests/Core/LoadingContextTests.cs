@@ -1,6 +1,7 @@
 ﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
+using System.Linq;
 using LinkIt.Core;
 using LinkIt.TestHelpers;
 using Xunit;
@@ -9,11 +10,11 @@ namespace LinkIt.Tests.Core
 {
     public class LoadingContextTests
     {
-        private readonly LoadingContext _sut;
+        private readonly LookupContext _sut;
 
         public LoadingContextTests()
         {
-            _sut = new LoadingContext(null);
+            _sut = new LookupContext();
         }
 
         [Fact]
@@ -22,7 +23,7 @@ namespace LinkIt.Tests.Core
             _sut.AddLookupId<Image>("a");
             _sut.AddLookupId<Image>("b");
 
-            Assert.Equal(new[] { "a", "b" }, _sut.ReferenceIds<Image, string>());
+            Assert.Equal(new[] { "a", "b" }, _sut.LookupIds[typeof(Image)].Cast<string>());
         }
 
         [Fact]
@@ -32,7 +33,7 @@ namespace LinkIt.Tests.Core
             _sut.AddLookupId<Image>("a");
             _sut.AddLookupId<Image>("b");
 
-            Assert.Equal(new[] { "a", "b" }, _sut.ReferenceIds<Image, string>());
+            Assert.Equal(new[] { "a", "b" }, _sut.LookupIds[typeof(Image)].Cast<string>());
         }
 
         [Fact]
@@ -40,9 +41,7 @@ namespace LinkIt.Tests.Core
         {
             _sut.AddLookupId<Image>(null);
 
-            var actual = _sut.ReferenceTypes;
-
-            Assert.Empty(actual);
+            Assert.Empty(_sut.LookupIds.Keys);
         }
     }
 }

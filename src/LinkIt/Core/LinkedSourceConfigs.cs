@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using LinkIt.Core.Interfaces;
 using LinkIt.Shared;
 
 namespace LinkIt.Core

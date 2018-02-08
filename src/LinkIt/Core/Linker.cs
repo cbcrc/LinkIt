@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LinkIt.PublicApi;
@@ -10,63 +9,30 @@ using LinkIt.PublicApi;
 namespace LinkIt.Core
 {
     /// <summary>
-    /// Responsible for giving access to the loaded references of a root linked source.
+    /// Responsible for creating linked sources.
     /// </summary>
     internal class Linker
     {
         private readonly List<object> _linkedSourcesToBeBuilt = new List<object>();
-        private readonly Dictionary<Type, object> _loadedReferencesByType = new Dictionary<Type, object>();
+        private readonly LoadLinkProtocol _loadLinkProtocol;
+        private readonly DataStore _dataStore;
+
+        public Linker(LoadLinkProtocol loadLinkProtocol, DataStore dataStore)
+        {
+            _loadLinkProtocol = loadLinkProtocol;
+            _dataStore = dataStore;
+        }
 
         internal IReadOnlyList<object> LinkedSourcesToBeBuilt => _linkedSourcesToBeBuilt.ToList();
 
-        private IDictionary<TId, TReference> GetReferenceDictionary<TId, TReference>()
+        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel, TModelId>(TModelId id, Action<TLinkedSource> init)
+            where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {
-            var tReference = typeof(TReference);
-            if (!_loadedReferencesByType.ContainsKey(tReference))
-            {
-                return null;
-            }
-
-            return (IDictionary<TId, TReference>) _loadedReferencesByType[tReference];
+            var linkedSourceModel = _dataStore.GetReference<TLinkedSourceModel, TModelId>(id);
+            return CreatePartiallyBuiltLinkedSource(linkedSourceModel, init);
         }
 
-        public void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById)
-        {
-            if (referencesById == null) throw new ArgumentNullException(nameof(referencesById));
-
-            var dictionary = GetReferenceDictionary<TId, TReference>() ?? new Dictionary<TId, TReference>();
-            foreach (var reference in referencesById)
-            {
-                dictionary[reference.Key] = reference.Value;
-            }
-
-            _loadedReferencesByType[typeof(TReference)] = dictionary;
-        }
-
-        public TReference GetOptionalReference<TReference, TId>(TId lookupId)
-        {
-            if (lookupId == null) return default;
-
-            var referenceDictionnary = GetReferenceDictionary<TId, TReference>();
-            if (referenceDictionnary == null) {
-                throw new InvalidOperationException(
-                    $"References of type {typeof(TReference).Name} were not loaded. Note that the implementation of IReferenceLoader must invoke {nameof(ILoadingContext)}.{nameof(ILoadingContext.AddResults)} with an empty set if none of the ids provided in the LoadingContext for a specific reference type can be loaded."
-                );
-            }
-
-            return referenceDictionnary.ContainsKey(lookupId)
-                ? referenceDictionnary[lookupId]
-                : default;
-        }
-
-        public IReadOnlyList<TReference> GetOptionalReferences<TReference,TId>(IEnumerable<TId> lookupIds)
-        {
-            return lookupIds
-                .Select(GetOptionalReference<TReference, TId>)
-                .ToList();
-        }
-
-        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, LoadLinkProtocol loadLinkProtocol, Action<TLinkedSource> init)
+        public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, Action<TLinkedSource> init)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {
             if (model == null) return null;
@@ -74,7 +40,7 @@ namespace LinkIt.Core
             var linkedSource = new TLinkedSource { Model = model };
             init?.Invoke(linkedSource); //Important: Init before LinkNestedLinkedSourcesFromModel
 
-            LinkNestedLinkedSourcesFromModel(linkedSource, loadLinkProtocol);
+            LinkNestedLinkedSourcesFromModel(linkedSource, _loadLinkProtocol);
 
             _linkedSourcesToBeBuilt.Add(linkedSource);
 
@@ -91,6 +57,33 @@ namespace LinkIt.Core
                     this,
                     loadLinkProtocol
                 );
+            }
+        }
+
+        public void LinkNestedLinkedSourcesById(IEnumerable<Type> referenceTypes)
+        {
+            foreach (var referenceType in referenceTypes)
+            {
+                foreach (var linkedSource in LinkedSourcesToBeBuilt)
+                {
+                    var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource, referenceType);
+                    foreach (var loadLinkExpression in loadLinkExpressions)
+                    {
+                        loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, this, referenceType, _loadLinkProtocol);
+                    }
+                }
+            }
+        }
+
+        public void LinkReferences()
+        {
+            foreach (var linkedSource in LinkedSourcesToBeBuilt)
+            {
+                foreach (var loadLinkExpression in _loadLinkProtocol.GetLoadLinkExpressions(linkedSource))
+                {
+                    loadLinkExpression.LinkReference(linkedSource, _dataStore);
+                    loadLinkExpression.FilterOutNullValues(linkedSource);
+                }
             }
         }
     }

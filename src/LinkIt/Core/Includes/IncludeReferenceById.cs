@@ -27,22 +27,22 @@ namespace LinkIt.Core.Includes
 
         public Type ReferenceType { get; }
 
-        public void AddLookupId(TLink link, LoadingContext loadingContext)
+        public void AddLookupId(TLink link, LookupContext lookupContext)
         {
             var lookupId = _getLookupId(link);
-            loadingContext.AddLookupId<TReference>(lookupId);
+            lookupContext.AddLookupId<TReference>(lookupId);
         }
 
-        public void AddDependency(string linkTargetId, Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
+        public void AddDependency(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
             var dependency = predecessor.Graph.GetOrAdd(ReferenceType);
             predecessor.Before(dependency);
         }
 
-        public TIReference GetReference(TLink link, Linker linker)
+        public TIReference GetReference(TLink link, DataStore dataStore)
         {
             var lookupId = _getLookupId(link);
-            return linker.GetOptionalReference<TReference, TId>(lookupId);
+            return dataStore.GetReference<TReference, TId>(lookupId);
         }
     }
 }

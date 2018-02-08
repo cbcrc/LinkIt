@@ -12,9 +12,9 @@ using Xunit;
 
 namespace LinkIt.Tests.Core
 {
-    public class LoadLinkConfig_ByIdsTests
+    public class LoadLinkByIdsTests
     {
-        public LoadLinkConfig_ByIdsTests()
+        public LoadLinkByIdsTests()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.For<PersonLinkedSource>()

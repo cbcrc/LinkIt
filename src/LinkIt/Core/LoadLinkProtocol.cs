@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.Core.Interfaces;
+using System.Threading.Tasks;
 using LinkIt.PublicApi;
 using LinkIt.TopologicalSorting;
 
@@ -21,7 +21,7 @@ namespace LinkIt.Core
         private readonly Func<IReferenceLoader> _createReferenceLoader;
 
         internal LoadLinkProtocol(
-            List<ILoadLinkExpression> loadLinkExpressions,
+            IEnumerable<ILoadLinkExpression> loadLinkExpressions,
             Func<IReferenceLoader> createReferenceLoader)
         {
             _allLoadLinkExpressions = loadLinkExpressions
@@ -39,6 +39,11 @@ namespace LinkIt.Core
                 GetLoadingLevelsFor<TRootLinkedSource>(),
                 this
             );
+        }
+
+        public IDataLoader<TModel> Load<TModel>()
+        {
+            return new DataLoader<TModel>(_createReferenceLoader);
         }
 
         public LoadLinkProtocolStatistics Statistics => new LoadLinkProtocolStatistics(_loadingLevelsByRootLinkedSourceType);

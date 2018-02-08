@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LinkIt.Core.Includes;
 using LinkIt.Core.Includes.Interfaces;
-using LinkIt.Core.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
 using LinkIt.Shared;
 using LinkIt.TopologicalSorting;
@@ -45,7 +44,7 @@ namespace LinkIt.Core
         public Type LinkedSourceType { get; }
         public List<Type> ReferenceTypes { get; }
 
-        public void AddLookupIds(object linkedSource, LoadingContext loadingContext, Type referenceTypeToBeLoaded)
+        public void AddLookupIds(object linkedSource, LookupContext lookupContext, Type referenceTypeToBeLoaded)
         {
             EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
             EnsureIsReferenceType(this, referenceTypeToBeLoaded);
@@ -58,7 +57,7 @@ namespace LinkIt.Core
             {
                 var include = _includeSet.GetIncludeWithAddLookupId(link);
 
-                if (include != null && include.ReferenceType == referenceTypeToBeLoaded) include.AddLookupId(link, loadingContext);
+                if (include != null && include.ReferenceType == referenceTypeToBeLoaded) include.AddLookupId(link, lookupContext);
             }
         }
 
@@ -77,12 +76,12 @@ namespace LinkIt.Core
             );
         }
 
-        public void LinkReference(object linkedSource, Linker linker)
+        public void LinkReference(object linkedSource, DataStore dataStore)
         {
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithGetReference,
-                (link, include, linkIndex) => include.GetReference(link, linker)
+                (link, include, linkIndex) => include.GetReference(link, dataStore)
             );
         }
 
@@ -196,7 +195,7 @@ namespace LinkIt.Core
         {
             foreach (var include in _includeSet.GetIncludes<IIncludeWithAddLookupId<TLink>>())
             {
-                include.AddDependency(LinkTargetId, predecessor, loadLinkProtocol);
+                include.AddDependency(predecessor, loadLinkProtocol);
             }
         }
     }

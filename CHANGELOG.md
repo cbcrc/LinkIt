@@ -23,3 +23,4 @@
 * Dependency cycles are allowed, except between linked sources of the same type. 
   In other words, there can be a cycle that includes linked sources with the same model type,
   but cycles with the exact same linked source type is not permitted.
+* Reference types can be loaded directly using `ILoadLinkProtocol.Load<TModel>().ByIdAsync({id})` or `ILoadLinkProtocol.Load<TModel>().ByIdsAsync({ids})`.

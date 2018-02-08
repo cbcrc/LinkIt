@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using LinkIt.TopologicalSorting;
 
-namespace LinkIt.Core.Interfaces
+namespace LinkIt.Core
 {
     /// <summary>
     /// Responsible for loading and linking a specific link target.
@@ -18,10 +18,10 @@ namespace LinkIt.Core.Interfaces
         Type LinkedSourceType { get; }
         List<Type> ReferenceTypes { get; }
 
-        void AddLookupIds(object linkedSource, LoadingContext loadingContext, Type referenceTypeToBeLoaded);
+        void AddLookupIds(object linkedSource, LookupContext lookupContext, Type referenceTypeToBeLoaded);
         void LinkNestedLinkedSourceById(object linkedSource, Linker linker, Type referenceTypeToBeLinked, LoadLinkProtocol loadLinkProtocol);
         void LinkNestedLinkedSourceFromModel(object linkedSource, Linker linker, LoadLinkProtocol loadLinkProtocol);
-        void LinkReference(object linkedSource, Linker linker);
+        void LinkReference(object linkedSource, DataStore dataStore);
         void FilterOutNullValues(object linkedSource);
 
         void AddDependencyForEachInclude(Dependency predecessor, LoadLinkProtocol loadLinkProtocol);
