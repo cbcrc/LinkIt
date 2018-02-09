@@ -30,7 +30,7 @@ namespace LinkIt.Core.Includes
         public void AddLookupId(TLink link, LookupContext lookupContext)
         {
             var lookupId = _getLookupId(link);
-            lookupContext.AddLookupId<TReference>(lookupId);
+            lookupContext.AddLookupId<TReference, TId>(lookupId);
         }
 
         public void AddDependency(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)

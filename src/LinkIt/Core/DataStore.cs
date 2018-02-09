@@ -1,8 +1,10 @@
-﻿using System;
+﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for more information.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using LinkIt.PublicApi;
 using LinkIt.Shared;
 
 namespace LinkIt.Core
@@ -10,6 +12,16 @@ namespace LinkIt.Core
     internal class DataStore
     {
         private readonly Dictionary<Type, IDictionary> _loadedReferencesByType = new Dictionary<Type, IDictionary>();
+
+        public IEnumerable<object> GetLoadedReferenceIds(Type referenceType)
+        {
+            if (!_loadedReferencesByType.ContainsKey(referenceType))
+            {
+                return Enumerable.Empty<object>();
+            }
+
+            return _loadedReferencesByType[referenceType].Keys.Cast<object>();
+        }
 
         private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>()
         {
@@ -24,7 +36,10 @@ namespace LinkIt.Core
 
         public void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById)
         {
-            if (referencesById == null) throw new ArgumentNullException(nameof(referencesById));
+            if (referencesById == null)
+            {
+                throw new ArgumentNullException(nameof(referencesById));
+            }
 
             var dictionary = GetReferenceDictionary<TReference, TId>() ?? new Dictionary<TId, TReference>();
             foreach (var reference in referencesById)
@@ -37,13 +52,16 @@ namespace LinkIt.Core
 
         public TReference GetReference<TReference, TId>(TId lookupId)
         {
-            if (lookupId == null) return default;
+            if (lookupId == null)
+            {
+                return default;
+            }
 
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
             return referenceDictionnary.GetValueOrDefault(lookupId);
         }
 
-        public IReadOnlyList<TReference> GetReferences<TReference,TId>(IEnumerable<TId> lookupIds)
+        public IReadOnlyList<TReference> GetReferences<TReference, TId>(IEnumerable<TId> lookupIds)
         {
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
             return lookupIds

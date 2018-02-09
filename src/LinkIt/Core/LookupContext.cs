@@ -1,11 +1,14 @@
-﻿using System;
+﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace LinkIt.Core
 {
     /// <summary>
-    /// Responsible for gathering the lookup ids of a loading level.
+    ///     Responsible for gathering the lookup ids of a loading level.
     /// </summary>
     internal class LookupContext
     {
@@ -14,9 +17,12 @@ namespace LinkIt.Core
         public IReadOnlyDictionary<Type, IReadOnlyList<object>> LookupIds
             => _lookupIdsByReferenceType.ToDictionary(p => p.Key, p => (IReadOnlyList<object>) p.Value.ToList());
 
-        public void AddLookupId<TReference>(object lookupId)
+        public void AddLookupId<TReference, TId>(TId lookupId)
         {
-            if (lookupId == null) return;
+            if (lookupId == null)
+            {
+                return;
+            }
 
             AddLookupIds(typeof(TReference), new[] { lookupId });
         }

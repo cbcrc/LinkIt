@@ -52,7 +52,7 @@ namespace LinkIt.Core.Includes
         public void AddLookupId(TLink link, LookupContext lookupContext)
         {
             var lookupId = _getLookupId(link);
-            lookupContext.AddLookupId<TChildLinkedSourceModel>(lookupId);
+            lookupContext.AddLookupId<TChildLinkedSourceModel, TId>(lookupId);
         }
 
         public void AddDependency(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
