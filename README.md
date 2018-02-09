@@ -1,6 +1,5 @@
-<img src="https://raw.githubusercontent.com/cbcrc/LinkIt/master/logo.png" width="250" title="LinkIt Logo">
- 
-===============
+# <img src="https://raw.githubusercontent.com/cbcrc/LinkIt/master/logo.png" width="250" title="LinkIt Logo">
+
 LinkIt is an object-oriented data integration library that makes it easy to load different kinds of objects and link them together. 
 
 LinkIt is not an object-relational mapping framework. It can be used for orchestrating the loading of objects and for linking the loaded objects togheter, not for defining how the objects are loaded. LinkIt is intended to be used in a variety of contexts such as data APIs, ETL processes, CQRS event handlers, web crawlers, etc.
