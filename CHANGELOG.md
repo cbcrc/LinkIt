@@ -24,3 +24,8 @@
   In other words, there can be a cycle that includes linked sources with the same model type,
   but cycles with the exact same linked source type is not permitted.
 * Reference types can be loaded directly using `ILoadLinkProtocol.Load<TModel>().ByIdAsync({id})` or `ILoadLinkProtocol.Load<TModel>().ByIdsAsync({ids})`.
+
+
+### Migration from 1.x to 2.0
+Included in the NuGet is a migration helper. It includes the removed classes and methods (as extension methods) with 
+the `ObsoleteAttribute` to explain with what to replace the deprecated class or method.
