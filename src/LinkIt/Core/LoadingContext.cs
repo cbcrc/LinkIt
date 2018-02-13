@@ -16,7 +16,7 @@ namespace LinkIt.Core
         public LoadingContext(LookupContext lookupContext, DataStore dataStore)
         {
             _dataStore = dataStore;
-            _lookupIds = GetLookupIds(lookupContext); //todo: remove lookup ids that are already in dataStore
+            _lookupIds = GetLookupIds(lookupContext);
         }
 
         private IReadOnlyDictionary<Type, IReadOnlyList<object>> GetLookupIds(LookupContext lookupContext)

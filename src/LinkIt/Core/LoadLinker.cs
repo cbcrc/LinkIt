@@ -98,7 +98,8 @@ namespace LinkIt.Core
 
         private async Task LoadAsync()
         {
-            foreach (var referenceTypesToBeLoaded in _referenceTypesToBeLoadedForEachLoadingLevel)
+            // root model is already loaded, so we can skip that level
+            foreach (var referenceTypesToBeLoaded in _referenceTypesToBeLoadedForEachLoadingLevel.Skip(1))
             {
                 await LoadNestingLevelAsync(referenceTypesToBeLoaded);
                 _linker.LinkNestedLinkedSourcesById(referenceTypesToBeLoaded);
@@ -109,7 +110,11 @@ namespace LinkIt.Core
         {
             var lookupContext = GetLookupContextForLoadingLevel(referenceTypeToBeLoaded);
             var loadingContext = new LoadingContext(lookupContext, _dataStore);
-            await _referenceLoader.LoadReferencesAsync(loadingContext);
+
+            if (loadingContext.ReferenceTypes.Any())
+            {
+                await _referenceLoader.LoadReferencesAsync(loadingContext);
+            }
         }
 
         private LookupContext GetLookupContextForLoadingLevel(List<Type> referenceTypes)
