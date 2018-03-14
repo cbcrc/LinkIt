@@ -19,7 +19,11 @@ namespace LinkIt.Samples
                 LoadReference(referenceIds.Key, referenceIds.Value, loadingContext);
             }
 
+#if NETSTANDARD
             return Task.CompletedTask;
+#else
+            return Task.FromResult(0);
+#endif
         }
 
         public void Dispose()

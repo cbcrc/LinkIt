@@ -38,7 +38,11 @@ namespace LinkIt.TestHelpers
                 LoadReference(referenceType, loadingContext);
             }
 
+#if NETSTANDARD
             return Task.CompletedTask;
+#else
+            return Task.FromResult(0);
+#endif
         }
 
         public void Dispose()

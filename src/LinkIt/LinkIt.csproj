@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Title>LinkIt</Title>
     <Description>LinkIt is an object-oriented data integration library that make it easy to load different kinds of objects and link them together.
@@ -16,7 +16,7 @@ Features
 - Support polymorphism out of the box
 - Favor convention over configuration
 - Perform complex projections easily with LinkIt AutoMapper Extensions</Description>
-    <Version>2.0.0-rc1</Version>
+    <Version>2.0.0-rc01</Version>
     <Authors>Stéphane Leblanc, Laurent le Beau-Martin</Authors>
     <Company>Radio-Canada/CBC</Company>
     <Copyright>Copyright (c) 2015-2018 Radio-Canada/CBC</Copyright>
@@ -25,14 +25,25 @@ Features
     <PackageLicenseUrl>https://raw.githubusercontent.com/cbcrc/LinkIt/master/LICENSE.txt</PackageLicenseUrl>
     <PackageTags>c# data integration database</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/cbcrc/LinkIt</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageReleaseNotes>Added back support for .NET Framework 4.5+</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\LinkIt.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\LinkIt.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\LinkIt.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\LinkIt.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+    <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45'">
+    <DefineConstants>NET45;NETFULL</DefineConstants>
   </PropertyGroup>
 
 </Project>
