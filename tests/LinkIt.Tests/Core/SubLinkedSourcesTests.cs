@@ -14,7 +14,7 @@ namespace LinkIt.Tests.Core
 {
     public class SubLinkedSourcesTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public SubLinkedSourcesTests()
         {
@@ -37,7 +37,6 @@ namespace LinkIt.Tests.Core
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
-
 
         [Fact]
         public async Task LoadLink_SubLinkedSources()
@@ -94,7 +93,6 @@ namespace LinkIt.Tests.Core
         [Fact]
         public async Task LoadLink_SubLinkedSourcesWithoutReferenceIds_ShouldLinkEmptySet()
         {
-
             var actual = await _sut.LoadLink<SubContentsOwnerLinkedSource>().FromModelAsync(
                 new SubContentsOwner
                 {
@@ -106,7 +104,6 @@ namespace LinkIt.Tests.Core
 
             Assert.Empty(actual.SubSubContents);
         }
-
 
         [Fact]
         public async Task LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicates()
@@ -127,7 +124,6 @@ namespace LinkIt.Tests.Core
             var linkedImagesIds = actual.SubSubContents.Select(subSubContent => subSubContent.Model.SummaryImageId);
             Assert.Equal(new[] {"a", "a"}, linkedImagesIds);
         }
-
     }
 
     public class SubContentsOwnerLinkedSource : ILinkedSource<SubContentsOwner>

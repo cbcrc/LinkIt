@@ -15,7 +15,7 @@ namespace LinkIt.Tests.TopologicalSorting
 {
     public class SideEffectBetweenNestedLinkedSourceTests
     {
-        private LoadLinkProtocol _sut;
+        private readonly LoadLinkProtocol _sut;
 
         public SideEffectBetweenNestedLinkedSourceTests()
         {
@@ -33,7 +33,6 @@ namespace LinkIt.Tests.TopologicalSorting
                 .LoadLinkReferencesByIds(
                     linkedSource => linkedSource.Model.PersonIds,
                     linkedSource => linkedSource.People);
-
 
             loadLinkProtocolBuilder.For<PersonLinkedSource>()
                 .LoadLinkReferenceById(

@@ -23,7 +23,6 @@ namespace LinkIt.Tests.Core
         private readonly ReferenceLoaderStub _referenceLoaderStub;
         private readonly ILoadLinkProtocol _sut;
 
-
         [Fact]
         public async Task LoadAsync()
         {
@@ -64,7 +63,6 @@ namespace LinkIt.Tests.Core
             actual.Should().BeEquivalentTo(expected);
         }
 
-
         [Fact]
         public async Task Loads_ManyReferencesCannotBeResolved_ShouldNotReturnResults()
         {
@@ -72,7 +70,6 @@ namespace LinkIt.Tests.Core
 
             Assert.Empty(actual);
         }
-
 
         [Fact]
         public async Task Loads_ManyReferencesWithDuplicates_ShouldLoadOnlyOne()
@@ -82,8 +79,7 @@ namespace LinkIt.Tests.Core
             var personIds = actual.Select(person => person.Id);
             Assert.Equal(new[] { "a", "a" }, personIds);
 
-            var loadedPersonIds = _referenceLoaderStub.RecordedLookupIdContexts
-                .First()
+            var loadedPersonIds = _referenceLoaderStub.RecordedLookupIdContexts[0]
                 .ReferenceIds<Person, string>();
 
             Assert.Equal(new[] { "a" }, loadedPersonIds);

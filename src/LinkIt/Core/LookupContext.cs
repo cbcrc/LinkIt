@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
@@ -19,7 +20,7 @@ namespace LinkIt.Core
 
         public void AddLookupId<TReference, TId>(TId lookupId)
         {
-            if (lookupId == null)
+            if (lookupId.EqualsDefaultValue())
             {
                 return;
             }
@@ -39,8 +40,10 @@ namespace LinkIt.Core
 
         private void AddLookupIds<TId>(Type referenceType, IEnumerable<TId> lookupIds)
         {
-            var nonNullIds = lookupIds.Where(id => id != null).ToList();
-            if (!nonNullIds.Any())
+            var nonNullIds = lookupIds
+                .Where(id => !id.EqualsDefaultValue())
+                .ToList();
+            if (nonNullIds.Count == 0)
             {
                 return;
             }

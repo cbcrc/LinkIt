@@ -14,7 +14,7 @@ namespace LinkIt.Tests.TopologicalSorting
 {
     public class PolymorphicTest
     {
-        private LoadLinkProtocol _sut;
+        private readonly LoadLinkProtocol _sut;
 
         public PolymorphicTest()
         {

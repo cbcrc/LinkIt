@@ -10,7 +10,7 @@ namespace LinkIt.Tests.Core.Polymorphic
 {
     public class PolymorphicNestedLinkedSourceTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public PolymorphicNestedLinkedSourceTests()
         {
@@ -26,7 +26,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                         .Include<ImageWithContextualizationLinkedSource>().AsNestedLinkedSourceById(
                             "image",
                             link => (string) link.Id,
-                            (linkedSource, referenceIndex, childLinkedSource) =>
+                            (linkedSource, _, childLinkedSource) =>
                                 childLinkedSource.ContentContextualization = linkedSource.Model.ContentContextualization)
                 );
 
@@ -73,7 +73,6 @@ namespace LinkIt.Tests.Core.Polymorphic
                 actual.Content as ImageWithContextualizationLinkedSource;
             Assert.Equal("altered image title", contentAsImage.ContentContextualization.Title);
         }
-
 
         public class WithNestedPolymorphicContentLinkedSource : ILinkedSource<WithNestedPolymorphicContent>
         {

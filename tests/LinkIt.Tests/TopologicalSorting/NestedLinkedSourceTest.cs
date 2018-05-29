@@ -14,7 +14,8 @@ namespace LinkIt.Tests.TopologicalSorting
 {
     public class NestedLinkedSourceTest
     {
-        private LoadLinkProtocol _sut;
+        private readonly LoadLinkProtocol _sut;
+
         public NestedLinkedSourceTest()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();

@@ -70,7 +70,10 @@ namespace LinkIt.Conventions
         private bool DoesConventionApply(ConventionMatch match)
         {
             var possibleConventionType = GetPossibleConventionType(match);
-            if (!possibleConventionType.IsInstanceOfType(match.Convention)) return false;
+            if (!possibleConventionType.IsInstanceOfType(match.Convention))
+            {
+                return false;
+            }
 
             try
             {
@@ -87,14 +90,25 @@ namespace LinkIt.Conventions
 
         private Type GetPossibleConventionType(ConventionMatch match)
         {
-            if (Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType) != null) return typeof(IByNullableValueTypeIdConvention);
-            if (IsGenericList(match.LinkTargetProperty)) return typeof(IMultiValueConvention);
+            if (Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType) != null)
+            {
+                return typeof(IByNullableValueTypeIdConvention);
+            }
+
+            if (IsGenericList(match.LinkTargetProperty))
+            {
+                return typeof(IMultiValueConvention);
+            }
+
             return typeof(ISingleValueConvention);
         }
 
         private static bool IsGenericList(PropertyInfo linkTargetProperty)
         {
-            if (!linkTargetProperty.PropertyType.IsGenericType) return false;
+            if (!linkTargetProperty.PropertyType.IsGenericType)
+            {
+                return false;
+            }
 
             return linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>);
         }

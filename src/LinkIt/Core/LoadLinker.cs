@@ -12,6 +12,7 @@ namespace LinkIt.Core
     /// <inheritdoc/>
     internal class LoadLinker<TRootLinkedSource, TRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
         where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new()
+        where TRootLinkedSourceModel: class
     {
         private readonly LoadLinkProtocol _loadLinkProtocol;
         private readonly IReferenceLoader _referenceLoader;
@@ -31,7 +32,7 @@ namespace LinkIt.Core
             TModel model,
             Action<TRootLinkedSource> initRootLinkedSource)
         {
-            var linkedSources = await FromModelsAsync(new [] { model }, (_, linkedSource) => initRootLinkedSource?.Invoke(linkedSource));
+            var linkedSources = await FromModelsAsync(new [] { model }, (_, linkedSource) => initRootLinkedSource?.Invoke(linkedSource)).ConfigureAwait(false);
             return linkedSources.SingleOrDefault();
         }
 
@@ -44,19 +45,18 @@ namespace LinkIt.Core
                 .Select((model, index) => CreateLinkedSource(model, index, initRootLinkedSources))
                 .ToList();
 
-            await LoadLinkRootLinkedSource();
+            await LoadLinkRootLinkedSource().ConfigureAwait(false);
 
             return linkedSources
                 .Where(linkedSource => linkedSource != null)
                 .ToList();
         }
 
-
         public async Task<TRootLinkedSource> ByIdAsync<TRootLinkedSourceModelId>(
             TRootLinkedSourceModelId modelId,
             Action<TRootLinkedSource> initRootLinkedSource)
         {
-            var linkedSources = await ByIdsAsync(new [] { modelId }, (_, linkedSource) => initRootLinkedSource?.Invoke(linkedSource));
+            var linkedSources = await ByIdsAsync(new [] { modelId }, (_, linkedSource) => initRootLinkedSource?.Invoke(linkedSource)).ConfigureAwait(false);
             return linkedSources.SingleOrDefault();
         }
 
@@ -64,11 +64,11 @@ namespace LinkIt.Core
             IEnumerable<TRootLinkedSourceModelId> modelIds,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
-            var models = await LoadRootLinkedSourceModelAsync(modelIds);
+            var models = await LoadRootLinkedSourceModelAsync(modelIds).ConfigureAwait(false);
             return await FromModelsAsync(
                 models,
                 initRootLinkedSources
-            );
+            ).ConfigureAwait(false);
         }
 
         private TRootLinkedSource CreateLinkedSource(TRootLinkedSourceModel model, int index, Action<int, TRootLinkedSource> initRootLinkedSources)
@@ -84,14 +84,14 @@ namespace LinkIt.Core
             var lookupContext = new LookupContext();
             lookupContext.AddLookupIds<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
 
-            await _referenceLoader.LoadReferencesAsync(new LoadingContext(lookupContext, _dataStore));
+            await _referenceLoader.LoadReferencesAsync(new LoadingContext(lookupContext, _dataStore)).ConfigureAwait(false);
 
             return _dataStore.GetReferences<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
         }
 
         private async Task LoadLinkRootLinkedSource()
         {
-            await LoadAsync();
+            await LoadAsync().ConfigureAwait(false);
 
             _linker.LinkReferences();
         }
@@ -101,7 +101,7 @@ namespace LinkIt.Core
             // root model is already loaded, so we can skip that level
             foreach (var referenceTypesToBeLoaded in _referenceTypesToBeLoadedForEachLoadingLevel.Skip(1))
             {
-                await LoadNestingLevelAsync(referenceTypesToBeLoaded);
+                await LoadNestingLevelAsync(referenceTypesToBeLoaded).ConfigureAwait(false);
                 _linker.LinkNestedLinkedSourcesById(referenceTypesToBeLoaded);
             }
         }
@@ -111,9 +111,9 @@ namespace LinkIt.Core
             var lookupContext = GetLookupContextForLoadingLevel(referenceTypeToBeLoaded);
             var loadingContext = new LoadingContext(lookupContext, _dataStore);
 
-            if (loadingContext.ReferenceTypes.Any())
+            if (loadingContext.ReferenceTypes.Count > 0)
             {
-                await _referenceLoader.LoadReferencesAsync(loadingContext);
+                await _referenceLoader.LoadReferencesAsync(loadingContext).ConfigureAwait(false);
             }
         }
 

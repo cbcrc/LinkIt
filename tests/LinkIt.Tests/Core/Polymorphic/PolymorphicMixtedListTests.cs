@@ -11,7 +11,7 @@ namespace LinkIt.Tests.Core.Polymorphic
 {
     public class PolymorphicMixtedListTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public PolymorphicMixtedListTests()
         {
@@ -78,7 +78,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                 target =>
                 {
                     var personLinkedSource = Assert.IsType<PersonLinkedSource>(target);
-                    Assert.Same(((Person)model.TargetReference[2]), personLinkedSource.Model);
+                    Assert.Same((Person)model.TargetReference[2], personLinkedSource.Model);
                     Assert.Equal("the-id", personLinkedSource.SummaryImage.Id);
                 }
             );

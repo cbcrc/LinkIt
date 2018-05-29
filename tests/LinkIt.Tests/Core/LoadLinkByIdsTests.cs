@@ -29,7 +29,6 @@ namespace LinkIt.Tests.Core
         private readonly ReferenceLoaderStub _referenceLoaderStub;
         private readonly ILoadLinkProtocol _sut;
 
-
         [Fact]
         public async Task LoadLinkByIdAsync()
         {
@@ -78,8 +77,7 @@ namespace LinkIt.Tests.Core
         {
             var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdAsync<string>(null);
 
-            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
-                .First()
+            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts[0]
                 .ReferenceTypes;
 
             Assert.Empty(loadedReferenceTypes);
@@ -98,7 +96,6 @@ namespace LinkIt.Tests.Core
             actual.Should().BeEquivalentTo(expected);
         }
 
-
         [Fact]
         public async Task LoadLinkByIds_ManyReferencesCannotBeResolved_ShouldLinkNull()
         {
@@ -106,7 +103,6 @@ namespace LinkIt.Tests.Core
 
             Assert.Empty(actual);
         }
-
 
         [Fact]
         public async Task LoadLinkByIds_ManyReferencesWithDuplicates_ShouldLinkDuplicatesAsync()
@@ -116,8 +112,7 @@ namespace LinkIt.Tests.Core
             var linkedSourceModelIds = actual.Select(linkedSource => linkedSource.Model.Id);
             Assert.Equal(new[] { "a", "a" }, linkedSourceModelIds);
 
-            var loadedPersonIds = _referenceLoaderStub.RecordedLookupIdContexts
-                .First()
+            var loadedPersonIds = _referenceLoaderStub.RecordedLookupIdContexts[0]
                 .ReferenceIds<Person, string>();
 
             Assert.Equal(new[] { "a" }, loadedPersonIds);
@@ -129,8 +124,7 @@ namespace LinkIt.Tests.Core
             var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdsAsync(new List<string> { null, null });
 
             Assert.Empty(actual);
-            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts
-                .First()
+            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts[0]
                 .ReferenceTypes;
             Assert.Empty(loadedReferenceTypes);
         }

@@ -11,7 +11,7 @@ namespace LinkIt.Tests.Core
 {
     public class SubLinkedSourceTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public SubLinkedSourceTests()
         {

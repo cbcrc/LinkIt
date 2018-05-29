@@ -21,7 +21,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                     link => link.Type,
                     includes => includes.Include<PolymorphicSubLinkedSourceTests.WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                         "web-page",
-                        link => "a string is not a WebPageReference"
+                        _ => "a string is not a WebPageReference"
                     )
                 );
 
@@ -43,11 +43,11 @@ namespace LinkIt.Tests.Core.Polymorphic
                     link => link.Type,
                     includes => includes.Include<PolymorphicSubLinkedSourceTests.WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "web-page",
-                            link => new PolymorphicSubLinkedSourceTests.WebPageReference()
+                            _ => new PolymorphicSubLinkedSourceTests.WebPageReference()
                         )
                         .Include<PolymorphicSubLinkedSourceTests.WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "web-page",
-                            link => new PolymorphicSubLinkedSourceTests.WebPageReference()
+                            _ => new PolymorphicSubLinkedSourceTests.WebPageReference()
                         )
                 );
 

@@ -14,7 +14,7 @@ namespace LinkIt.Tests.Core
 {
     public class LoadLinkModelTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public LoadLinkModelTests()
         {

@@ -11,8 +11,8 @@ namespace LinkIt.Tests.Core
 {
     public class NestedLinkedSourceTests
     {
-        private ReferenceLoaderStub _referenceLoaderStub;
-        private ILoadLinkProtocol _sut;
+        private readonly ReferenceLoaderStub _referenceLoaderStub;
+        private readonly ILoadLinkProtocol _sut;
 
         public NestedLinkedSourceTests()
         {
@@ -108,7 +108,4 @@ namespace LinkIt.Tests.Core
             Assert.Null(actual);
         }
     }
-
-
-
 }

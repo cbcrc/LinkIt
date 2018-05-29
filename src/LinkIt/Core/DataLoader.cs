@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
@@ -20,12 +21,12 @@ namespace LinkIt.Core
 
         public async Task<TModel> ByIdAsync<TId>(TId id)
         {
-            if (id == null)
+            if (id.EqualsDefaultValue())
             {
                 return default;
             }
 
-            var models = await ByIdsAsync(new [] { id });
+            var models = await ByIdsAsync(new [] { id }).ConfigureAwait(false);
             return models.SingleOrDefault();
         }
 
@@ -34,7 +35,7 @@ namespace LinkIt.Core
             var lookupContext = new LookupContext();
             lookupContext.AddLookupIds<TModel, TId>(ids);
 
-            if (!lookupContext.LookupIds.Any())
+            if (lookupContext.LookupIds.Count == 0)
             {
                 return new TModel[0];
             }
@@ -44,11 +45,11 @@ namespace LinkIt.Core
 
             using (var referenceLoader = _createReferenceLoader())
             {
-                await referenceLoader.LoadReferencesAsync(loadingContext);
+                await referenceLoader.LoadReferencesAsync(loadingContext).ConfigureAwait(false);
             }
 
             return dataStore.GetReferences<TModel, TId>(ids)
-                .Where(m => m != null)
+                .Where(m => !m.EqualsDefaultValue())
                 .ToList();
         }
     }

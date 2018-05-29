@@ -50,14 +50,16 @@ namespace LinkIt.Core
             EnsureIsReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource) linkedSource)
-                .Where(link => link != null)
+                .Where(link => !link.EqualsDefaultValue())
                 .ToList();
 
             foreach (var link in notNullLinks)
             {
                 var include = _includeSet.GetIncludeWithAddLookupId(link);
-
-                if (include != null && include.ReferenceType == referenceTypeToBeLoaded) include.AddLookupId(link, lookupContext);
+                if (include != null && include.ReferenceType == referenceTypeToBeLoaded)
+                {
+                    include.AddLookupId(link, lookupContext);
+                }
             }
         }
 
@@ -81,7 +83,7 @@ namespace LinkIt.Core
             SetLinkTargetValues(
                 linkedSource,
                 _includeSet.GetIncludeWithGetReference,
-                (link, include, linkIndex) => include.GetReference(link, dataStore)
+                (link, include, _) => include.GetReference(link, dataStore)
             );
         }
 
@@ -133,7 +135,6 @@ namespace LinkIt.Core
             );
         }
 
-
         private void SetLinkTargetValues<TInclude>(
             TLinkedSource linkedSource,
             Func<TLink, TInclude> getInclude,
@@ -144,18 +145,37 @@ namespace LinkIt.Core
 
             for (var linkIndex = 0; linkIndex < links.Count; linkIndex++)
             {
-                var link = links[linkIndex];
-                if (link == null) continue;
-
-                var include = getInclude(link);
-                if (include == null) continue;
-
-                _linkTarget.SetLinkTargetValue(
-                    linkedSource,
-                    getLinkTargetValue(link, include, linkIndex),
-                    linkIndex
-                );
+                var value = GetLinkTargetValue(links, linkIndex, getInclude, getLinkTargetValue);
+                if (!value.EqualsDefaultValue())
+                {
+                    _linkTarget.SetLinkTargetValue(
+                        linkedSource,
+                        value,
+                        linkIndex
+                    );
+                }
             }
+        }
+
+        private static TAbstractLinkTarget GetLinkTargetValue<TInclude>(
+            List<TLink> links,
+            int linkIndex,
+            Func<TLink, TInclude> getInclude,
+            Func<TLink, TInclude, int, TAbstractLinkTarget> getLinkTargetValue)
+        {
+            var link = links[linkIndex];
+            if (link.EqualsDefaultValue())
+            {
+                return default;
+            }
+
+            var include = getInclude(link);
+            if (include.EqualsDefaultValue())
+            {
+                return default;
+            }
+
+            return getLinkTargetValue(link, include, linkIndex);
         }
 
         private List<TLink> GetLinks(TLinkedSource linkedSource)
@@ -168,19 +188,23 @@ namespace LinkIt.Core
         private static void EnsureLinkedSourceIsOfTLinkedSource(object linkedSource)
         {
             if (!(linkedSource is TLinkedSource))
+            {
                 throw new LinkItException(
-                    $"Cannot invoke load-link expression for {typeof(TLinkedSource)} with linked source of type {linkedSource?.GetType()}"
-                );
+                   $"Cannot invoke load-link expression for {typeof(TLinkedSource)} with linked source of type {linkedSource?.GetType()}"
+               );
+            }
         }
 
         private static void EnsureIsReferenceType(ILoadLinkExpression loadLinkExpression, Type referenceType)
         {
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType))
+            {
                 throw new LinkItException(
-                    $"Cannot invoke this load link expression for reference type {referenceType}." +
-                    $"Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}." +
-                    $"This load link expression is for {loadLinkExpression.LinkedSourceType}."
-                );
+                   $"Cannot invoke this load link expression for reference type {referenceType}." +
+                   $"Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}." +
+                   $"This load link expression is for {loadLinkExpression.LinkedSourceType}."
+               );
+            }
         }
 
         private void AddDependenciesForAllNestedLinkedSources(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)

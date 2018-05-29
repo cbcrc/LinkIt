@@ -73,9 +73,11 @@ namespace LinkIt.Core
         {
             var rootLinkedSourceType = typeof(TRootLinkedSource);
             if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType))
+            {
                 throw new InvalidOperationException(
-                    $"The type {rootLinkedSourceType} cannot be used as root linked source because there are no load link expression associated with this linked source."
-                );
+                   $"The type {rootLinkedSourceType} cannot be used as root linked source because there are no load link expression associated with this linked source."
+               );
+            }
 
             return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
         }

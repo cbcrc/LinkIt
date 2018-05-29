@@ -20,16 +20,36 @@ namespace LinkIt.TopologicalSorting
 
         public bool Equals(DependencyType other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
             return ModelType == other.ModelType && LinkedSourceType == other.LinkedSourceType;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (obj is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
             return Equals((DependencyType) obj);
         }
 
@@ -37,7 +57,7 @@ namespace LinkIt.TopologicalSorting
         {
             unchecked
             {
-                return (ModelType.GetHashCode() * 397) ^ (LinkedSourceType != null ? LinkedSourceType.GetHashCode() : 0);
+                return (ModelType.GetHashCode() * 397) ^ (LinkedSourceType?.GetHashCode() ?? 0);
             }
         }
     }

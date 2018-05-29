@@ -23,14 +23,23 @@ namespace LinkIt.Conventions.DefaultConventions
         /// <inheritdoc />
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
         {
-            if (linkTargetProperty.Name != linkedSourceModelProperty.Name) return false;
+            if (linkTargetProperty.Name != linkedSourceModelProperty.Name)
+            {
+                return false;
+            }
 
             var sourceListItemType = linkedSourceModelProperty.PropertyType.GenericTypeArguments.Single();
             var linkTargetListItemType = linkTargetProperty.PropertyType.GenericTypeArguments.Single();
 
-            if (!linkTargetListItemType.IsLinkedSource()) return false;
+            if (!linkTargetListItemType.IsLinkedSource())
+            {
+                return false;
+            }
 
-            if (linkTargetListItemType.GetLinkedSourceModelType() != sourceListItemType) return false;
+            if (linkTargetListItemType.GetLinkedSourceModelType() != sourceListItemType)
+            {
+                return false;
+            }
 
             return true;
         }
@@ -46,7 +55,7 @@ namespace LinkIt.Conventions.DefaultConventions
             loadLinkProtocolForLinkedSourceBuilder.LoadLinkPolymorphicList<TLinkTargetProperty, TLinkedSourceModelProperty, bool>(
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty,
-                link => true,
+                _ => true,
                 includes => includes
                     .Include<TLinkTargetProperty>().AsNestedLinkedSourceFromModel(
                         true,

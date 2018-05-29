@@ -13,7 +13,7 @@ namespace LinkIt.Tests.TopologicalSorting
 {
     public class SimplestRootLinkedSourceTest
     {
-        private LoadLinkProtocol _sut;
+        private readonly LoadLinkProtocol _sut;
 
         public SimplestRootLinkedSourceTest()
         {

@@ -45,9 +45,20 @@ namespace LinkIt.Conventions
             IEnumerable<Assembly> assemblies,
             IList<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
-            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-            if (conventions == null) throw new ArgumentNullException(nameof(conventions));
+            if (loadLinkProtocolBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
+            }
+
+            if (assemblies == null)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
+
+            if (conventions == null)
+            {
+                throw new ArgumentNullException(nameof(conventions));
+            }
 
             var types = assemblies
                 .SelectMany(assembly => assembly.GetTypes())
@@ -68,9 +79,21 @@ namespace LinkIt.Conventions
             IList<Type> types,
             IList<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null) throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
-            if (types == null) throw new ArgumentNullException(nameof(types));
-            if (conventions == null) throw new ArgumentNullException(nameof(conventions));
+            if (loadLinkProtocolBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
+            }
+
+            if (types == null)
+            {
+                throw new ArgumentNullException(nameof(types));
+            }
+
+            if (conventions == null)
+            {
+                throw new ArgumentNullException(nameof(conventions));
+            }
+
             EnsureConventionNamesAreUnique(conventions);
 
             var matches = new FindAllConventionMatchesQuery(types, conventions).Execute();
@@ -82,10 +105,12 @@ namespace LinkIt.Conventions
         {
             var notUniqueConventionNames = conventions.GetNotUniqueKey(convention => convention.Name);
 
-            if (notUniqueConventionNames.Any())
+            if (notUniqueConventionNames.Count > 0)
+            {
                 throw new ArgumentException(
-                    $"Cannot have many conventions with the same name: {string.Join(",", notUniqueConventionNames)}"
-                );
+                   $"Cannot have many conventions with the same name: {string.Join(",", notUniqueConventionNames)}"
+               );
+            }
         }
     }
 }

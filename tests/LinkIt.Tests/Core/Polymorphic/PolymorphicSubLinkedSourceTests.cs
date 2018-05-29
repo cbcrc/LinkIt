@@ -10,7 +10,7 @@ namespace LinkIt.Tests.Core.Polymorphic
 {
     public class PolymorphicSubLinkedSourceTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public PolymorphicSubLinkedSourceTests()
         {
@@ -24,7 +24,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                     includes => includes.Include<PdfReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "pdf",
                             link => link,
-                            (linkedSource, referenceIndex, childLinkedSource) =>
+                            (linkedSource, _, childLinkedSource) =>
                                 childLinkedSource.Contextualization = "From the level below:" + linkedSource.Model.Id
                         )
                         .Include<WebPageReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
@@ -80,7 +80,6 @@ namespace LinkIt.Tests.Core.Polymorphic
             Assert.Equal("computed-image-ida", linkedSource.Model.ImageId);
             Assert.Equal("computed-image-ida", linkedSource.Image.Id);
         }
-
 
         public class LinkedSource : ILinkedSource<Model>
         {

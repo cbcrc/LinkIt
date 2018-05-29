@@ -24,16 +24,30 @@ namespace LinkIt.Conventions
 
         public void Execute()
         {
-            foreach (var match in _matches) ApplyConvention(match);
+            foreach (var match in _matches)
+            {
+                ApplyConvention(match);
+            }
         }
 
         private void ApplyConvention(ConventionMatch match)
         {
             try
             {
-                if (match.Convention is ISingleValueConvention) ApplySingleValueConvention(match);
-                if (match.Convention is IMultiValueConvention) ApplyMultiValueConvention(match);
-                if (match.Convention is IByNullableValueTypeIdConvention) ApplyNullableValueTypeIdConvention(match);
+                if (match.Convention is ISingleValueConvention)
+                {
+                    ApplySingleValueConvention(match);
+                }
+
+                if (match.Convention is IMultiValueConvention)
+                {
+                    ApplyMultiValueConvention(match);
+                }
+
+                if (match.Convention is IByNullableValueTypeIdConvention)
+                {
+                    ApplyNullableValueTypeIdConvention(match);
+                }
             }
             catch (TargetInvocationException ex)
             {

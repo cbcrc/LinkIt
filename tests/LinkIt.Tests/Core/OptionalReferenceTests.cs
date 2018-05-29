@@ -10,7 +10,7 @@ namespace LinkIt.Tests.Core
 {
     public class OptionalReferenceTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public OptionalReferenceTests()
         {

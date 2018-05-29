@@ -10,16 +10,14 @@ namespace LinkIt.TopologicalSorting
     /// <summary>
     /// Represents a sorting solution
     /// </summary>
-    internal class TopologicalSort : IEnumerable<ISet<Dependency>>, IEnumerable<Dependency>
+    internal sealed class TopologicalSort : IEnumerable<ISet<Dependency>>, IEnumerable<Dependency>
     {
-        private readonly IReadOnlyList<ISet<Dependency>> _collections;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TopologicalSort"/> class.
         /// </summary>
         private TopologicalSort(IReadOnlyList<ISet<Dependency>> collections)
         {
-            _collections = collections;
+            DependencySets = collections;
         }
 
         public static TopologicalSort For(DependencyGraph graph)
@@ -49,12 +47,12 @@ namespace LinkIt.TopologicalSorting
         /// <summary>
         /// Gets the sets of dependencies in the order to be loaded. Dependencies in a set can be loaded in any order.
         /// </summary>
-        public IReadOnlyList<ISet<Dependency>> DependencySets => _collections;
+        public IReadOnlyList<ISet<Dependency>> DependencySets { get; }
 
         /// <summary>
         /// Gets the dependencies in an order to be loaded.
         /// </summary>
-        public IReadOnlyList<Dependency> Dependencies => _collections.SelectMany(set => set).ToList();
+        public IReadOnlyList<Dependency> Dependencies => DependencySets.SelectMany(set => set).ToList();
 
         #region IEnumerable
 
@@ -64,7 +62,7 @@ namespace LinkIt.TopologicalSorting
         /// </summary>
         IEnumerator<ISet<Dependency>> IEnumerable<ISet<Dependency>>.GetEnumerator()
         {
-            return _collections.GetEnumerator();
+            return DependencySets.GetEnumerator();
         }
 
         /// <inheritdoc />
@@ -76,7 +74,7 @@ namespace LinkIt.TopologicalSorting
         /// </returns>
         public System.Collections.IEnumerator GetEnumerator()
         {
-            return (this as IEnumerable<Dependency>).GetEnumerator();
+            return (this as IEnumerable<Dependency>)?.GetEnumerator();
         }
 
         /// <inheritdoc />

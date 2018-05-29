@@ -40,6 +40,7 @@ namespace LinkIt.Tests.LinkTargets
             Assert.Equal("the-alt1", actual.Images[0].Alt);
             Assert.Equal("the-alt2", actual.Images[1].Alt);
         }
+
         [Fact]
         public void SetIListTargetProperty()
         {

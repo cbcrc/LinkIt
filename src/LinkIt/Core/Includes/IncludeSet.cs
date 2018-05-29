@@ -27,7 +27,10 @@ namespace LinkIt.Core.Includes
         {
             var include = GetInclude<IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>>(link);
 
-            if (include == null || include.ReferenceType != referenceType) return null;
+            if (include == null || include.ReferenceType != referenceType)
+            {
+                return null;
+            }
 
             return include;
         }
@@ -82,7 +85,7 @@ namespace LinkIt.Core.Includes
 
         private static void AssumeNotNullLink(TLink link)
         {
-            if (link == null)
+            if (link.EqualsDefaultValue())
             {
                 throw new LinkItException(
                     $"{typeof(TLinkedSource)}: Cannot invoke GetInclude with a null link"
@@ -94,8 +97,7 @@ namespace LinkIt.Core.Includes
             where TInclude : class, IInclude
         {
             return _includes.Values
-                .Where(include => include is TInclude)
-                .Cast<TInclude>()
+                .OfType<TInclude>()
                 .ToList();
         }
     }

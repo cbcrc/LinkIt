@@ -52,7 +52,7 @@ namespace LinkIt.Core
 
         public TReference GetReference<TReference, TId>(TId lookupId)
         {
-            if (lookupId == null)
+            if (lookupId.EqualsDefaultValue())
             {
                 return default;
             }

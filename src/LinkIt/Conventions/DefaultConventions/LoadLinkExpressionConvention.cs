@@ -30,7 +30,10 @@ namespace LinkIt.Conventions.DefaultConventions
         /// </summary>
         public static List<ILoadLinkExpressionConvention> DefaultAnd(params ILoadLinkExpressionConvention[] customConventions)
         {
-            if (customConventions == null) throw new ArgumentNullException(nameof(customConventions));
+            if (customConventions == null)
+            {
+                throw new ArgumentNullException(nameof(customConventions));
+            }
 
             return Default
                 .Concat(customConventions)

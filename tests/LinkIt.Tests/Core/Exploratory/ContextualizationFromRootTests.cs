@@ -57,8 +57,8 @@ namespace LinkIt.Tests.Core.Exploratory
             );
 
             Assert.Equal(2, actual.Count);
-            Assert.Equal("overriden-image-0", actual.First().Contextualization.SummaryImageId);
-            Assert.Equal("overriden-image-0", actual.First().SummaryImage.Id);
+            Assert.Equal("overriden-image-0", actual[0].Contextualization.SummaryImageId);
+            Assert.Equal("overriden-image-0", actual[0].SummaryImage.Id);
             Assert.Equal("overriden-image-2", actual.Last().Contextualization.SummaryImageId);
             Assert.Equal("overriden-image-2", actual.Last().SummaryImage.Id);
         }

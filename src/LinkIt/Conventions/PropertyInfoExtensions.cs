@@ -18,9 +18,11 @@ namespace LinkIt.Conventions
 
         public static bool MatchLinkedSourceModelPropertyName(this PropertyInfo linkTargetProperty, PropertyInfo linkedSourceModelProperty, string suffix, string lastCharacterToIgnore)
         {
-            if (!linkTargetProperty.Name.EndsWith(lastCharacterToIgnore) ||
-                !linkedSourceModelProperty.Name.EndsWith(lastCharacterToIgnore))
+            if (!linkTargetProperty.Name.EndsWith(lastCharacterToIgnore)
+                || !linkedSourceModelProperty.Name.EndsWith(lastCharacterToIgnore))
+            {
                 return false;
+            }
 
             return MatchLinkedSourceModelPropertyName(
                 RemoveLastCharacter(linkTargetProperty, lastCharacterToIgnore),

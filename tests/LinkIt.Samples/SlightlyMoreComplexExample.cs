@@ -20,7 +20,7 @@ namespace LinkIt.Samples
             _fixture = fixture;
         }
 
-        private List<BlogPost> GetBlogPostByKeyword(string fish)
+        private List<BlogPost> GetBlogPosts()
         {
             //fake result of a database query
             return new List<BlogPost>
@@ -72,7 +72,7 @@ namespace LinkIt.Samples
         [Fact]
         public async Task LoadLink_FromQuery()
         {
-            var models = GetBlogPostByKeyword("fish");
+            var models = GetBlogPosts();
             var actual = await _fixture.LoadLinkProtocol.LoadLink<BlogPostLinkedSource>().FromModelsAsync(models);
 
             Assert.Equal(models.Count, actual.Count);

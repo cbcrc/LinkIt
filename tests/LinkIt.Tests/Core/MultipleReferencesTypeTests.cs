@@ -10,7 +10,7 @@ namespace LinkIt.Tests.Core
 {
     public class MultipleReferencesTypeTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public MultipleReferencesTypeTests()
         {
@@ -42,7 +42,6 @@ namespace LinkIt.Tests.Core
             Assert.Equal("32", actual.Author.Id);
         }
     }
-
 
     public class MultipleReferencesTypeLinkedSource : ILinkedSource<MultipleReferencesTypeContent>
     {

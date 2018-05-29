@@ -115,10 +115,12 @@ namespace LinkIt.Conventions.Tests
 
             public string Name { get; }
 
-
             public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
             {
-                if (linkTargetProperty.Name == "Model") DidAttemptToMatchModelAsLinkTarget = true;
+                if (linkTargetProperty.Name == "Model")
+                {
+                    DidAttemptToMatchModelAsLinkTarget = true;
+                }
 
                 var matchingName = linkTargetProperty.Name + "Id";
                 return matchingName == linkedSourceModelProperty.Name;

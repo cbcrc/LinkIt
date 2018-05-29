@@ -9,7 +9,7 @@ namespace LinkIt.Shared
     {
         public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue = default)
         {
-            if (dictionary == null || key == null)
+            if (dictionary == null || key.EqualsDefaultValue())
             {
                 return defaultValue;
             }

@@ -11,7 +11,7 @@ namespace LinkIt.Tests.Core.Polymorphic
 {
     public class PolymorphicReferencesTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public PolymorphicReferencesTests()
         {

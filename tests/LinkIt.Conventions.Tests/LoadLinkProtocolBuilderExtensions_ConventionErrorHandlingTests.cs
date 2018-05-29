@@ -49,7 +49,6 @@ namespace LinkIt.Conventions.Tests
             Assert.Contains("does apply failed", exception.InnerException.Message);
         }
 
-
         public class DoesApplyFailedConvention : ISingleValueConvention
         {
             public string Name => "Does apply failed convention";

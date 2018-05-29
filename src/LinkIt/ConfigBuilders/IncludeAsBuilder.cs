@@ -28,7 +28,10 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TId> getLookupId,
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSource = null)
         {
-            if (getLookupId == null) throw new ArgumentNullException(nameof(getLookupId));
+            if (getLookupId == null)
+            {
+                throw new ArgumentNullException(nameof(getLookupId));
+            }
 
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceById<TLinkedSource, TAbstractLinkTarget, TLink, TId>(
@@ -53,7 +56,10 @@ namespace LinkIt.ConfigBuilders
             Action<TLink, TLinkTarget> initChildLinkedSource
         )
         {
-            if (getLookupId == null) throw new ArgumentNullException(nameof(getLookupId));
+            if (getLookupId == null)
+            {
+                throw new ArgumentNullException(nameof(getLookupId));
+            }
 
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceById<TLinkedSource, TAbstractLinkTarget, TLink, TId>(
@@ -77,7 +83,10 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSource = null)
         {
-            if (getNestedLinkedSourceModel == null) throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
+            if (getNestedLinkedSourceModel == null)
+            {
+                throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
+            }
 
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceFromModel<TLinkedSource, TAbstractLinkTarget, TLink, TChildLinkedSourceModel>(
@@ -102,7 +111,10 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
             Action<TLink, TLinkTarget> initChildLinkedSource)
         {
-            if (getNestedLinkedSourceModel == null) throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
+            if (getNestedLinkedSourceModel == null)
+            {
+                throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
+            }
 
             var include = LinkedSourceConfigs.GetConfigFor<TLinkTarget>()
                 .CreateIncludeNestedLinkedSourceFromModel<TLinkedSource, TAbstractLinkTarget, TLink, TChildLinkedSourceModel>(
@@ -127,7 +139,10 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TId> getLookupId
         )
         {
-            if (getLookupId == null) throw new ArgumentNullException(nameof(getLookupId));
+            if (getLookupId == null)
+            {
+                throw new ArgumentNullException(nameof(getLookupId));
+            }
 
             _includeSetBuilder.AddToIncludeSet(
                 discriminantValue,

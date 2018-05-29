@@ -17,6 +17,7 @@ namespace LinkIt.Core.Includes
         IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink>,
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
+        where TChildLinkedSourceModel: class
     {
         private readonly Func<TLink, TChildLinkedSourceModel> _getNestedLinkedSourceModel;
         private readonly Action<TLink, TChildLinkedSource> _initChildLinkedSourceWithLink;
@@ -58,6 +59,7 @@ namespace LinkIt.Core.Includes
                 CreateInitChildLinkedSourceAction(linkedSource, referenceIndex, link)
             );
         }
+
         public void AddDependenciesForAllLinkTargets(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
             loadLinkProtocol.AddDependenciesForAllLinkTargets(ChildLinkedSourceType, predecessor);
@@ -65,9 +67,15 @@ namespace LinkIt.Core.Includes
 
         private Action<TChildLinkedSource> CreateInitChildLinkedSourceAction(TLinkedSource linkedSource, int referenceIndex, TLink link)
         {
-            if (_initChildLinkedSourceWithParentAndReferenceIndex != null) return childLinkedSource => _initChildLinkedSourceWithParentAndReferenceIndex(linkedSource, referenceIndex, childLinkedSource);
+            if (_initChildLinkedSourceWithParentAndReferenceIndex != null)
+            {
+                return childLinkedSource => _initChildLinkedSourceWithParentAndReferenceIndex(linkedSource, referenceIndex, childLinkedSource);
+            }
 
-            if (_initChildLinkedSourceWithLink != null) return childLinkedSource => _initChildLinkedSourceWithLink(link, childLinkedSource);
+            if (_initChildLinkedSourceWithLink != null)
+            {
+                return childLinkedSource => _initChildLinkedSourceWithLink(link, childLinkedSource);
+            }
 
             return null;
         }

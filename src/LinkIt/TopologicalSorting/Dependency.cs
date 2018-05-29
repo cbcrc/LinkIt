@@ -62,18 +62,6 @@ namespace LinkIt.TopologicalSorting
             return this;
         }
 
-        private IEnumerable<Dependency> Predecessors()
-        {
-            foreach (var directPredecessor in _directPredecessors)
-            {
-                yield return directPredecessor;
-                foreach (var predecessor in directPredecessor.Predecessors())
-                {
-                    yield return predecessor;
-                }
-            }
-        }
-
         public bool HasPredecessor(Dependency dependency)
         {
             return _directPredecessors.Contains(dependency) || _directPredecessors.Any(p => p.HasPredecessor(dependency));
@@ -133,18 +121,6 @@ namespace LinkIt.TopologicalSorting
         public bool HasFollower(Dependency dependency)
         {
             return _directFollowers.Contains(dependency) || _directFollowers.Any(p => p.HasFollower(dependency));
-        }
-
-        private IEnumerable<Dependency> Followers()
-        {
-            foreach (var directFollower in _directFollowers)
-            {
-                yield return directFollower;
-                foreach (var follower in directFollower.Followers())
-                {
-                    yield return follower;
-                }
-            }
         }
 
         /// <summary>
@@ -208,16 +184,36 @@ namespace LinkIt.TopologicalSorting
 
         public bool Equals(Dependency other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
             return Type.Equals(other.Type) && Graph.Equals(other.Graph);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
             return Equals((Dependency) obj);
         }
 

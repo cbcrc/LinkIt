@@ -23,7 +23,11 @@ namespace LinkIt.Conventions
         private static Expression GenerateGetProperty(ParameterExpression root, string propertyInDotNotation)
         {
             Expression propertyExpression = root;
-            foreach (var property in propertyInDotNotation.Split('.')) propertyExpression = Expression.PropertyOrField(propertyExpression, property);
+            foreach (var property in propertyInDotNotation.Split('.'))
+            {
+                propertyExpression = Expression.PropertyOrField(propertyExpression, property);
+            }
+
             return propertyExpression;
         }
     }

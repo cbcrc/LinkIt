@@ -49,8 +49,15 @@ namespace LinkIt.Core
 
         public void AddResults<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId)
         {
-            if (references == null) throw new ArgumentNullException(nameof(references));
-            if (getReferenceId == null) throw new ArgumentNullException(nameof(getReferenceId));
+            if (references == null)
+            {
+                throw new ArgumentNullException(nameof(references));
+            }
+
+            if (getReferenceId == null)
+            {
+                throw new ArgumentNullException(nameof(getReferenceId));
+            }
 
             var referenceDictionary = references.ToDictionary(
                 getReferenceId,

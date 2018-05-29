@@ -36,10 +36,25 @@ namespace LinkIt.Samples
 
         private void LoadReference(Type referenceType, IReadOnlyList<object> referenceIds, ILoadingContext loadingContext)
         {
-            if (referenceType == typeof(Media)) LoadMedia(referenceIds, loadingContext);
-            if (referenceType == typeof(Tag)) LoadTags(referenceIds, loadingContext);
-            if (referenceType == typeof(BlogPost)) LoadBlogPosts(loadingContext);
-            if (referenceType == typeof(Image)) LoadImages(loadingContext);
+            if (referenceType == typeof(Media))
+            {
+                LoadMedia(referenceIds, loadingContext);
+            }
+
+            if (referenceType == typeof(Tag))
+            {
+                LoadTags(referenceIds, loadingContext);
+            }
+
+            if (referenceType == typeof(BlogPost))
+            {
+                LoadBlogPosts(loadingContext);
+            }
+
+            if (referenceType == typeof(Image))
+            {
+                LoadImages(loadingContext);
+            }
         }
 
         private void LoadMedia(IReadOnlyList<object> referenceIds, ILoadingContext loadingContext)

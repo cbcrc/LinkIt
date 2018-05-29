@@ -10,6 +10,7 @@ namespace LinkIt.Core
 {
     internal class LoadLinkerWrapper<TRootLinkedSource, TRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
         where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new()
+        where TRootLinkedSourceModel: class
     {
         private readonly Func<IReferenceLoader> _createReferenceLoader;
         private readonly List<List<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
@@ -29,7 +30,7 @@ namespace LinkIt.Core
             using (var referenceLoader = _createReferenceLoader())
             {
                 var loadLinker = CreateLoadLinker(referenceLoader);
-                return await loadLinker.FromModelAsync(model, initRootLinkedSource);
+                return await loadLinker.FromModelAsync(model, initRootLinkedSource).ConfigureAwait(false);
             }
         }
 
@@ -40,7 +41,7 @@ namespace LinkIt.Core
             using (var referenceLoader = _createReferenceLoader())
             {
                 var loadLinker = CreateLoadLinker(referenceLoader);
-                return await loadLinker.FromModelsAsync(models, initRootLinkedSources);
+                return await loadLinker.FromModelsAsync(models, initRootLinkedSources).ConfigureAwait(false);
             }
         }
 
@@ -49,7 +50,7 @@ namespace LinkIt.Core
             using (var referenceLoader = _createReferenceLoader())
             {
                 var loadLinker = CreateLoadLinker(referenceLoader);
-                return await loadLinker.ByIdAsync(modelId, initRootLinkedSource);
+                return await loadLinker.ByIdAsync(modelId, initRootLinkedSource).ConfigureAwait(false);
             }
         }
 
@@ -58,7 +59,7 @@ namespace LinkIt.Core
             using (var referenceLoader = _createReferenceLoader())
             {
                 var loadLinker = CreateLoadLinker(referenceLoader);
-                return await loadLinker.ByIdsAsync(modelIds, initRootLinkedSources);
+                return await loadLinker.ByIdsAsync(modelIds, initRootLinkedSources).ConfigureAwait(false);
             }
         }
 

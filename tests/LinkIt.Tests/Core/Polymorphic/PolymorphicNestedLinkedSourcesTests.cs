@@ -12,7 +12,7 @@ namespace LinkIt.Tests.Core.Polymorphic
 {
     public class PolymorphicNestedLinkedSourcesTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public PolymorphicNestedLinkedSourcesTests()
         {

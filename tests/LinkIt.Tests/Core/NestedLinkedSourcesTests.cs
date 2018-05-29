@@ -12,7 +12,7 @@ namespace LinkIt.Tests.Core
 {
     public class NestedLinkedSourcesTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public NestedLinkedSourcesTests()
         {

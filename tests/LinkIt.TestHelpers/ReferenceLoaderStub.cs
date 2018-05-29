@@ -72,9 +72,12 @@ namespace LinkIt.TestHelpers
         private void LoadReference(Type referenceType, ILoadingContext loadingContext)
         {
             if (!_referenceTypeConfigByReferenceType.ContainsKey(referenceType))
-                throw new NotImplementedException(
-                    $"There is no loader for reference of type {referenceType.Name}."
-                );
+            {
+                throw new NotSupportedException(
+                   $"There is no loader for reference of type {referenceType.Name}."
+               );
+            }
+
             var referenceTypeConfig = _referenceTypeConfigByReferenceType[referenceType];
             referenceTypeConfig.Load(loadingContext);
         }

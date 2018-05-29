@@ -9,10 +9,10 @@ namespace LinkIt.Shared
     {
         public static bool IsPublicReadWrite(this PropertyInfo property)
         {
-            return property.CanRead &&
-                   property.GetGetMethod(false) != null &&
-                   property.CanWrite &&
-                   property.GetSetMethod(false) != null;
+            return property.CanRead
+                   && property.GetGetMethod(false) != null
+                   && property.CanWrite
+                   && property.GetSetMethod(false) != null;
         }
 
         public static string GetFullName(this PropertyInfo property)

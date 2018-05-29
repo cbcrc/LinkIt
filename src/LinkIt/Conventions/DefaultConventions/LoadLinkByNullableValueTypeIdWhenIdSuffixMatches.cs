@@ -35,15 +35,19 @@ namespace LinkIt.Conventions.DefaultConventions
             where TLinkedSourceModelProperty : struct
         {
             if (typeof(TLinkTargetProperty).IsLinkedSource())
+            {
                 loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty
                 );
+            }
             else
+            {
                 loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferenceById(
                     getLinkedSourceModelProperty,
                     getLinkTargetProperty
                 );
+            }
         }
     }
 }

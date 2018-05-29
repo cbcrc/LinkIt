@@ -12,7 +12,6 @@ namespace LinkIt.Tests.Core
 {
     public class LoadLinkConfig_WithCycleTest
     {
-
         [Fact]
         public void CreateLoadLinkConfig_WithCycleCausedByDirectNestedLinkedSource_ShouldThrow()
         {

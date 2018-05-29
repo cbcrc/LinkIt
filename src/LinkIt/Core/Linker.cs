@@ -27,6 +27,7 @@ namespace LinkIt.Core
 
         public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel, TModelId>(TModelId id, Action<TLinkedSource> init)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
+            where TLinkedSourceModel : class
         {
             var linkedSourceModel = _dataStore.GetReference<TLinkedSourceModel, TModelId>(id);
             return CreatePartiallyBuiltLinkedSource(linkedSourceModel, init);
@@ -34,8 +35,12 @@ namespace LinkIt.Core
 
         public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, Action<TLinkedSource> init)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
+            where TLinkedSourceModel : class
         {
-            if (model == null) return null;
+            if (model == null)
+            {
+                return null;
+            }
 
             var linkedSource = new TLinkedSource { Model = model };
             init?.Invoke(linkedSource); //Important: Init before LinkNestedLinkedSourcesFromModel

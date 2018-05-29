@@ -46,4 +46,14 @@ Features
     <DefineConstants>NET45;NETFULL</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="V2MigrationHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="V2MigrationHelper.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

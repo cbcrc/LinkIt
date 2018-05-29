@@ -36,7 +36,10 @@ namespace LinkIt.LinkTargets
 
         public bool Equals(ILinkTarget other)
         {
-            if (other == null) return false;
+            if (other == null)
+            {
+                return false;
+            }
 
             return Id.Equals(other.Id);
         }

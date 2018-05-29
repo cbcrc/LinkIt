@@ -12,7 +12,7 @@ namespace LinkIt.Tests.Core
 {
     public class ManyReferencesTests
     {
-        private ILoadLinkProtocol _sut;
+        private readonly ILoadLinkProtocol _sut;
 
         public ManyReferencesTests()
         {
@@ -107,7 +107,6 @@ namespace LinkIt.Tests.Core
             var linkedImagesIds = actual.FavoriteImages.Select(image => image.Id);
             Assert.Equal(new[] { "a", "a" }, linkedImagesIds);
         }
-
 
         [Fact]
         public async System.Threading.Tasks.Task LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNullAsync()

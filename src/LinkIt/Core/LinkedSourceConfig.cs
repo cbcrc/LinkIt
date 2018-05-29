@@ -14,6 +14,7 @@ namespace LinkIt.Core
     /// <inheritdoc />
     internal class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel> : IGenericLinkedSourceConfig<TLinkedSource>
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
+        where TLinkedSourceModel: class
     {
         public LinkedSourceConfig()
         {
@@ -30,7 +31,6 @@ namespace LinkIt.Core
         {
             return new LoadLinkerWrapper<TLinkedSource, TLinkedSourceModel>(createReferenceLoader, referenceTypeToBeLoadedForEachLoadingLevel, loadLinkProtocol);
         }
-
 
         public IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
             Func<TLink, TId> getLookupId,
@@ -96,17 +96,21 @@ namespace LinkIt.Core
             var concreteType = typeof(TConcrete);
 
             if (!abstractType.IsAssignableFrom(concreteType))
+            {
                 throw new LinkItException(
-                    $"{abstractType} is not assignable from {concreteType}."
-                );
+                   $"{abstractType} is not assignable from {concreteType}."
+               );
+            }
         }
 
         private void EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(ILinkTarget linkTarget)
         {
             if (!LinkedSourceModelType.IsAssignableFrom(typeof(TChildLinkedSourceModel)))
+            {
                 throw new ArgumentException(
-                    $"{linkTarget.Id}: getNestedLinkedSourceModel returns an invalid type. {LinkedSourceModelType} is not assignable from {typeof(TChildLinkedSourceModel)}."
-                );
+                   $"{linkTarget.Id}: getNestedLinkedSourceModel returns an invalid type. {LinkedSourceModelType} is not assignable from {typeof(TChildLinkedSourceModel)}."
+               );
+            }
         }
     }
 }

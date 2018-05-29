@@ -11,7 +11,6 @@ namespace LinkIt.Tests.LinkTargets
 {
     public class LinkTargetFactoryTests
     {
-
         [Fact]
         public void Create_LinkTargetShouldBeEquatable()
         {
@@ -25,7 +24,6 @@ namespace LinkIt.Tests.LinkTargets
             Assert.True(summaryImage2.Equals(summaryImage1));
             Assert.False(anotherImage.Equals(summaryImage1));
         }
-
 
         [Fact]
         public void Create_WithNestedGetter_ShouldThrow()
@@ -83,12 +81,13 @@ namespace LinkIt.Tests.LinkTargets
             Assert.Contains("ForLinkedTargetLinkedSource/AReadOnlyImage", exception.Message);
             Assert.Contains("read-write", exception.Message);
         }
+
         public class ForLinkedTargetLinkedSource : ILinkedSource<Person>
         {
             public Image SummaryImage { get; set; }
             public Image AnotherImage { get; set; }
             public Image AReadOnlyImage => null;
-            public Image APrivateSetterImage { get; private set; }
+            public Image APrivateSetterImage { get; }
             public Person Model { get; set; }
 
             public Image AnImageFunc()

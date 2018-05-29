@@ -18,7 +18,7 @@ namespace LinkIt.PublicApi
         /// <summary>
         /// Load references for the current load phase.
         /// </summary>
-        /// <param name="context">Loading context</param>
-        Task LoadReferencesAsync(ILoadingContext context);
+        /// <param name="loadingContext">Loading context</param>
+        Task LoadReferencesAsync(ILoadingContext loadingContext);
     }
 }

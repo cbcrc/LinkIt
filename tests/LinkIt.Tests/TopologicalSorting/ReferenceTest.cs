@@ -14,7 +14,7 @@ namespace LinkIt.Tests.TopologicalSorting
 {
     public class ReferenceTest
     {
-        private LoadLinkProtocol _sut;
+        private readonly LoadLinkProtocol _sut;
 
         public ReferenceTest()
         {
