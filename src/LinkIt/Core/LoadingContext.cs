@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using LinkIt.PublicApi;
 
@@ -11,7 +12,7 @@ namespace LinkIt.Core
     internal class LoadingContext : ILoadingContext
     {
         private readonly DataStore _dataStore;
-        private readonly IReadOnlyDictionary<Type, IReadOnlyList<object>> _lookupIds;
+        private readonly ImmutableDictionary<Type, IReadOnlyList<object>> _lookupIds;
 
         public LoadingContext(LookupContext lookupContext, DataStore dataStore)
         {
@@ -19,17 +20,17 @@ namespace LinkIt.Core
             _lookupIds = GetLookupIds(lookupContext);
         }
 
-        private IReadOnlyDictionary<Type, IReadOnlyList<object>> GetLookupIds(LookupContext lookupContext)
+        private ImmutableDictionary<Type, IReadOnlyList<object>> GetLookupIds(LookupContext lookupContext)
         {
             return lookupContext.LookupIds
                 .ToDictionary(
                     p => p.Key,
-                    p => p.Value.Except(_dataStore.GetLoadedReferenceIds(p.Key))
+                    p => p.Value.Except(_dataStore.GetLoadedReferenceIds(p.Key)).ToImmutableList()
                 )
-                .Where(p => p.Value.Any())
-                .ToDictionary(
+                .Where(p => p.Value.Count > 0)
+                .ToImmutableDictionary(
                     p => p.Key,
-                    p => (IReadOnlyList<object>) p.Value.ToList()
+                    p => (IReadOnlyList<object>) p.Value
                 );
         }
 
@@ -45,7 +46,14 @@ namespace LinkIt.Core
             => GetLookupIds(referenceType).OfType<TId>().ToList();
 
         private IReadOnlyList<object> GetLookupIds(Type referenceType)
-            => _lookupIds.ContainsKey(referenceType) ? _lookupIds[referenceType] : new object[0];
+        {
+            if (referenceType is null)
+            {
+                throw new ArgumentNullException(nameof(referenceType));
+            }
+
+            return _lookupIds.TryGetValue(referenceType, out var lookupIds) ? lookupIds : new object[0];
+        }
 
         public void AddResults<TReference, TId>(IEnumerable<TReference> references, Func<TReference, TId> getReferenceId)
         {
@@ -59,16 +67,19 @@ namespace LinkIt.Core
                 throw new ArgumentNullException(nameof(getReferenceId));
             }
 
-            var referenceDictionary = references.ToDictionary(
-                getReferenceId,
-                reference => reference
-            );
+            var referenceDictionary = references
+                .Select(reference => new KeyValuePair<TId, TReference>(getReferenceId(reference), reference));
 
             _dataStore.AddReferences(referenceDictionary);
         }
 
         public void AddResults<TReference, TId>(IDictionary<TId, TReference> referencesById)
         {
+            if (referencesById == null)
+            {
+                throw new ArgumentNullException(nameof(referencesById));
+            }
+
             _dataStore.AddReferences(referencesById);
         }
     }

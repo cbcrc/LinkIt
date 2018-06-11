@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using LinkIt.Shared;
 
@@ -11,43 +13,37 @@ namespace LinkIt.Core
 {
     internal class DataStore
     {
-        private readonly Dictionary<Type, IDictionary> _loadedReferencesByType = new Dictionary<Type, IDictionary>();
+        private readonly ConcurrentDictionary<Type, IDictionary> _loadedReferencesByType = new ConcurrentDictionary<Type, IDictionary>();
 
-        public IEnumerable<object> GetLoadedReferenceIds(Type referenceType)
+        public IReadOnlyList<object> GetLoadedReferenceIds(Type referenceType)
         {
-            if (!_loadedReferencesByType.ContainsKey(referenceType))
+            if (!_loadedReferencesByType.TryGetValue(referenceType, out var references))
             {
-                return Enumerable.Empty<object>();
+                return new object[0];
             }
 
-            return _loadedReferencesByType[referenceType].Keys.Cast<object>();
+            return references.Keys
+                .Cast<object>()
+                .ToArray();
         }
 
-        private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>()
+        private ImmutableDictionary<TId, TReference> GetReferenceDictionary<TReference, TId>()
         {
-            var tReference = typeof(TReference);
-            if (!_loadedReferencesByType.ContainsKey(tReference))
+            if (!_loadedReferencesByType.TryGetValue(typeof(TReference), out var dictionary))
             {
                 return null;
             }
 
-            return _loadedReferencesByType[tReference] as Dictionary<TId, TReference>;
+            return dictionary as ImmutableDictionary<TId, TReference>;
         }
 
-        public void AddReferences<TReference, TId>(IDictionary<TId, TReference> referencesById)
+        public void AddReferences<TReference, TId>(IEnumerable<KeyValuePair<TId, TReference>> referencesById)
         {
-            if (referencesById == null)
-            {
-                throw new ArgumentNullException(nameof(referencesById));
-            }
-
-            var dictionary = GetReferenceDictionary<TReference, TId>() ?? new Dictionary<TId, TReference>();
-            foreach (var reference in referencesById)
-            {
-                dictionary[reference.Key] = reference.Value;
-            }
-
-            _loadedReferencesByType[typeof(TReference)] = dictionary;
+            _loadedReferencesByType.AddOrUpdate(
+                typeof(TReference),
+                _ => ImmutableDictionary.CreateRange(referencesById),
+                (_, dict) => (dict as ImmutableDictionary<TId, TReference>)?.AddRange(referencesById)
+            );
         }
 
         public TReference GetReference<TReference, TId>(TId lookupId)
@@ -58,13 +54,24 @@ namespace LinkIt.Core
             }
 
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
+            if (referenceDictionnary == null)
+            {
+                return default;
+            }
+
             return referenceDictionnary.GetValueOrDefault(lookupId);
         }
 
         public IReadOnlyList<TReference> GetReferences<TReference, TId>(IEnumerable<TId> lookupIds)
         {
             var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
+            if (referenceDictionnary == null)
+            {
+                return new TReference[0];
+            }
+
             return lookupIds
+                .Where(id => !id.EqualsDefaultValue())
                 .Select(id => referenceDictionnary.GetValueOrDefault(id))
                 .ToList();
         }
