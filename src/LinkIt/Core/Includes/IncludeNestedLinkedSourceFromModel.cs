@@ -17,7 +17,6 @@ namespace LinkIt.Core.Includes
         IIncludeWithCreateNestedLinkedSourceFromModel<TLinkedSource, TAbstractChildLinkedSource, TLink>,
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
-        where TChildLinkedSourceModel: class
     {
         private readonly Func<TLink, TChildLinkedSourceModel> _getNestedLinkedSourceModel;
         private readonly Action<TLink, TChildLinkedSource> _initChildLinkedSourceWithLink;

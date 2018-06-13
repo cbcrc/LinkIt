@@ -21,7 +21,7 @@ namespace LinkIt.Core
 
         public async Task<TModel> ByIdAsync<TId>(TId id)
         {
-            if (id.EqualsDefaultValue())
+            if ((object) id == null)
             {
                 return default;
             }
@@ -49,7 +49,7 @@ namespace LinkIt.Core
             }
 
             return dataStore.GetReferences<TModel, TId>(ids)
-                .Where(m => !m.EqualsDefaultValue())
+                .Where(id => (object) id != null)
                 .ToList();
         }
     }

@@ -14,7 +14,6 @@ namespace LinkIt.Core
     /// <inheritdoc />
     internal class LinkedSourceConfig<TLinkedSource, TLinkedSourceModel> : IGenericLinkedSourceConfig<TLinkedSource>
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
-        where TLinkedSourceModel: class
     {
         public LinkedSourceConfig()
         {

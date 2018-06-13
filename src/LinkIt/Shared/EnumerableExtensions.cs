@@ -9,6 +9,11 @@ namespace LinkIt.Shared
 {
     internal static class EnumerableExtensions
     {
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> items)
+        {
+            return items?.Any() != true;
+        }
+
         public static List<TKey> GetNotUniqueKey<TItem, TKey>(this IEnumerable<TItem> items, Func<TItem, TKey> keySelector)
         {
             return items

@@ -77,10 +77,7 @@ namespace LinkIt.Tests.Core
         {
             var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdAsync<string>(null);
 
-            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts[0]
-                .ReferenceTypes;
-
-            Assert.Empty(loadedReferenceTypes);
+            Assert.Empty(_referenceLoaderStub.RecordedLookupIdContexts);
         }
 
         [Fact]
@@ -124,9 +121,7 @@ namespace LinkIt.Tests.Core
             var actual = await _sut.LoadLink<PersonLinkedSource>().ByIdsAsync(new List<string> { null, null });
 
             Assert.Empty(actual);
-            var loadedReferenceTypes = _referenceLoaderStub.RecordedLookupIdContexts[0]
-                .ReferenceTypes;
-            Assert.Empty(loadedReferenceTypes);
+            Assert.Empty(_referenceLoaderStub.RecordedLookupIdContexts);
         }
 
         [Fact]

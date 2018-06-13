@@ -85,7 +85,7 @@ namespace LinkIt.Core.Includes
 
         private static void AssumeNotNullLink(TLink link)
         {
-            if (link.EqualsDefaultValue())
+            if ((object) link == null)
             {
                 throw new LinkItException(
                     $"{typeof(TLinkedSource)}: Cannot invoke GetInclude with a null link"

@@ -20,7 +20,7 @@ namespace LinkIt.Core
 
         public void AddLookupId<TReference, TId>(TId lookupId)
         {
-            if (lookupId.EqualsDefaultValue())
+            if ((object) lookupId == null)
             {
                 return;
             }
@@ -41,7 +41,7 @@ namespace LinkIt.Core
         private void AddLookupIds<TId>(Type referenceType, IEnumerable<TId> lookupIds)
         {
             var nonNullIds = lookupIds
-                .Where(id => !id.EqualsDefaultValue())
+                .Where(id => (object) id != null)
                 .ToList();
             if (nonNullIds.Count == 0)
             {

@@ -50,7 +50,7 @@ namespace LinkIt.Core
             EnsureIsReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource) linkedSource)
-                .Where(link => !link.EqualsDefaultValue())
+                .Where(link => (object) link != null)
                 .ToList();
 
             foreach (var link in notNullLinks)
@@ -146,7 +146,7 @@ namespace LinkIt.Core
             for (var linkIndex = 0; linkIndex < links.Count; linkIndex++)
             {
                 var value = GetLinkTargetValue(links, linkIndex, getInclude, getLinkTargetValue);
-                if (!value.EqualsDefaultValue())
+                if ((object) value != null)
                 {
                     _linkTarget.SetLinkTargetValue(
                         linkedSource,
@@ -164,13 +164,13 @@ namespace LinkIt.Core
             Func<TLink, TInclude, int, TAbstractLinkTarget> getLinkTargetValue)
         {
             var link = links[linkIndex];
-            if (link.EqualsDefaultValue())
+            if ((object) link == null)
             {
                 return default;
             }
 
             var include = getInclude(link);
-            if (include.EqualsDefaultValue())
+            if ((object) include == null)
             {
                 return default;
             }

@@ -42,7 +42,7 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public async Task LoadLink_WithWrontModelType_ShouldThrow()
+        public async Task LoadLink_WithWrongModelType_ShouldThrow()
         {
             Func<Task> act = async () =>
                 await _sut.LoadLink<SingleReferenceLinkedSource>()

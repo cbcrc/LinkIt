@@ -41,7 +41,7 @@ namespace LinkIt.LinkTargets
         {
             var values = _get(linkedSource);
             var valuesWithoutNull = values
-                .Where(value => !value.EqualsDefaultValue())
+                .Where(value => (object) value != null)
                 .ToArray();
 
             SetTargetProperty(linkedSource, valuesWithoutNull);

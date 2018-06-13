@@ -12,7 +12,6 @@ namespace LinkIt.Core
     /// <inheritdoc/>
     internal class LoadLinker<TRootLinkedSource, TRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
         where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new()
-        where TRootLinkedSourceModel: class
     {
         private readonly LoadLinkProtocol _loadLinkProtocol;
         private readonly IReferenceLoader _referenceLoader;

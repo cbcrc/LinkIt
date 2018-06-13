@@ -18,7 +18,6 @@ namespace LinkIt.Core.Includes
         IIncludeWithAddLookupId<TLink>,
         IIncludeWithChildLinkedSource
         where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
-        where TChildLinkedSourceModel: class
     {
         private readonly Func<TLink, TId> _getLookupId;
         private readonly Action<TLink, TChildLinkedSource> _initChildLinkedSourceWithLink;

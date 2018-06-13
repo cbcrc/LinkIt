@@ -7,7 +7,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
@@ -48,7 +47,7 @@ namespace LinkIt.Core
 
         public TReference GetReference<TReference, TId>(TId lookupId)
         {
-            if (lookupId.EqualsDefaultValue())
+            if ((object) lookupId == null)
             {
                 return default;
             }
@@ -71,7 +70,7 @@ namespace LinkIt.Core
             }
 
             return lookupIds
-                .Where(id => !id.EqualsDefaultValue())
+                .Where(id => (object) id != null)
                 .Select(id => referenceDictionnary.GetValueOrDefault(id))
                 .ToList();
         }
