@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
-using LinkIt.Tests.Core;
 using Xunit;
 
 namespace LinkIt.Tests.Core

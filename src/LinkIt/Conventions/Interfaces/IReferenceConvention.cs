@@ -5,13 +5,14 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Conventions.Interfaces
 {
     /// <summary>
-    /// Convention for loading a reference or linked source using an ID from the model.
+    /// Convention for loading a reference using an ID from the model.
     /// </summary>
-    public interface ISingleValueConvention : ILoadLinkExpressionConvention
+    public interface IReferenceConvention : ILoadLinkExpressionConvention
     {
         /// <summary>
         /// Apply the convention for a property of the model and a link.
@@ -22,6 +23,6 @@ namespace LinkIt.Conventions.Interfaces
             Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty
-        );
+        ) where TLinkedSource: ILinkedSource;
     }
 }

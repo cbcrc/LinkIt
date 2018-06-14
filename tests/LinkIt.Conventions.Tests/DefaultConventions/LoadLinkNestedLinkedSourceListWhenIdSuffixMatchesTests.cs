@@ -13,7 +13,7 @@ using Xunit;
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
 {
-    public class LoadLinkSingleValueSubLinkedSourceWhenNameMatchesTests
+    public class LoadLinkNestedLinkedSourceListWhenIdSuffixMatchesTests
     {
         [Fact]
         public async Task GetLinkedSourceTypes()
@@ -21,17 +21,18 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
             var model = new Model
             {
                 Id = "One",
-                Media = new Media
-                {
-                    Id = 1
-                }
+                MediaNestedLinkedSourceIds = new List<int> { 2, 22 }
             };
             var sut = BuildLoadLinkProtocol();
 
             var actual = await sut.LoadLink<LinkedSource>().FromModelAsync(model);
 
             Assert.Same(model, actual.Model);
-            Assert.Equal(model.Media.Id, actual.Media.Model.Id);
+            Assert.Collection(
+                actual.MediaNestedLinkedSources,
+                mediaLinkedSource => Assert.Equal(model.MediaNestedLinkedSourceIds[0], mediaLinkedSource.Model.Id),
+                mediaLinkedSource => Assert.Equal(model.MediaNestedLinkedSourceIds[1], mediaLinkedSource.Model.Id)
+            );
         }
 
         private static ILoadLinkProtocol BuildLoadLinkProtocol()
@@ -40,7 +41,10 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
 
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches() }
+                new List<ILoadLinkExpressionConvention>
+                {
+                    new LoadLinkNestedLinkedSourceListWhenIdSuffixMatches(),
+                }
             );
 
             return loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
@@ -48,14 +52,14 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
 
         public class LinkedSource : ILinkedSource<Model>
         {
-            public MediaLinkedSource Media { get; set; }
+            public List<MediaLinkedSource> MediaNestedLinkedSources { get; set; }
             public Model Model { get; set; }
         }
 
         public class Model
         {
             public string Id { get; set; }
-            public Media Media { get; set; }
+            public List<int> MediaNestedLinkedSourceIds { get; set; }
         }
     }
 }

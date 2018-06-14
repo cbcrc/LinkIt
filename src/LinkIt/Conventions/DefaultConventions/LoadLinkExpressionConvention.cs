@@ -18,11 +18,14 @@ namespace LinkIt.Conventions.DefaultConventions
         /// </summary>
         public static List<ILoadLinkExpressionConvention> Default => new List<ILoadLinkExpressionConvention>
         {
-            new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches(),
-            new LoadLinkMultiValueWhenIdSuffixMatches(),
-            new LoadLinkSingleValueWhenIdSuffixMatches(),
-            new LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches(),
-            new LoadLinkSingleValueNestedLinkedSourceFromModelWhenNameMatches()
+            new LoadLinkReferenceByNullableIdWhenIdSuffixMatches(),
+            new LoadLinkNestedLinkedSourceByNullableIdWhenIdSuffixMatches(),
+            new LoadLinkReferenceWhenIdSuffixMatches(),
+            new LoadLinkNestedLinkedSourceWhenIdSuffixMatches(),
+            new LoadLinkReferenceListWhenIdSuffixMatches(),
+            new LoadLinkNestedLinkedSourceListWhenIdSuffixMatches(),
+            new LoadLinkNestedLinkedSourceFromModelWhenNameMatches(),
+            new LoadLinkNestedLinkedSourceListFromModelWhenNameMatches()
         };
 
         /// <summary>

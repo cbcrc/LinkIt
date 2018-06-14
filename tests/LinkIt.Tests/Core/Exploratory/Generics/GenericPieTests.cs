@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System.Threading.Tasks;
-using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;

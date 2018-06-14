@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using LinkIt.Core.Includes;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
+using LinkIt.PublicApi;
 
 namespace LinkIt.ConfigBuilders
 {
@@ -13,6 +14,7 @@ namespace LinkIt.ConfigBuilders
     /// Builder to configure a polymorphic link.
     /// </summary>
     public class IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>
+        where TLinkedSource: ILinkedSource
     {
         private readonly Dictionary<TDiscriminant, IInclude> _includeByDiscriminantValue =
             new Dictionary<TDiscriminant, IInclude>();

@@ -16,7 +16,7 @@ Features
 - Support polymorphism out of the box
 - Favor convention over configuration
 - Perform complex projections easily with LinkIt AutoMapper Extensions</Description>
-    <Version>2.0.0-rc01</Version>
+    <Version>2.0.0-rc02</Version>
     <Authors>Stéphane Leblanc, Laurent le Beau-Martin</Authors>
     <Company>Radio-Canada/CBC</Company>
     <Copyright>Copyright (c) 2015-2018 Radio-Canada/CBC</Copyright>
@@ -27,7 +27,9 @@ Features
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/cbcrc/LinkIt</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageReleaseNotes>Added back support for .NET Framework 4.5+</PackageReleaseNotes>
+    <PackageReleaseNotes>Changed type constraints to allow:
+- value types as models
+- break linking of nested linked source(s) to a reference type at compile-time instead of at runtime</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

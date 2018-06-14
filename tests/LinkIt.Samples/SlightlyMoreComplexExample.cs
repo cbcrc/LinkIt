@@ -82,7 +82,7 @@ namespace LinkIt.Samples
         }
 
         [Fact]
-        public async Task LoadLink_FromTransiantModel()
+        public async Task LoadLink_FromTransientModel()
         {
             var model = new BlogPost
             {

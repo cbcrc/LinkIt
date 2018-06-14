@@ -17,6 +17,7 @@ namespace LinkIt.ConfigBuilders
     /// Builder to help configure the <see cref="ILoadLinkProtocol"/> for a linked source type.
     /// </summary>
     public class LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>
+        where TLinkedSource : ILinkedSource
     {
         private readonly Action<ILoadLinkExpression> _addLoadLinkExpression;
 
@@ -123,6 +124,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, TId> getLookupId,
             Expression<Func<TLinkedSource, TChildLinkedSource>> getLinkTarget,
             Action<TLinkedSource, TChildLinkedSource> initChildLinkedSource = null)
+            where TChildLinkedSource: ILinkedSource
         {
             if (getLookupId == null)
             {
@@ -150,6 +152,7 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, TChildLinkedSource> initChildLinkedSource = null
         )
             where TId : struct
+            where TChildLinkedSource: ILinkedSource
         {
             if (getOptionalLookupId == null)
             {
@@ -175,6 +178,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
             Expression<Func<TLinkedSource, IList<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null)
+            where TChildLinkedSource: ILinkedSource
         {
             if (getLookupIds == null)
             {
@@ -197,6 +201,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
             ILinkTarget<TLinkedSource, TChildLinkedSource> linkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null)
+            where TChildLinkedSource: ILinkedSource
         {
             var include = LinkedSourceConfigs.GetConfigFor<TChildLinkedSource>()
                 .CreateIncludeNestedLinkedSourceById<TLinkedSource, TChildLinkedSource, TId, TId>(
@@ -224,7 +229,6 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, TChildLinkedSource> initChildLinkedSource = null
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
-            where TChildLinkedSourceModel: class
         {
             if (getNestedLinkedSourceModel == null)
             {
@@ -252,7 +256,6 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
-            where TChildLinkedSourceModel: class
         {
             if (getNestedLinkedSourceModels == null)
             {
@@ -277,7 +280,6 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
-            where TChildLinkedSourceModel: class
         {
             var include = new IncludeNestedLinkedSourceFromModel<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel, TChildLinkedSource, TChildLinkedSourceModel>(
                 childLinkedSource => childLinkedSource,

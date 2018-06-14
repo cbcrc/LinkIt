@@ -42,7 +42,7 @@ namespace LinkIt.LinkTargets
             var propertyType = property.PropertyType;
             if (!propertyType.IsAssignableFrom(typeof(TTargetProperty[])) && !propertyType.IsAssignableFrom(typeof(List<TTargetProperty>)))
             {
-                throw new ArgumentException($"{property.GetFullName()}: Only lists that can be assigned from an array or a List<> are supported.");
+                throw new ArgumentException($"Property {property.GetFullName()} is an invalid link target for a list: Only properties that can be assigned from an {typeof(TTargetProperty).Name}[] or List<{typeof(TTargetProperty).Name}> are supported.");
             }
         }
 

@@ -21,7 +21,8 @@ namespace LinkIt.Tests.Core.Polymorphic
                     linkedSource => linkedSource.Model.Target,
                     linkedSource => linkedSource.Target,
                     link => link.Type,
-                    includes => includes.Include<PdfReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
+                    includes => includes
+                        .Include<PdfReferenceLinkedSource>().AsNestedLinkedSourceFromModel(
                             "pdf",
                             link => link,
                             (linkedSource, _, childLinkedSource) =>

@@ -6,17 +6,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.Shared;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Conventions.DefaultConventions
 {
     /// <summary>
-    /// Load link the property of a linked source if there is a property from the model with the same name suffixed by "Id".
+    /// Load link the property of a linked source if it's a linked source
+    /// and there is a property from the model with the same name suffixed by "Id".
     /// </summary>
-    public class LoadLinkSingleValueWhenIdSuffixMatches : ISingleValueConvention
+    public class LoadLinkNestedLinkedSourceWhenIdSuffixMatches : INestedLinkedSourceConvention
     {
         /// <inheritdoc />
-        public string Name => "Load link single value when id suffix matches";
+        public string Name => "Load link single linked source when id suffix matches";
 
         /// <inheritdoc />
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
@@ -31,21 +32,13 @@ namespace LinkIt.Conventions.DefaultConventions
             Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
+            where TLinkedSource: ILinkedSource
+            where TLinkTargetProperty: ILinkedSource
         {
-            if (typeof(TLinkTargetProperty).IsLinkedSource())
-            {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
-                    getLinkedSourceModelProperty,
-                    getLinkTargetProperty
-                );
-            }
-            else
-            {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferenceById(
-                    getLinkedSourceModelProperty,
-                    getLinkTargetProperty
-                );
-            }
+            loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
+                getLinkedSourceModelProperty,
+                getLinkTargetProperty
+            );
         }
     }
 }

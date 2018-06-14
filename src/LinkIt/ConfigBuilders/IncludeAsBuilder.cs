@@ -4,6 +4,7 @@
 using System;
 using LinkIt.Core;
 using LinkIt.Core.Includes;
+using LinkIt.PublicApi;
 
 namespace LinkIt.ConfigBuilders
 {
@@ -12,6 +13,7 @@ namespace LinkIt.ConfigBuilders
     /// </summary>
     public class IncludeAsBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant, TLinkTarget>
         where TLinkTarget : TAbstractLinkTarget
+        where TLinkedSource: ILinkedSource
     {
         private readonly IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> _includeSetBuilder;
 

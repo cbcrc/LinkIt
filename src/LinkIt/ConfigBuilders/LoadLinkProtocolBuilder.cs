@@ -45,6 +45,7 @@ namespace LinkIt.ConfigBuilders
         /// Configure a linked source type.
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> For<TLinkedSource>()
+            where TLinkedSource: ILinkedSource
         {
             if (!typeof(TLinkedSource).IsLinkedSource())
             {

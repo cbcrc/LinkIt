@@ -100,7 +100,7 @@ namespace LinkIt.Conventions.Tests
             public string PersonId { get; set; }
         }
 
-        public class ConventionStub : ISingleValueConvention
+        public class ConventionStub : IReferenceConvention
         {
             public readonly List<string> LinkTargetPropertyNamesWhereConventionApplies = new List<string>();
 
@@ -127,6 +127,7 @@ namespace LinkIt.Conventions.Tests
             }
 
             public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
+                where TLinkedSource: ILinkedSource
             {
                 LinkTargetPropertyNamesWhereConventionApplies.Add(linkTargetProperty.Name);
             }

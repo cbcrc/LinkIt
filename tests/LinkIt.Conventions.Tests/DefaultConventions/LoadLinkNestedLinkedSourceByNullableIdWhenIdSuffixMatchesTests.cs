@@ -13,7 +13,7 @@ using Xunit;
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
 {
-    public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatchesTests
+    public class LoadLinkNestedLinkedSourceByNullableIdWhenIdSuffixMatchesTests
     {
         [Fact]
         public async Task GetLinkedSourceTypes()
@@ -21,7 +21,6 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
             var model = new Model
             {
                 Id = "One",
-                MediaReferenceId = 1,
                 MediaNestedLinkedSourceId = 2
             };
             var sut = BuildLoadLinkProtocol();
@@ -29,8 +28,7 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
             var actual = await sut.LoadLink<LinkedSource>().FromModelAsync(model);
 
             Assert.Same(model, actual.Model);
-            Assert.Equal(model.MediaNestedLinkedSourceId, actual.MediaNestedLinkedSource.Id);
-            Assert.Equal(model.MediaReferenceId, actual.MediaReference.Id);
+            Assert.Equal(model.MediaNestedLinkedSourceId, actual.MediaNestedLinkedSource.Model.Id);
         }
 
         private static ILoadLinkProtocol BuildLoadLinkProtocol()
@@ -38,22 +36,20 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkByNullableValueTypeIdWhenIdSuffixMatches() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkNestedLinkedSourceByNullableIdWhenIdSuffixMatches() }
             );
             return loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
         private class LinkedSource : ILinkedSource<Model>
         {
-            public Media MediaReference { get; set; }
-            public Media MediaNestedLinkedSource { get; set; }
+            public MediaLinkedSource MediaNestedLinkedSource { get; set; }
             public Model Model { get; set; }
         }
 
         private class Model
         {
             public string Id { get; set; }
-            public int? MediaReferenceId { get; set; }
             public int? MediaNestedLinkedSourceId { get; set; }
         }
     }

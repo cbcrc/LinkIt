@@ -3,11 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
+using LinkIt.PublicApi;
 using LinkIt.Shared;
 
 namespace LinkIt.Conventions.DefaultConventions
@@ -15,10 +15,10 @@ namespace LinkIt.Conventions.DefaultConventions
     /// <summary>
     /// Load link a linked source property of a linked source if there is a property from the model with the same name.
     /// </summary>
-    public class LoadLinkMultiValueNestedLinkedSourceFromModelWhenNameMatches : IMultiValueConvention
+    public class LoadLinkNestedLinkedSourceListFromModelWhenNameMatches : INestedLinkedSourceListConvention
     {
         /// <inheritdoc />
-        public string Name => "Load link multi value nested linked source from model when name matches";
+        public string Name => "Load link nested linked source polymorphic list from model when name matches";
 
         /// <inheritdoc />
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
@@ -28,14 +28,8 @@ namespace LinkIt.Conventions.DefaultConventions
                 return false;
             }
 
-            var sourceListItemType = linkedSourceModelProperty.PropertyType.GenericTypeArguments.Single();
-            var linkTargetListItemType = linkTargetProperty.PropertyType.GenericTypeArguments.Single();
-
-            if (!linkTargetListItemType.IsLinkedSource())
-            {
-                return false;
-            }
-
+            var sourceListItemType = linkedSourceModelProperty.PropertyType.GetEnumerableItemType();
+            var linkTargetListItemType = linkTargetProperty.PropertyType.GetEnumerableItemType();
             if (linkTargetListItemType.GetLinkedSourceModelType() != sourceListItemType)
             {
                 return false;
@@ -51,8 +45,10 @@ namespace LinkIt.Conventions.DefaultConventions
             Expression<Func<TLinkedSource, IList<TLinkTargetProperty>>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
+            where TLinkedSource: ILinkedSource
+            where TLinkTargetProperty: ILinkedSource
         {
-            loadLinkProtocolForLinkedSourceBuilder.LoadLinkPolymorphicList<TLinkTargetProperty, TLinkedSourceModelProperty, bool>(
+            loadLinkProtocolForLinkedSourceBuilder.LoadLinkPolymorphicList(
                 getLinkedSourceModelProperty,
                 getLinkTargetProperty,
                 _ => true,

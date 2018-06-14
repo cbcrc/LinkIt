@@ -13,7 +13,7 @@ using Xunit;
 
 namespace LinkIt.Conventions.Tests.DefaultConventions
 {
-    public class LoadLinkSingleValueWhenIdSuffixMatchesTests
+    public class LoadLinkNestedLinkedSourceListFromModelWhenNameMatchesTests
     {
         [Fact]
         public async Task GetLinkedSourceTypes()
@@ -21,25 +21,36 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
             var model = new Model
             {
                 Id = "One",
-                MediaReferenceId = 1,
-                MediaNestedLinkedSourceId = 2
+                ListOfMedia = new List<Media>
+                {
+                    new Media
+                    {
+                        Id = 1
+                    },
+                    new Media
+                    {
+                        Id = 2
+                    }
+                }
             };
             var sut = BuildLoadLinkProtocol();
 
             var actual = await sut.LoadLink<LinkedSource>().FromModelAsync(model);
 
             Assert.Same(model, actual.Model);
-            Assert.Equal(model.MediaNestedLinkedSourceId, actual.MediaNestedLinkedSource.Model.Id);
-            Assert.Equal(model.MediaReferenceId, actual.MediaReference.Id);
+            Assert.Collection(
+                actual.ListOfMedia,
+                mediaLinkedSource => Assert.Equal(model.ListOfMedia[0].Id, mediaLinkedSource.Model.Id),
+                mediaLinkedSource => Assert.Equal(model.ListOfMedia[1].Id, mediaLinkedSource.Model.Id)
+            );
         }
 
         private static ILoadLinkProtocol BuildLoadLinkProtocol()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
-
             loadLinkProtocolBuilder.ApplyConventions(
                 new List<Type> { typeof(LinkedSource) },
-                new List<ILoadLinkExpressionConvention> { new LoadLinkSingleValueWhenIdSuffixMatches() }
+                new List<ILoadLinkExpressionConvention> { new LoadLinkNestedLinkedSourceListFromModelWhenNameMatches() }
             );
 
             return loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
@@ -47,16 +58,14 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
 
         public class LinkedSource : ILinkedSource<Model>
         {
-            public Media MediaReference { get; set; }
-            public MediaLinkedSource MediaNestedLinkedSource { get; set; }
+            public List<MediaLinkedSource> ListOfMedia { get; set; }
             public Model Model { get; set; }
         }
 
         public class Model
         {
             public string Id { get; set; }
-            public int MediaReferenceId { get; set; }
-            public int MediaNestedLinkedSourceId { get; set; }
+            public List<Media> ListOfMedia { get; set; }
         }
     }
 }

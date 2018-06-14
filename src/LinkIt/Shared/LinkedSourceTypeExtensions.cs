@@ -7,7 +7,7 @@ using LinkIt.PublicApi;
 
 namespace LinkIt.Shared
 {
-    internal static class LinkedSourceTypeExtensions
+    internal static class TypeExtensions
     {
         public static bool IsLinkedSource(this Type type)
         {
@@ -29,7 +29,17 @@ namespace LinkIt.Shared
                 throw new ArgumentException($"{type.Name} must implement ILinkedSource<>.", nameof(type));
             }
 
-            return iLinkedSourceType.GenericTypeArguments.Single();
+            return iLinkedSourceType.GetEnumerableItemType();
+        }
+
+        public static Type GetEnumerableItemType(this Type type)
+        {
+            if (type.IsArray)
+            {
+                return type.GetElementType();
+            }
+
+            return type.GenericTypeArguments?.SingleOrDefault();
         }
     }
 }

@@ -49,7 +49,7 @@ namespace LinkIt.Conventions.Tests
             Assert.Contains("does apply failed", exception.InnerException.Message);
         }
 
-        public class DoesApplyFailedConvention : ISingleValueConvention
+        public class DoesApplyFailedConvention : IReferenceConvention
         {
             public string Name => "Does apply failed convention";
 
@@ -59,11 +59,12 @@ namespace LinkIt.Conventions.Tests
             }
 
             public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
+                where TLinkedSource: ILinkedSource
             {
             }
         }
 
-        public class ApplyFailedConvention : ISingleValueConvention
+        public class ApplyFailedConvention : IReferenceConvention
         {
             public string Name => "ApplyFailedConvention";
 
@@ -73,6 +74,7 @@ namespace LinkIt.Conventions.Tests
             }
 
             public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder, Func<TLinkedSource, TLinkedSourceModelProperty> getLinkedSourceModelProperty, Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty, PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
+                where TLinkedSource: ILinkedSource
             {
                 throw new Exception("apply failed");
             }

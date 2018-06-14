@@ -43,11 +43,11 @@ namespace LinkIt.Conventions
         private List<Type> GetLinkedSourceTypes()
         {
             return _types
-                .Where(LinkedSourceTypeExtensions.IsLinkedSource)
+                .Where(TypeExtensions.IsLinkedSource)
                 .ToList();
         }
 
-        private List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
+        private static List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
         {
             return linkedSourceType
                 .GetProperties()
@@ -56,7 +56,7 @@ namespace LinkIt.Conventions
                 .ToList();
         }
 
-        private List<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType)
+        private static List<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType)
         {
             var linkedSourceModelType = linkedSourceType
                 .GetProperty("Model")
@@ -67,7 +67,7 @@ namespace LinkIt.Conventions
                 .ToList();
         }
 
-        private bool DoesConventionApply(ConventionMatch match)
+        private static bool DoesConventionApply(ConventionMatch match)
         {
             var possibleConventionType = GetPossibleConventionType(match);
             if (!possibleConventionType.IsInstanceOfType(match.Convention))
@@ -88,29 +88,47 @@ namespace LinkIt.Conventions
             }
         }
 
-        private Type GetPossibleConventionType(ConventionMatch match)
+        private static Type GetPossibleConventionType(ConventionMatch match)
         {
             if (Nullable.GetUnderlyingType(match.LinkedSourceModelProperty.PropertyType) != null)
             {
-                return typeof(IByNullableValueTypeIdConvention);
+                if (match.LinkTargetProperty.PropertyType.IsLinkedSource())
+                {
+                    return typeof(INestedLinkedSourceByNullableIdConvention);
+                }
+
+                return typeof(IReferenceByNullableIdConvention);
             }
 
-            if (IsGenericList(match.LinkTargetProperty))
+            if (IsArrayOrList(match.LinkTargetProperty))
             {
-                return typeof(IMultiValueConvention);
+                var linkTargetListItemType = match.LinkTargetProperty.PropertyType.GetEnumerableItemType();
+                if (linkTargetListItemType.IsLinkedSource())
+                {
+                    return typeof(INestedLinkedSourceListConvention);
+                }
+
+                return typeof(IReferenceListConvention);
             }
 
-            return typeof(ISingleValueConvention);
+            if (match.LinkTargetProperty.PropertyType.IsLinkedSource())
+            {
+                return typeof(INestedLinkedSourceConvention);
+            }
+
+            return typeof(IReferenceConvention);
+        }
+
+        private static bool IsArrayOrList(PropertyInfo linkTargetProperty)
+        {
+            return linkTargetProperty.PropertyType.IsArray
+                   || IsGenericList(linkTargetProperty);
         }
 
         private static bool IsGenericList(PropertyInfo linkTargetProperty)
         {
-            if (!linkTargetProperty.PropertyType.IsGenericType)
-            {
-                return false;
-            }
-
-            return linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>);
+            return linkTargetProperty.PropertyType.IsGenericType
+                && linkTargetProperty.PropertyType.GetGenericTypeDefinition() == typeof(List<>);
         }
     }
 }

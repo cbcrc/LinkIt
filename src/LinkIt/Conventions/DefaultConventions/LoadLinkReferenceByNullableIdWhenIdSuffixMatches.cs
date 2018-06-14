@@ -6,17 +6,17 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.Shared;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Conventions.DefaultConventions
 {
     /// <summary>
     /// Load link the property of a linked source if there is a property from the model with the same name suffixed by "Id".
     /// </summary>
-    public class LoadLinkByNullableValueTypeIdWhenIdSuffixMatches : IByNullableValueTypeIdConvention
+    public class LoadLinkReferenceByNullableIdWhenIdSuffixMatches : IReferenceByNullableIdConvention
     {
         /// <inheritdoc />
-        public string Name => "Load link by nullable value type id when id suffix matches";
+        public string Name => "Load link reference by nullable value type id when id suffix matches";
 
         /// <inheritdoc />
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
@@ -31,23 +31,13 @@ namespace LinkIt.Conventions.DefaultConventions
             Expression<Func<TLinkedSource, TLinkTargetProperty>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty
-        )
-            where TLinkedSourceModelProperty : struct
+        ) where TLinkedSource: ILinkedSource
+          where TLinkedSourceModelProperty : struct
         {
-            if (typeof(TLinkTargetProperty).IsLinkedSource())
-            {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceById(
-                    getLinkedSourceModelProperty,
-                    getLinkTargetProperty
-                );
-            }
-            else
-            {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferenceById(
-                    getLinkedSourceModelProperty,
-                    getLinkTargetProperty
-                );
-            }
+            loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferenceById(
+                getLinkedSourceModelProperty,
+                getLinkTargetProperty
+            );
         }
     }
 }

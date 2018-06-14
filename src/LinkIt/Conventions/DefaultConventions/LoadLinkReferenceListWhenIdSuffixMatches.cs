@@ -7,17 +7,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
-using LinkIt.Shared;
+using LinkIt.PublicApi;
 
 namespace LinkIt.Conventions.DefaultConventions
 {
     /// <summary>
-    /// Load link the property of a linked source if there is a property from the model with the same name suffixed by "Id[s]".
+    /// Load link the property of a linked source if it's not linked sources and
+    /// there is a property from the model with the same name suffixed by "Id[s]".
     /// </summary>
-    public class LoadLinkMultiValueWhenIdSuffixMatches : IMultiValueConvention
+    public class LoadLinkReferenceListWhenIdSuffixMatches : IReferenceListConvention
     {
         /// <inheritdoc />
-        public string Name => "Load link multi value when id suffix matches";
+        public string Name => "Load link references when id suffix matches";
 
         /// <inheritdoc />
         public bool DoesApply(PropertyInfo linkedSourceModelProperty, PropertyInfo linkTargetProperty)
@@ -32,21 +33,12 @@ namespace LinkIt.Conventions.DefaultConventions
             Expression<Func<TLinkedSource, IList<TLinkTargetProperty>>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
+            where TLinkedSource: ILinkedSource
         {
-            if (typeof(TLinkTargetProperty).IsLinkedSource())
-            {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourcesByIds(
-                    getLinkedSourceModelProperty,
-                    getLinkTargetProperty
-                );
-            }
-            else
-            {
-                loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferencesByIds(
-                    getLinkedSourceModelProperty,
-                    getLinkTargetProperty
-                );
-            }
+            loadLinkProtocolForLinkedSourceBuilder.LoadLinkReferencesByIds(
+                getLinkedSourceModelProperty,
+                getLinkTargetProperty
+            );
         }
     }
 }
