@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using LinkIt.Core;
 using LinkIt.PublicApi;
+using LinkIt.ReadableExpressions.Extensions;
 using LinkIt.Shared;
 
 namespace LinkIt.ConfigBuilders
@@ -49,7 +50,7 @@ namespace LinkIt.ConfigBuilders
         {
             if (!typeof(TLinkedSource).IsLinkedSource())
             {
-                throw new ArgumentException($"Generic type parameter {typeof(TLinkedSource).Name} must implement ILinkedSource<>.", nameof(TLinkedSource));
+                throw new LinkItException($"Can't configure load link protocol for {typeof(TLinkedSource).GetFriendlyName()}: type must implement ILinkedSource<T>.");
             }
 
             return new LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource>(AddLoadLinkExpression);

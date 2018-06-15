@@ -7,6 +7,8 @@ using LinkIt.Core.Includes;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
 using LinkIt.PublicApi;
+using LinkIt.ReadableExpressions.Extensions;
+using LinkIt.Shared;
 
 namespace LinkIt.ConfigBuilders
 {
@@ -39,8 +41,8 @@ namespace LinkIt.ConfigBuilders
         {
             if (_includeByDiscriminantValue.ContainsKey(discriminant))
             {
-                throw new ArgumentException(
-                   $"{LinkTarget.Id}: cannot have many includes for the same discriminant ({discriminant})."
+                throw new LinkItException(
+                   $"Invalid configuration for linked source {typeof(TLinkedSource).GetFriendlyName()}, polymorphic list target {{{LinkTarget.Expression}}}: cannot have more than one include with the same discriminant ({discriminant})."
                );
             }
 

@@ -1,8 +1,11 @@
 // Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
+using System;
+using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.LinkTargets.Interfaces;
+using LinkIt.ReadableExpressions;
 using LinkIt.Shared;
 
 namespace LinkIt.LinkTargets
@@ -10,12 +13,18 @@ namespace LinkIt.LinkTargets
     internal class SingleValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
     {
         private readonly PropertyInfo _property;
+        private readonly Expression<Func<TLinkedSource, TTargetProperty>> _expression;
 
-        public SingleValueLinkTarget(PropertyInfo property)
+        public SingleValueLinkTarget(PropertyInfo property, Expression<Func<TLinkedSource, TTargetProperty>> expression)
         {
             _property = property;
+            _expression = expression;
             Id = property.GetFullName();
         }
+
+        public string Id { get; }
+
+        public string Expression => _expression.ToReadableString();
 
         public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
         {
@@ -32,16 +41,9 @@ namespace LinkIt.LinkTargets
             //Do nothing for single value
         }
 
-        public string Id { get; }
-
         public bool Equals(ILinkTarget other)
         {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return Id.Equals(other.Id);
+            return other != null && Id.Equals(other.Id);
         }
     }
 }

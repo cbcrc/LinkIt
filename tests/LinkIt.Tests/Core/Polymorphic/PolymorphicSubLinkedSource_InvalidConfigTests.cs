@@ -3,6 +3,7 @@
 
 using System;
 using LinkIt.ConfigBuilders;
+using LinkIt.Shared;
 using Xunit;
 
 namespace LinkIt.Tests.Core.Polymorphic
@@ -25,8 +26,9 @@ namespace LinkIt.Tests.Core.Polymorphic
                     )
                 );
 
-            var ex = Assert.Throws<ArgumentException>(act);
-            Assert.Contains("LinkedSource/Target", ex.Message);
+            var ex = Assert.Throws<LinkItException>(act);
+            Assert.Contains("Invalid configuration", ex.Message);
+            Assert.Contains("linkedSource.Target", ex.Message);
             Assert.Contains("WebPageReference", ex.Message);
             Assert.Contains("getNestedLinkedSourceModel", ex.Message);
         }
@@ -51,8 +53,9 @@ namespace LinkIt.Tests.Core.Polymorphic
                         )
                 );
 
-            var ex = Assert.Throws<ArgumentException>(act);
-            Assert.Contains("LinkedSource/Target", ex.Message);
+            var ex = Assert.Throws<LinkItException>(act);
+            Assert.Contains("LinkedSource", ex.Message);
+            Assert.Contains("linkedSource.Target", ex.Message);
             Assert.Contains("web-page", ex.Message);
         }
     }

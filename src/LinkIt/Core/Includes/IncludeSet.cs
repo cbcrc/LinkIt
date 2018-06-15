@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LinkIt.Core.Includes.Interfaces;
+using LinkIt.ReadableExpressions.Extensions;
 using LinkIt.Shared;
 
 namespace LinkIt.Core.Includes
@@ -78,7 +79,7 @@ namespace LinkIt.Core.Includes
             if (!_includes.ContainsKey(discriminant))
             {
                 throw new LinkItException(
-                    $"{typeof(TLinkedSource)}: Cannot invoke GetInclude for discriminant={discriminant}"
+                    $"{typeof(TLinkedSource).GetFriendlyName()}: Cannot invoke GetInclude for discriminant={discriminant}"
                 );
             }
         }
@@ -88,7 +89,7 @@ namespace LinkIt.Core.Includes
             if ((object) link == null)
             {
                 throw new LinkItException(
-                    $"{typeof(TLinkedSource)}: Cannot invoke GetInclude with a null link"
+                    $"{typeof(TLinkedSource).GetFriendlyName()}: Cannot invoke GetInclude with a null link"
                 );
             }
         }

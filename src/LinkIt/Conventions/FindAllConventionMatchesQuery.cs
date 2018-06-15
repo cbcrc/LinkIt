@@ -78,8 +78,8 @@ namespace LinkIt.Conventions
             }
             catch (Exception ex)
             {
-                throw new Exception(
-                    $"The convention \"{match.Convention.Name}\" failed for DoesApply. Link target id: {match.LinkTargetProperty.GetFullName()}, linked source model property: {match.LinkedSourceModelProperty.Name}",
+                throw new LinkItException(
+                    $"The convention \"{match.Convention.Name}\" failed for DoesApply. Link target id: {match.LinkTargetProperty.GetFullName()}, linked source model property: {match.LinkedSourceModelProperty.GetFullName()}",
                     ex
                 );
             }

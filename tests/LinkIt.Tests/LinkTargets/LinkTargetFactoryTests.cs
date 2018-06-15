@@ -4,6 +4,7 @@
 using System;
 using LinkIt.LinkTargets;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 using LinkIt.TestHelpers;
 using Xunit;
 
@@ -31,7 +32,7 @@ namespace LinkIt.Tests.LinkTargets
             Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, string>(
                 linkedSource => linkedSource.SummaryImage.Alt);
 
-            var exception = Assert.Throws<ArgumentException>(act);
+            var exception = Assert.Throws<LinkItException>(act);
             Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
             Assert.Contains("direct getter", exception.Message);
         }
@@ -43,7 +44,7 @@ namespace LinkIt.Tests.LinkTargets
                 linkedSource => linkedSource.SummaryImage ?? new Image()
             );
 
-            var exception = Assert.Throws<ArgumentException>(act);
+            var exception = Assert.Throws<LinkItException>(act);
             Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
             Assert.Contains("direct getter", exception.Message);
         }
@@ -55,7 +56,7 @@ namespace LinkIt.Tests.LinkTargets
                 linkedSource => linkedSource.AnImageFunc()
             );
 
-            var exception = Assert.Throws<ArgumentException>(act);
+            var exception = Assert.Throws<LinkItException>(act);
             Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
             Assert.Contains("direct getter", exception.Message);
         }
@@ -66,8 +67,9 @@ namespace LinkIt.Tests.LinkTargets
             Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.APrivateSetterImage);
 
-            var exception = Assert.Throws<ArgumentException>(act);
-            Assert.Contains("ForLinkedTargetLinkedSource/APrivateSetterImage", exception.Message);
+            var exception = Assert.Throws<LinkItException>(act);
+            Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
+            Assert.Contains("APrivateSetterImage", exception.Message);
             Assert.Contains("read-write", exception.Message);
         }
 
@@ -77,8 +79,9 @@ namespace LinkIt.Tests.LinkTargets
             Action act = () => LinkTargetFactory.Create<ForLinkedTargetLinkedSource, Image>(
                 linkedSource => linkedSource.AReadOnlyImage);
 
-            var exception = Assert.Throws<ArgumentException>(act);
-            Assert.Contains("ForLinkedTargetLinkedSource/AReadOnlyImage", exception.Message);
+            var exception = Assert.Throws<LinkItException>(act);
+            Assert.Contains("ForLinkedTargetLinkedSource", exception.Message);
+            Assert.Contains("AReadOnlyImage", exception.Message);
             Assert.Contains("read-write", exception.Message);
         }
 

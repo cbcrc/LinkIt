@@ -51,8 +51,8 @@ namespace LinkIt.Conventions
             }
             catch (TargetInvocationException ex)
             {
-                throw new Exception(
-                    $"The convention \"{match.Convention.Name}\" failed for Apply. Link target id: {match.LinkTargetProperty.GetFullName()}, linked source model property: {match.LinkedSourceModelProperty.Name}",
+                throw new LinkItException(
+                    $"The convention \"{match.Convention.Name}\" failed for Apply. Link target id: {match.LinkTargetProperty.GetFullName()}, linked source model property: {match.LinkedSourceModelProperty.GetFullName()}",
                     ex.GetBaseException()
                 );
             }
@@ -62,7 +62,7 @@ namespace LinkIt.Conventions
 
         private void ApplySingleValueConvention(ConventionMatch match)
         {
-            var genericParameters = new Type[]
+            var genericParameters = new []
             {
                 match.LinkedSourceType,
                 match.LinkTargetProperty.PropertyType,

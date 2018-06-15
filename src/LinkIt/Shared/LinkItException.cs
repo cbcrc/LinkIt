@@ -10,8 +10,8 @@ namespace LinkIt.Shared
     /// </summary>
     public class LinkItException : Exception
     {
-        internal LinkItException(string message)
-            : base(message)
+        internal LinkItException(string message, Exception innerException = null)
+            : base(message, innerException)
         {
         }
     }

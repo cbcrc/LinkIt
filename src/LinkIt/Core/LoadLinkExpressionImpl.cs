@@ -7,6 +7,7 @@ using System.Linq;
 using LinkIt.Core.Includes;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
+using LinkIt.ReadableExpressions.Extensions;
 using LinkIt.Shared;
 using LinkIt.TopologicalSorting;
 
@@ -190,7 +191,7 @@ namespace LinkIt.Core
             if (!(linkedSource is TLinkedSource))
             {
                 throw new LinkItException(
-                   $"Cannot invoke load-link expression for {typeof(TLinkedSource)} with linked source of type {linkedSource?.GetType()}"
+                   $"Cannot invoke load-link expression for {typeof(TLinkedSource).GetFriendlyName()} with linked source of type {linkedSource?.GetType().GetFriendlyName()}"
                );
             }
         }
@@ -200,9 +201,9 @@ namespace LinkIt.Core
             if (!loadLinkExpression.ReferenceTypes.Contains(referenceType))
             {
                 throw new LinkItException(
-                   $"Cannot invoke this load link expression for reference type {referenceType}." +
-                   $"Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes)}." +
-                   $"This load link expression is for {loadLinkExpression.LinkedSourceType}."
+                   $"Cannot invoke this load link expression for reference type {referenceType.GetFriendlyName()}." +
+                   $"Supported reference types are {string.Join(",", loadLinkExpression.ReferenceTypes.Select(t => t.GetFriendlyName()))}." +
+                   $"This load link expression is for {loadLinkExpression.LinkedSourceType.GetFriendlyName()}."
                );
             }
         }

@@ -3,10 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using LinkIt.Core.Includes;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
 using LinkIt.PublicApi;
+using LinkIt.ReadableExpressions;
+using LinkIt.ReadableExpressions.Extensions;
 using LinkIt.Shared;
 
 namespace LinkIt.Core
@@ -56,40 +59,40 @@ namespace LinkIt.Core
         }
 
         public IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             ILinkTarget linkTarget,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource)
         {
-            EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
+            EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TLink, TChildLinkedSourceModel>(linkTarget, getNestedLinkedSourceModel);
             EnsureIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
 
             return new IncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
-                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel),
+                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel.Compile()),
                 initChildLinkedSource
             );
         }
 
         public IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             ILinkTarget linkTarget,
             Action<TLink, TLinkedSource> initChildLinkedSource)
         {
-            EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(linkTarget);
+            EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TLink, TChildLinkedSourceModel>(linkTarget, getNestedLinkedSourceModel);
             EnsureIsAssignableFrom<TAbstractChildLinkedSource, TLinkedSource>();
 
             return new IncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TLinkedSource, TLinkedSourceModel>(
-                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel),
+                WrapGetNestedLinkedSourceModel(getNestedLinkedSourceModel.Compile()),
                 initChildLinkedSource
             );
         }
 
-        private Func<TLink, TLinkedSourceModel> WrapGetNestedLinkedSourceModel<TLink, TChildLinkedSourceModel>(
+        private static Func<TLink, TLinkedSourceModel> WrapGetNestedLinkedSourceModel<TLink, TChildLinkedSourceModel>(
             Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel)
         {
             return link => (TLinkedSourceModel) (object) getNestedLinkedSourceModel(link);
         }
 
-        private void EnsureIsAssignableFrom<TAbstract, TConcrete>()
+        private static void EnsureIsAssignableFrom<TAbstract, TConcrete>()
         {
             var abstractType = typeof(TAbstract);
             var concreteType = typeof(TConcrete);
@@ -102,12 +105,16 @@ namespace LinkIt.Core
             }
         }
 
-        private void EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TChildLinkedSourceModel>(ILinkTarget linkTarget)
+        private void EnsureGetNestedLinkedSourceModelReturnsTheExpectedType<TLink, TChildLinkedSourceModel>(
+            ILinkTarget linkTarget,
+            Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel)
         {
             if (!LinkedSourceModelType.IsAssignableFrom(typeof(TChildLinkedSourceModel)))
             {
-                throw new ArgumentException(
-                   $"{linkTarget.Id}: getNestedLinkedSourceModel returns an invalid type. {LinkedSourceModelType} is not assignable from {typeof(TChildLinkedSourceModel)}."
+                throw new LinkItException(
+                   $"Invalid configuration for linked source {typeof(TLinkedSource).GetFriendlyName()}, polymorphic list target {{{linkTarget.Expression}}}: "
+                    + $"in AsNestedLinkedSourceFromModel(), expression supplied to getNestedLinkedSourceModel ({getNestedLinkedSourceModel.ToReadableString()}) returns an invalid type. "
+                    + $"Expected {LinkedSourceModelType.GetFriendlyName()}, but received {typeof(TChildLinkedSourceModel).GetFriendlyName()}."
                );
             }
         }

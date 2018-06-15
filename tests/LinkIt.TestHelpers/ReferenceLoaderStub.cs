@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkIt.PublicApi;
+using LinkIt.ReadableExpressions.Extensions;
 
 namespace LinkIt.TestHelpers
 {
@@ -74,7 +75,7 @@ namespace LinkIt.TestHelpers
             if (!_referenceTypeConfigByReferenceType.ContainsKey(referenceType))
             {
                 throw new NotSupportedException(
-                   $"There is no loader for reference of type {referenceType.Name}."
+                   $"There is no loader for reference of type {referenceType.GetFriendlyName()}."
                );
             }
 

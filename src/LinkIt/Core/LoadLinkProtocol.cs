@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LinkIt.PublicApi;
+using LinkIt.ReadableExpressions.Extensions;
+using LinkIt.Shared;
 using LinkIt.TopologicalSorting;
 
 namespace LinkIt.Core
@@ -73,8 +75,8 @@ namespace LinkIt.Core
             var rootLinkedSourceType = typeof(TRootLinkedSource);
             if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType))
             {
-                throw new InvalidOperationException(
-                   $"The type {rootLinkedSourceType} cannot be used as root linked source because there are no load link expression associated with this linked source."
+                throw new LinkItException(
+                   $"Cannot find load link configuration for type {rootLinkedSourceType.GetFriendlyName()}."
                );
             }
 
@@ -90,7 +92,7 @@ namespace LinkIt.Core
                 var sort = dependencyGraph.Sort();
                 if (sort == null)
                 {
-                    throw new InvalidOperationException($"Cannot create the load link protocol for {rootLinkedSourceType}.");
+                    throw new LinkItException($"Cannot create load link protocol for {rootLinkedSourceType.GetFriendlyName()}. Possible cyclic dependencies.");
                 }
 
                 var loadingLevels = sort.GetLoadingLevels();
@@ -119,8 +121,8 @@ namespace LinkIt.Core
             }
             catch (NotSupportedException ex)
             {
-                throw new NotSupportedException(
-                    $"Unable to create the load link protocol for {rootLinkedSourceConfig.LinkedSourceType}. For more details, see inner exception.",
+                throw new LinkItException(
+                    $"Unable to create the load link protocol for {rootLinkedSourceType.GetFriendlyName()}. For more details, see inner exception.",
                     ex
                 );
             }

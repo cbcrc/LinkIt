@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 using LinkIt.TestHelpers;
 using Xunit;
 
@@ -56,9 +57,9 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            var ex = await Assert.ThrowsAsync<ArgumentException>(act);
-            Assert.Contains("Int32", ex.Message);
-            Assert.Contains("String", ex.Message);
+            var ex = await Assert.ThrowsAsync<LinkItException>(act);
+            Assert.Contains("int", ex.Message);
+            Assert.Contains("string", ex.Message);
         }
     }
 

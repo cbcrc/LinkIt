@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System.Reflection;
+using LinkIt.ReadableExpressions.Extensions;
 
 namespace LinkIt.Shared
 {
@@ -17,7 +18,7 @@ namespace LinkIt.Shared
 
         public static string GetFullName(this PropertyInfo property)
         {
-            return $"{property.DeclaringType}/{property.Name}";
+            return $"{property.DeclaringType.GetFriendlyName()}.{property.Name}";
         }
     }
 }

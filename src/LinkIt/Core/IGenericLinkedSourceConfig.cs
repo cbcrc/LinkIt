@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using LinkIt.Core.Includes.Interfaces;
 using LinkIt.LinkTargets.Interfaces;
 using LinkIt.PublicApi;
@@ -31,13 +32,13 @@ namespace LinkIt.Core
         );
 
         IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             ILinkTarget linkTarget,
             Action<TLinkTargetOwner, int, TLinkedSource> initChildLinkedSource = null
         );
 
         IInclude CreateIncludeNestedLinkedSourceFromModel<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TChildLinkedSourceModel>(
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             ILinkTarget linkTarget,
             Action<TLink, TLinkedSource> initChildLinkedSource
         );

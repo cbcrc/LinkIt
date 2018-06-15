@@ -4,23 +4,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.LinkTargets.Interfaces;
+using LinkIt.ReadableExpressions;
 using LinkIt.Shared;
 
 namespace LinkIt.LinkTargets
 {
     internal class MultiValueLinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget<TLinkedSource, TTargetProperty>
     {
-        private readonly Func<TLinkedSource, IList<TTargetProperty>> _get;
+        private readonly Func<TLinkedSource, List<TTargetProperty>> _get;
         private readonly PropertyInfo _property;
+        private readonly Expression<Func<TLinkedSource, List<TTargetProperty>>> _expression;
 
-        public MultiValueLinkTarget(PropertyInfo property, Func<TLinkedSource, IList<TTargetProperty>> get)
+        public MultiValueLinkTarget(PropertyInfo property, Expression<Func<TLinkedSource, List<TTargetProperty>>> expression)
         {
             _property = property;
+            _expression = expression;
+            _get = expression.Compile();
             Id = property.GetFullName();
-            _get = get;
         }
+
+        public string Id { get; }
+
+        public string Expression => _expression.ToReadableString();
 
         //See ILinkTarget.SetLinkTargetValue
         public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
@@ -49,26 +57,12 @@ namespace LinkIt.LinkTargets
 
         private void SetTargetProperty(TLinkedSource linkedSource, TTargetProperty[] values)
         {
-            if (_property.PropertyType.IsAssignableFrom(typeof(TTargetProperty[])))
-            {
-                _property.SetMethod.Invoke(linkedSource, new object[] { values });
-            }
-            else if (_property.PropertyType.IsAssignableFrom(typeof(List<TTargetProperty>)))
-            {
-                _property.SetMethod.Invoke(linkedSource, new object[] { values.ToList() });
-            }
+            _property.SetMethod.Invoke(linkedSource, new object[] { values.ToList() });
         }
-
-        public string Id { get; }
 
         public bool Equals(ILinkTarget other)
         {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return Id.Equals(other.Id);
+            return other != null && Id.Equals(other.Id);
         }
     }
 }

@@ -107,8 +107,8 @@ namespace LinkIt.Conventions
 
             if (notUniqueConventionNames.Count > 0)
             {
-                throw new ArgumentException(
-                   $"Cannot have many conventions with the same name: {string.Join(",", notUniqueConventionNames)}"
+                throw new LinkItException(
+                   $"Cannot have more than one convention with the same name: {string.Join(",", notUniqueConventionNames)}"
                );
             }
         }

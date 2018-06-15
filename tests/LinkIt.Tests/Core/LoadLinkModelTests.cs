@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 using LinkIt.TestHelpers;
 using Xunit;
 
@@ -50,9 +51,9 @@ namespace LinkIt.Tests.Core
                         "The model of SingleReferenceLinkedSource is not a string"
                     );
 
-            var ex = await Assert.ThrowsAsync<ArgumentException>(act);
+            var ex = await Assert.ThrowsAsync<LinkItException>(act);
             Assert.Contains("SingleReferenceContent", ex.Message);
-            Assert.Contains("String", ex.Message);
+            Assert.Contains("string", ex.Message);
         }
 
         [Fact]
@@ -106,9 +107,9 @@ namespace LinkIt.Tests.Core
                 }
             );
 
-            var ex = await Assert.ThrowsAsync<ArgumentException>(act);
+            var ex = await Assert.ThrowsAsync<LinkItException>(act);
             Assert.Contains("SingleReferenceContent", ex.Message);
-            Assert.Contains("String", ex.Message);
+            Assert.Contains("string", ex.Message);
         }
     }
 }

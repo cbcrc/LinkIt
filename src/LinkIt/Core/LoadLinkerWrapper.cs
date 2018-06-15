@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkIt.PublicApi;
+using LinkIt.ReadableExpressions.Extensions;
 using LinkIt.Shared;
 
 namespace LinkIt.Core
@@ -99,9 +100,8 @@ namespace LinkIt.Core
 
             if (rootModelType != expectedModelType)
             {
-                throw new ArgumentException(
-                    $"Invalid root linked source model type. Expected {expectedModelType} but was {rootModelType}.",
-                    nameof(TRootLinkedSourceModel)
+                throw new LinkItException(
+                    $"Invalid linked source model. Tried to load link {typeof(TRootLinkedSource).GetFriendlyName()} from model(s) of type {rootModelType.GetFriendlyName()}; expected {expectedModelType.GetFriendlyName()}."
                 );
             }
         }

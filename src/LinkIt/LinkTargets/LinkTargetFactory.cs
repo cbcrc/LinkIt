@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using LinkIt.LinkTargets.Interfaces;
+using LinkIt.ReadableExpressions;
+using LinkIt.ReadableExpressions.Extensions;
 using LinkIt.Shared;
 
 namespace LinkIt.LinkTargets
@@ -19,7 +21,7 @@ namespace LinkIt.LinkTargets
         {
             var property = GetPropertyFromGetter(getLinkTarget);
 
-            return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(property);
+            return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(property, getLinkTarget);
         }
 
         public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
@@ -27,7 +29,7 @@ namespace LinkIt.LinkTargets
         {
             var property = GetPropertyFromGetter(getLinkTarget);
 
-            return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(property, getLinkTarget.Compile());
+            return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(property, getLinkTarget);
         }
 
         private static PropertyInfo GetPropertyFromGetter<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter)
@@ -38,8 +40,7 @@ namespace LinkIt.LinkTargets
             EnsureIsPropertyOfLinkedSource<TLinkedSource>(getterBody);
 
             var property = (PropertyInfo) getterBody.Member;
-
-            EnsureIsReadWrite(property);
+            EnsureIsReadWrite(getter, property);
 
             //Impossible to have a write only property, since the setter is inferred from the getter
 
@@ -50,7 +51,7 @@ namespace LinkIt.LinkTargets
         {
             if (getter.Body.NodeType != ExpressionType.MemberAccess)
             {
-                throw OnlyDirectGetterAreSupported<TLinkedSource>();
+                throw OnlyDirectGetterAreSupported<TLinkedSource>(getter);
             }
         }
 
@@ -58,21 +59,25 @@ namespace LinkIt.LinkTargets
         {
             if (getterBody.Member.MemberType != MemberTypes.Property || getterBody.Expression.NodeType != ExpressionType.Parameter)
             {
-                throw OnlyDirectGetterAreSupported<TLinkedSource>();
+                throw OnlyDirectGetterAreSupported<TLinkedSource>(getterBody.Expression);
             }
         }
 
-        private static void EnsureIsReadWrite(PropertyInfo property)
+        private static void EnsureIsReadWrite<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter, PropertyInfo property)
         {
             if (!property.IsPublicReadWrite())
             {
-                throw new ArgumentException($"{property.GetFullName()}: Only read-write properties are supported.");
+                var errorMessage = $"Invalid configuration for linked source {typeof(TLinkedSource).GetFriendlyName()}: "
+                                   + $"Link {{{getter.ToReadableString()}}} is not valid, only read-write properties are supported.";
+                throw new LinkItException(errorMessage);
             }
         }
 
-        private static ArgumentException OnlyDirectGetterAreSupported<TLinkedSource>()
+        private static LinkItException OnlyDirectGetterAreSupported<TLinkedSource>(Expression expression)
         {
-            return new ArgumentException($"{typeof(TLinkedSource)}: Only direct getters are supported. Ex: p => p.Property");
+            var errorMessage = $"Invalid configuration for linked source {typeof(TLinkedSource).GetFriendlyName()}: "
+                             + $"Link {{{expression.ToReadableString()}}} is not valid, only direct getters are supported. Ex: p => p.Property";
+            return new LinkItException(errorMessage);
         }
     }
 }

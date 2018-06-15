@@ -8,6 +8,7 @@ using System.Reflection;
 using LinkIt.ConfigBuilders;
 using LinkIt.Conventions.Interfaces;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 using LinkIt.TestHelpers;
 using Xunit;
 
@@ -29,7 +30,7 @@ namespace LinkIt.Conventions.Tests
                 }
             );
 
-            var exception = Assert.Throws<ArgumentException>(act);
+            var exception = Assert.Throws<LinkItException>(act);
             Assert.Contains("with the same name", exception.Message);
             Assert.Contains("same-name", exception.Message);
         }

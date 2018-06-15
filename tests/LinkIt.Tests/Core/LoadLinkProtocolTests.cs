@@ -4,6 +4,7 @@
 using System;
 using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
+using LinkIt.Shared;
 using LinkIt.TestHelpers;
 using Xunit;
 
@@ -35,9 +36,9 @@ namespace LinkIt.Tests.Core
 
             Func<Task> act = async () => await sut.LoadLink<PersonLinkedSource>().ByIdAsync("dont-care");
 
-            var ex = await Assert.ThrowsAsync<InvalidOperationException>(act);
+            var ex = await Assert.ThrowsAsync<LinkItException>(act);
+            Assert.Contains("Cannot find load link", ex.Message);
             Assert.Contains("PersonLinkedSource", ex.Message);
-            Assert.Contains("root linked source", ex.Message);
         }
     }
 }

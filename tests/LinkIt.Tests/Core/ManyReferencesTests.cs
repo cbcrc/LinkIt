@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
@@ -32,7 +33,7 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task LoadLink_ManyReferencesAsync()
+        public async Task LoadLink_ManyReferencesAsync()
         {
             var actual = await _sut.LoadLink<ManyReferencesLinkedSource>().FromModelAsync(
                 new ManyReferencesContent
@@ -60,7 +61,7 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNullAsync()
+        public async Task LoadLink_ManyReferencesWithNullInReferenceIds_ShouldLinkNullAsync()
         {
             var actual = await _sut.LoadLink<ManyReferencesLinkedSource>().FromModelAsync(
                 new ManyReferencesContent
@@ -76,7 +77,7 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySetAsync()
+        public async Task LoadLink_ManyReferencesWithoutReferenceIds_ShouldLinkEmptySetAsync()
         {
             var actual = await _sut.LoadLink<ManyReferencesLinkedSource>().FromModelAsync(
                 new ManyReferencesContent
@@ -92,7 +93,7 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicatesAsync()
+        public async Task LoadLink_ManyReferencesWithDuplicates_ShouldLinkDuplicatesAsync()
         {
             var actual = await _sut.LoadLink<ManyReferencesLinkedSource>().FromModelAsync(
                 new ManyReferencesContent
@@ -109,7 +110,7 @@ namespace LinkIt.Tests.Core
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNullAsync()
+        public async Task LoadLink_ManyReferencesCannotBeResolved_ShouldLinkNullAsync()
         {
             var actual = await _sut.LoadLink<ManyReferencesLinkedSource>().FromModelAsync(
                 new ManyReferencesContent

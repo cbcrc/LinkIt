@@ -8,6 +8,7 @@ namespace LinkIt.LinkTargets.Interfaces
     internal interface ILinkTarget : IEquatable<ILinkTarget>
     {
         string Id { get; }
+        string Expression { get; }
     }
 
     internal interface ILinkTarget<TLinkedSource, TTargetProperty> : ILinkTarget

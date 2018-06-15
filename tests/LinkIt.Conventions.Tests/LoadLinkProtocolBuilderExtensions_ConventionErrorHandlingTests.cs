@@ -27,7 +27,7 @@ namespace LinkIt.Conventions.Tests
 
             var exception = Assert.ThrowsAny<Exception>(act);
             Assert.Contains("ApplyFailedConvention", exception.Message);
-            Assert.Contains("LinkedSource/Person", exception.Message);
+            Assert.Contains("LinkedSource.Person", exception.Message);
             Assert.Contains("PersonId", exception.Message);
             Assert.Contains("apply failed", exception.InnerException.Message);
         }
@@ -44,7 +44,7 @@ namespace LinkIt.Conventions.Tests
 
             var exception = Assert.ThrowsAny<Exception>(act);
             Assert.Contains("Does apply failed convention", exception.Message);
-            Assert.Contains("LinkedSource/Person", exception.Message);
+            Assert.Contains("LinkedSource.Person", exception.Message);
             Assert.Contains("PersonId", exception.Message);
             Assert.Contains("does apply failed", exception.InnerException.Message);
         }

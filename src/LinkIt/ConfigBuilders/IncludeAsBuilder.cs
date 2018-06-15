@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
+using System.Linq.Expressions;
 using LinkIt.Core;
 using LinkIt.Core.Includes;
 using LinkIt.PublicApi;
@@ -82,7 +83,7 @@ namespace LinkIt.ConfigBuilders
         /// </summary>
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSource = null)
         {
             if (getNestedLinkedSourceModel == null)
@@ -110,7 +111,7 @@ namespace LinkIt.ConfigBuilders
         /// </summary>
         public IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> AsNestedLinkedSourceFromModel<TChildLinkedSourceModel>(
             TDiscriminant discriminantValue,
-            Func<TLink, TChildLinkedSourceModel> getNestedLinkedSourceModel,
+            Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             Action<TLink, TLinkTarget> initChildLinkedSource)
         {
             if (getNestedLinkedSourceModel == null)
