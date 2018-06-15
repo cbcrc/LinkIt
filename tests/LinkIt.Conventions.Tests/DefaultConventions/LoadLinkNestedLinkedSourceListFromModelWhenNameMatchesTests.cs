@@ -45,15 +45,87 @@ namespace LinkIt.Conventions.Tests.DefaultConventions
             );
         }
 
+        [Fact]
+        public async Task NestedLinkedSourceListInNestedLinkedSourceList()
+        {
+            var masterModel = new Master
+            {
+                ListOfModels = new List<Model>
+                {
+                     new Model
+                    {
+                        Id = "One",
+                        ListOfMedia = new List<Media>
+                        {
+                            new Media
+                            {
+                                Id = 1
+                            },
+                            new Media
+                            {
+                                Id = 2
+                            }
+                        }
+                    },
+                    new Model
+                    {
+                        Id = "Two",
+                        ListOfMedia = new List<Media>
+                        {
+                            new Media
+                            {
+                                Id = 3
+                            },
+                            new Media
+                            {
+                                Id = 4
+                            }
+                        }
+                    }
+                }
+            };
+            var sut = BuildLoadLinkProtocol();
+
+            var actual = await sut.LoadLink<MasterLinkedSource>().FromModelAsync(masterModel);
+
+            Assert.Same(masterModel, actual.Model);
+            Assert.Collection(
+                actual.ListOfModels,
+                modelLinkedSource => Assert.Equal(masterModel.ListOfModels[0].Id, modelLinkedSource.Model.Id),
+                modelLinkedSource => Assert.Equal(masterModel.ListOfModels[1].Id, modelLinkedSource.Model.Id)
+            );
+            Assert.Collection(
+                actual.ListOfModels[0].ListOfMedia,
+                mediaLinkedSource => Assert.Equal(masterModel.ListOfModels[0].ListOfMedia[0].Id, mediaLinkedSource.Model.Id),
+                mediaLinkedSource => Assert.Equal(masterModel.ListOfModels[0].ListOfMedia[1].Id, mediaLinkedSource.Model.Id)
+            );
+            Assert.Collection(
+                actual.ListOfModels[1].ListOfMedia,
+                mediaLinkedSource => Assert.Equal(masterModel.ListOfModels[1].ListOfMedia[0].Id, mediaLinkedSource.Model.Id),
+                mediaLinkedSource => Assert.Equal(masterModel.ListOfModels[1].ListOfMedia[1].Id, mediaLinkedSource.Model.Id)
+            );
+        }
+
         private static ILoadLinkProtocol BuildLoadLinkProtocol()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
             loadLinkProtocolBuilder.ApplyConventions(
-                new List<Type> { typeof(LinkedSource) },
+                new List<Type> { typeof(LinkedSource), typeof(MasterLinkedSource) },
                 new List<ILoadLinkExpressionConvention> { new LoadLinkNestedLinkedSourceListFromModelWhenNameMatches() }
             );
 
             return loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
+        }
+
+        public class MasterLinkedSource : ILinkedSource<Master>
+        {
+            public Master Model { get; set; }
+            public List<LinkedSource> ListOfModels { get; set; }
+        }
+
+        public class Master
+        {
+            public List<Model> ListOfModels { get; set; }
         }
 
         public class LinkedSource : ILinkedSource<Model>

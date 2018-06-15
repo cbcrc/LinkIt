@@ -109,7 +109,7 @@ namespace LinkIt.Conventions
 
         private void ApplyListConvention(ConventionMatch match)
         {
-            var genericParameters = new Type[]
+            var genericParameters = new []
             {
                 match.LinkedSourceType,
                 match.LinkTargetProperty.PropertyType.GetEnumerableItemType(),
@@ -130,7 +130,7 @@ namespace LinkIt.Conventions
         public void ApplyListConventionGeneric<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(ConventionMatch match, MethodInfo applyMethod)
             where TLinkedSource: ILinkedSource
         {
-            var getLinkTargetProperty = FuncGenerator.GenerateFromGetterAsExpression<TLinkedSource, IList<TLinkTargetProperty>>(
+            var getLinkTargetProperty = FuncGenerator.GenerateFromGetterAsExpression<TLinkedSource, List<TLinkTargetProperty>>(
                 match.LinkTargetProperty.Name
             );
             var getLinkedSourceModelProperty = FuncGenerator
@@ -156,7 +156,7 @@ namespace LinkIt.Conventions
 
         private void ApplyNullableIdConvention(ConventionMatch match)
         {
-            var genericParameters = new Type[]
+            var genericParameters = new []
             {
                 match.LinkedSourceType,
                 match.LinkTargetProperty.PropertyType,

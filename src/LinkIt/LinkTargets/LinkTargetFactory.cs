@@ -14,8 +14,6 @@ namespace LinkIt.LinkTargets
     //http://stackoverflow.com/questions/7723744/expressionfunctmodel-string-to-expressionactiontmodel-getter-to-sette
     internal static class LinkTargetFactory
     {
-        #region Single Value
-
         public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
             Expression<Func<TLinkedSource, TTargetProperty>> getLinkTarget)
         {
@@ -24,31 +22,13 @@ namespace LinkIt.LinkTargets
             return new SingleValueLinkTarget<TLinkedSource, TTargetProperty>(property);
         }
 
-        #endregion
-
-        #region Multi Value
-
         public static ILinkTarget<TLinkedSource, TTargetProperty> Create<TLinkedSource, TTargetProperty>(
-            Expression<Func<TLinkedSource, IList<TTargetProperty>>> getLinkTarget)
+            Expression<Func<TLinkedSource, List<TTargetProperty>>> getLinkTarget)
         {
             var property = GetPropertyFromGetter(getLinkTarget);
-            EnsureIsSupportedIListImplementation<TTargetProperty>(property);
 
             return new MultiValueLinkTarget<TLinkedSource, TTargetProperty>(property, getLinkTarget.Compile());
         }
-
-        private static void EnsureIsSupportedIListImplementation<TTargetProperty>(PropertyInfo property)
-        {
-            var propertyType = property.PropertyType;
-            if (!propertyType.IsAssignableFrom(typeof(TTargetProperty[])) && !propertyType.IsAssignableFrom(typeof(List<TTargetProperty>)))
-            {
-                throw new ArgumentException($"Property {property.GetFullName()} is an invalid link target for a list: Only properties that can be assigned from an {typeof(TTargetProperty).Name}[] or List<{typeof(TTargetProperty).Name}> are supported.");
-            }
-        }
-
-        #endregion
-
-        #region Shared
 
         private static PropertyInfo GetPropertyFromGetter<TLinkedSource, TTargetProperty>(Expression<Func<TLinkedSource, TTargetProperty>> getter)
         {
@@ -94,7 +74,5 @@ namespace LinkIt.LinkTargets
         {
             return new ArgumentException($"{typeof(TLinkedSource)}: Only direct getters are supported. Ex: p => p.Property");
         }
-
-        #endregion
     }
 }

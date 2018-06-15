@@ -54,29 +54,6 @@ namespace LinkIt.ConfigBuilders
         /// <summary>
         /// Load a reference by ID.
         /// </summary>
-        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferencesByIds<TReference, TId>(
-            Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
-            Expression<Func<TLinkedSource, IList<TReference>>> getLinkTarget)
-        {
-            if (getLookupIds == null)
-            {
-                throw new ArgumentNullException(nameof(getLookupIds));
-            }
-
-            if (getLinkTarget == null)
-            {
-                throw new ArgumentNullException(nameof(getLinkTarget));
-            }
-
-            return LoadLinkReferencesByIds(
-                getLookupIds,
-                LinkTargetFactory.Create(getLinkTarget)
-            );
-        }
-
-        /// <summary>
-        /// Load a reference by ID.
-        /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferenceById<TReference, TId>(
             Func<TLinkedSource, TId?> getOptionalLookupId,
             Expression<Func<TLinkedSource, TReference>> getLinkTarget
@@ -95,6 +72,29 @@ namespace LinkIt.ConfigBuilders
 
             return LoadLinkReferencesByIds(
                 ToGetLookupIdsForOptionalSingleValue(getOptionalLookupId),
+                LinkTargetFactory.Create(getLinkTarget)
+            );
+        }
+
+        /// <summary>
+        /// Load references by their IDs.
+        /// </summary>
+        public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferencesByIds<TReference, TId>(
+            Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
+            Expression<Func<TLinkedSource, List<TReference>>> getLinkTarget)
+        {
+            if (getLookupIds == null)
+            {
+                throw new ArgumentNullException(nameof(getLookupIds));
+            }
+
+            if (getLinkTarget == null)
+            {
+                throw new ArgumentNullException(nameof(getLinkTarget));
+            }
+
+            return LoadLinkReferencesByIds(
+                getLookupIds,
                 LinkTargetFactory.Create(getLinkTarget)
             );
         }
@@ -172,11 +172,11 @@ namespace LinkIt.ConfigBuilders
         }
 
         /// <summary>
-        /// Load nested linked sources by IDs.
+        /// Load nested linked sources by their IDs.
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourcesByIds<TChildLinkedSource, TId>(
             Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
-            Expression<Func<TLinkedSource, IList<TChildLinkedSource>>> getLinkTarget,
+            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null)
             where TChildLinkedSource: ILinkedSource
         {
@@ -252,7 +252,7 @@ namespace LinkIt.ConfigBuilders
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourcesFromModels<TChildLinkedSource, TChildLinkedSourceModel>(
             Func<TLinkedSource, IEnumerable<TChildLinkedSourceModel>> getNestedLinkedSourceModels,
-            Expression<Func<TLinkedSource, IList<TChildLinkedSource>>> getLinkTarget,
+            Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
@@ -339,7 +339,7 @@ namespace LinkIt.ConfigBuilders
         /// </summary>
         public LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkPolymorphicList<TAbstractLinkTarget, TLink, TDiscriminant>(
             Func<TLinkedSource, IEnumerable<TLink>> getLinks,
-            Expression<Func<TLinkedSource, IList<TAbstractLinkTarget>>> getLinkTarget,
+            Expression<Func<TLinkedSource, List<TAbstractLinkTarget>>> getLinkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
         {

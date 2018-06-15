@@ -42,7 +42,7 @@ namespace LinkIt.Conventions.DefaultConventions
         public void Apply<TLinkedSource, TLinkTargetProperty, TLinkedSourceModelProperty>(
             LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> loadLinkProtocolForLinkedSourceBuilder,
             Func<TLinkedSource, IEnumerable<TLinkedSourceModelProperty>> getLinkedSourceModelProperty,
-            Expression<Func<TLinkedSource, IList<TLinkTargetProperty>>> getLinkTargetProperty,
+            Expression<Func<TLinkedSource, List<TLinkTargetProperty>>> getLinkTargetProperty,
             PropertyInfo linkedSourceModelProperty,
             PropertyInfo linkTargetProperty)
             where TLinkedSource: ILinkedSource

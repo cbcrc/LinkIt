@@ -40,31 +40,28 @@ namespace LinkIt.Conventions
                 .ToList();
         }
 
-        private List<Type> GetLinkedSourceTypes()
+        private IEnumerable<Type> GetLinkedSourceTypes()
         {
             return _types
-                .Where(TypeExtensions.IsLinkedSource)
-                .ToList();
+                .Where(TypeExtensions.IsLinkedSource);
         }
 
-        private static List<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
+        private static IEnumerable<PropertyInfo> GetLinkTargetProperties(Type linkedSourceType)
         {
             return linkedSourceType
                 .GetProperties()
                 .Where(property => property.Name != "Model")
-                .Where(PropertyInfoExtensions.IsPublicReadWrite)
-                .ToList();
+                .Where(PropertyInfoExtensions.IsPublicReadWrite);
         }
 
-        private static List<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType)
+        private static IEnumerable<PropertyInfo> GetLinkedSourceModelProperties(Type linkedSourceType)
         {
             var linkedSourceModelType = linkedSourceType
                 .GetProperty("Model")
                 .PropertyType;
 
             return linkedSourceModelType
-                .GetProperties()
-                .ToList();
+                .GetProperties();
         }
 
         private static bool DoesConventionApply(ConventionMatch match)
@@ -100,7 +97,7 @@ namespace LinkIt.Conventions
                 return typeof(IReferenceByNullableIdConvention);
             }
 
-            if (IsArrayOrList(match.LinkTargetProperty))
+            if (IsGenericList(match.LinkTargetProperty))
             {
                 var linkTargetListItemType = match.LinkTargetProperty.PropertyType.GetEnumerableItemType();
                 if (linkTargetListItemType.IsLinkedSource())
@@ -117,12 +114,6 @@ namespace LinkIt.Conventions
             }
 
             return typeof(IReferenceConvention);
-        }
-
-        private static bool IsArrayOrList(PropertyInfo linkTargetProperty)
-        {
-            return linkTargetProperty.PropertyType.IsArray
-                   || IsGenericList(linkTargetProperty);
         }
 
         private static bool IsGenericList(PropertyInfo linkTargetProperty)
