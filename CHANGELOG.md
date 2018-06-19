@@ -27,5 +27,7 @@
 
 
 ### Migration from 1.x to 2.0
-Included in the NuGet is a migration helper. It includes the removed classes and methods (as extension methods) with 
-the `ObsoleteAttribute` to explain with what to replace the deprecated class or method.
+In the repository, there is a [migration helper](https://github.com/cbcrc/LinkIt/blob/master/src/LinkIt/V2MigrationHelper.cs). 
+Copy the file to get help migrating your code. It includes stubs of all the removed classes 
+and methods (as extension methods), with the `ObsoleteAttribute` explaining what to replace them with. 
+Your build result will include warnings for every use of those classes/methods.

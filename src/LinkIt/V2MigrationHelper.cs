@@ -12,25 +12,25 @@ namespace LinkIt.PublicApi
     /// </summary>
     public static class V2LoadingContextMigrationHelper
     {
-        [Obsolete("Deperecated. Use ReferenceTypes property.", true)]
+        [Obsolete("Deprecated. Use ReferenceTypes property.", true)]
         public static void GetReferenceTypes(this ILoadingContext context)
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("Deperecated. Use AddResults.", true)]
+        [Obsolete("Deprecated. Use AddResults.", true)]
         public static void AddReferences<TReference, TId>(this ILoadingContext context, IEnumerable<TReference> references, Func<TReference, TId> getReferenceId)
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("Deperecated. Use AddResults.", true)]
+        [Obsolete("Deprecated. Use AddResults.", true)]
         public static void AddReferences<TReference, TId>(this ILoadingContext context, IDictionary<TId, TReference> referencesById)
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("Deperecated. Use ReferenceIds.", true)]
+        [Obsolete("Deprecated. Use ReferenceIds.", true)]
         public static void GetReferenceIds<TId>(this ILoadingContext context)
         {
             throw new NotImplementedException();
@@ -50,56 +50,60 @@ namespace LinkIt.ConfigBuilders
 {
     public static class V2LoadLinkProtocolForLinkedSourceBuilderMigrationHelper
     {
-        [Obsolete("Deperecated. Use LoadLinkReferencesByIds (pluralized method name).", true)]
+        [Obsolete("Deprecated. Use LoadLinkReferencesByIds (pluralized method name).", true)]
         public static LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkReferenceById<TLinkedSource, TReference, TId>(
             this LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> builder,
             Func<TLinkedSource, TId?> getOptionalLookupId,
             Expression<Func<TLinkedSource, TReference>> getLinkTarget
         )
-            where TId:struct
+            where TId:struct where TLinkedSource : ILinkedSource
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("Deperecated. Use LoadLinkNestedLinkedSourcesByIds (pluralized method name).", true)]
+        [Obsolete("Deprecated. Use LoadLinkNestedLinkedSourcesByIds (pluralized method name).", true)]
         public static LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceById<TLinkedSource, TChildLinkedSource, TId>(
             this LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> builder,
             Func<TLinkedSource, List<TId>> getLookupIds,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget,
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource)
+            where TLinkedSource : ILinkedSource
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("Deperecated. Use LoadLinkNestedLinkedSourcesFromModels (pluralized method name).", true)]
+        [Obsolete("Deprecated. Use LoadLinkNestedLinkedSourcesFromModels (pluralized method name).", true)]
         public static LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> LoadLinkNestedLinkedSourceFromModel<TLinkedSource, TChildLinkedSource, TChildLinkedSourceModel>(
             this LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> builder,
             Func<TLinkedSource, List<TChildLinkedSourceModel>> getNestedLinkedSourceModels,
             Expression<Func<TLinkedSource, List<TChildLinkedSource>>> getLinkTarget
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
+            where TLinkedSource : ILinkedSource
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("Deperecated. Use LoadLinkPolymorphic.", true)]
+        [Obsolete("Deprecated. Use LoadLinkPolymorphic.", true)]
         public static LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLink<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
             this LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> builder,
             Func<TLinkedSource, TLink> getLink,
             Expression<Func<TLinkedSource, TAbstractLinkTarget>> getLinkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
+            where TLinkedSource : ILinkedSource
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("Deperecated. Use LoadLinkPolymorphicList.", true)]
+        [Obsolete("Deprecated. Use LoadLinkPolymorphicList.", true)]
         public static LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> PolymorphicLoadLinkForList<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
             this LoadLinkProtocolForLinkedSourceBuilder<TLinkedSource> builder,
             Func<TLinkedSource, List<TLink>> getLinks,
             Expression<Func<TLinkedSource, List<TAbstractLinkTarget>>> getLinkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes)
+            where TLinkedSource : ILinkedSource
         {
             throw new NotImplementedException();
         }
