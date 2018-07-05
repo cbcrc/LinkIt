@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
