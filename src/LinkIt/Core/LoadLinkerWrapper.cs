@@ -15,10 +15,10 @@ namespace LinkIt.Core
         where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new()
     {
         private readonly Func<IReferenceLoader> _createReferenceLoader;
-        private readonly List<List<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
+        private readonly IEnumerable<IEnumerable<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
         private readonly LoadLinkProtocol _loadLinkProtocol;
 
-        public LoadLinkerWrapper(Func<IReferenceLoader> createReferenceLoader, List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
+        public LoadLinkerWrapper(Func<IReferenceLoader> createReferenceLoader, IEnumerable<IEnumerable<Type>> referenceTypeToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
         {
             _createReferenceLoader = createReferenceLoader;
             _referenceTypeToBeLoadedForEachLoadingLevel = referenceTypeToBeLoadedForEachLoadingLevel;

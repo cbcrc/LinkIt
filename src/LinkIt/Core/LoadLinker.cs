@@ -15,11 +15,11 @@ namespace LinkIt.Core
     {
         private readonly LoadLinkProtocol _loadLinkProtocol;
         private readonly IReferenceLoader _referenceLoader;
-        private readonly List<List<Type>> _referenceTypesToBeLoadedForEachLoadingLevel;
+        private readonly IEnumerable<IEnumerable<Type>> _referenceTypesToBeLoadedForEachLoadingLevel;
         private readonly DataStore _dataStore = new DataStore();
         private readonly Linker _linker;
 
-        internal LoadLinker(IReferenceLoader referenceLoader, List<List<Type>> referenceTypesToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
+        internal LoadLinker(IReferenceLoader referenceLoader, IEnumerable<IEnumerable<Type>> referenceTypesToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
         {
             _referenceLoader = referenceLoader;
             _referenceTypesToBeLoadedForEachLoadingLevel = referenceTypesToBeLoadedForEachLoadingLevel;
@@ -105,7 +105,7 @@ namespace LinkIt.Core
             }
         }
 
-        private async Task LoadNestingLevelAsync(List<Type> referenceTypeToBeLoaded)
+        private async Task LoadNestingLevelAsync(IEnumerable<Type> referenceTypeToBeLoaded)
         {
             var lookupContext = GetLookupContextForLoadingLevel(referenceTypeToBeLoaded);
             var loadingContext = new LoadingContext(lookupContext, _dataStore);
@@ -116,7 +116,7 @@ namespace LinkIt.Core
             }
         }
 
-        private LookupContext GetLookupContextForLoadingLevel(List<Type> referenceTypes)
+        private LookupContext GetLookupContextForLoadingLevel(IEnumerable<Type> referenceTypes)
         {
             var lookupContext = new LookupContext();
 

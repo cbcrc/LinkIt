@@ -18,7 +18,7 @@ namespace LinkIt.Core
     internal interface IGenericLinkedSourceConfig<TLinkedSource> : ILinkedSourceConfig
     {
         ILoadLinker<TLinkedSource> CreateLoadLinker(Func<IReferenceLoader> createReferenceLoader,
-            List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel,
+            IEnumerable<IEnumerable<Type>> referenceTypeToBeLoadedForEachLoadingLevel,
             LoadLinkProtocol loadLinkProtocol);
 
         IInclude CreateIncludeNestedLinkedSourceById<TLinkTargetOwner, TAbstractChildLinkedSource, TLink, TId>(
