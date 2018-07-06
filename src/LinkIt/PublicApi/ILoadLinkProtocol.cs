@@ -22,5 +22,7 @@ namespace LinkIt.PublicApi
         /// Stats for the <see cref="ILoadLinkProtocol"/>.
         /// </summary>
         LoadLinkProtocolStatistics Statistics { get; }
+
+        void EnableDebugMode();
     }
 }

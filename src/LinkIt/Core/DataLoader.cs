@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -40,7 +40,7 @@ namespace LinkIt.Core
             }
 
             var dataStore = new DataStore();
-            var loadingContext = new LoadingContext(lookupContext, dataStore);
+            var loadingContext = new LoadingContext(lookupContext.LookupIds, dataStore);
 
             using (var referenceLoader = _createReferenceLoader())
             {

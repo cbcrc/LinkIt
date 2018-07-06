@@ -53,6 +53,12 @@ namespace LinkIt.Core
 
         public LoadLinkProtocolStatistics Statistics => new LoadLinkProtocolStatistics(_loadingLevelsByRootLinkedSourceType);
 
+        internal bool IsDebugModeEnabled { get; private set; }
+
+        public void EnableDebugMode()
+        {
+            IsDebugModeEnabled = true;
+        }
 
         internal IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
@@ -95,8 +101,7 @@ namespace LinkIt.Core
                 throw new LinkItException($"Cannot create load link protocol for {rootLinkedSourceType.GetFriendlyName()}. Possible cyclic dependencies.");
             }
 
-            var loadingLevels = sort.GetLoadingLevels();
-            return loadingLevels;
+            return sort.GetLoadingLevels();
         }
 
         internal void AddDependenciesForAllLinkTargets(Type linkedSourceType, Dependency predecessor)

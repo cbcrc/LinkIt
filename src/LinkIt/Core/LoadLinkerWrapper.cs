@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using LinkIt.Debugging;
 using LinkIt.PublicApi;
 using LinkIt.ReadableExpressions.Extensions;
 using LinkIt.Shared;
@@ -15,10 +17,10 @@ namespace LinkIt.Core
         where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new()
     {
         private readonly Func<IReferenceLoader> _createReferenceLoader;
-        private readonly IEnumerable<IEnumerable<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
+        private readonly IReadOnlyList<IReadOnlyList<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
         private readonly LoadLinkProtocol _loadLinkProtocol;
 
-        public LoadLinkerWrapper(Func<IReferenceLoader> createReferenceLoader, IEnumerable<IEnumerable<Type>> referenceTypeToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
+        public LoadLinkerWrapper(Func<IReferenceLoader> createReferenceLoader, IReadOnlyList<IReadOnlyList<Type>> referenceTypeToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
         {
             _createReferenceLoader = createReferenceLoader;
             _referenceTypeToBeLoadedForEachLoadingLevel = referenceTypeToBeLoadedForEachLoadingLevel;
@@ -36,7 +38,8 @@ namespace LinkIt.Core
 
             using (var referenceLoader = _createReferenceLoader())
             {
-                var loadLinker = CreateLoadLinker(referenceLoader);
+                var loadLinkDetails = GetLoadLinkDetailsIfDebugModeEnabled(nameof(FromModelAsync), new [] { model });
+                var loadLinker = CreateLoadLinker(referenceLoader, loadLinkDetails);
                 return await loadLinker.FromModelAsync(model, initRootLinkedSource).ConfigureAwait(false);
             }
         }
@@ -52,7 +55,8 @@ namespace LinkIt.Core
 
             using (var referenceLoader = _createReferenceLoader())
             {
-                var loadLinker = CreateLoadLinker(referenceLoader);
+                var loadLinkDetails = GetLoadLinkDetailsIfDebugModeEnabled(nameof(FromModelsAsync), models);
+                var loadLinker = CreateLoadLinker(referenceLoader, loadLinkDetails);
                 return await loadLinker.FromModelsAsync(models, initRootLinkedSources).ConfigureAwait(false);
             }
         }
@@ -66,7 +70,8 @@ namespace LinkIt.Core
 
             using (var referenceLoader = _createReferenceLoader())
             {
-                var loadLinker = CreateLoadLinker(referenceLoader);
+                var loadLinkDetails = GetLoadLinkDetailsIfDebugModeEnabled(nameof(ByIdAsync), new [] { modelId });
+                var loadLinker = CreateLoadLinker(referenceLoader, loadLinkDetails);
                 return await loadLinker.ByIdAsync(modelId, initRootLinkedSource).ConfigureAwait(false);
             }
         }
@@ -83,14 +88,26 @@ namespace LinkIt.Core
 
             using (var referenceLoader = _createReferenceLoader())
             {
-                var loadLinker = CreateLoadLinker(referenceLoader);
+                var loadLinkDetails = GetLoadLinkDetailsIfDebugModeEnabled(nameof(ByIdsAsync), nonNullIds);
+                var loadLinker = CreateLoadLinker(referenceLoader, loadLinkDetails);
                 return await loadLinker.ByIdsAsync(nonNullIds, initRootLinkedSources).ConfigureAwait(false);
             }
         }
 
-        private LoadLinker<TRootLinkedSource, TRootLinkedSourceModel> CreateLoadLinker(IReferenceLoader referenceLoader)
+        private LoadLinkDetails<TRootLinkedSource, TRootLinkedSourceModel> GetLoadLinkDetailsIfDebugModeEnabled<T>(string methodName, IEnumerable<T> values)
         {
-            return new LoadLinker<TRootLinkedSource, TRootLinkedSourceModel>(referenceLoader, _referenceTypeToBeLoadedForEachLoadingLevel, _loadLinkProtocol);
+            if (!_loadLinkProtocol.IsDebugModeEnabled)
+            {
+                return null;
+            }
+
+            var callDetails = new LoadLinkCallDetails(methodName, values.Cast<object>());
+            return new LoadLinkDetails<TRootLinkedSource, TRootLinkedSourceModel>(callDetails, _referenceTypeToBeLoadedForEachLoadingLevel);
+        }
+
+        private LoadLinker<TRootLinkedSource, TRootLinkedSourceModel> CreateLoadLinker(IReferenceLoader referenceLoader, LoadLinkDetails<TRootLinkedSource, TRootLinkedSourceModel> loadLinkDetails)
+        {
+            return new LoadLinker<TRootLinkedSource, TRootLinkedSourceModel>(referenceLoader, _referenceTypeToBeLoadedForEachLoadingLevel, _loadLinkProtocol, loadLinkDetails);
         }
 
         private static void EnsureValidRootLinkedSourceModelType<TModel>()

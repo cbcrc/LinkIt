@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using LinkIt.Debugging;
 
 namespace LinkIt.PublicApi
 {
@@ -52,5 +53,11 @@ namespace LinkIt.PublicApi
         /// <typeparam name="TId">Type of the ID</typeparam>
         /// <param name="referencesById">Dictionary of references with their ID as key</param>
         void AddResults<TReference, TId>(IDictionary<TId, TReference> referencesById);
+
+        /// <summary>
+        /// Details about the current load-link operation.
+        /// Debug mode must be enabled on the ILoadLinkProtocol for this to not be null.
+        /// </summary>
+        ILoadLinkDetails LoadLinkDetails { get; }
     }
 }

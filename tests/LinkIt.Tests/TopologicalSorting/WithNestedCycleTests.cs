@@ -1,7 +1,8 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
+using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
@@ -58,7 +59,9 @@ namespace LinkIt.Tests.TopologicalSorting
             Action act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
             var exception = Assert.Throws<InvalidOperationException>(act);
-            Assert.Equal($"Recursive dependency detected for type {{ {nameof(ParentLinkedSource)} }}.", exception.Message);
+            exception.Message.Should().BeOneOf(
+                $"Recursive dependency detected for type {{ {nameof(ParentLinkedSource)} }}.",
+                $"Recursive dependency detected for type {{ {nameof(ChildLinkedSource)} }}.");
         }
 
         [Fact]
@@ -84,7 +87,10 @@ namespace LinkIt.Tests.TopologicalSorting
             Action act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
             var exception = Assert.Throws<InvalidOperationException>(act);
-            Assert.Equal($"Recursive dependency detected for type {{ {nameof(IndirectCycleLinkedSourceA)} }}.", exception.Message);
+            exception.Message.Should().BeOneOf(
+                $"Recursive dependency detected for type {{ {nameof(IndirectCycleLinkedSourceA)} }}.",
+                $"Recursive dependency detected for type {{ {nameof(IndirectCycleLinkedSourceB)} }}.",
+                $"Recursive dependency detected for type {{ {nameof(IndirectCycleLinkedSourceC)} }}.");
         }
 
         private class CycleInReferenceLinkedSource : ILinkedSource<DirectCycle>
