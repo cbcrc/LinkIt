@@ -49,7 +49,7 @@ namespace LinkIt.LinkTargets
         {
             var values = _get(linkedSource);
             var valuesWithoutNull = values
-                .Where(value => (object) value != null)
+                .WhereNotNull()
                 .ToArray();
 
             SetTargetProperty(linkedSource, valuesWithoutNull);

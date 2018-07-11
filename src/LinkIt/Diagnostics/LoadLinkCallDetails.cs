@@ -1,7 +1,12 @@
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
-namespace LinkIt.Debugging
+namespace LinkIt.Diagnostics
 {
 
     /// <summary>
@@ -9,10 +14,10 @@ namespace LinkIt.Debugging
     /// </summary>
     public class LoadLinkCallDetails
     {
-        internal LoadLinkCallDetails(string method, IEnumerable<object> values)
+        internal LoadLinkCallDetails(string method, IEnumerable values)
         {
             Method = method;
-            Values = values.ToImmutableList();
+            Values = values.Cast<object>().ToImmutableList();
         }
 
         /// <summary>

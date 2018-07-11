@@ -51,7 +51,7 @@ namespace LinkIt.TestHelpers
             IsDisposed = true;
         }
 
-        private List<IReferenceTypeConfig> GetDefaultReferenceTypeConfigs()
+        private static List<IReferenceTypeConfig> GetDefaultReferenceTypeConfigs()
         {
             return new List<IReferenceTypeConfig>
             {

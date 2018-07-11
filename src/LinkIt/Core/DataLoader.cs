@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkIt.PublicApi;
+using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
@@ -48,7 +49,7 @@ namespace LinkIt.Core
             }
 
             return dataStore.GetReferences<TModel, TId>(ids)
-                .Where(id => (object) id != null)
+                .WhereNotNull()
                 .ToList();
         }
     }

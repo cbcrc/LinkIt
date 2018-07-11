@@ -53,13 +53,6 @@ namespace LinkIt.Core
 
         public LoadLinkProtocolStatistics Statistics => new LoadLinkProtocolStatistics(_loadingLevelsByRootLinkedSourceType);
 
-        internal bool IsDebugModeEnabled { get; private set; }
-
-        public void EnableDebugMode()
-        {
-            IsDebugModeEnabled = true;
-        }
-
         internal IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
             return GetLoadLinkExpressions(linkedSource)

@@ -1,3 +1,6 @@
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -5,9 +8,8 @@ using System.Diagnostics;
 using System.Linq;
 using LinkIt.PublicApi;
 
-namespace LinkIt.Debugging
+namespace LinkIt.Diagnostics
 {
-
     internal class LoadLinkDetails<TLinkedSource, TLinkedSourceModel> : ILoadLinkDetails
         where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>
     {

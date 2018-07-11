@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using LinkIt.Debugging;
+using LinkIt.Diagnostics;
 
 namespace LinkIt.PublicApi
 {

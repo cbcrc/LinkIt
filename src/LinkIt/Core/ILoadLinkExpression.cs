@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -22,7 +22,6 @@ namespace LinkIt.Core
         void LinkNestedLinkedSourceById(object linkedSource, Linker linker, Type referenceTypeToBeLinked, LoadLinkProtocol loadLinkProtocol);
         void LinkNestedLinkedSourceFromModel(object linkedSource, Linker linker, LoadLinkProtocol loadLinkProtocol);
         void LinkReference(object linkedSource, DataStore dataStore);
-        void FilterOutNullValues(object linkedSource);
 
         void AddDependencyForEachInclude(Dependency predecessor, LoadLinkProtocol loadLinkProtocol);
     }

@@ -1,7 +1,10 @@
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 
-namespace LinkIt.Debugging
+namespace LinkIt.Diagnostics
 {
     /// <summary>
     /// Provides information to aid in debugging load-link operations.
