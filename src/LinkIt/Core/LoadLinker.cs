@@ -3,60 +3,42 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using LinkIt.Diagnostics;
 using LinkIt.PublicApi;
 
 namespace LinkIt.Core
 {
-    /// <inheritdoc/>
-    internal class LoadLinker<TRootLinkedSource, TRootLinkedSourceModel> : ILoadLinker<TRootLinkedSource>
+    internal class LoadLinker<TRootLinkedSource, TRootLinkedSourceModel> : IDisposable
         where TRootLinkedSource : class, ILinkedSource<TRootLinkedSourceModel>, new()
     {
         private readonly LoadLinkProtocol _loadLinkProtocol;
         private readonly IReferenceLoader _referenceLoader;
-        private readonly List<List<Type>> _referenceTypesToBeLoadedForEachLoadingLevel;
+        private readonly IReadOnlyList<IReadOnlyList<Type>> _referenceTypesToBeLoadedForEachLoadingLevel;
         private readonly DataStore _dataStore = new DataStore();
         private readonly Linker _linker;
+        private readonly LoadLinkDetails<TRootLinkedSource, TRootLinkedSourceModel> _loadLinkDetails;
 
-        internal LoadLinker(IReferenceLoader referenceLoader, List<List<Type>> referenceTypesToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
+        internal LoadLinker(Func<IReferenceLoader> getReferenceLoader, IReadOnlyList<IReadOnlyList<Type>> referenceTypesToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol, LoadLinkDetails<TRootLinkedSource, TRootLinkedSourceModel> loadLinkDetails)
         {
-            _referenceLoader = referenceLoader;
+            _referenceLoader = getReferenceLoader();
             _referenceTypesToBeLoadedForEachLoadingLevel = referenceTypesToBeLoadedForEachLoadingLevel;
             _loadLinkProtocol = loadLinkProtocol;
+            _loadLinkDetails = loadLinkDetails;
             _linker = new Linker(_loadLinkProtocol, _dataStore);
         }
 
-        public async Task<TRootLinkedSource> FromModelAsync<TModel>(
-            TModel model,
-            Action<TRootLinkedSource> initRootLinkedSource)
-        {
-            var linkedSources = await FromModelsAsync(new [] { model }, (_, linkedSource) => initRootLinkedSource?.Invoke(linkedSource)).ConfigureAwait(false);
-            return linkedSources.SingleOrDefault();
-        }
-
-        public async Task<IReadOnlyList<TRootLinkedSource>> FromModelsAsync<TModel>(
-            IEnumerable<TModel> models,
+        public async Task<IReadOnlyList<TRootLinkedSource>> FromModelsAsync(
+            IEnumerable<TRootLinkedSourceModel> models,
             Action<int, TRootLinkedSource> initRootLinkedSources)
         {
-            var linkedSources = models
-                .Cast<TRootLinkedSourceModel>()
-                .Select((model, index) => CreateLinkedSource(model, index, initRootLinkedSources))
-                .ToList();
+            var linkedSources = CreatePartiallyBuiltLinkedSource(models, initRootLinkedSources);
 
             await LoadLinkRootLinkedSource().ConfigureAwait(false);
 
-            return linkedSources
-                .Where(linkedSource => linkedSource != null)
-                .ToList();
-        }
-
-        public async Task<TRootLinkedSource> ByIdAsync<TRootLinkedSourceModelId>(
-            TRootLinkedSourceModelId modelId,
-            Action<TRootLinkedSource> initRootLinkedSource)
-        {
-            var linkedSources = await ByIdsAsync(new [] { modelId }, (_, linkedSource) => initRootLinkedSource?.Invoke(linkedSource)).ConfigureAwait(false);
-            return linkedSources.SingleOrDefault();
+            return linkedSources;
         }
 
         public async Task<IReadOnlyList<TRootLinkedSource>> ByIdsAsync<TRootLinkedSourceModelId>(
@@ -68,6 +50,22 @@ namespace LinkIt.Core
                 models,
                 initRootLinkedSources
             ).ConfigureAwait(false);
+        }
+
+        private ImmutableList<TRootLinkedSource> CreatePartiallyBuiltLinkedSource(IEnumerable<TRootLinkedSourceModel> models, Action<int, TRootLinkedSource> initRootLinkedSources)
+        {
+            _loadLinkDetails?.CurrentStep.LinkStart();
+
+            var linkedSources = models
+                .Select((model, index) => CreateLinkedSource(model, index, initRootLinkedSources))
+                .Where(linkedSource => linkedSource != null)
+                .ToImmutableList();
+
+            _loadLinkDetails?.CurrentStep.LinkEnd();
+
+            _loadLinkDetails?.SetResult(linkedSources);
+
+            return linkedSources;
         }
 
         private TRootLinkedSource CreateLinkedSource(TRootLinkedSourceModel model, int index, Action<int, TRootLinkedSource> initRootLinkedSources)
@@ -83,9 +81,34 @@ namespace LinkIt.Core
             var lookupContext = new LookupContext();
             lookupContext.AddLookupIds<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
 
-            await _referenceLoader.LoadReferencesAsync(new LoadingContext(lookupContext, _dataStore)).ConfigureAwait(false);
+            var loadingContext = GetLoadingContext(lookupContext);
+
+            _loadLinkDetails?.CurrentStep.LoadStart();
+            await _referenceLoader.LoadReferencesAsync(loadingContext).ConfigureAwait(false);
+            _loadLinkDetails?.CurrentStep.LoadEnd();
 
             return _dataStore.GetReferences<TRootLinkedSourceModel, TRootLinkedSourceModelId>(modelIds);
+        }
+
+        private LoadingContext GetLoadingContext(LookupContext lookupContext)
+        {
+            var lookupIds = GetLookupIdsToLoad(lookupContext);
+            _loadLinkDetails?.CurrentStep.SetReferenceIds(lookupIds);
+            return new LoadingContext(lookupIds, _dataStore, _loadLinkDetails);
+        }
+
+        private ImmutableDictionary<Type, IReadOnlyList<object>> GetLookupIdsToLoad(LookupContext lookupContext)
+        {
+            return lookupContext.LookupIds
+                .Select(p => new {
+                    Type = p.Key,
+                    Ids = p.Value.Except(_dataStore.GetLoadedReferenceIds(p.Key)).ToImmutableList(),
+                })
+                .Where(p => p.Ids.Count > 0)
+                .ToImmutableDictionary(
+                    p => p.Type,
+                    p => (IReadOnlyList<object>) p.Ids
+                );
         }
 
         private async Task LoadLinkRootLinkedSource()
@@ -100,23 +123,29 @@ namespace LinkIt.Core
             // root model is already loaded, so we can skip that level
             foreach (var referenceTypesToBeLoaded in _referenceTypesToBeLoadedForEachLoadingLevel.Skip(1))
             {
+                _loadLinkDetails?.NextStep();
                 await LoadNestingLevelAsync(referenceTypesToBeLoaded).ConfigureAwait(false);
+
+                _loadLinkDetails?.CurrentStep.LinkStart();
                 _linker.LinkNestedLinkedSourcesById(referenceTypesToBeLoaded);
+                _loadLinkDetails?.CurrentStep.LinkEnd();
             }
         }
 
-        private async Task LoadNestingLevelAsync(List<Type> referenceTypeToBeLoaded)
+        private async Task LoadNestingLevelAsync(IEnumerable<Type> referenceTypeToBeLoaded)
         {
             var lookupContext = GetLookupContextForLoadingLevel(referenceTypeToBeLoaded);
-            var loadingContext = new LoadingContext(lookupContext, _dataStore);
+            var loadingContext = GetLoadingContext(lookupContext);
 
+            _loadLinkDetails?.CurrentStep.LoadStart();
             if (loadingContext.ReferenceTypes.Count > 0)
             {
                 await _referenceLoader.LoadReferencesAsync(loadingContext).ConfigureAwait(false);
             }
+            _loadLinkDetails?.CurrentStep.LoadEnd();
         }
 
-        private LookupContext GetLookupContextForLoadingLevel(List<Type> referenceTypes)
+        private LookupContext GetLookupContextForLoadingLevel(IEnumerable<Type> referenceTypes)
         {
             var lookupContext = new LookupContext();
 
@@ -133,6 +162,11 @@ namespace LinkIt.Core
             }
 
             return lookupContext;
+        }
+
+        public void Dispose()
+        {
+            _referenceLoader?.Dispose();
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
+using LinkIt.Diagnostics;
 using LinkIt.PublicApi;
 
 namespace LinkIt.Core
@@ -12,27 +12,16 @@ namespace LinkIt.Core
     internal class LoadingContext : ILoadingContext
     {
         private readonly DataStore _dataStore;
-        private readonly ImmutableDictionary<Type, IReadOnlyList<object>> _lookupIds;
+        private readonly IReadOnlyDictionary<Type, IReadOnlyList<object>> _lookupIds;
 
-        public LoadingContext(LookupContext lookupContext, DataStore dataStore)
+        public LoadingContext(IReadOnlyDictionary<Type, IReadOnlyList<object>> lookupIds, DataStore dataStore, ILoadLinkDetails loadLinkDetails = null)
         {
             _dataStore = dataStore;
-            _lookupIds = GetLookupIds(lookupContext);
+            _lookupIds = lookupIds;
+            LoadLinkDetails = loadLinkDetails;
         }
 
-        private ImmutableDictionary<Type, IReadOnlyList<object>> GetLookupIds(LookupContext lookupContext)
-        {
-            return lookupContext.LookupIds
-                .ToDictionary(
-                    p => p.Key,
-                    p => p.Value.Except(_dataStore.GetLoadedReferenceIds(p.Key)).ToImmutableList()
-                )
-                .Where(p => p.Value.Count > 0)
-                .ToImmutableDictionary(
-                    p => p.Key,
-                    p => (IReadOnlyList<object>) p.Value
-                );
-        }
+        public ILoadLinkDetails LoadLinkDetails { get; }
 
         public IReadOnlyList<Type> ReferenceTypes => _lookupIds.Keys.ToList();
 
@@ -71,6 +60,7 @@ namespace LinkIt.Core
                 .Select(reference => new KeyValuePair<TId, TReference>(getReferenceId(reference), reference));
 
             _dataStore.AddReferences(referenceDictionary);
+            LoadLinkDetails?.CurrentStep.AddReferenceValues(references);
         }
 
         public void AddResults<TReference, TId>(IDictionary<TId, TReference> referencesById)
@@ -81,6 +71,7 @@ namespace LinkIt.Core
             }
 
             _dataStore.AddReferences(referencesById);
+            LoadLinkDetails?.CurrentStep.AddReferenceValues(referencesById.Values);
         }
     }
 }

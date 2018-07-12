@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -51,7 +51,7 @@ namespace LinkIt.Core
             EnsureIsReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource) linkedSource)
-                .Where(link => (object) link != null)
+                .WhereNotNull()
                 .ToList();
 
             foreach (var link in notNullLinks)
@@ -86,6 +86,8 @@ namespace LinkIt.Core
                 _includeSet.GetIncludeWithGetReference,
                 (link, include, _) => include.GetReference(link, dataStore)
             );
+
+            _linkTarget.FilterOutNullValues((TLinkedSource) linkedSource);
         }
 
         public void LinkNestedLinkedSourceById(
@@ -107,13 +109,6 @@ namespace LinkIt.Core
                         loadLinkProtocol
                     )
             );
-        }
-
-        public void FilterOutNullValues(object linkedSource)
-        {
-            EnsureLinkedSourceIsOfTLinkedSource(linkedSource);
-
-            _linkTarget.FilterOutNullValues((TLinkedSource) linkedSource);
         }
 
         public void AddDependencyForEachInclude(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)

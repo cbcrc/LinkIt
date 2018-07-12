@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LinkIt.Diagnostics;
 
 namespace LinkIt.PublicApi
 {
@@ -43,5 +44,15 @@ namespace LinkIt.PublicApi
             IEnumerable<TRootLinkedSourceModelId> modelIds,
             Action<int, TRootLinkedSource> initRootLinkedSources = null
         );
+
+        /// <summary>
+        /// Enable debug mode to provide information to aid in debugging load-link operations.
+        /// An object of type <see cref="ILoadLinkDetails"/> will be available in the <see cref="ILoadingContext"/> object
+        /// when method <see cref="IReferenceLoader.LoadReferencesAsync"/> is called.
+        /// Also, an action can be supplied and will be called, with the <see cref="ILoadLinkDetails"/> object,
+        /// when the load link operation is completed.
+        /// </summary>
+        /// <param name="onLoadLinkCompleted">Action to execute when the load link operation is completed.</param>
+        ILoadLinker<TRootLinkedSource> EnableDebugMode(Action<ILoadLinkDetails> onLoadLinkCompleted = null);
     }
 }

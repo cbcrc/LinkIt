@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using LinkIt.Shared;
 
 namespace LinkIt.Core
 {
@@ -70,7 +71,7 @@ namespace LinkIt.Core
             }
 
             return lookupIds
-                .Where(id => (object) id != null)
+                .WhereNotNull()
                 .Select(id => referenceDictionnary.GetValueOrDefault(id))
                 .ToList();
         }

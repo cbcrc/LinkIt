@@ -22,5 +22,10 @@ namespace LinkIt.Shared
                 .Select(group => group.Key)
                 .ToList();
         }
+
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> items)
+        {
+            return items.Where(item => (object) item != null);
+        }
     }
 }

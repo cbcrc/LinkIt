@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -51,7 +51,7 @@ namespace LinkIt.TestHelpers
             IsDisposed = true;
         }
 
-        private List<IReferenceTypeConfig> GetDefaultReferenceTypeConfigs()
+        private static List<IReferenceTypeConfig> GetDefaultReferenceTypeConfigs()
         {
             return new List<IReferenceTypeConfig>
             {

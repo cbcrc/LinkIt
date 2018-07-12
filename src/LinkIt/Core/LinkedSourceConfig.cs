@@ -28,7 +28,7 @@ namespace LinkIt.Core
         public Type LinkedSourceModelType { get; }
 
         public ILoadLinker<TLinkedSource> CreateLoadLinker(Func<IReferenceLoader> createReferenceLoader,
-            List<List<Type>> referenceTypeToBeLoadedForEachLoadingLevel,
+            IReadOnlyList<IReadOnlyList<Type>> referenceTypeToBeLoadedForEachLoadingLevel,
             LoadLinkProtocol loadLinkProtocol)
         {
             return new LoadLinkerWrapper<TLinkedSource, TLinkedSourceModel>(createReferenceLoader, referenceTypeToBeLoadedForEachLoadingLevel, loadLinkProtocol);

@@ -1,8 +1,9 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using LinkIt.PublicApi;
 using LinkIt.ReadableExpressions.Extensions;
@@ -18,19 +19,22 @@ namespace LinkIt.Core
     /// </summary>
     internal class LoadLinkProtocol : ILoadLinkProtocol
     {
-        private readonly Dictionary<Type, List<ILoadLinkExpression>> _allLoadLinkExpressions;
+        private readonly IReadOnlyDictionary<Type, ImmutableList<ILoadLinkExpression>> _allLoadLinkExpressions;
         private readonly Func<IReferenceLoader> _createReferenceLoader;
+        private readonly IReadOnlyDictionary<Type, IReadOnlyList<IReadOnlyList<Type>>> _loadingLevelsByRootLinkedSourceType;
 
         internal LoadLinkProtocol(
             IEnumerable<ILoadLinkExpression> loadLinkExpressions,
             Func<IReferenceLoader> createReferenceLoader)
         {
+            _createReferenceLoader = createReferenceLoader;
+
             _allLoadLinkExpressions = loadLinkExpressions
                 .GroupBy(e => e.LinkedSourceType)
-                .ToDictionary(g => g.Key, g => g.ToList());
+                .ToImmutableDictionary(g => g.Key, g => g.ToImmutableList());
 
-            _createReferenceLoader = createReferenceLoader;
-            InitLoadingLevelsForEachPossibleRootLinkedSourceType();
+            _loadingLevelsByRootLinkedSourceType = _allLoadLinkExpressions.Keys
+                .ToImmutableDictionary(linkedSourceType => linkedSourceType, CalculateLoadingLevels);
         }
 
         public ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>()
@@ -49,28 +53,26 @@ namespace LinkIt.Core
 
         public LoadLinkProtocolStatistics Statistics => new LoadLinkProtocolStatistics(_loadingLevelsByRootLinkedSourceType);
 
-        internal List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
+        internal IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
             return GetLoadLinkExpressions(linkedSource)
                 .Where(loadLinkExpression => loadLinkExpression.ReferenceTypes.Contains(referenceType))
                 .ToList();
         }
 
-        internal List<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource)
+        internal IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource)
         {
             return GetLoadLinkExpressions(linkedSource.GetType());
         }
 
-        private List<ILoadLinkExpression> GetLoadLinkExpressions(Type linkedSourceType)
+        private IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(Type linkedSourceType)
         {
             return _allLoadLinkExpressions.ContainsKey(linkedSourceType)
-                ? _allLoadLinkExpressions[linkedSourceType]
+                ? (IReadOnlyList<ILoadLinkExpression>) _allLoadLinkExpressions[linkedSourceType]
                 : new List<ILoadLinkExpression>();
         }
 
-        private Dictionary<Type, List<List<Type>>> _loadingLevelsByRootLinkedSourceType;
-
-        private List<List<Type>> GetLoadingLevelsFor<TRootLinkedSource>()
+        private IReadOnlyList<IReadOnlyList<Type>> GetLoadingLevelsFor<TRootLinkedSource>()
         {
             var rootLinkedSourceType = typeof(TRootLinkedSource);
             if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType))
@@ -83,21 +85,16 @@ namespace LinkIt.Core
             return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
         }
 
-        private void InitLoadingLevelsForEachPossibleRootLinkedSourceType()
+        private IReadOnlyList<IReadOnlyList<Type>> CalculateLoadingLevels(Type rootLinkedSourceType)
         {
-            _loadingLevelsByRootLinkedSourceType = new Dictionary<Type, List<List<Type>>>();
-            foreach (var rootLinkedSourceType in _allLoadLinkExpressions.Keys)
+            var dependencyGraph = CreateDependencyGraph(rootLinkedSourceType);
+            var sort = dependencyGraph.Sort();
+            if (sort == null)
             {
-                var dependencyGraph = CreateDependencyGraph(rootLinkedSourceType);
-                var sort = dependencyGraph.Sort();
-                if (sort == null)
-                {
-                    throw new LinkItException($"Cannot create load link protocol for {rootLinkedSourceType.GetFriendlyName()}. Possible cyclic dependencies.");
-                }
-
-                var loadingLevels = sort.GetLoadingLevels();
-                _loadingLevelsByRootLinkedSourceType.Add(rootLinkedSourceType, loadingLevels);
+                throw new LinkItException($"Cannot create load link protocol for {rootLinkedSourceType.GetFriendlyName()}. Possible cyclic dependencies.");
             }
+
+            return sort.GetLoadingLevels();
         }
 
         internal void AddDependenciesForAllLinkTargets(Type linkedSourceType, Dependency predecessor)

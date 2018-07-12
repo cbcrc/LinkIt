@@ -1,11 +1,13 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 //using System;
 using System;
+using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
 using LinkIt.TestHelpers;
+using LinkIt.Tests.TopologicalSorting;
 using Xunit;
 
 namespace LinkIt.Tests.Core
@@ -24,7 +26,7 @@ namespace LinkIt.Tests.Core
             Action act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
             var exception = Assert.Throws<InvalidOperationException>(act);
-            Assert.Equal($"Recursive dependency detected for type {{ {typeof(DirectCycleInNestedLinkedSource).Name} }}.", exception.Message);
+            Assert.Equal($"Recursive dependency detected for type {{ {nameof(DirectCycleInNestedLinkedSource)} }}.", exception.Message);
         }
 
         [Fact]
@@ -45,7 +47,9 @@ namespace LinkIt.Tests.Core
             Action act = () => loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
 
             var exception = Assert.Throws<InvalidOperationException>(act);
-            Assert.Equal($"Recursive dependency detected for type {{ {typeof(IndirectCycleLevel0LinkedSource).Name} }}.", exception.Message);
+            exception.Message.Should().BeOneOf(
+                $"Recursive dependency detected for type {{ {nameof(IndirectCycleLevel0LinkedSource)} }}.",
+                $"Recursive dependency detected for type {{ {nameof(IndirectCycleLevel1LinkedSource)} }}.");
         }
 
         [Fact]
