@@ -49,11 +49,12 @@ namespace LinkIt.ConfigBuilders
             _includeByDiscriminantValue.Add(discriminant, include);
         }
 
-        internal IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> Build(Func<TLink, TDiscriminant> getDiscriminant)
+        internal IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant> Build(Func<TLink, TDiscriminant> getDiscriminant, bool ignoreUnhandledCases)
         {
             return new IncludeSet<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
                 _includeByDiscriminantValue,
-                getDiscriminant
+                getDiscriminant,
+                ignoreUnhandledCases
             );
         }
     }

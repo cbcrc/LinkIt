@@ -1,20 +1,16 @@
-// Copyright (c) CBC/Radio-Canada. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for more information.
-
 using System.Collections.Generic;
 using LinkIt.ConfigBuilders;
 using LinkIt.PublicApi;
-using LinkIt.Shared;
 using LinkIt.TestHelpers;
 using Xunit;
 
 namespace LinkIt.Tests.Core.Polymorphic
 {
-    public class PolymorphicReferencesTests
+    public class PolymorphicReferencesIgnoreIncludesTests
     {
         private readonly ILoadLinkProtocol _sut;
 
-        public PolymorphicReferencesTests()
+        public PolymorphicReferencesIgnoreIncludesTests()
         {
             var loadLinkProtocolBuilder = new LoadLinkProtocolBuilder();
 
@@ -30,55 +26,18 @@ namespace LinkIt.Tests.Core.Polymorphic
                         .Include<Person>().AsReferenceById(
                             "person",
                             link => link.Id
-                        )
+                        ),
+                    ignoreUnhandledCases:true
                 );
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());
         }
 
-        [Fact]
-        public async System.Threading.Tasks.Task LoadLink_PolymorphicReferenceWithImageAsync()
-        {
-            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
-                new Model
-                {
-                    Id = "1",
-                    Target = new List<PolymorphicReference>
-                    {
-                        new PolymorphicReference
-                        {
-                            Type = "person",
-                            Id = "a"
-                        },
-                        new PolymorphicReference
-                        {
-                            Type = "image",
-                            Id = "b"
-                        }
-                    }
-                }
-            );
-
-            Assert.Collection(
-                actual.Target,
-                target =>
-                {
-                    var person = Assert.IsType<Person>(target);
-                    Assert.Equal("a", person.Id);
-                },
-                target =>
-                {
-                    var image = Assert.IsType<Image>(target);
-                    Assert.Equal("b", image.Id);
-                }
-            );
-        }
-
+        
         [Fact]
         public async System.Threading.Tasks.Task LoadLink_PolymorphicReferenceWithUnkownDiscriminantAsync()
         {
-
-            var exception = await Assert.ThrowsAsync<LinkItException>(() => _sut.LoadLink<LinkedSource>().FromModelAsync(
+            var actual = await _sut.LoadLink<LinkedSource>().FromModelAsync(
                 new Model
                 {
                     Id = "1",
@@ -101,9 +60,21 @@ namespace LinkIt.Tests.Core.Polymorphic
                         }
                     }
                 }
-            ));
+            );
 
-            Assert.Contains("Cannot invoke GetInclude for discriminant=", exception.Message);
+            Assert.Collection(
+                actual.Target,
+                target =>
+                {
+                    var person = Assert.IsType<Person>(target);
+                    Assert.Equal("a", person.Id);
+                },
+                target =>
+                {
+                    var image = Assert.IsType<Image>(target);
+                    Assert.Equal("b", image.Id);
+                }
+            );
         }
         
         public class LinkedSource : ILinkedSource<Model>
