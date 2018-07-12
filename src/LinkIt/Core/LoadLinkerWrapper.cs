@@ -21,6 +21,7 @@ namespace LinkIt.Core
         private readonly IReadOnlyList<IReadOnlyList<Type>> _referenceTypeToBeLoadedForEachLoadingLevel;
         private readonly LoadLinkProtocol _loadLinkProtocol;
         private bool _isDebugModeEnabled;
+
         private Action<ILoadLinkDetails> _onLoadLinkCompleted;
 
         public LoadLinkerWrapper(Func<IReferenceLoader> createReferenceLoader, IReadOnlyList<IReadOnlyList<Type>> referenceTypeToBeLoadedForEachLoadingLevel, LoadLinkProtocol loadLinkProtocol)
@@ -28,6 +29,14 @@ namespace LinkIt.Core
             _createReferenceLoader = createReferenceLoader;
             _referenceTypeToBeLoadedForEachLoadingLevel = referenceTypeToBeLoadedForEachLoadingLevel;
             _loadLinkProtocol = loadLinkProtocol;
+        }
+
+        public ILoadLinker<TRootLinkedSource> EnableDebugMode(Action<ILoadLinkDetails> onLoadLinkCompleted = null)
+        {
+            _isDebugModeEnabled = true;
+            _onLoadLinkCompleted = onLoadLinkCompleted;
+
+            return this;
         }
 
         public async Task<TRootLinkedSource> FromModelAsync<TModel>(TModel model, Action<TRootLinkedSource> initRootLinkedSource = null)
@@ -80,6 +89,7 @@ namespace LinkIt.Core
         private async Task<IReadOnlyList<TRootLinkedSource>> LoadLinkFromModelsAsync(string callingMethod, IEnumerable<TRootLinkedSourceModel> nonNullModels, Action<int, TRootLinkedSource> initRootLinkedSources)
         {
             var loadLinkDetails = GetLoadLinkDetailsIfDebugModeEnabled(callingMethod, nonNullModels);
+            loadLinkDetails?.CurrentStep.AddReferenceValues(nonNullModels);
 
             IReadOnlyList<TRootLinkedSource> linkedSources;
             using (var loadLinker = CreateLoadLinker(loadLinkDetails))
@@ -89,17 +99,6 @@ namespace LinkIt.Core
 
             OnLoadLinkCompleted(loadLinkDetails);
             return linkedSources;
-        }
-
-        private void OnLoadLinkCompleted(LoadLinkDetails<TRootLinkedSource, TRootLinkedSourceModel> loadLinkDetails)
-        {
-            if (!_isDebugModeEnabled || loadLinkDetails is null)
-            {
-                return;
-            }
-
-            loadLinkDetails.LoadLinkEnd();
-            _onLoadLinkCompleted?.Invoke(loadLinkDetails);
         }
 
         public async Task<TRootLinkedSource> ByIdAsync<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId, Action<TRootLinkedSource> initRootLinkedSource = null)
@@ -164,12 +163,15 @@ namespace LinkIt.Core
             return new LoadLinker<TRootLinkedSource, TRootLinkedSourceModel>(_createReferenceLoader, _referenceTypeToBeLoadedForEachLoadingLevel, _loadLinkProtocol, loadLinkDetails);
         }
 
-        public ILoadLinker<TRootLinkedSource> EnableDebugMode(Action<ILoadLinkDetails> onLoadLinkCompleted = null)
+        private void OnLoadLinkCompleted(LoadLinkDetails<TRootLinkedSource, TRootLinkedSourceModel> loadLinkDetails)
         {
-            _isDebugModeEnabled = true;
-            _onLoadLinkCompleted = onLoadLinkCompleted;
+            if (!_isDebugModeEnabled || loadLinkDetails is null)
+            {
+                return;
+            }
 
-            return this;
+            loadLinkDetails.LoadLinkEnd();
+            _onLoadLinkCompleted?.Invoke(loadLinkDetails);
         }
     }
 }

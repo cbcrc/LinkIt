@@ -3,6 +3,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using LinkIt.ConfigBuilders;
 using LinkIt.Diagnostics;
 using LinkIt.PublicApi;
@@ -43,37 +44,82 @@ namespace LinkIt.Tests.Diagnostics
         }
 
         [Fact]
-        public async Task FromModels_DetailsAreNotEmpty()
+        public async Task FromModels_DetailsAreComplete()
         {
+            // Arrange
             var models = new[]
             {
                 GetBlogPost("first"),
                 GetBlogPost("second")
             };
 
+            // Act
             ILoadLinkDetails details = null;
             var result = await _sut.LoadLink<BlogPostLinkedSource>().EnableDebugMode(x => details = x).FromModelsAsync(models);
 
-            Assert.Equal("FromModelsAsync", details.CallDetails.Method);
-            Assert.Equal(models, details.CallDetails.Values);
-            Assert.Equal(typeof(BlogPost), details.LinkedSourceModelType);
-            Assert.Equal(typeof(BlogPostLinkedSource), details.LinkedSourceType);
-            Assert.Equal(result, details.Result);
-            Assert.NotNull(details.Took);
+            // Assert
+            details.CallDetails.Method.Should().Be("FromModelsAsync");
+            details.CallDetails.Values.Should().Equal(models);
 
-            Assert.NotNull(details.CurrentStep);
-            Assert.Equal(3, details.Steps.Count);
+            details.LinkedSourceModelType.Should().Be<BlogPost>();
+            details.LinkedSourceType.Should().Be<BlogPostLinkedSource>();
 
-            Assert.Equal(details.Steps[2], details.CurrentStep);
+            details.Result.Should().BeEquivalentTo(result);
 
-            var firstStep = details.Steps[0];
-            Assert.Equal(1, firstStep.StepNumber);
-            Assert.Null(firstStep.LoadTook);
-            Assert.NotNull(firstStep.LinkTook);
-            Assert.Equal(1, firstStep.References.Count);
-            Assert.Equal(typeof(BlogPost), firstStep.References[0].Type);
-            Assert.Empty(firstStep.References[0].Ids);
-            Assert.Equal(models, firstStep.References[0].Values);
+            details.Took.Should().NotBeNull();
+
+            details.Steps.Should().HaveCount(3);
+            details.CurrentStep.Should().Be(details.Steps[2]);
+
+            VerifyFirstStep(details.Steps[0], models);
+            VerifySecondStep(details.Steps[1], models);
+            VerifyThirdStep(details.Steps[2], models);
+        }
+
+        private void VerifyFirstStep(LoadLinkStepDetails step, BlogPost[] models)
+        {
+            step.StepNumber.Should().Be(1);
+            step.LoadTook.Should().BeNull("Models are pre-loaded");
+            step.LinkTook.Should().NotBeNull();
+
+            var reference = new ReferenceLoadDetails(typeof(BlogPost));
+            reference.AddValues(models);
+
+            step.References.Should().BeEquivalentTo(reference);
+        }
+
+        private void VerifySecondStep(LoadLinkStepDetails step, BlogPost[] models)
+        {
+            step.StepNumber.Should().Be(2);
+            step.LoadTook.Should().NotBeNull();
+            step.LinkTook.Should().NotBeNull();
+
+            step.References.Should().HaveCount(2);
+
+            var mediaReference = step.References.Should().Contain(item => item.Type == typeof(Media)).Subject;
+            mediaReference.Ids.Should().HaveCount(2)
+                .And.BeEquivalentTo(models.Select(m => m.MediaId));
+            mediaReference.Values.Should().HaveCount(2)
+                .And.BeEquivalentTo(models.Select(m => new { Id = m.MediaId }), o => o.ExcludingMissingMembers());
+
+            var personReference = step.References.Should().Contain(item => item.Type == typeof(Person)).Subject;
+            personReference.Ids.Should().HaveCount(2)
+                .And.BeEquivalentTo(models.Select(m => m.AuthorId));
+            personReference.Values.Should().HaveCount(2)
+                .And.BeEquivalentTo(models.Select(m => new { Id = m.AuthorId }), o => o.ExcludingMissingMembers());
+        }
+
+        private void VerifyThirdStep(LoadLinkStepDetails step, BlogPost[] models)
+        {
+            step.StepNumber.Should().Be(3);
+            step.LoadTook.Should().NotBeNull();
+            step.LinkTook.Should().NotBeNull();
+
+            step.References.Should().HaveCount(1);
+
+            var reference = step.References.Should().Contain(item => item.Type == typeof(Image)).Subject;
+            reference.Ids.Should().HaveCount(4);
+            reference.Values.Should().HaveCount(4);
         }
 
         private static BlogPost GetBlogPost(string id)
