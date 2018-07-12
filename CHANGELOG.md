@@ -16,7 +16,8 @@
 * The overload of `LoadLinkProtocolForLinkedSourceBuilder.LoadLinkNestedLinkedSourceFromModel` for lists has been renamed `LoadLinkNestedLinkedSourcesFromModels`. 
 * `LoadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLink` has been renamed `LoadLinkPolymorphic`. 
 * `LoadLinkProtocolForLinkedSourceBuilder.PolymorphicLoadLinkForList` has been renamed `LoadLinkPolymorphicList`. 
- 
+* Added method `ILoadLinker.EnabledDebugMode()` in order to aid in diagnosing load-link operations ([#8](https://github.com/cbcrc/LinkIt/issues/8)). 
+
  
 ### Features
 
