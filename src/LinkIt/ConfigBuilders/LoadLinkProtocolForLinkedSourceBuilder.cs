@@ -304,7 +304,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, TLink> getLink,
             Expression<Func<TLinkedSource, TAbstractLinkTarget>> getLinkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
-            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreNotConfiguredDiscriminants = false)
+            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreUnhandledCases = false)
         {
             if (getLink == null)
             {
@@ -331,7 +331,7 @@ namespace LinkIt.ConfigBuilders
                 LinkTargetFactory.Create(getLinkTarget),
                 getDiscriminant,
                 includes,
-                ignoreNotConfiguredDiscriminants
+                ignoreUnhandledCases
             );
         }
 
@@ -342,7 +342,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, IEnumerable<TLink>> getLinks,
             Expression<Func<TLinkedSource, List<TAbstractLinkTarget>>> getLinkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
-            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreNotConfiguredDiscriminants = false)
+            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreUnhandledCases = false)
         {
             if (getLinks == null)
             {
@@ -369,7 +369,7 @@ namespace LinkIt.ConfigBuilders
                 LinkTargetFactory.Create(getLinkTarget),
                 getDiscriminant,
                 includes,
-                ignoreNotConfiguredDiscriminants
+                ignoreUnhandledCases
             );
         }
 
@@ -377,7 +377,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, IEnumerable<TLink>> getLinks,
             ILinkTarget<TLinkedSource, TAbstractLinkTarget> linkTarget,
             Func<TLink, TDiscriminant> getDiscriminant,
-            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreNotConfiguredDiscriminants)
+            Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreUnhandledCases)
         {
             var includeBuilder = new IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(linkTarget);
             includes(includeBuilder);
@@ -385,7 +385,7 @@ namespace LinkIt.ConfigBuilders
             var loadLinkExpression = new LoadLinkExpressionImpl<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>(
                 getLinks,
                 linkTarget,
-                includeBuilder.Build(getDiscriminant, ignoreNotConfiguredDiscriminants)
+                includeBuilder.Build(getDiscriminant, ignoreUnhandledCases)
             );
 
             return AddLoadLinkExpression(loadLinkExpression);
@@ -441,7 +441,7 @@ namespace LinkIt.ConfigBuilders
                         }
                     },
                     _ => true,
-                    ignoreNotConfiguredDiscriminants: false
+                    ignoreUnhandledCases: false
                 )
             );
 

@@ -27,7 +27,7 @@ namespace LinkIt.Tests.Core.Polymorphic
                             "person",
                             link => link.Id
                         ),
-                    ignoreNotConfiguredDiscriminants:true
+                    ignoreUnhandledCases:true
                 );
 
             _sut = loadLinkProtocolBuilder.Build(() => new ReferenceLoaderStub());

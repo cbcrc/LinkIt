@@ -16,14 +16,14 @@ namespace LinkIt.Core.Includes
     internal class IncludeSet<TLinkedSource, TAbstractChildLinkedSource, TLink, TDiscriminant>
     {
         private readonly Func<TLink, TDiscriminant> _getDiscriminant;
-        private readonly bool _ignoreNotConfiguredDiscriminants;
+        private readonly bool _ignoreUnhandledCases;
         private readonly Dictionary<TDiscriminant, IInclude> _includes;
 
-        public IncludeSet(Dictionary<TDiscriminant, IInclude> includes, Func<TLink, TDiscriminant> getDiscriminant, bool ignoreNotConfiguredDiscriminants)
+        public IncludeSet(Dictionary<TDiscriminant, IInclude> includes, Func<TLink, TDiscriminant> getDiscriminant, bool ignoreUnhandledCases)
         {
             _includes = includes;
             _getDiscriminant = getDiscriminant;
-            _ignoreNotConfiguredDiscriminants = ignoreNotConfiguredDiscriminants;
+            _ignoreUnhandledCases = ignoreUnhandledCases;
         }
 
         public IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink> GetIncludeWithCreateNestedLinkedSourceByIdForReferenceType(TLink link, Type referenceType)
@@ -70,7 +70,7 @@ namespace LinkIt.Core.Includes
 
             var discriminant = _getDiscriminant(link);
 
-            if (_ignoreNotConfiguredDiscriminants && !_includes.ContainsKey(discriminant)) return null;
+            if (_ignoreUnhandledCases && !_includes.ContainsKey(discriminant)) return null;
 
             AssumeIncludeExistsForDiscriminant(discriminant);
 
