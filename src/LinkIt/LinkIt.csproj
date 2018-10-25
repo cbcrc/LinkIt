@@ -16,7 +16,7 @@ Features
 - Support polymorphism out of the box
 - Favor convention over configuration
 - Perform complex projections easily with LinkIt AutoMapper Extensions</Description>
-    <Version>2.0.0-rc04</Version>
+    <Version>2.0.0-rc05</Version>
     <Authors>Stéphane Leblanc, Laurent le Beau-Martin</Authors>
     <Company>Radio-Canada/CBC</Company>
     <Copyright>Copyright (c) 2015-2018 Radio-Canada/CBC</Copyright>
@@ -27,7 +27,7 @@ Features
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/cbcrc/LinkIt</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageReleaseNotes>Added diagnostic tools</PackageReleaseNotes>
+    <PackageReleaseNotes>Performance bugfix : initialization of the LoadLinkProtocol took 80x-100x more time than necessary</PackageReleaseNotes>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

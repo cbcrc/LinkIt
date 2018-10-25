@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -57,7 +57,7 @@ namespace LinkIt.TopologicalSorting
         {
             unchecked
             {
-                return (ModelType.GetHashCode() * 397) ^ (LinkedSourceType?.GetHashCode() ?? 0);
+                return (ModelType.GetHashCode() * 397) ^ (LinkedSourceType?.GetHashCode() ?? 1);
             }
         }
     }

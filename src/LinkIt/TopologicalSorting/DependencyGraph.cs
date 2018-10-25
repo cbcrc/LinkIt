@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 Martin Evans. Licensed under the MIT license.
+// Copyright (c) 2016 Martin Evans. Licensed under the MIT license.
 // Source: https://github.com/martindevans/TopologicalSorting
 // Modified by Radio-Canada for the purposes of this library.
 
@@ -108,14 +108,6 @@ namespace LinkIt.TopologicalSorting
             }
 
             return simplifiedGraph;
-        }
-
-        internal static void CheckGraph(Dependency a, Dependency b)
-        {
-            if (a.Graph != b.Graph)
-            {
-                throw new ArgumentException($"dependency {a} is not associated with the same graph as dependency {b}");
-            }
         }
 
         public void Remove(Dependency dependency)

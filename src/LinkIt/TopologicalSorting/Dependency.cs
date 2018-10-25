@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 Martin Evans. Licensed under the MIT license.
+// Copyright (c) 2016 Martin Evans. Licensed under the MIT license.
 // Source: https://github.com/martindevans/TopologicalSorting
 // Modified by Radio-Canada for the purposes of this library.
 
@@ -21,7 +21,7 @@ namespace LinkIt.TopologicalSorting
         /// <summary>
         /// The graph this dependency is part of
         /// </summary>
-        public DependencyGraph Graph { get; }
+        private readonly DependencyGraph _graph;
 
         private readonly HashSet<Dependency> _directPredecessors = new HashSet<Dependency>();
         public IEnumerable<Dependency> DirectPredecessors => _directPredecessors;
@@ -36,7 +36,7 @@ namespace LinkIt.TopologicalSorting
         /// <param name="type">The type of this dependency</param>
         public Dependency(DependencyGraph graph, DependencyType type)
         {
-            Graph = graph ?? throw new ArgumentNullException(nameof(graph));
+            _graph = graph ?? throw new ArgumentNullException(nameof(graph));
             Type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
@@ -44,10 +44,12 @@ namespace LinkIt.TopologicalSorting
         /// Indicates that this dependency should be loaded before another
         /// </summary>
         /// <param name="follower">The ancestor.</param>
-        /// <returns>returns this dependency</returns>
-        public Dependency Before(Dependency follower)
+        public void Before(Dependency follower)
         {
-            DependencyGraph.CheckGraph(this, follower);
+            if (_directFollowers.Contains(follower))
+            {
+                return;
+            }
 
             if (this == follower || HasPredecessor(follower))
             {
@@ -58,8 +60,6 @@ namespace LinkIt.TopologicalSorting
             {
                 follower.After(this);
             }
-
-            return this;
         }
 
         public bool HasPredecessor(Dependency dependency)
@@ -68,41 +68,39 @@ namespace LinkIt.TopologicalSorting
         }
 
         /// <summary>
-        /// Indicates that this dependency must be loaded before all the followers
+        /// Indicates that this dependency must be loaded before the reference type and/or linked source.
         /// </summary>
-        /// <param name="followers">The followers.</param>
-        /// <returns>the followers</returns>
-        public Dependency Before(params Dependency[] followers)
+        /// <param name="referenceType">The reference type that can only be loaded after this dependency.</param>
+        /// <param name="linkedSourceType">The linked source type that can only be loaded after this dependency.</param>
+        /// <returns>The created dependency</returns>
+        public Dependency Before(Type referenceType, Type linkedSourceType = null)
         {
-            return Before(followers as IEnumerable<Dependency>);
+            var dependency = _graph.GetOrAdd(referenceType, linkedSourceType);
+            Before(dependency);
+            return dependency;
         }
 
         /// <summary>
-        /// Indicates that this dependency must be loaded before all the followers
+        /// Indicates that this dependency must be loaded after the reference type and/or linked source.
         /// </summary>
-        /// <param name="followers">The followers.</param>
-        public Dependency Before(IEnumerable<Dependency> followers)
+        /// <param name="referenceType">The reference type that can only be loaded before this dependency.</param>
+        /// <param name="linkedSourceType">The linked source type that can only be loaded before this dependency.</param>
+        public Dependency After(Type referenceType, Type linkedSourceType = null)
         {
-            foreach (var ancestor in followers)
-            {
-                Before(ancestor);
-            }
-
-            return this;
+            var dependency = _graph.GetOrAdd(referenceType, linkedSourceType);
+            After(dependency);
+            return dependency;
         }
 
         /// <summary>
         /// Indicates that this dependency should be loaded after another
         /// </summary>
         /// <param name="predecessor">The predecessor.</param>
-        /// <returns>this dependency</returns>
-        public Dependency After(Dependency predecessor)
+        public void After(Dependency predecessor)
         {
-            DependencyGraph.CheckGraph(this, predecessor);
-
             if (_directPredecessors.Contains(predecessor))
             {
-                return this;
+                return;
             }
 
             if (this == predecessor || HasFollower(predecessor))
@@ -114,8 +112,6 @@ namespace LinkIt.TopologicalSorting
             {
                 predecessor.Before(this);
             }
-
-            return this;
         }
 
         public bool HasFollower(Dependency dependency)
@@ -158,22 +154,22 @@ namespace LinkIt.TopologicalSorting
                 Before(follower);
             }
 
-            other.Unlink();
-
-            Graph.Remove(other);
+            other.RemoveFromGraph();
 
             return this;
         }
 
-        private void Unlink()
+        private void RemoveFromGraph()
         {
             foreach (var dependency in DirectPredecessors.Concat(DirectFollowers))
             {
-                dependency.Remove(this);
+                dependency.RemoveFromDependencies(this);
             }
+
+            _graph.Remove(this);
         }
 
-        private void Remove(Dependency other)
+        private void RemoveFromDependencies(Dependency other)
         {
             _directPredecessors.Remove(other);
             _directFollowers.Remove(other);
@@ -194,7 +190,7 @@ namespace LinkIt.TopologicalSorting
                 return true;
             }
 
-            return Type.Equals(other.Type) && Graph.Equals(other.Graph);
+            return Type.Equals(other.Type);
         }
 
         public override bool Equals(object obj)
@@ -219,10 +215,7 @@ namespace LinkIt.TopologicalSorting
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (Type.GetHashCode() * 397) ^ Graph.GetHashCode();
-            }
+            return Type.GetHashCode();
         }
     }
 }

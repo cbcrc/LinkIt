@@ -35,8 +35,7 @@ namespace LinkIt.Core.Includes
 
         public void AddDependency(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            var dependency = predecessor.Graph.GetOrAdd(ReferenceType);
-            predecessor.Before(dependency);
+            predecessor.Before(ReferenceType);
         }
 
         public TIReference GetReference(TLink link, DataStore dataStore)

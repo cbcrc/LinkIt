@@ -57,8 +57,7 @@ namespace LinkIt.Core.Includes
 
         public void AddDependency(Dependency predecessor, LoadLinkProtocol loadLinkProtocol)
         {
-            var dependency = predecessor.Graph.GetOrAdd(ReferenceType, ChildLinkedSourceType);
-            predecessor.Before(dependency);
+            var dependency = predecessor.Before(ReferenceType, ChildLinkedSourceType);
 
             loadLinkProtocol.AddDependenciesForAllLinkTargets(ChildLinkedSourceType, dependency);
         }

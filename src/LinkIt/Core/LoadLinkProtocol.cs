@@ -13,7 +13,7 @@ using LinkIt.TopologicalSorting;
 namespace LinkIt.Core
 {
     /// <summary>
-    /// In addition to the responsiblies of ILoadLinkProtocol,
+    /// In addition to the responsibilities of <see cref="ILoadLinkProtocol"/>,
     /// responsible for gathering and giving access to the load link expressions
     /// responsible to infer loading levels for each possible root linked source
     /// </summary>
