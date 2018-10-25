@@ -16,7 +16,7 @@ namespace LinkIt.Core
         string LinkTargetId { get; }
 
         Type LinkedSourceType { get; }
-        List<Type> ReferenceTypes { get; }
+        ISet<Type> ReferenceTypes { get; }
 
         void AddLookupIds(object linkedSource, LookupContext lookupContext, Type referenceTypeToBeLoaded);
         void LinkNestedLinkedSourceById(object linkedSource, Linker linker, Type referenceTypeToBeLinked, LoadLinkProtocol loadLinkProtocol);

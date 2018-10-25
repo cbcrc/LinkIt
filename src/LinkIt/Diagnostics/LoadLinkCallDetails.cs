@@ -3,7 +3,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace LinkIt.Diagnostics
@@ -17,7 +16,7 @@ namespace LinkIt.Diagnostics
         internal LoadLinkCallDetails(string method, IEnumerable values)
         {
             Method = method;
-            Values = values.Cast<object>().ToImmutableList();
+            Values = values.Cast<object>().ToList();
         }
 
         /// <summary>

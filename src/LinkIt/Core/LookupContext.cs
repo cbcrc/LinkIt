@@ -57,9 +57,9 @@ namespace LinkIt.Core
 
         private HashSet<object> GetOrAddLookupIdsFor(Type referenceType)
         {
-            if (_lookupIdsByReferenceType.ContainsKey(referenceType))
+            if (_lookupIdsByReferenceType.TryGetValue(referenceType, out var lookupIds))
             {
-                return _lookupIdsByReferenceType[referenceType];
+                return lookupIds;
             }
 
             var emptySet = new HashSet<object>();

@@ -32,18 +32,18 @@ namespace LinkIt.Core
 
             ReferenceTypes = _includeSet.GetIncludesWithAddLookupId()
                 .Select(include => include.ReferenceType)
-                .ToList();
+                .ToHashSet();
 
             ChildLinkedSourceTypes = _includeSet.GetIncludesWithChildLinkedSource()
                 .Select(include => include.ChildLinkedSourceType)
-                .ToList();
+                .ToHashSet();
         }
 
-        public List<Type> ChildLinkedSourceTypes { get; }
+        public ISet<Type> ChildLinkedSourceTypes { get; }
 
         public string LinkTargetId => _linkTarget.Id;
         public Type LinkedSourceType { get; }
-        public List<Type> ReferenceTypes { get; }
+        public ISet<Type> ReferenceTypes { get; }
 
         public void AddLookupIds(object linkedSource, LookupContext lookupContext, Type referenceTypeToBeLoaded)
         {
@@ -51,8 +51,7 @@ namespace LinkIt.Core
             EnsureIsReferenceType(this, referenceTypeToBeLoaded);
 
             var notNullLinks = GetLinks((TLinkedSource) linkedSource)
-                .WhereNotNull()
-                .ToList();
+                .WhereNotNull();
 
             foreach (var link in notNullLinks)
             {

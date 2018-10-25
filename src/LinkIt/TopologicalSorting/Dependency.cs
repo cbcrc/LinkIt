@@ -11,7 +11,7 @@ namespace LinkIt.TopologicalSorting
     /// <summary>
     /// A dependency in an object graph to load.
     /// </summary>
-    internal class Dependency : IEquatable<Dependency>
+    internal class Dependency
     {
         /// <summary>
         /// The type of this dependency.
@@ -23,9 +23,11 @@ namespace LinkIt.TopologicalSorting
         /// </summary>
         private readonly DependencyGraph _graph;
 
+        // DO NOT override Equals(), we want to use reference comparison
         private readonly HashSet<Dependency> _directPredecessors = new HashSet<Dependency>();
         public IEnumerable<Dependency> DirectPredecessors => _directPredecessors;
 
+        // DO NOT override Equals(), we want to use reference comparison
         private readonly HashSet<Dependency> _directFollowers = new HashSet<Dependency>();
         public IEnumerable<Dependency> DirectFollowers => _directFollowers;
 
@@ -38,33 +40,6 @@ namespace LinkIt.TopologicalSorting
         {
             _graph = graph ?? throw new ArgumentNullException(nameof(graph));
             Type = type ?? throw new ArgumentNullException(nameof(type));
-        }
-
-        /// <summary>
-        /// Indicates that this dependency should be loaded before another
-        /// </summary>
-        /// <param name="follower">The ancestor.</param>
-        public void Before(Dependency follower)
-        {
-            if (_directFollowers.Contains(follower))
-            {
-                return;
-            }
-
-            if (this == follower || HasPredecessor(follower))
-            {
-                throw new InvalidOperationException($"Recursive dependency detected for {follower}.");
-            }
-
-            if (_directFollowers.Add(follower))
-            {
-                follower.After(this);
-            }
-        }
-
-        public bool HasPredecessor(Dependency dependency)
-        {
-            return _directPredecessors.Contains(dependency) || _directPredecessors.Any(p => p.HasPredecessor(dependency));
         }
 
         /// <summary>
@@ -81,15 +56,42 @@ namespace LinkIt.TopologicalSorting
         }
 
         /// <summary>
-        /// Indicates that this dependency must be loaded after the reference type and/or linked source.
+        /// Indicates that this dependency should be loaded before another
         /// </summary>
-        /// <param name="referenceType">The reference type that can only be loaded before this dependency.</param>
-        /// <param name="linkedSourceType">The linked source type that can only be loaded before this dependency.</param>
-        public Dependency After(Type referenceType, Type linkedSourceType = null)
+        /// <param name="follower">The ancestor.</param>
+        public void Before(Dependency follower)
         {
-            var dependency = _graph.GetOrAdd(referenceType, linkedSourceType);
-            After(dependency);
-            return dependency;
+            if (ReferenceEquals(this, follower))
+            {
+                throw CycleDetectedException(follower);
+            }
+
+            if (!AddFollower(follower))
+            {
+                return;
+            }
+
+            if (HasPredecessor(follower))
+            {
+                throw CycleDetectedException(follower);
+            }
+
+            follower.AddPredecessor(this);
+        }
+
+        private bool AddFollower(Dependency follower)
+        {
+            return _directFollowers.Add(follower);
+        }
+
+        private static InvalidOperationException CycleDetectedException(Dependency dependency)
+        {
+            return new InvalidOperationException($"Recursive dependency detected for {dependency}.");
+        }
+
+        public bool HasPredecessor(Dependency dependency)
+        {
+            return _directPredecessors.Contains(dependency) || _directPredecessors.Any(p => p.HasPredecessor(dependency));
         }
 
         /// <summary>
@@ -98,20 +100,27 @@ namespace LinkIt.TopologicalSorting
         /// <param name="predecessor">The predecessor.</param>
         public void After(Dependency predecessor)
         {
-            if (_directPredecessors.Contains(predecessor))
+            if (ReferenceEquals(this, predecessor))
+            {
+                throw CycleDetectedException(predecessor);
+            }
+
+            if (!AddPredecessor(predecessor))
             {
                 return;
             }
 
-            if (this == predecessor || HasFollower(predecessor))
+            if (HasFollower(predecessor))
             {
-                throw new InvalidOperationException($"Recursive dependency detected for {predecessor}.");
+                throw CycleDetectedException(predecessor);
             }
 
-            if (_directPredecessors.Add(predecessor))
-            {
-                predecessor.Before(this);
-            }
+            predecessor.AddFollower(this);
+        }
+
+        private bool AddPredecessor(Dependency predecessor)
+        {
+            return _directPredecessors.Add(predecessor);
         }
 
         public bool HasFollower(Dependency dependency)
@@ -119,39 +128,22 @@ namespace LinkIt.TopologicalSorting
             return _directFollowers.Contains(dependency) || _directFollowers.Any(p => p.HasFollower(dependency));
         }
 
-        /// <summary>
-        /// Indicates that this dependency must be loaded after all the predecessors
-        /// </summary>
-        /// <param name="predecessors">The predecessors.</param>
-        public Dependency After(params Dependency[] predecessors)
-        {
-            return After(predecessors as IEnumerable<Dependency>);
-        }
-
-        /// <summary>
-        /// Indicates that this dependency must be loaded after all the predecessors
-        /// </summary>
-        /// <param name="predecessors">The predecessors.</param>
-        public Dependency After(IEnumerable<Dependency> predecessors)
-        {
-            foreach (var predecessor in predecessors)
-            {
-                After(predecessor);
-            }
-
-            return this;
-        }
-
         public Dependency Merge(Dependency other)
         {
             foreach (var predecessor in other.DirectPredecessors)
             {
-                After(predecessor);
+                if (AddPredecessor(predecessor))
+                {
+                    predecessor.AddFollower(this);
+                }
             }
 
             foreach (var follower in other.DirectFollowers)
             {
-                Before(follower);
+                if (AddFollower(follower))
+                {
+                    follower.AddPredecessor(this);
+                }
             }
 
             other.RemoveFromGraph();
@@ -177,45 +169,5 @@ namespace LinkIt.TopologicalSorting
 
         /// <inheritdoc />
         public override string ToString() => Type.ToString();
-
-        public bool Equals(Dependency other)
-        {
-            if (other is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return Type.Equals(other.Type);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((Dependency) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Type.GetHashCode();
-        }
     }
 }

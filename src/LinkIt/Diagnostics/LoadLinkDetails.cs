@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using LinkIt.PublicApi;
@@ -31,7 +30,7 @@ namespace LinkIt.Diagnostics
         {
             return referenceTypesToBeLoadedForEachLoadingLevel
                 .Select((referenceTypes, index) => new LoadLinkStepDetails(referenceTypes, index + 1))
-                .ToImmutableList();
+                .ToList();
         }
 
         public Type LinkedSourceType => typeof(TLinkedSource);
@@ -40,7 +39,7 @@ namespace LinkIt.Diagnostics
 
         public LoadLinkCallDetails CallDetails { get; }
 
-        public IReadOnlyList<object> Result { get; private set; } = ImmutableList<object>.Empty;
+        public IReadOnlyList<object> Result { get; private set; } = new List<object>();
 
         public IReadOnlyList<LoadLinkStepDetails> Steps { get; }
 
@@ -56,7 +55,7 @@ namespace LinkIt.Diagnostics
 
         internal void SetResult(IEnumerable<object> linkedSources)
         {
-            Result = linkedSources.ToImmutableList();
+            Result = linkedSources.ToList();
         }
 
         internal void LoadLinkEnd()

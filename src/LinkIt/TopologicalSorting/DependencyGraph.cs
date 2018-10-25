@@ -47,7 +47,7 @@ namespace LinkIt.TopologicalSorting
         }
 
         /// <summary>
-        /// Reduce the graph, merging any and all dependecies of a model type, as long as no cycle is created.
+        /// Reduce the graph, merging any and all dependencies of a model type, as long as no cycle is created.
         /// </summary>
         public void Reduce()
         {
@@ -64,7 +64,7 @@ namespace LinkIt.TopologicalSorting
 
             foreach (var topologicalSort in topologicalSorts)
             {
-                // Merge each level of the topoligical sort into one dependency
+                // Merge each level of the topological sort into one dependency
                 foreach (var set in topologicalSort.DependencySets)
                 {
                     var originalDependencies = set.Select(d => _dependencies[d.Type]);

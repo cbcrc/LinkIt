@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkIt.Diagnostics;
@@ -52,14 +51,14 @@ namespace LinkIt.Core
             ).ConfigureAwait(false);
         }
 
-        private ImmutableList<TRootLinkedSource> CreatePartiallyBuiltLinkedSource(IEnumerable<TRootLinkedSourceModel> models, Action<int, TRootLinkedSource> initRootLinkedSources)
+        private IReadOnlyList<TRootLinkedSource> CreatePartiallyBuiltLinkedSource(IEnumerable<TRootLinkedSourceModel> models, Action<int, TRootLinkedSource> initRootLinkedSources)
         {
             _loadLinkDetails?.CurrentStep.LinkStart();
 
             var linkedSources = models
                 .Select((model, index) => CreateLinkedSource(model, index, initRootLinkedSources))
                 .Where(linkedSource => linkedSource != null)
-                .ToImmutableList();
+                .ToList();
 
             _loadLinkDetails?.CurrentStep.LinkEnd();
 
@@ -97,15 +96,15 @@ namespace LinkIt.Core
             return new LoadingContext(lookupIds, _dataStore, _loadLinkDetails);
         }
 
-        private ImmutableDictionary<Type, IReadOnlyList<object>> GetLookupIdsToLoad(LookupContext lookupContext)
+        private IReadOnlyDictionary<Type, IReadOnlyList<object>> GetLookupIdsToLoad(LookupContext lookupContext)
         {
             return lookupContext.LookupIds
                 .Select(p => new {
                     Type = p.Key,
-                    Ids = p.Value.Except(_dataStore.GetLoadedReferenceIds(p.Key)).ToImmutableList(),
+                    Ids = p.Value.Except(_dataStore.GetLoadedReferenceIds(p.Key)).ToList(),
                 })
                 .Where(p => p.Ids.Count > 0)
-                .ToImmutableDictionary(
+                .ToDictionary(
                     p => p.Type,
                     p => (IReadOnlyList<object>) p.Ids
                 );

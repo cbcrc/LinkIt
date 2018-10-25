@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using LinkIt.Shared;
 
 namespace LinkIt.Diagnostics
 {
@@ -15,14 +15,14 @@ namespace LinkIt.Diagnostics
     /// </summary>
     public class LoadLinkStepDetails
     {
-        private readonly ImmutableDictionary<Type, ReferenceLoadDetails> _references;
+        private readonly IReadOnlyDictionary<Type, ReferenceLoadDetails> _references;
         private Stopwatch _stopwatch;
 
         internal LoadLinkStepDetails(IReadOnlyList<Type> referenceTypes, int stepNumber)
         {
             StepNumber = stepNumber;
             _references = referenceTypes
-                .ToImmutableDictionary(
+                .ToDictionary(
                     type => type,
                     type => new ReferenceLoadDetails(type)
                 );
@@ -36,7 +36,7 @@ namespace LinkIt.Diagnostics
         /// <summary>
         /// Information on the references loaded or to load in this step.
         /// </summary>
-        public IReadOnlyList<ReferenceLoadDetails> References => _references.Values.ToImmutableList();
+        public IReadOnlyList<ReferenceLoadDetails> References => _references.Values.ToList();
 
         /// <summary>
         /// Time taken to load all references.
@@ -70,7 +70,7 @@ namespace LinkIt.Diagnostics
             LinkTook = _stopwatch.Elapsed;
         }
 
-        internal void SetReferenceIds(ImmutableDictionary<Type, IReadOnlyList<object>> referenceIds)
+        internal void SetReferenceIds(IReadOnlyDictionary<Type, IReadOnlyList<object>> referenceIds)
         {
             foreach (var referenceLoadDetails in _references.Values)
             {

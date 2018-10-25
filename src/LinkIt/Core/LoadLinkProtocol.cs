@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using LinkIt.PublicApi;
 using LinkIt.ReadableExpressions.Extensions;
@@ -19,7 +18,7 @@ namespace LinkIt.Core
     /// </summary>
     internal class LoadLinkProtocol : ILoadLinkProtocol
     {
-        private readonly IReadOnlyDictionary<Type, ImmutableList<ILoadLinkExpression>> _allLoadLinkExpressions;
+        private readonly IReadOnlyDictionary<Type, IReadOnlyList<ILoadLinkExpression>> _allLoadLinkExpressions;
         private readonly Func<IReferenceLoader> _createReferenceLoader;
         private readonly IReadOnlyDictionary<Type, IReadOnlyList<IReadOnlyList<Type>>> _loadingLevelsByRootLinkedSourceType;
 
@@ -31,19 +30,17 @@ namespace LinkIt.Core
 
             _allLoadLinkExpressions = loadLinkExpressions
                 .GroupBy(e => e.LinkedSourceType)
-                .ToImmutableDictionary(g => g.Key, g => g.ToImmutableList());
+                .ToDictionary(g => g.Key, g => (IReadOnlyList<ILoadLinkExpression>) g.ToList());
 
             _loadingLevelsByRootLinkedSourceType = _allLoadLinkExpressions.Keys
-                .ToImmutableDictionary(linkedSourceType => linkedSourceType, CalculateLoadingLevels);
+                .ToDictionary(linkedSourceType => linkedSourceType, CalculateLoadingLevels);
         }
 
         public ILoadLinker<TRootLinkedSource> LoadLink<TRootLinkedSource>()
         {
-            return LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>().CreateLoadLinker(
-                _createReferenceLoader,
-                GetLoadingLevelsFor<TRootLinkedSource>(),
-                this
-            );
+            var loadingLevels = GetLoadingLevelsFor<TRootLinkedSource>();
+            var linkedSourceConfig = LinkedSourceConfigs.GetConfigFor<TRootLinkedSource>();
+            return linkedSourceConfig.CreateLoadLinker(_createReferenceLoader, loadingLevels, this);
         }
 
         public IDataLoader<TModel> Load<TModel>()
@@ -53,11 +50,10 @@ namespace LinkIt.Core
 
         public LoadLinkProtocolStatistics Statistics => new LoadLinkProtocolStatistics(_loadingLevelsByRootLinkedSourceType);
 
-        internal IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
+        internal IEnumerable<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource, Type referenceType)
         {
             return GetLoadLinkExpressions(linkedSource)
-                .Where(loadLinkExpression => loadLinkExpression.ReferenceTypes.Contains(referenceType))
-                .ToList();
+                .Where(loadLinkExpression => loadLinkExpression.ReferenceTypes.Contains(referenceType));
         }
 
         internal IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(object linkedSource)
@@ -67,22 +63,22 @@ namespace LinkIt.Core
 
         private IReadOnlyList<ILoadLinkExpression> GetLoadLinkExpressions(Type linkedSourceType)
         {
-            return _allLoadLinkExpressions.ContainsKey(linkedSourceType)
-                ? (IReadOnlyList<ILoadLinkExpression>) _allLoadLinkExpressions[linkedSourceType]
+            return _allLoadLinkExpressions.TryGetValue(linkedSourceType, out var expressions)
+                ? expressions
                 : new List<ILoadLinkExpression>();
         }
 
         private IReadOnlyList<IReadOnlyList<Type>> GetLoadingLevelsFor<TRootLinkedSource>()
         {
             var rootLinkedSourceType = typeof(TRootLinkedSource);
-            if (!_loadingLevelsByRootLinkedSourceType.ContainsKey(rootLinkedSourceType))
+            if (!_loadingLevelsByRootLinkedSourceType.TryGetValue(rootLinkedSourceType, out var loadingLevels))
             {
                 throw new LinkItException(
                    $"Cannot find load link configuration for type {rootLinkedSourceType.GetFriendlyName()}."
                );
             }
 
-            return _loadingLevelsByRootLinkedSourceType[rootLinkedSourceType];
+            return loadingLevels;
         }
 
         private IReadOnlyList<IReadOnlyList<Type>> CalculateLoadingLevels(Type rootLinkedSourceType)

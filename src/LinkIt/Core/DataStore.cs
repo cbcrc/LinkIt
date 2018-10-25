@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using LinkIt.Shared;
 
@@ -27,22 +26,22 @@ namespace LinkIt.Core
                 .ToArray();
         }
 
-        private ImmutableDictionary<TId, TReference> GetReferenceDictionary<TReference, TId>()
+        private Dictionary<TId, TReference> GetReferenceDictionary<TReference, TId>()
         {
             if (!_loadedReferencesByType.TryGetValue(typeof(TReference), out var dictionary))
             {
                 return null;
             }
 
-            return dictionary as ImmutableDictionary<TId, TReference>;
+            return dictionary as Dictionary<TId, TReference>;
         }
 
         public void AddReferences<TReference, TId>(IEnumerable<KeyValuePair<TId, TReference>> referencesById)
         {
             _loadedReferencesByType.AddOrUpdate(
                 typeof(TReference),
-                _ => ImmutableDictionary.CreateRange(referencesById),
-                (_, dict) => (dict as ImmutableDictionary<TId, TReference>)?.AddRange(referencesById)
+                _ => referencesById.ToDictionary(p => p.Key, p => p.Value),
+                (_, dict) => (dict as Dictionary<TId, TReference>)?.AddRange(referencesById)
             );
         }
 

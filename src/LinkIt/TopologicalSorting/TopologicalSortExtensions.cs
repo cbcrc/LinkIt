@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace LinkIt.TopologicalSorting
@@ -15,8 +14,8 @@ namespace LinkIt.TopologicalSorting
             return sort.DependencySets
                 .Select(set => set
                     .Select(dep => dep.Type.ModelType)
-                    .ToImmutableList())
-                .ToImmutableList();
+                    .ToList())
+                .ToList();
         }
     }
 }

@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Linq;
 
 namespace LinkIt.Diagnostics
 {
@@ -13,7 +13,7 @@ namespace LinkIt.Diagnostics
     /// </summary>
     public class ReferenceLoadDetails
     {
-        private ImmutableList<object> _values = ImmutableList<object>.Empty;
+        private readonly List<object> _values = new List<object>();
 
         internal ReferenceLoadDetails(Type type)
         {
@@ -34,19 +34,19 @@ namespace LinkIt.Diagnostics
         /// <summary>
         /// References loaded.
         /// </summary>
-        public IReadOnlyList<object> Values => _values;
+        public IReadOnlyList<object> Values => _values.ToList();
 
         internal void SetIds(IReadOnlyList<object> ids)
         {
             if (ids != null)
             {
-                Ids = ids;
+                Ids = ids.ToList();
             }
         }
 
         internal void AddValues(IEnumerable<object> values)
         {
-            _values = _values.AddRange(values);
+            _values.AddRange(values);
         }
     }
 }

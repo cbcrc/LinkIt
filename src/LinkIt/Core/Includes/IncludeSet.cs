@@ -17,11 +17,13 @@ namespace LinkIt.Core.Includes
     {
         private readonly Func<TLink, TDiscriminant> _getDiscriminant;
         private readonly bool _ignoreUnhandledCases;
-        private readonly Dictionary<TDiscriminant, IInclude> _includes;
+        private readonly Dictionary<TDiscriminant, IInclude> _includesByDiscriminant;
+        private readonly List<IInclude> _includes;
 
         public IncludeSet(Dictionary<TDiscriminant, IInclude> includes, Func<TLink, TDiscriminant> getDiscriminant, bool ignoreUnhandledCases)
         {
-            _includes = includes;
+            _includesByDiscriminant = includes;
+            _includes = includes.Values.ToList();
             _getDiscriminant = getDiscriminant;
             _ignoreUnhandledCases = ignoreUnhandledCases;
         }
@@ -30,7 +32,7 @@ namespace LinkIt.Core.Includes
         {
             var include = GetInclude<IIncludeWithCreateNestedLinkedSourceById<TLinkedSource, TAbstractChildLinkedSource, TLink>>(link);
 
-            if (include == null || include.ReferenceType != referenceType)
+            if (include is null || include.ReferenceType != referenceType)
             {
                 return null;
             }
@@ -53,12 +55,12 @@ namespace LinkIt.Core.Includes
             return GetInclude<IIncludeWithGetReference<TAbstractChildLinkedSource, TLink>>(link);
         }
 
-        public List<IIncludeWithAddLookupId<TLink>> GetIncludesWithAddLookupId()
+        public IEnumerable<IIncludeWithAddLookupId<TLink>> GetIncludesWithAddLookupId()
         {
             return GetIncludes<IIncludeWithAddLookupId<TLink>>();
         }
 
-        public List<IIncludeWithChildLinkedSource> GetIncludesWithChildLinkedSource()
+        public IEnumerable<IIncludeWithChildLinkedSource> GetIncludesWithChildLinkedSource()
         {
             return GetIncludes<IIncludeWithChildLinkedSource>();
         }
@@ -70,23 +72,20 @@ namespace LinkIt.Core.Includes
 
             var discriminant = _getDiscriminant(link);
 
-            if (_ignoreUnhandledCases && !_includes.ContainsKey(discriminant)) return null;
-
-            AssumeIncludeExistsForDiscriminant(discriminant);
-
-            var include = _includes[discriminant];
-
-            return include as TInclude;
-        }
-
-        private void AssumeIncludeExistsForDiscriminant(TDiscriminant discriminant)
-        {
-            if (!_includes.ContainsKey(discriminant))
+            _includesByDiscriminant.TryGetValue(discriminant, out var include);
+            if (include != null)
             {
-                throw new LinkItException(
-                    $"{typeof(TLinkedSource).GetFriendlyName()}: Cannot invoke GetInclude for discriminant={discriminant}"
-                );
+                return include as TInclude;
             }
+
+            if (_ignoreUnhandledCases)
+            {
+                return null;
+            }
+
+            throw new LinkItException(
+                $"{typeof(TLinkedSource).GetFriendlyName()}: Cannot invoke GetInclude for discriminant={discriminant}"
+            );
         }
 
         private static void AssumeNotNullLink(TLink link)
@@ -99,12 +98,10 @@ namespace LinkIt.Core.Includes
             }
         }
 
-        public List<TInclude> GetIncludes<TInclude>()
+        public IEnumerable<TInclude> GetIncludes<TInclude>()
             where TInclude : class, IInclude
         {
-            return _includes.Values
-                .OfType<TInclude>()
-                .ToList();
+            return _includes.OfType<TInclude>();
         }
     }
 }

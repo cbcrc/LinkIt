@@ -27,5 +27,10 @@ namespace LinkIt.Shared
         {
             return items.Where(item => (object) item != null);
         }
+
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> items)
+        {
+            return new HashSet<T>(items);
+        }
     }
 }
