@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -52,7 +52,7 @@ namespace LinkIt.Conventions
             catch (TargetInvocationException ex)
             {
                 throw new LinkItException(
-                    $"The convention \"{match.Convention.Name}\" failed for Apply. Link target id: {match.LinkTargetProperty.GetFullName()}, linked source model property: {match.LinkedSourceModelProperty.GetFullName()}",
+                    $"The convention \"{match.Convention.Name}\" failed for Apply. Link target id: {match.LinkTargetProperty.GetFriendlyName()}, linked source model property: {match.LinkedSourceModelProperty.GetFriendlyName()}",
                     ex.GetBaseException()
                 );
             }

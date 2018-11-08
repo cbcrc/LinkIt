@@ -16,9 +16,14 @@ namespace LinkIt.Shared
                    && property.GetSetMethod(false) != null;
         }
 
-        public static string GetFullName(this PropertyInfo property)
+        public static string GetFriendlyName(this PropertyInfo property)
         {
             return $"{property.DeclaringType.GetFriendlyName()}.{property.Name}";
+        }
+
+        public static string GetFullName(this PropertyInfo property)
+        {
+            return $"{property.DeclaringType.FullName}.{property.Name}";
         }
     }
 }
