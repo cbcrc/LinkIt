@@ -63,17 +63,23 @@ namespace LinkIt.Core
             }
         }
 
-        public void LinkNestedLinkedSourcesById(IEnumerable<Type> referenceTypes)
+        public void LinkNestedLinkedSourcesById(IReadOnlyList<Type> referenceTypesToBeLoaded)
         {
-            foreach (var referenceType in referenceTypes)
+            foreach (var linkedSource in LinkedSourcesToBeBuilt)
             {
-                foreach (var linkedSource in LinkedSourcesToBeBuilt)
+                LinkNestedLinkedSourcesById(linkedSource, referenceTypesToBeLoaded);
+            }
+        }
+
+        private void LinkNestedLinkedSourcesById(object linkedSource, IReadOnlyList<Type> referenceTypesToBeLoaded)
+        {
+            var loadLinkExpressionsForLinkedSource = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource);
+            foreach (var referenceType in referenceTypesToBeLoaded)
+            {
+                var loadLinkExpressionsForReference = loadLinkExpressionsForLinkedSource.Where(e => e.ReferenceTypes.Contains(referenceType));
+                foreach (var loadLinkExpression in loadLinkExpressionsForReference)
                 {
-                    var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource, referenceType);
-                    foreach (var loadLinkExpression in loadLinkExpressions)
-                    {
-                        loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, this, referenceType, _loadLinkProtocol);
-                    }
+                    loadLinkExpression.LinkNestedLinkedSourceById(linkedSource, this, referenceType, _loadLinkProtocol);
                 }
             }
         }

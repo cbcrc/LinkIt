@@ -33,7 +33,19 @@ namespace LinkIt.LinkTargets
         //See ILinkTarget.SetLinkTargetValue
         public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
         {
-            _get(linkedSource)[linkTargetValueIndex] = linkTargetValue;
+            var list = _get(linkedSource);
+            list[linkTargetValueIndex] = linkTargetValue;
+        }
+
+        public TTargetProperty GetLinkTargetValue(TLinkedSource linkedSource, int linkTargetValueIndex)
+        {
+            var list = _get(linkedSource);
+            if (list is null || linkTargetValueIndex >= list.Count)
+            {
+                return default;
+            }
+
+            return list[linkTargetValueIndex];
         }
 
         public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues)
@@ -41,7 +53,7 @@ namespace LinkIt.LinkTargets
             if (_get(linkedSource) == null)
             {
                 var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValues];
-                SetTargetProperty(linkedSource, polymorphicListToBeBuilt);
+                SetTargetProperty(linkedSource, polymorphicListToBeBuilt.ToList());
             }
         }
 
@@ -50,14 +62,14 @@ namespace LinkIt.LinkTargets
             var values = _get(linkedSource);
             var valuesWithoutNull = values
                 .WhereNotNull()
-                .ToArray();
+                .ToList();
 
             SetTargetProperty(linkedSource, valuesWithoutNull);
         }
 
-        private void SetTargetProperty(TLinkedSource linkedSource, TTargetProperty[] values)
+        private void SetTargetProperty(TLinkedSource linkedSource, List<TTargetProperty> values)
         {
-            _property.SetMethod.Invoke(linkedSource, new object[] { values.ToList() });
+            _property.SetValue(linkedSource, values);
         }
 
         public bool Equals(ILinkTarget other)

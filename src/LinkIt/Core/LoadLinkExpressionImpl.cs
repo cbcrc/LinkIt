@@ -56,7 +56,7 @@ namespace LinkIt.Core
             foreach (var link in notNullLinks)
             {
                 var include = _includeSet.GetIncludeWithAddLookupId(link);
-                if (include != null && include.ReferenceType == referenceTypeToBeLoaded)
+                if (include?.ReferenceType == referenceTypeToBeLoaded)
                 {
                     include.AddLookupId(link, lookupContext);
                 }
@@ -138,18 +138,38 @@ namespace LinkIt.Core
             var links = GetLinks(linkedSource);
             _linkTarget.LazyInit(linkedSource, links.Count);
 
+            TAbstractLinkTarget GetLinkTargetValueForIndex(int index) => GetLinkTargetValue(links, index, getInclude, getLinkTargetValue);
+
             for (var linkIndex = 0; linkIndex < links.Count; linkIndex++)
             {
-                var value = GetLinkTargetValue(links, linkIndex, getInclude, getLinkTargetValue);
-                if ((object) value != null)
-                {
-                    _linkTarget.SetLinkTargetValue(
-                        linkedSource,
-                        value,
-                        linkIndex
-                    );
-                }
+                SetLinkTargetValue(linkedSource, linkIndex, GetLinkTargetValueForIndex);
             }
+        }
+
+        private void SetLinkTargetValue(TLinkedSource linkedSource, int linkIndex, Func<int, TAbstractLinkTarget> getLinkTargetValueForIndex)
+        {
+            if (HasLinkTargetValue(linkedSource, linkIndex))
+            {
+                return;
+            }
+
+            var value = getLinkTargetValueForIndex(linkIndex);
+            if ((object) value == null)
+            {
+                return;
+            }
+
+            _linkTarget.SetLinkTargetValue(
+                linkedSource,
+                value,
+                linkIndex
+            );
+        }
+
+        private bool HasLinkTargetValue(TLinkedSource linkedSource, int linkIndex)
+        {
+            var current = _linkTarget.GetLinkTargetValue(linkedSource, linkIndex);
+            return (object) current != null;
         }
 
         private static TAbstractLinkTarget GetLinkTargetValue<TInclude>(

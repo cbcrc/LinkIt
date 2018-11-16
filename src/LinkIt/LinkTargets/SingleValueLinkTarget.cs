@@ -28,7 +28,12 @@ namespace LinkIt.LinkTargets
 
         public void SetLinkTargetValue(TLinkedSource linkedSource, TTargetProperty linkTargetValue, int linkTargetValueIndex)
         {
-            _property.SetMethod.Invoke(linkedSource, new object[] { linkTargetValue });
+            _property.SetValue(linkedSource, linkTargetValue);
+        }
+
+        public TTargetProperty GetLinkTargetValue(TLinkedSource linkedSource, int linkTargetValueIndex)
+        {
+            return (TTargetProperty) _property.GetValue(linkedSource);
         }
 
         public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues)

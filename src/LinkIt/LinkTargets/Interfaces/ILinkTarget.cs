@@ -27,6 +27,8 @@ namespace LinkIt.LinkTargets.Interfaces
             int linkTargetValueIndex
         );
 
+        TTargetProperty GetLinkTargetValue(TLinkedSource linkedSource, int linkTargetValueIndex);
+
         void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues);
 
         void FilterOutNullValues(TLinkedSource linkedSource);

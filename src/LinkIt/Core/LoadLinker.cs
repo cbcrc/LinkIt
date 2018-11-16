@@ -131,9 +131,9 @@ namespace LinkIt.Core
             }
         }
 
-        private async Task LoadNestingLevelAsync(IEnumerable<Type> referenceTypeToBeLoaded)
+        private async Task LoadNestingLevelAsync(IReadOnlyList<Type> referenceTypesToBeLoaded)
         {
-            var lookupContext = GetLookupContextForLoadingLevel(referenceTypeToBeLoaded);
+            var lookupContext = GetLookupContextForLoadingLevel(referenceTypesToBeLoaded);
             var loadingContext = GetLoadingContext(lookupContext);
 
             _loadLinkDetails?.CurrentStep.LoadStart();
@@ -144,23 +144,28 @@ namespace LinkIt.Core
             _loadLinkDetails?.CurrentStep.LoadEnd();
         }
 
-        private LookupContext GetLookupContextForLoadingLevel(IEnumerable<Type> referenceTypes)
+        private LookupContext GetLookupContextForLoadingLevel(IReadOnlyList<Type> referenceTypesToBeLoaded)
         {
             var lookupContext = new LookupContext();
-
-            foreach (var referenceType in referenceTypes)
+            foreach (var linkedSource in _linker.LinkedSourcesToBeBuilt)
             {
-                foreach (var linkedSource in _linker.LinkedSourcesToBeBuilt)
-                {
-                    var loadLinkExpressions = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource, referenceType);
-                    foreach (var loadLinkExpression in loadLinkExpressions)
-                    {
-                        loadLinkExpression.AddLookupIds(linkedSource, lookupContext, referenceType);
-                    }
-                }
+                AddLookupIdsForLinkedSource(lookupContext, linkedSource, referenceTypesToBeLoaded);
             }
 
             return lookupContext;
+        }
+
+        private void AddLookupIdsForLinkedSource(LookupContext lookupContext, object linkedSource, IReadOnlyList<Type> referenceTypesToBeLoaded)
+        {
+            var loadLinkExpressionsForLinkedSource = _loadLinkProtocol.GetLoadLinkExpressions(linkedSource);
+            foreach (var referenceType in referenceTypesToBeLoaded)
+            {
+                var loadLinkExpressionsForReference = loadLinkExpressionsForLinkedSource.Where(e => e.ReferenceTypes.Contains(referenceType));
+                foreach (var loadLinkExpression in loadLinkExpressionsForReference)
+                {
+                    loadLinkExpression.AddLookupIds(linkedSource, lookupContext, referenceType);
+                }
+            }
         }
 
         public void Dispose()

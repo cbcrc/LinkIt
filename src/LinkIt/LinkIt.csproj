@@ -16,7 +16,7 @@ Features
 - Support polymorphism out of the box
 - Favor convention over configuration
 - Perform complex projections easily with LinkIt AutoMapper Extensions</Description>
-    <Version>2.0.0-rc07</Version>
+    <Version>2.0.0-rc09</Version>
     <Authors>Stéphane Leblanc, Laurent le Beau-Martin</Authors>
     <Company>Radio-Canada/CBC</Company>
     <Copyright>Copyright (c) 2015-2018 Radio-Canada/CBC</Copyright>
@@ -27,7 +27,7 @@ Features
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/cbcrc/LinkIt</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageReleaseNotes>Fixed issue when multiple linked sources had the same name</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed issue with duplicate linked sources created.</PackageReleaseNotes>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
