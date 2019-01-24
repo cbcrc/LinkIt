@@ -57,7 +57,7 @@ namespace LinkIt.LinkTargets
 
         private static void EnsureIsPropertyOfLinkedSource<TLinkedSource>(MemberExpression getterBody)
         {
-            if (getterBody.Member.MemberType != MemberTypes.Property || getterBody.Expression.NodeType != ExpressionType.Parameter)
+            if (getterBody.Member.MemberType != MemberTypes.Property || (getterBody.Expression.NodeType != ExpressionType.Parameter && getterBody.Expression.NodeType != ExpressionType.Convert))
             {
                 throw OnlyDirectGetterAreSupported<TLinkedSource>(getterBody.Expression);
             }
