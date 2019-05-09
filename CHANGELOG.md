@@ -1,7 +1,7 @@
 # Change Log
  
 <a name="2.0.0"></a>
-## [2.0.0](https://github.com/cbcrc/LinkIt/compare/v1.1.0...v2.0.0) (2018-??-??)
+## [2.0.0](https://github.com/cbcrc/LinkIt/compare/v1.1.0...v2.0.0) (2019-05-09)
  
 ### Breaking changes
  
