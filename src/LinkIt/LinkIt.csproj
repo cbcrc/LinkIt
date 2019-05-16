@@ -31,7 +31,7 @@ Features
     <Copyright>Copyright (c) 2015-2019 Radio-Canada/CBC</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/cbcrc/LinkIt/master/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/cbcrc/LinkIt</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/cbcrc/LinkIt/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageTags>c# data integration database</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/cbcrc/LinkIt</RepositoryUrl>
@@ -41,6 +41,7 @@ Features
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
