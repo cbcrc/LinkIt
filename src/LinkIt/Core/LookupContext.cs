@@ -20,7 +20,7 @@ namespace LinkIt.Core
 
         public void AddLookupId<TReference, TId>(TId lookupId)
         {
-            if ((object) lookupId == null)
+            if (lookupId is null)
             {
                 return;
             }
@@ -30,7 +30,7 @@ namespace LinkIt.Core
 
         public void AddLookupIds<TReference, TId>(IEnumerable<TId> lookupIds)
         {
-            if (lookupIds == null)
+            if (lookupIds is null)
             {
                 throw new ArgumentNullException(nameof(lookupIds));
             }

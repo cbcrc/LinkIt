@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -45,17 +45,17 @@ namespace LinkIt.Conventions
             IEnumerable<Assembly> assemblies,
             IList<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null)
+            if (loadLinkProtocolBuilder is null)
             {
                 throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
             }
 
-            if (assemblies == null)
+            if (assemblies is null)
             {
                 throw new ArgumentNullException(nameof(assemblies));
             }
 
-            if (conventions == null)
+            if (conventions is null)
             {
                 throw new ArgumentNullException(nameof(conventions));
             }
@@ -79,17 +79,17 @@ namespace LinkIt.Conventions
             IList<Type> types,
             IList<ILoadLinkExpressionConvention> conventions)
         {
-            if (loadLinkProtocolBuilder == null)
+            if (loadLinkProtocolBuilder is null)
             {
                 throw new ArgumentNullException(nameof(loadLinkProtocolBuilder));
             }
 
-            if (types == null)
+            if (types is null)
             {
                 throw new ArgumentNullException(nameof(types));
             }
 
-            if (conventions == null)
+            if (conventions is null)
             {
                 throw new ArgumentNullException(nameof(conventions));
             }

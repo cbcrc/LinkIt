@@ -33,7 +33,7 @@ namespace LinkIt.Conventions.DefaultConventions
         /// </summary>
         public static List<ILoadLinkExpressionConvention> DefaultAnd(params ILoadLinkExpressionConvention[] customConventions)
         {
-            if (customConventions == null)
+            if (customConventions is null)
             {
                 throw new ArgumentNullException(nameof(customConventions));
             }

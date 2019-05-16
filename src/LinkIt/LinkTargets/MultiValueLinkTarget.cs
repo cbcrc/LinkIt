@@ -50,7 +50,7 @@ namespace LinkIt.LinkTargets
 
         public void LazyInit(TLinkedSource linkedSource, int numOfLinkedTargetValues)
         {
-            if (_get(linkedSource) == null)
+            if (_get(linkedSource) is null)
             {
                 var polymorphicListToBeBuilt = new TTargetProperty[numOfLinkedTargetValues];
                 SetTargetProperty(linkedSource, polymorphicListToBeBuilt.ToList());

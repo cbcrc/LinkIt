@@ -31,7 +31,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TId> getLookupId,
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSource = null)
         {
-            if (getLookupId == null)
+            if (getLookupId is null)
             {
                 throw new ArgumentNullException(nameof(getLookupId));
             }
@@ -86,7 +86,7 @@ namespace LinkIt.ConfigBuilders
             Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             Action<TLinkedSource, int, TLinkTarget> initChildLinkedSource = null)
         {
-            if (getNestedLinkedSourceModel == null)
+            if (getNestedLinkedSourceModel is null)
             {
                 throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
             }
@@ -114,7 +114,7 @@ namespace LinkIt.ConfigBuilders
             Expression<Func<TLink, TChildLinkedSourceModel>> getNestedLinkedSourceModel,
             Action<TLink, TLinkTarget> initChildLinkedSource)
         {
-            if (getNestedLinkedSourceModel == null)
+            if (getNestedLinkedSourceModel is null)
             {
                 throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
             }
@@ -142,7 +142,7 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TId> getLookupId
         )
         {
-            if (getLookupId == null)
+            if (getLookupId is null)
             {
                 throw new ArgumentNullException(nameof(getLookupId));
             }

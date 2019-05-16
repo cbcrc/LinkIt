@@ -40,7 +40,7 @@ namespace LinkIt.Core
 
         public async Task<TRootLinkedSource> FromModelAsync<TModel>(TModel model, Action<TRootLinkedSource> initRootLinkedSource = null)
         {
-            if ((object) model == null)
+            if (model is null)
             {
                 return null;
             }
@@ -102,7 +102,7 @@ namespace LinkIt.Core
 
         public async Task<TRootLinkedSource> ByIdAsync<TRootLinkedSourceModelId>(TRootLinkedSourceModelId modelId, Action<TRootLinkedSource> initRootLinkedSource = null)
         {
-            if ((object) modelId == null)
+            if (modelId is null)
             {
                 return null;
             }

@@ -154,7 +154,7 @@ namespace LinkIt.Core
             }
 
             var value = getLinkTargetValueForIndex(linkIndex);
-            if ((object) value == null)
+            if (value is null)
             {
                 return;
             }
@@ -169,7 +169,7 @@ namespace LinkIt.Core
         private bool HasLinkTargetValue(TLinkedSource linkedSource, int linkIndex)
         {
             var current = _linkTarget.GetLinkTargetValue(linkedSource, linkIndex);
-            return (object) current != null;
+            return !(current is null);
         }
 
         private static TAbstractLinkTarget GetLinkTargetValue<TInclude>(
@@ -179,13 +179,13 @@ namespace LinkIt.Core
             Func<TLink, TInclude, int, TAbstractLinkTarget> getLinkTargetValue)
         {
             var link = links[linkIndex];
-            if ((object) link == null)
+            if (link is null)
             {
                 return default;
             }
 
             var include = getInclude(link);
-            if ((object) include == null)
+            if (include is null)
             {
                 return default;
             }

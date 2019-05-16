@@ -35,12 +35,12 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, TId> getLookupId,
             Expression<Func<TLinkedSource, TReference>> getLinkTarget)
         {
-            if (getLookupId == null)
+            if (getLookupId is null)
             {
                 throw new ArgumentNullException(nameof(getLookupId));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -60,12 +60,12 @@ namespace LinkIt.ConfigBuilders
         )
             where TId : struct
         {
-            if (getOptionalLookupId == null)
+            if (getOptionalLookupId is null)
             {
                 throw new ArgumentNullException(nameof(getOptionalLookupId));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -83,12 +83,12 @@ namespace LinkIt.ConfigBuilders
             Func<TLinkedSource, IEnumerable<TId>> getLookupIds,
             Expression<Func<TLinkedSource, List<TReference>>> getLinkTarget)
         {
-            if (getLookupIds == null)
+            if (getLookupIds is null)
             {
                 throw new ArgumentNullException(nameof(getLookupIds));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -126,12 +126,12 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, TChildLinkedSource> initChildLinkedSource = null)
             where TChildLinkedSource: ILinkedSource
         {
-            if (getLookupId == null)
+            if (getLookupId is null)
             {
                 throw new ArgumentNullException(nameof(getLookupId));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -154,12 +154,12 @@ namespace LinkIt.ConfigBuilders
             where TId : struct
             where TChildLinkedSource: ILinkedSource
         {
-            if (getOptionalLookupId == null)
+            if (getOptionalLookupId is null)
             {
                 throw new ArgumentNullException(nameof(getOptionalLookupId));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -180,12 +180,12 @@ namespace LinkIt.ConfigBuilders
             Action<TLinkedSource, int, TChildLinkedSource> initChildLinkedSource = null)
             where TChildLinkedSource: ILinkedSource
         {
-            if (getLookupIds == null)
+            if (getLookupIds is null)
             {
                 throw new ArgumentNullException(nameof(getLookupIds));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -230,12 +230,12 @@ namespace LinkIt.ConfigBuilders
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
-            if (getNestedLinkedSourceModel == null)
+            if (getNestedLinkedSourceModel is null)
             {
                 throw new ArgumentNullException(nameof(getNestedLinkedSourceModel));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -257,12 +257,12 @@ namespace LinkIt.ConfigBuilders
         )
             where TChildLinkedSource : class, ILinkedSource<TChildLinkedSourceModel>, new()
         {
-            if (getNestedLinkedSourceModels == null)
+            if (getNestedLinkedSourceModels is null)
             {
                 throw new ArgumentNullException(nameof(getNestedLinkedSourceModels));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
@@ -306,22 +306,22 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreUnhandledCases = false)
         {
-            if (getLink == null)
+            if (getLink is null)
             {
                 throw new ArgumentNullException(nameof(getLink));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
 
-            if (getDiscriminant == null)
+            if (getDiscriminant is null)
             {
                 throw new ArgumentNullException(nameof(getDiscriminant));
             }
 
-            if (includes == null)
+            if (includes is null)
             {
                 throw new ArgumentNullException(nameof(includes));
             }
@@ -344,22 +344,22 @@ namespace LinkIt.ConfigBuilders
             Func<TLink, TDiscriminant> getDiscriminant,
             Action<IncludeSetBuilder<TLinkedSource, TAbstractLinkTarget, TLink, TDiscriminant>> includes, bool ignoreUnhandledCases = false)
         {
-            if (getLinks == null)
+            if (getLinks is null)
             {
                 throw new ArgumentNullException(nameof(getLinks));
             }
 
-            if (getLinkTarget == null)
+            if (getLinkTarget is null)
             {
                 throw new ArgumentNullException(nameof(getLinkTarget));
             }
 
-            if (getDiscriminant == null)
+            if (getDiscriminant is null)
             {
                 throw new ArgumentNullException(nameof(getDiscriminant));
             }
 
-            if (includes == null)
+            if (includes is null)
             {
                 throw new ArgumentNullException(nameof(includes));
             }

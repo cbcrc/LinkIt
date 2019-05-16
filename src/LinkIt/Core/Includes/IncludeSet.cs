@@ -90,7 +90,7 @@ namespace LinkIt.Core.Includes
 
         private static void AssumeNotNullLink(TLink link)
         {
-            if ((object) link == null)
+            if (link is null)
             {
                 throw new LinkItException(
                     $"{typeof(TLinkedSource).GetFriendlyName()}: Cannot invoke GetInclude with a null link"

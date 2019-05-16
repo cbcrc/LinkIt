@@ -47,31 +47,26 @@ namespace LinkIt.Core
 
         public TReference GetReference<TReference, TId>(TId lookupId)
         {
-            if ((object) lookupId == null)
+            if (lookupId is null)
             {
                 return default;
             }
 
-            var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
-            if (referenceDictionnary == null)
-            {
-                return default;
-            }
-
-            return referenceDictionnary.GetValueOrDefault(lookupId);
+            var referenceDictionary = GetReferenceDictionary<TReference, TId>();
+            return referenceDictionary is null ? default : referenceDictionary.GetValueOrDefault(lookupId);
         }
 
         public IReadOnlyList<TReference> GetReferences<TReference, TId>(IEnumerable<TId> lookupIds)
         {
-            var referenceDictionnary = GetReferenceDictionary<TReference, TId>();
-            if (referenceDictionnary == null)
+            var referenceDictionary = GetReferenceDictionary<TReference, TId>();
+            if (referenceDictionary is null)
             {
                 return new TReference[0];
             }
 
             return lookupIds
                 .WhereNotNull()
-                .Select(id => referenceDictionnary.GetValueOrDefault(id))
+                .Select(id => referenceDictionary.GetValueOrDefault(id))
                 .ToList();
         }
     }

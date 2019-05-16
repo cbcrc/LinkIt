@@ -85,7 +85,7 @@ namespace LinkIt.Core
         {
             var dependencyGraph = CreateDependencyGraph(rootLinkedSourceType);
             var sort = dependencyGraph.Sort();
-            if (sort == null)
+            if (sort is null)
             {
                 throw new LinkItException($"Cannot create load link protocol for {rootLinkedSourceType.GetFriendlyName()}. Possible cyclic dependencies.");
             }

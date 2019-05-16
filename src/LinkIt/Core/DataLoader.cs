@@ -21,7 +21,7 @@ namespace LinkIt.Core
 
         public async Task<TModel> ByIdAsync<TId>(TId id)
         {
-            if ((object) id == null)
+            if (id is null)
             {
                 return default;
             }

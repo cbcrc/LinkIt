@@ -24,7 +24,7 @@ namespace LinkIt.Shared
         public static Type GetLinkedSourceModelType(this Type type)
         {
             var iLinkedSourceType = type.GetLinkedSourceInterface();
-            if (iLinkedSourceType == null)
+            if (iLinkedSourceType is null)
             {
                 throw new ArgumentException($"{type.Name} must implement ILinkedSource<>.", nameof(type));
             }

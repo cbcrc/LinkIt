@@ -35,7 +35,7 @@ namespace LinkIt.Core
         public TLinkedSource CreatePartiallyBuiltLinkedSource<TLinkedSource, TLinkedSourceModel>(TLinkedSourceModel model, Action<TLinkedSource> init)
             where TLinkedSource : class, ILinkedSource<TLinkedSourceModel>, new()
         {
-            if ((object) model == null)
+            if (model is null)
             {
                 return null;
             }

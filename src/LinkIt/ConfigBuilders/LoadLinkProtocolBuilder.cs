@@ -1,4 +1,4 @@
-﻿// Copyright (c) CBC/Radio-Canada. All rights reserved.
+// Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for more information.
 
 using System;
@@ -24,7 +24,7 @@ namespace LinkIt.ConfigBuilders
         /// </summary>
         public void ApplyLoadLinkProtocolConfigs(IEnumerable<Assembly> assemblies)
         {
-            if (assemblies == null)
+            if (assemblies is null)
             {
                 throw new ArgumentNullException(nameof(assemblies));
             }
@@ -67,7 +67,7 @@ namespace LinkIt.ConfigBuilders
         /// <param name="createReferenceLoader">Factory method to create a new instance of the reference loader</param>
         public ILoadLinkProtocol Build(Func<IReferenceLoader> createReferenceLoader)
         {
-            if (createReferenceLoader == null)
+            if (createReferenceLoader is null)
             {
                 throw new ArgumentNullException(nameof(createReferenceLoader));
             }
