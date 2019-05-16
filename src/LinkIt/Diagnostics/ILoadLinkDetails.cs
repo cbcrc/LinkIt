@@ -45,5 +45,15 @@ namespace LinkIt.Diagnostics
         /// Time taken to load-link the result.
         /// </summary>
         TimeSpan? Took { get; }
+
+        /// <summary>
+        /// Time taken to load all references.
+        /// </summary>
+        TimeSpan LoadTook { get; }
+
+        /// <summary>
+        /// Time taken to perform linking in the linked sources.
+        /// </summary>
+        TimeSpan LinkTook { get; }
     }
 }

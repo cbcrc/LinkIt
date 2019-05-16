@@ -47,6 +47,10 @@ namespace LinkIt.Diagnostics
 
         public TimeSpan? Took { get; private set; }
 
+        public TimeSpan LoadTook => TimeSpan.FromTicks(Steps.Sum(step => step.LoadTook.GetValueOrDefault().Ticks));
+
+        public TimeSpan LinkTook => TimeSpan.FromTicks(Steps.Sum(step => step.LinkTook.GetValueOrDefault().Ticks));
+
         internal void NextStep()
         {
             ++_currentStepIndex;
